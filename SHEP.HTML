@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<title>SHEP AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-sidenav a {padding:20px}
+</style>
+<body>
+
+<!-- Sidenav (hidden by default) -->
+<nav class="w3-sidenav w3-card-2 w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:20%;min-width:300px" id="mySidenav">
+  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-closenav">Close Menu</a>
+  <a href="index.HTML" onclick="w3.close()">Home</a>
+  <a href="#about" onclick="w3_close()">SHEP</a>
+</nav>
+
+<!-- Top menu -->
+<div class="w3-top">
+  <div class="w3-black w3-xlarge w3-padding-xlarge" style="max-width:40000px;margin:auto">
+    <div class="w3-opennav w3-left w3-hover-text-grey" onclick="w3_open()">☰</div>
+    <div class="w3-right">By Dexter Shepherd</div>
+    <div class="w3-center">SHEP AI</div>
+  </div>
+</div>
+
+  <!-- Pagination -->
+
+ <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px"> 
+  <hr id="about">
+
+  <!-- About Section -->
+  <div class="w3-container w3-padding-32 w3-center">  
+    <h3>SHEP</h3><br>
+    <img src="assets/pleased.png" alt="FINISHED_PROJECT picture" class="w3-image" style="display:block;margin:auto" width="500" height="500">
+    <div class="w3-padding-32">
+      <h4><b>SHEP</b></h4>
+      <h6><i>A computer would only deserve to be called intelligent if it could deceive a human into believing that it was human. - Alan Turing</i></h6>
+      <p>The system is able to read a main file and create files and create pathway links depending on what is in the input. <br />The system is able to expand its knowledge through a series of text files with links to eachother. 
+
+The system has speech to text for its main input.<br /> By using serial communication, the AI can receive and send data to an Arduino, this Arduino has servos which can read <br />its own position so the user can record actions and play them on command. The data from the servos will store on a local SD card.
+<br />
+The AI has audio output text to speech on top to make it a full audio I/O system. The system has a graphical interface which allows you to interact.
+<br />
+The system has a data file organized alphabetically with every word in the English language, the user has added, and what they categorize as. 
+<br />
+This system runs on raspberry pi and desktop although SHEP is programmed into the Pi. 
+
+<br /><br />Lots of people ask; "why is SHEP called SHEP?". SHEP is named SHEP as its developer was Dexter Shepherd 
+<br />and his name could be shortned down. Dexter named his AI after himself because it builds trust in an AI when it has a human connection.
+<br />Dexter Shepherd feels that SHEP being named after him shows more passion and commitment to SHEP and the project.
+<br /><br />SHEP has been under development since 2014 and the theory of SHEP developed since 2013. 
+<br />SHEP's first verson was on C++ written by Dexter Shepherd. SHEP didnt work as the theory was still under development
+<br />but SHEP continued as a project. 
+<br />It was only until 2015 SHEP became a learning algorithm and started to develop rapidly from a text = data analyser all the way to a network of files linking using a database on the English language.
+<br /><br />SHEP is currently being developed so it can not only learn from the user, but learn from watching people communicate and saving these respnonses in its data. 
+<br />This is a bit like how a human learns.
+<br />
+<img src="assets/prod.jpg" alt="SHEP GUI	" style="width:304px;height:200px;">
+<br />Above shows SHEP on a touchscreen TFT. This is SHEP's head, the USB ports on the side are used to connect to an external sound card, a wireless internet dongle and an Arduino for serial output (actions)
+<br /><br />We want SHEP's data files to expand in knowledge and social responses so SHEP can appear to be human and appear to be understanding.
+SHEP is being developed further so it can reply based on the topic of conversation instead of just reading and writing what is in its data. 
+We want SHEP to further be able to apply logic to input and output by recording lgic in its data. This means SHEP could apply knowledge to different situations.
+<br />The SHEP AI projects is only being developed by one programmer at its current stage, This means that programming is taking longer than it could.
+
+</div>
+  </div>
+  <hr>
+  
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32">
+    <div class="w3-third">
+      <h3></h3>
+      <p></p>
+      <p></p>
+    </div>
+  
+    <div class="w3-third">
+      <h3>News feed</h3>
+      <ul class="w3-ul w3-hoverable">
+        <li class="w3-padding-16">
+          
+          <span class="w3-large">This website was recently created</span><br>
+		  <span></span>
+        </li>
+        <li class="w3-padding-16">
+          <span class="w3-large">SHEP's latest version has reached the end of its development! V 0.0.2</span><br>
+          
+        </li> 
+      </ul>
+    </div>
+
+    <div class="w3-third w3-serif">
+      <h3></h3>
+      <p>
+        
+      </p>
+    </div>
+  </footer>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidenav
+function w3_open() {
+    document.getElementById("mySidenav").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidenav").style.display = "none";
+}
+</script>
+
+</body>
+</html>
