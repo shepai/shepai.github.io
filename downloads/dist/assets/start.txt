@@ -1,0 +1,1 @@
+how*question.txt/hello*greeting.txt/what*question.txt/hi*greeting.txt/who*question.txt/good*adjective.txt/whats*question.txt/what's*question.txt/why*question.txt/you*pronoun.txt/goodnight*exclamation.txt/do*question.txt/when*question.txt/where*question.txt/move*action.txt/turn*.txt/i'm*pronoun.txt/
