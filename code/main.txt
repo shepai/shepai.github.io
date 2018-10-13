@@ -34,42 +34,30 @@ def audioCheck():
     #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
     m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
 
+#start up functions
 audioCheck()
-def find_usb(string,media):   #find the USB path to my code
-    #this function is purely to make the developers life easier
-    breaker = 0
-    subfolders = [f.path for f in os.scandir(string) if f.is_dir() ]#find all the files
-    for i in range(len(subfolders)):
-        if media in str(subfolders[i]):    #till it finds my memory stick
-            string = subfolders[i]/speech
+update()
 
-            breaker = 1
-    if breaker == 1:
-        return string
-    else:
-        #print(string)
-        return find_usb(subfolders[0],media)
-def update():
-    #update the system to the newest code
-    media = input("Name of drive route: ")
-    #usbpath = find_usb("/media",media)
-    media = "/media/pi/DEXTER/Python coursework/"
-    choice = input("Write in or out? ")
-    if choice == "in":
-        f = open(media+"main.py",'r')
-        r = f.read()
-        f.close()
-        out("Updating...")
-        current = open(system_pathway+"main.py",'w')
-        current.write(r)
-        current.close()
-    else:
-        current = open(system_pathway+"main.py",'r')
-        r=current.read()
-        current.close()
-        f = open(media+"main.py",'w')
-        f.write(r)
-        f.close()
+def Update():#update the code
+       file = open("test.txt",'w')
+       for line in urlopen("https://shepai.github.io/code/main.txt"): #read
+              # Find the data
+              file.write("\n"+str(line)[2:-3])
+       file.close()#save to file
+       file = open("test.txt",'r')
+       r = file.read()
+       file.close()
+       current = open(system_pathway+"main.py",'r')
+       r2 = current.read()
+       current.close()
+       if(r == r2):#if same
+              print("No update needed")
+       else:
+              #update
+              print("updating...")
+              current = open(system_pathway+"main.py",'w')
+              current.write(r)
+              current.close()
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 def displayEye():
     #the display of the eye
