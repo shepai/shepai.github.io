@@ -34,10 +34,6 @@ def audioCheck():
     #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
     m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
 
-#start up functions
-audioCheck()
-update()
-
 def Update():#update the code
        file = open("test.txt",'w')
        for line in urlopen("https://shepai.github.io/code/main.txt"): #read
@@ -293,6 +289,11 @@ def add_variable(vocab):
     file.close()
 
 exit = 0
+
+#start up functions
+audioCheck()
+if internet() == True:#update if internet
+       update()
 
 while(exit ==0):
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
