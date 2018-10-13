@@ -36,19 +36,21 @@ def audioCheck():
        #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
        m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
 
-def update():#update the code
+def Update():
        file = open("test.txt",'w')
-       for line in urlopen("https://shepai.github.io/code/main.txt"): #read
-              # Find the data
-              file.write("\n"+str(line)[2:-3])
-       file.close()#save to file
+       for line in urlopen("https://shepai.github.io/code/main.txt"):
+              # Do something, like maybe print the data:
+              s = str(line)[2:-3]
+              s = s.replace("\\'","'")
+              file.write("\n"+s)
+       file.close()
        file = open("test.txt",'r')
        r = file.read()
        file.close()
        current = open(system_pathway+"main.py",'r')
        r2 = current.read()
        current.close()
-       if(r == r2):#if same
+       if(r == r2):#same
               print("No update needed")
        else:
               #update
