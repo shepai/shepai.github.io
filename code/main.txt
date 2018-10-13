@@ -13,7 +13,7 @@ try:
        import httplib
 except:
        import http.client as httplib
-
+from urllib.request import urlopen
 #data handling library
 import xml.etree.ElementTree as ET
 #serial communication library
@@ -34,7 +34,7 @@ def audioCheck():
     #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
     m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
 
-def Update():#update the code
+def update():#update the code
        file = open("test.txt",'w')
        for line in urlopen("https://shepai.github.io/code/main.txt"): #read
               # Find the data
