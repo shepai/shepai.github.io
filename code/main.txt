@@ -38,7 +38,7 @@ def audioCheck():
 
 def update():
        file = open("test.txt",'w')
-       for line in urlopen("https://shepai.github.io/code/main.txt"):
+       for line in urlopen("https://shepai.github.io/code/main.py"):
               # Do something, like maybe print the data:
               s = str(line)[2:-3]
               s = s.replace("\\'","'")
@@ -90,7 +90,7 @@ def getVoice():
     global voiceReply
     global rec
     global m
-    voiceReply = ""
+    voiceReply = "#1"
     connection = internet()
     if connection == True:  #connection found
         with m as source:
@@ -98,7 +98,7 @@ def getVoice():
         
         stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
         print("say something")
-        while voiceReply == "":
+        while voiceReply == "#1":
             time.sleep(1)#listen for 1 seconds
         stop_listening()    #stop listening
         
