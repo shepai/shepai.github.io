@@ -76,14 +76,19 @@ def callback(recognizer, audio):
         print("you said "+str(voiceReply))
     except sr.UnknownValueError:    #unkown reply
         out("Could not understand")
+        voiceReply = ""
     except sr.RequestError as e:
         out("error: {0}".format(e))
+        voiceReply = ""
     except KeyError:
         out("I don't understand what you are saying")   #no reply
+        voiceReply = ""
     except ValueError:
         out("Sorry, I didn't get that") #no reply
+        voiceReply = ""
     except LookupError:
         out("sorry, I didn't get that")
+        voiceReply = ""
 
 def getVoice():
     #get a voice input
@@ -97,7 +102,7 @@ def getVoice():
             rec.adjust_for_ambient_noise(source)
         
         stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
-        print("say something")
+        print("User message:")
         while voiceReply == "#1":
             time.sleep(1)#listen for 1 seconds
         stop_listening()    #stop listening
@@ -173,9 +178,9 @@ def search(sentence):   #search through data to find if in
             command = find_term(sentence,"c") #search message for command
             if command!="#@false":
                 #all words needed found
-                print(trigger)
-                print(subject)
-                print(command)
+                #print(trigger)
+                #print(subject)
+                #print(command)
                 AI = find(trigger,subject,command)  #search database
                 out(AI)
                 
