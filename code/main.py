@@ -304,7 +304,7 @@ if internet() == True:#update if internet
        update()
 
 while(exit ==0):
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    os.system('clear')  # on linux / os x
     displayEye()    #output eye to the user
     print("User: ")
     user_message = PutIn("") #get userinput
