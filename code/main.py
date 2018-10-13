@@ -13,7 +13,7 @@ try:
        import httplib
 except:
        import http.client as httplib
-
+from urllib.request import urlopen
 #data handling library
 import xml.etree.ElementTree as ET
 #serial communication library
@@ -29,47 +29,35 @@ system_pathway = "/home/pi/Documents/applications/AI/"
 
 #initialize microphone
 def audioCheck():
-    #variables to listen to audio with
-    rec = sr.Recognizer()
-    #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-    m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
+       global rec
+       global m
+       #variables to listen to audio with
+       rec = sr.Recognizer()
+       #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
+       m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
 
-audioCheck()
-def find_usb(string,media):   #find the USB path to my code
-    #this function is purely to make the developers life easier
-    breaker = 0
-    subfolders = [f.path for f in os.scandir(string) if f.is_dir() ]#find all the files
-    for i in range(len(subfolders)):
-        if media in str(subfolders[i]):    #till it finds my memory stick
-            string = subfolders[i]/speech
-
-            breaker = 1
-    if breaker == 1:
-        return string
-    else:
-        #print(string)
-        return find_usb(subfolders[0],media)
 def update():
-    #update the system to the newest code
-    media = input("Name of drive route: ")
-    #usbpath = find_usb("/media",media)
-    media = "/media/pi/DEXTER/Python coursework/"
-    choice = input("Write in or out? ")
-    if choice == "in":
-        f = open(media+"main.py",'r')
-        r = f.read()
-        f.close()
-        out("Updating...")
-        current = open(system_pathway+"main.py",'w')
-        current.write(r)
-        current.close()
-    else:
-        current = open(system_pathway+"main.py",'r')
-        r=current.read()
-        current.close()
-        f = open(media+"main.py",'w')
-        f.write(r)
-        f.close()
+       file = open("test.txt",'w')
+       for line in urlopen("https://shepai.github.io/code/main.py"):
+              # Do something, like maybe print the data:
+              s = str(line)[2:-3]
+              s = s.replace("\\'","'")
+              file.write("\n"+s)
+       file.close()
+       file = open("test.txt",'r')
+       r = file.read()
+       file.close()
+       current = open(system_pathway+"main.py",'r')
+       r2 = current.read()
+       current.close()
+       if(r == r2):#same
+              print("No update needed")
+       else:
+              #update
+              print("updating...")
+              current = open(system_pathway+"main.py",'w')
+              current.write(r)
+              current.close()
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 def displayEye():
     #the display of the eye
@@ -80,6 +68,8 @@ def displayEye():
 def callback(recognizer, audio):
     #turn the audio into speech
     global voiceReply
+    global rec
+    global m
     voiceReply = ""
     try:
         voiceReply = (rec.recognize_google(audio))
@@ -98,7 +88,9 @@ def callback(recognizer, audio):
 def getVoice():
     #get a voice input
     global voiceReply
-    voiceReply = ""
+    global rec
+    global m
+    voiceReply = "#1"
     connection = internet()
     if connection == True:  #connection found
         with m as source:
@@ -106,7 +98,7 @@ def getVoice():
         
         stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
         print("say something")
-        while voiceReply == "":
+        while voiceReply == "#1":
             time.sleep(1)#listen for 1 seconds
         stop_listening()    #stop listening
         
@@ -305,6 +297,11 @@ def add_variable(vocab):
     file.close()
 
 exit = 0
+
+#start up functions
+audioCheck()
+if internet() == True:#update if internet
+       update()
 
 while(exit ==0):
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
