@@ -31,11 +31,13 @@ system_pathway = "/home/pi/Documents/applications/AI/"
 def audioCheck():
        global rec
        global m
-       #variables to listen to audio with
-       rec = sr.Recognizer()
-       #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-       m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
-
+       try:
+              #variables to listen to audio with
+              rec = sr.Recognizer()
+              #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
+              m = sr.Microphone(device_index = 1, sample_rate = 44100, chunk_size = 512)
+       except:
+              out("Problem connecting to microphone")
 def update():
        file = open("test.txt",'w')
        for line in urlopen("https://shepai.github.io/code/main.py"):
@@ -103,8 +105,10 @@ def getVoice():
         
         stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
         print("User message:")
-        while voiceReply == "#1":
+        timer = 0
+        while voiceReply == "#1" && timer <6:
             time.sleep(1)#listen for 1 seconds
+            timer += 1
         stop_listening()    #stop listening
         
         
@@ -147,27 +151,30 @@ def internet():
 def out(string):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
     pts= prtlst.comports()
-    string1 = pts[0]
-    #print(string1[0])
-    hardware_port = string1[0]
-    for pt in pts:
-        #print(pt)
-        if 'USB' in pt[1]: #check 'USB' string in device description
-            #print(pt)
-            COMs.append(pt[0])
-    #output to com
-    #print(string)#method of output  
-    ser = serial.Serial(hardware_port, 9600)
-    a = 0
-    #print("opening :"+hardware_port)
-    if string == None:
-        string = ""
-    string+= '/'  #tells the board to output
-    
-    while a < len(string):  #send message through
-                ser.write(string[a].encode('ascii'))
-                a += 1
-    ser.close() #close ports
+    try:
+           string1 = pts[0]
+           #print(string1[0])
+           hardware_port = string1[0]
+           for pt in pts:
+               #print(pt)
+               if 'USB' in pt[1]: #check 'USB' string in device description
+                   #print(pt)
+                   COMs.append(pt[0])
+           #output to com
+           #print(string)#method of output  
+           ser = serial.Serial(hardware_port, 9600)
+           a = 0
+           #print("opening :"+hardware_port)
+           if string == None:
+               string = ""
+           string+= '/'  #tells the board to output
+           
+           while a < len(string):  #send message through
+                       ser.write(string[a].encode('ascii'))
+                       a += 1
+           ser.close() #close ports
+    except:
+           print(string)#output using print if no hardware found
     
 def search(sentence):   #search through data to find if in
     print("searching '"+sentence+"'")
@@ -312,6 +319,11 @@ while(exit ==0):
     os.system('clear')  # on linux / os x
     displayEye()    #output eye to the user
     print("User: ")
+    #user_message = getVoice()
+    #if user_message == "robot":
+    #  user_message = getVoice()
+    #elif user_message == "keyboard":
+    #  user_message == putIn()
     user_message = PutIn("") #get userinput
     if user_message == "/add trigger":  #add trigger word command
         add_trigger()
@@ -323,7 +335,7 @@ while(exit ==0):
         add_layer()
     elif user_message == "/add variable":   #add variable command
         add_variable()
-    elif user_message == "/exit":   #leave program
+    elif user_message == "/exit" or user_message == "exit":   #leave program
         exit = 1
     elif user_message == "":    #no data
         print("")
