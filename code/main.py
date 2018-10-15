@@ -94,10 +94,10 @@ def callback(recognizer, audio):
         voiceReply = ""
     except sr.RequestError as e:
         print("error: {0}".format(e))
-        out("error understanding","t")
+        #out("error understanding","t")
         voiceReply = ""
     except KeyError:
-        out("I do not understand what you are saying","t")   #no reply
+        #out("I do not understand what you are saying","t")   #no reply
         voiceReply = ""
     except ValueError:
         #no reply
