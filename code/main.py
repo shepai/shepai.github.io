@@ -100,10 +100,12 @@ def callback(recognizer, audio):
         out("I do not understand what you are saying","t")   #no reply
         voiceReply = ""
     except ValueError:
-        out("Sorry, I did not get that","t") #no reply
+        #no reply
+        #out("Sorry, I did not get that","t") 
         voiceReply = ""
     except LookupError:
-        out("sorry, I did not get that","t")
+        #no reply
+        #out("sorry, I did not get that","t")
         voiceReply = ""
 
 def getVoice():
@@ -138,8 +140,9 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
     string = getVoice() #get voice input
     if "robot" in string:
            if string == "keyboard":
-                  string = input()
-    
+                     string = input()#type mode
+           else:
+                     string = (string.replace("robot ","",1))#getrid of call sign
            return string  #return input
     else:
            return "" #nothing said to robot
@@ -362,7 +365,7 @@ while(exit ==0):
     elif user_message == "/exit" or user_message == "exit":   #leave program
         exit = 1
     elif user_message == "":    #no data
-        print("")
+        print("")#waste space to do nothing
     elif user_message == "/update":
         update()
     else:
