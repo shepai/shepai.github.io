@@ -42,10 +42,9 @@ def update():
        file = open("test.txt","w")
        for line in urlopen("https://shepai.github.io/code/main.py"):
               # Do something, like maybe print the data:
-              s = str(line)[2:-3]
-              #s = s.replace("\\"",""")
-              #s = s.replace("\\n"","\n")
-              file.write("\n"+s)
+              s = line.decode('utf-8')
+              print(s)
+              file.write(s)
        file.close()
        file = open("test.txt","r")
        r = file.read()
