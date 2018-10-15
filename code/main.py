@@ -56,7 +56,7 @@ def update():
                      print(s)
                      file.write(s)
               file.close()
-              file = open("test.txt","r")
+              file = open(system_pathway+"test.txt","r")
               r = file.read()
               file.close()
               current = open(system_pathway+"main.py","r")
