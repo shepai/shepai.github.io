@@ -137,7 +137,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
     string = ""
     string = getVoice() #get voice input
     if "robot" in string:
-           if string == keyboard:
+           if string == "keyboard":
                   string = input()
     
            return string  #return input
