@@ -21,6 +21,8 @@ import serial
 import serial.tools.list_ports as prtlst
 #speech recognition lib
 import speech_recognition as sr
+#speech output lib
+import pyttsx3
 #global variables
 global rec
 global m
@@ -39,27 +41,37 @@ def audioCheck():
        except:
               out("Problem connecting to microphone")
 def update():
-       file = open("test.txt","w")
-       for line in urlopen("https://shepai.github.io/code/main.py"):
-              # Do something, like maybe print the data:
-              s = line.decode('utf-8')
-              print(s)
-              file.write(s)
-       file.close()
-       file = open("test.txt","r")
-       r = file.read()
-       file.close()
-       current = open(system_pathway+"main.py","r")
-       r2 = current.read()
-       current.close()
-       if(r == r2):#same
-              print("No update needed")
-       else:
-              #update
-              print("updating...")
-              current = open(system_pathway+"main.py","w")
-              current.write(r)
+       try:
+              file = open(system_pathway+"test.txt","w")
+              for line in urlopen("https://shepai.github.io/code/main.py"):
+                     #decode the file and write it to the Pi
+                     s = line.decode('utf-8')
+                     print(s)
+                     file.write(s)
+              file.close()
+              file = open(system_pathway+"eye.txt","w")
+              for line in urlopen("https://shepai.github.io/code/eye.txt"):
+                     #decode the file and write it to the Pi
+                     s = line.decode('utf-8')
+                     print(s)
+                     file.write(s)
+              file.close()
+              file = open("test.txt","r")
+              r = file.read()
+              file.close()
+              current = open(system_pathway+"main.py","r")
+              r2 = current.read()
               current.close()
+              if(r == r2):#same
+                     print("No update needed")
+              else:
+                     #update
+                     print("updating...")
+                     current = open(system_pathway+"main.py","w")
+                     current.write(r)
+                     current.close()
+       except:
+              out("Error finding update")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 def displayEye():
     #the display of the eye
@@ -104,7 +116,7 @@ def getVoice():
             rec.adjust_for_ambient_noise(source)
         
         stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
-        print("User message:")
+        
         timer = 0
         while voiceReply == "#1" and timer <25:
             time.sleep(1)#listen for 1 seconds
@@ -176,10 +188,13 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
                        a += 1
            ser.close() #close ports
     except:
-           print(string)#output using print if no hardware found
+              print(string)#output using print if no hardware found
+              engine = pyttsx3.init();
+              engine.say(string);
+              engine.runAndWait() ;
     
 def search(sentence):   #search through data to find if in
-    print("searching "+sentence)
+    #print("searching "+sentence)
     trigger=find_term(sentence,"t")  #search string for trigger word in database
     if trigger!="#@false":
         subject = find_term(sentence,"s") #search message for subject
