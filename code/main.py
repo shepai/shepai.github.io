@@ -189,9 +189,7 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
            ser.close() #close ports
     except:
               print(string)#output using print if no hardware found
-              engine = pyttsx3.init();
-              engine.say(string);
-              engine.runAndWait() ;
+              os.system("espeak '"+string+"' 2>/dev/null")
     
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
