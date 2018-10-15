@@ -133,7 +133,7 @@ def getVoice():
         out("There is an error conencting to the internet","t")
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
-    out(string)#method of output
+    out(string,"t")#method of output
     string = ""
     string = getVoice() #get voice input
     if "robot" in string:
