@@ -27,8 +27,9 @@ import pyttsx3
 global rec
 global m
 global system_pathway
+global connection_errors
 system_pathway = "/home/pi/Documents/applications/AI/"
-
+connection_errors = 0
 #initialize microphone
 def audioCheck():
        global rec
@@ -113,9 +114,11 @@ def getVoice():
     global voiceReply
     global rec
     global m
+    global connection_errors
     voiceReply = "#1"
     connection = internet()
     if connection == True:  #connection found
+        connection_errors = 0 #show there is a strong connection
         with m as source:
             rec.adjust_for_ambient_noise(source)
         
@@ -126,13 +129,16 @@ def getVoice():
         while voiceReply == "#1" and timer <25:
             time.sleep(1)#listen for 1 seconds
             timer += 1
-        if voiceReply == "#1":
+        if voiceReply == "#1":     #if nothing was said
                voiceReply = ""
         stop_listening()    #stop listening
         
         
     else:   #no connection
-        out("There is an error conencting to the internet","t")
+        connection_errors += 1
+        if connection_errors == 4:
+               out("There is an error conencting to the internet","t")
+               voiceReply = input(": ")   #alternate method
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string,"t")#method of output
@@ -173,7 +179,7 @@ def out(string,method):    #use fundtion so method of output can be changed for 
            pts= prtlst.comports()
            if method == "t":
               #output using onboard TTS
-              os.system("espeak '"+string+"' 2>/dev/null")
+              os.system("espeak '"+string+"' -s 100 2>/dev/null")
            else:
               try:
                   string1 = pts[0]
