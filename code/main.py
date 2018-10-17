@@ -345,8 +345,8 @@ exit = 0
 
 #start up functions
 audioCheck()
-if internet() == True:#update if internet
-       update()
+
+update()      #find an update for the system
 
 while(exit ==0):
     os.system("clear")  # on linux / os x
