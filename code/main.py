@@ -209,6 +209,7 @@ def getVoice():
                       #voiceReply = input(": ")   #alternate method
     except:
            #no microphone or internet error
+           audioCheck()
            out("There was an error connecting to microphone")
            displayEye(200,0,0)
     return voiceReply.lower()   #return voice
@@ -252,7 +253,7 @@ def out(string,method):    #use fundtion so method of output can be changed for 
            pts= prtlst.comports()
            if method == "t":
               #output using onboard TTS
-              os.system("espeak '"+string+"' -s 100 2>/dev/null")
+              os.system("espeak '"+string+"'2>/dev/null")
            else:
               try:
                   string1 = pts[0]
@@ -423,6 +424,7 @@ def add_variable(vocab):
 exit = 0
 
 #start up functions
+out("starting SHEP")
 audioCheck()
 loadScreen()
 time.sleep(0.25)
