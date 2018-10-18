@@ -75,12 +75,57 @@ def update():
        except:
               out("Error finding update","t")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
-def displayEye():
+def loadScreen():
+    for i in range(100):    #show a loading screen
+        hue = int(time.time() * 100) % 360
+        for x in range(8):
+            offset = x * spacing
+            h = ((hue + offset) % 360) / 360.0
+            r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(h, 1.0, 1.0)]
+            for y in range(4):
+                uh.set_pixel(x, y, r, g, b)
+        uh.show()
+        time.sleep(0.05)
+    uh.clear()
+
+def displayEye(red,green,blue):
     #the display of the eye
     f = open(system_pathway+"eye.txt","r")
     r = f.read()
     f.close()
     print(r)    #output on screen the eye in file
+    #top of eye
+    uh.set_pixel(0, 4, red, green, blue)
+    uh.set_pixel(0, 3, red, green, blue)
+    #side
+    uh.set_pixel(1, 2, red, green, blue)
+    uh.set_pixel(1, 5, red, green, blue)
+    uh.set_pixel(2, 2, red, green, blue)
+    uh.set_pixel(2, 5, red, green, blue)
+    #bottom
+    uh.set_pixel(3, 4, red, green, blue)
+    uh.set_pixel(3, 3, red, green, blue)
+    uh.show()
+def blink(red,green,blue):
+    #the display of the eye
+    f = open(system_pathway+"eye.txt","r")
+    r = f.read()
+    f.close()
+    print(r)    #output on screen the eye in file
+    #top of eye
+    uh.set_pixel(1, 4, red, green, blue)
+    uh.set_pixel(1, 3, red, green, blue)
+    #side
+    uh.set_pixel(1, 2, red, green, blue)
+    uh.set_pixel(1, 5, red, green, blue)
+    uh.set_pixel(2, 2, red, green, blue)
+    uh.set_pixel(2, 5, red, green, blue)
+    #bottom
+    uh.set_pixel(2, 4, red, green, blue)
+    uh.set_pixel(2, 3, red, green, blue)
+    uh.show()
+    time.sleep(0.25)
+    displayEye(20,200,0)
 def callback(recognizer, audio):
     #turn the audio into speech
     global voiceReply
@@ -115,30 +160,42 @@ def getVoice():
     global rec
     global m
     global connection_errors
-    voiceReply = "#1"
-    connection = internet()
-    if connection == True:  #connection found
-        connection_errors = 0 #show there is a strong connection
-        with m as source:
-            rec.adjust_for_ambient_noise(source)
-        
-        stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
-        print(">>")
-        out("red light","s")#show lights on LED 
-        timer = 0
-        while voiceReply == "#1" and timer <25:
-            time.sleep(1)#listen for 1 seconds
-            timer += 1
-        if voiceReply == "#1":     #if nothing was said
-               voiceReply = ""
-        stop_listening()    #stop listening
-        
-        
-    else:   #no connection
-        connection_errors += 1
-        if connection_errors == 4:
-               out("There is an error conencting to the internet","t")
-               voiceReply = input(": ")   #alternate method
+    try:
+           displayEye(20,200,0)    #output eye to the user
+           voiceReply = "#1"
+           connection = internet()
+           if connection == True:  #connection found
+               connection_errors = 0 #show there is a strong connection
+               with m as source:
+                   rec.adjust_for_ambient_noise(source)
+               
+               stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
+               print(">>")
+               #out("red light","s")#show lights on LED
+               uh.set_pixel(3, 0, 0, 0, 200)     #turn on listening light
+               uh.show()    #show user
+               timer = 0
+               while voiceReply == "#1" and timer <25:
+                   time.sleep(1)#listen for 1 seconds
+                   timer += 1
+               uh.clear()   #get rid of light
+               
+               blink(20,200,0)       #show eye
+               uh.show()
+               if voiceReply == "#1":     #if nothing was said
+                      voiceReply = ""
+               stop_listening()    #stop listening
+               
+               
+           else:   #no connection
+               connection_errors += 1
+               if connection_errors == 4:
+                      out("There is an error conencting to the internet","t")
+                      #voiceReply = input(": ")   #alternate method
+    except:
+           #no microphone or internet error
+           out("There was an error connecting to microphone")
+           displayEye(200,0,0)
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string,"t")#method of output
@@ -172,6 +229,7 @@ def internet():
            return True
        except:
            conn.close()
+           displayEye(200,0,0)
            return False
 def out(string,method):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
@@ -205,10 +263,12 @@ def out(string,method):    #use fundtion so method of output can be changed for 
                   ser.close() #close ports
               except:
                      print(string)#output using print if no hardware found
+                     displayEye(200,0,0)
                      
     except:
            #no connection
            print(string)
+           displayEye(200,0,0)
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
     trigger=find_term(sentence,"t")  #search string for trigger word in database
@@ -345,12 +405,13 @@ exit = 0
 
 #start up functions
 audioCheck()
-
+loadScreen()
 update()      #find an update for the system
+displayEye(20,200,0)    #output eye to the user
 
 while(exit ==0):
     os.system("clear")  # on linux / os x
-    displayEye()    #output eye to the user
+    
     print("User: ")
     #user_message = getVoice()
     #if user_message == "robot":
