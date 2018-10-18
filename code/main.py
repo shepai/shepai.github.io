@@ -8,6 +8,8 @@ import sys
 import os
 import re
 import time
+#input timer
+from threading import Thread
 #import the internet connection library
 try:
        import httplib
@@ -405,25 +407,39 @@ def add_variable(vocab):
     file.write(vocab+".txt")
     file.write("/")
     file.close()
+def breaker():
+    time.sleep(2)
+    if answer != None:
+        return
+    print "Too Slow"
+
+
 
 exit = 0
 
 #start up functions
 audioCheck()
 loadScreen()
+delay(0.25)
 update()      #find an update for the system
 displayEye(20,200,0)    #output eye to the user
 
 while(exit ==0):
     os.system("clear")  # on linux / os x
-    
+    Thread(target = breaker).start()
+
+    answer = input("Enter 'a' to use keyboard: ")
     print("User: ")
+    if answer == "a":
+       user_message = input("=: ")
+    else:
+       user_message = PutIn("") #get userinput
     #user_message = getVoice()
     #if user_message == "robot":
     #  user_message = getVoice()
     #elif user_message == "keyboard":
     #  user_message == putIn()
-    user_message = PutIn("") #get userinput
+    
     if user_message == "/add trigger":  #add trigger word command
         add_trigger()
     elif user_message == "/add subject":    #add subject word command
