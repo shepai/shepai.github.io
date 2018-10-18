@@ -411,8 +411,6 @@ def add_variable(vocab):
     file.close()
 def breaker():
     time.sleep(2)
-    if answer != None:
-        return
     
 
 
