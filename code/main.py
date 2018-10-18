@@ -83,6 +83,8 @@ def update():
               out("Error finding update","t")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 def loadScreen():
+    spacing = 360.0 / 16.0
+    hue = 0
     for i in range(100):    #show a loading screen
         hue = int(time.time() * 100) % 360
         for x in range(8):
