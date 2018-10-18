@@ -132,6 +132,11 @@ def blink(red,green,blue):
     #bottom
     uh.set_pixel(2, 4, red, green, blue)
     uh.set_pixel(2, 3, red, green, blue)
+    #centre
+    uh.set_pixel(1, 3, red, blue, green)
+    uh.set_pixel(1, 4, red, blue, green)
+    uh.set_pixel(2, 3, red, blue, green)
+    uh.set_pixel(2, 4, red, blue, green)
     uh.show()
     time.sleep(0.25)
     displayEye(20,200,0)
