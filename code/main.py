@@ -28,6 +28,11 @@ global rec
 global m
 global system_pathway
 global connection_errors
+#eye
+import unicornhat as uh
+import time
+import colorsys
+
 system_pathway = "/home/pi/Documents/applications/AI/"
 connection_errors = 0
 #initialize microphone
