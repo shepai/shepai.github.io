@@ -411,7 +411,7 @@ def breaker():
     time.sleep(2)
     if answer != None:
         return
-    print "Too Slow"
+    
 
 
 
@@ -428,9 +428,9 @@ while(exit ==0):
     os.system("clear")  # on linux / os x
     Thread(target = breaker).start()
 
-    answer = input("Enter 'a' to use keyboard: ")
+    answer = input("Enter to use keyboard: ")
     print("User: ")
-    if answer == "a":
+    if answer != None:
        user_message = input("=: ")
     else:
        user_message = PutIn("") #get userinput
