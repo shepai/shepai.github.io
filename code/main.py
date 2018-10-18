@@ -184,7 +184,7 @@ def getVoice():
                uh.set_pixel(3, 0, 0, 0, 200)     #turn on listening light
                uh.show()    #show user
                timer = 0
-               while voiceReply == "#1" and timer <25:
+               while voiceReply == "#1" and timer <15:
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
                uh.clear()   #get rid of light
@@ -422,7 +422,7 @@ exit = 0
 #start up functions
 audioCheck()
 loadScreen()
-delay(0.25)
+time.sleep(0.25)
 update()      #find an update for the system
 displayEye(20,200,0)    #output eye to the user
 
