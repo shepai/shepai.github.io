@@ -409,8 +409,7 @@ def add_variable(vocab):
     file.write(vocab+".txt")
     file.write("/")
     file.close()
-def breaker():
-    time.sleep(2)
+
     
 
 
@@ -426,14 +425,7 @@ displayEye(20,200,0)    #output eye to the user
 
 while(exit ==0):
     os.system("clear")  # on linux / os x
-    Thread(target = breaker).start()
-
-    answer = input("Enter to use keyboard: ")
-    print("User: ")
-    if answer != None:
-       user_message = input("=: ")
-    else:
-       user_message = PutIn("") #get userinput
+    user_message = PutIn("") #get userinput
     #user_message = getVoice()
     #if user_message == "robot":
     #  user_message = getVoice()
