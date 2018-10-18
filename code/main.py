@@ -424,7 +424,7 @@ def add_variable(vocab):
 exit = 0
 
 #start up functions
-out("starting SHEP")
+out("starting SHEP","t")
 audioCheck()
 loadScreen()
 time.sleep(0.25)
