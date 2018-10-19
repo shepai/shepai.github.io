@@ -207,6 +207,7 @@ def getVoice():
                if connection_errors == 4:
                       out("There is an error conencting to the internet","t")
                       #voiceReply = input(": ")   #alternate method
+                      connection_errors = 0 #reset check
     except:
            #no microphone or internet error
            audioCheck()
@@ -253,7 +254,7 @@ def out(string,method):    #use fundtion so method of output can be changed for 
            pts= prtlst.comports()
            if method == "t":
               #output using onboard TTS
-              os.system("espeak '"+string+"'2>/dev/null")
+              os.system("espeak '"+string+"' 2>/dev/null")
            else:
               try:
                   string1 = pts[0]
