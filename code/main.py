@@ -45,7 +45,7 @@ def audioCheck():
               #variables to listen to audio with
               rec = sr.Recognizer()
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-              m = sr.Microphone(device_index = 1, sample_rate = 88200, chunk_size = 512)
+              m = sr.Microphone(device_index = 1, sample_rate = 48000, chunk_size = 512)
        except:
               out("Problem connecting to microphone","t")
 def update():
@@ -160,10 +160,12 @@ def callback(recognizer, audio):
         voiceReply = ""
     except KeyError:
         #out("I do not understand what you are saying","t")   #no reply
+        displayEye(200,0,0)
         voiceReply = ""
     except ValueError:
         #no reply
-        #out("Sorry, I did not get that","t") 
+        #out("Sorry, I did not get that","t")
+        displayEye(100,100,0)
         voiceReply = ""
     except LookupError:
         #no reply
