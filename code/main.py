@@ -85,13 +85,13 @@ def update():
 def loadScreen():
     spacing = 360.0 / 16.0
     hue = 0
-    for i in range(100):    #show a loading screen
+    for i in range(500):    #show a loading screen
         hue = int(time.time() * 100) % 360
-        for x in range(8):
-            offset = x * spacing
+        for y in range(8):
+            offset = y * spacing
             h = ((hue + offset) % 360) / 360.0
             r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(h, 1.0, 1.0)]
-            for y in range(4):
+            for x in range(4):
                 uh.set_pixel(x, y, r, g, b)
         uh.show()
         time.sleep(0.05)
@@ -99,6 +99,7 @@ def loadScreen():
 
 def displayEye(red,green,blue):
     #the display of the eye
+    os.system("clear")  # on linux / os x
     f = open(system_pathway+"eye.txt","r")
     r = f.read()
     f.close()
