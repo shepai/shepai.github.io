@@ -85,7 +85,7 @@ def update():
 def loadScreen():
     spacing = 360.0 / 16.0
     hue = 0
-    for i in range(500):    #show a loading screen
+    for i in range(200):    #show a loading screen
         hue = int(time.time() * 100) % 360
         for y in range(8):
             offset = y * spacing
