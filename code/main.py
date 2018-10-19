@@ -160,7 +160,7 @@ def callback(recognizer, audio):
         voiceReply = ""
     except KeyError:
         #out("I do not understand what you are saying","t")   #no reply
-        displayEye(200,0,0)
+        #displayEye(200,0,0)
         voiceReply = ""
     except ValueError:
         #no reply
