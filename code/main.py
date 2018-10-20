@@ -381,7 +381,7 @@ def find(trigger, subject, command):
         r = file.read() #read data
         file.close()
         r = r.replace("</data>","") #remove end
-        r = r + "\t<phrase name=\'command\'+str(num)+"">\n"
+        r = r + "\t<phrase name=\'command "+str(num)+"'">\n"
         r = r + "\t<trigger>"+trigger+"</trigger>\n"
         r = r + "\t<subject>"+subject+"</subject>\n"
         r = r + "\t<command>"+command+"</command>\n"
