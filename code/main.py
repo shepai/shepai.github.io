@@ -99,11 +99,7 @@ def loadScreen():
 
 def displayEye(red,green,blue):
     #the display of the eye
-    os.system("clear")  # on linux / os x
-    f = open(system_pathway+"eye.txt","r")
-    r = f.read()
-    f.close()
-    print(r)    #output on screen the eye in file
+    
     #top of eye
     uh.set_pixel(0, 4, red, green, blue)
     uh.set_pixel(0, 3, red, green, blue)
@@ -447,12 +443,19 @@ def add_variable(vocab):
 exit = 0
 
 #start up functions
+os.system("clear")  # on linux / os x
+f = open(system_pathway+"eye.txt","r")
+r = f.read()
+f.close()
+print(r)    #output on screen the eye in file
+
 out("starting SHEP","t")
 audioCheck()
 loadScreen()
 time.sleep(0.25)
 update()      #find an update for the system
 displayEye(20,200,0)    #output eye to the user
+
 
 while(exit ==0):
     os.system("clear")  # on linux / os x
