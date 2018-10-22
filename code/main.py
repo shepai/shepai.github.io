@@ -165,7 +165,7 @@ def callback(recognizer, audio):
     except ValueError:
         #no reply
         #out("Sorry, I did not get that","t")
-        displayEye(100,100,0)
+        
         voiceReply = ""
     except LookupError:
         #no reply
@@ -302,7 +302,14 @@ def search(sentence):   #search through data to find if in
                 #print(subject)
                 #print(command)
                 AI = find(trigger,subject,command)  #search database
-                out(AI,"t")
+                AI = find(trigger,subject,command)  #search database
+                if AI[:3] == "!A!":
+                    #action
+                    print("ACTION")
+                    AI = AI.replace("!A! ","")
+                    os.system("sudo python3 "+system_pathway+AI)
+                else:
+                    out(AI,"t")
                 
             else:   #no command word found
                 out("No command found","t")
@@ -377,11 +384,23 @@ def find(trigger, subject, command):
     if output == "none":    #nothing found in data
         out("Nothing in my data... Please tell me, how, you, would like, me to respond","t")
         say = validate() #get a valid user input
+        if say == "add action":
+            exit = 1
+            while exit == 1:
+                say = PutIn("What is the name of your action?")
+                try:    #look for file
+                    file = open("action/"+say+".py","r")
+                    file.close()
+                    exit = 0
+                except:
+                    out("There is no such file")
+            say = "!A! "+"action/"+say+".py"    #save in format
+
         file = open(system_pathway+"knowledge.xml","r")    #open database
         r = file.read() #read data
         file.close()
         r = r.replace("</data>","") #remove end
-        r = r + "\t<phrase name=\'command "+str(num)+"'">\n"
+        r = r + "\t<phrase name=\'command "+str(num)+"'>\n"
         r = r + "\t<trigger>"+trigger+"</trigger>\n"
         r = r + "\t<subject>"+subject+"</subject>\n"
         r = r + "\t<command>"+command+"</command>\n"
