@@ -194,12 +194,13 @@ def internet():
 def out(string,method):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
     try:
-           pts= prtlst.comports()
+           
            if method == "t":
               #output using onboard TTS
-              os.system("espeak '"+string+"' 2>/dev/null")
+              os.system("espeak '"+string+"'")
            else:
               try:
+                  pts= prtlst.comports()
                   string1 = pts[0]
                   #print(string1[0])
                   hardware_port = string1[0]
@@ -393,6 +394,7 @@ r = f.read()
 f.close()
 print(r)    #output on screen the eye in file
 os.system("sudo amixer -c 0 set Headphone 100%")#turn volume up
+os.system("sudo amixer sset Master 100%")#turn volume up
 time.sleep(1)
 out("starting SHEP","t")
 audioCheck()
