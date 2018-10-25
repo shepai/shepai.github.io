@@ -393,8 +393,8 @@ f = open(system_pathway+"eye.txt","r")
 r = f.read()
 f.close()
 print(r)    #output on screen the eye in file
-os.system("sudo amixer -c 0 set Headphone 100%")#turn volume up
-os.system("sudo amixer sset Master 100%")#turn volume up
+os.system("sudo alsactl restore")#turn volume up
+#os.system("sudo amixer set Master 100%")#turn volume up
 time.sleep(1)
 out("starting SHEP","t")
 audioCheck()
