@@ -197,7 +197,7 @@ def out(string,method):    #use fundtion so method of output can be changed for 
            
            if method == "t":
               #output using onboard TTS
-              os.system("espeak '"+string+"'")
+              os.system("espeak '"+string+"' 2>/dev/null")
            else:
               try:
                   pts= prtlst.comports()
