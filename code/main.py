@@ -49,6 +49,12 @@ def audioCheck():
               m = sr.Microphone()
        except:
               out("Problem connecting to microphone","t")
+              error_pixels()
+def error_pixels():
+       #the pixels desplayed for an error
+       pixels.off()
+       pixels.wakeup()
+       time.sleep(1)
 def update():
        try:
               file = open(system_pathway+"test.txt","w")
@@ -122,7 +128,7 @@ def getVoice():
     global m
     global connection_errors
     try:
-           pixels.wakeup()    #output eye to the user
+           
            voiceReply = "#1"
            connection = internet()
            if connection == True:  #connection found
@@ -133,7 +139,7 @@ def getVoice():
                stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
                print(">>")
                #out("red light","s")#show lights on LED
-               
+               pixels.listen()    #output eye to the user
                timer = 0
                while voiceReply == "#1" and timer <15:
                    time.sleep(1)#listen for 1 seconds
@@ -141,8 +147,8 @@ def getVoice():
                if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
                stop_listening()    #stop listening
-               
-               
+               pixels.off() #stop the LEDs
+               time.sleep(0.2)     #
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
@@ -153,7 +159,7 @@ def getVoice():
            #no microphone or internet error
            audioCheck()
            out("There was an error connecting to microphone")
-           pixels.think()
+           error_pixels()
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string,"t")#method of output
@@ -164,6 +170,8 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
                      string = input()#type mode
            else:
                      string = (string.replace("robot ","",1))#getrid of call sign
+           pixels.think()   #show the user it is thinking
+           time.sleep(0.2)
            return string  #return input
     else:
            return "" #nothing said to robot
@@ -171,13 +179,7 @@ def validate(): #get a valid speech input from the user
     string = ""
     while string == "": #loop till something
         string = PutIn("Please tell me") #get voice or text input
-        if string == None:
-            string = ""
-        if "[" in string:
-            string = ""
-        if "/speech" in string and string != "/speech":
-            out("Invalid ")
-            string = ""
+        
     return string
 def internet():
        conn = httplib.HTTPConnection("www.google.com", timeout=5)
@@ -187,7 +189,7 @@ def internet():
            return True
        except:
            conn.close()
-           pixels.think()
+           error_pixels()
            return False
 def out(string,method):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
@@ -221,12 +223,12 @@ def out(string,method):    #use fundtion so method of output can be changed for 
                   ser.close() #close ports
               except:
                      print(string)#output using print if no hardware found
-                     pixels.think()
+                     error_pixels()
                      
     except:
            #no connection
            print(string)
-           pixels.think()
+           error_pixels()
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
     trigger=find_term(sentence,"t")  #search string for trigger word in database
@@ -390,7 +392,8 @@ f = open(system_pathway+"eye.txt","r")
 r = f.read()
 f.close()
 print(r)    #output on screen the eye in file
-
+os.system("sudo amixer -c 0 set Headphone 100%")#turn volume up
+time.sleep(1)
 out("starting SHEP","t")
 audioCheck()
 time.sleep(0.25)
@@ -401,11 +404,6 @@ update()      #find an update for the system
 while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
-    #user_message = getVoice()
-    #if user_message == "robot":
-    #  user_message = getVoice()
-    #elif user_message == "keyboard":
-    #  user_message == putIn()
     
     if user_message == "/add trigger":  #add trigger word command
         add_trigger()
