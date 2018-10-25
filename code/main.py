@@ -36,7 +36,7 @@ import colorsys
 from pixels import Pixels #found in folder
 pixels = Pixels()
 
-system_pathway = "/home/pi/AI/Python coursework/"
+system_pathway = "/home/pi/AI/Python_coursework/"
 connection_errors = 0
 #initialize microphone
 def audioCheck():
@@ -84,10 +84,7 @@ def update():
               out("Error finding update","t")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 
-def displayEye(red,green,blue):
-    #the display of the eye
-    pixels.wakeup()
-    time.sleep(1)
+
 def callback(recognizer, audio):
     #turn the audio into speech
     global voiceReply
@@ -106,7 +103,7 @@ def callback(recognizer, audio):
         voiceReply = ""
     except KeyError:
         #out("I do not understand what you are saying","t")   #no reply
-        #displayEye(200,0,0)
+        #pixels.think()
         voiceReply = ""
     except ValueError:
         #no reply
@@ -125,7 +122,7 @@ def getVoice():
     global m
     global connection_errors
     try:
-           displayEye(20,200,0)    #output eye to the user
+           pixels.wakeup()    #output eye to the user
            voiceReply = "#1"
            connection = internet()
            if connection == True:  #connection found
@@ -156,7 +153,7 @@ def getVoice():
            #no microphone or internet error
            audioCheck()
            out("There was an error connecting to microphone")
-           displayEye(200,0,0)
+           pixels.think()
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string,"t")#method of output
@@ -190,7 +187,7 @@ def internet():
            return True
        except:
            conn.close()
-           displayEye(200,0,0)
+           pixels.think()
            return False
 def out(string,method):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
@@ -224,12 +221,12 @@ def out(string,method):    #use fundtion so method of output can be changed for 
                   ser.close() #close ports
               except:
                      print(string)#output using print if no hardware found
-                     displayEye(200,0,0)
+                     pixels.think()
                      
     except:
            #no connection
            print(string)
-           displayEye(200,0,0)
+           pixels.think()
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
     trigger=find_term(sentence,"t")  #search string for trigger word in database
@@ -398,7 +395,7 @@ out("starting SHEP","t")
 audioCheck()
 time.sleep(0.25)
 update()      #find an update for the system
-displayEye(20,200,0)    #output eye to the user
+#pixels.wakeup()    #output eye to the user
 
 
 while(exit ==0):
