@@ -20,7 +20,7 @@ from urllib.request import urlopen
 import xml.etree.ElementTree as ET
 #serial communication library
 import serial
-import serial.tools.list_ports as prtlst
+#import serial.tools.list_ports as prtlst
 #speech recognition lib
 import speech_recognition as sr
 #speech output lib
@@ -31,11 +31,12 @@ global m
 global system_pathway
 global connection_errors
 #eye
-import unicornhat as uh
 import time
 import colorsys
+from pixels import Pixels #found in folder
+pixels = Pixels()
 
-system_pathway = "/home/pi/Documents/applications/AI/"
+system_pathway = "/home/pi/AI/Python coursework/"
 connection_errors = 0
 #initialize microphone
 def audioCheck():
@@ -45,7 +46,7 @@ def audioCheck():
               #variables to listen to audio with
               rec = sr.Recognizer()
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-              m = sr.Microphone(device_index = 1, sample_rate = 48000, chunk_size = 512)
+              m = sr.Microphone()
        except:
               out("Problem connecting to microphone","t")
 def update():
@@ -82,62 +83,11 @@ def update():
        except:
               out("Error finding update","t")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
-def loadScreen():
-    spacing = 360.0 / 16.0
-    hue = 0
-    for i in range(200):    #show a loading screen
-        hue = int(time.time() * 100) % 360
-        for y in range(8):
-            offset = y * spacing
-            h = ((hue + offset) % 360) / 360.0
-            r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(h, 1.0, 1.0)]
-            for x in range(4):
-                uh.set_pixel(x, y, r, g, b)
-        uh.show()
-        time.sleep(0.05)
-    uh.clear()
 
 def displayEye(red,green,blue):
     #the display of the eye
-    
-    #top of eye
-    uh.set_pixel(0, 4, red, green, blue)
-    uh.set_pixel(0, 3, red, green, blue)
-    #side
-    uh.set_pixel(1, 2, red, green, blue)
-    uh.set_pixel(1, 5, red, green, blue)
-    uh.set_pixel(2, 2, red, green, blue)
-    uh.set_pixel(2, 5, red, green, blue)
-    #bottom
-    uh.set_pixel(3, 4, red, green, blue)
-    uh.set_pixel(3, 3, red, green, blue)
-    #centre
-    uh.set_pixel(1, 3, red, blue, green)
-    uh.set_pixel(1, 4, red, blue, green)
-    uh.set_pixel(2, 3, red, blue, green)
-    uh.set_pixel(2, 4, red, blue, green)
-    uh.show()
-def blink(red,green,blue):
-    #the display of the eye
-    f = open(system_pathway+"eye.txt","r")
-    r = f.read()
-    f.close()
-    print(r)    #output on screen the eye in file
-    #top of eye
-    uh.set_pixel(1, 4, red, green, blue)
-    uh.set_pixel(1, 3, red, green, blue)
-    #side
-    uh.set_pixel(1, 2, red, green, blue)
-    uh.set_pixel(1, 5, red, green, blue)
-    uh.set_pixel(2, 2, red, green, blue)
-    uh.set_pixel(2, 5, red, green, blue)
-    #bottom
-    uh.set_pixel(2, 4, red, green, blue)
-    uh.set_pixel(2, 3, red, green, blue)
-    
-    uh.show()
-    time.sleep(0.25)
-    displayEye(20,200,0)
+    pixels.wakeup()
+    time.sleep(1)
 def callback(recognizer, audio):
     #turn the audio into speech
     global voiceReply
@@ -186,16 +136,11 @@ def getVoice():
                stop_listening = rec.listen_in_background(m,callback)#listen for audio in background
                print(">>")
                #out("red light","s")#show lights on LED
-               uh.set_pixel(3, 0, 0, 0, 200)     #turn on listening light
-               uh.show()    #show user
+               
                timer = 0
                while voiceReply == "#1" and timer <15:
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
-               uh.clear()   #get rid of light
-               
-               blink(20,200,0)       #show eye
-               uh.show()
                if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
                stop_listening()    #stop listening
@@ -451,7 +396,6 @@ print(r)    #output on screen the eye in file
 
 out("starting SHEP","t")
 audioCheck()
-loadScreen()
 time.sleep(0.25)
 update()      #find an update for the system
 displayEye(20,200,0)    #output eye to the user
