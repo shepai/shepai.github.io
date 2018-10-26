@@ -191,7 +191,7 @@ def getVoice():
     except:
            #no microphone or internet error
            audioCheck()
-           out("There was an error connecting to microphone")
+           #out("There was an error connecting to microphone")
            error_pixels()
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
@@ -235,7 +235,7 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
            error_pixels()
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
-    trigger=find_term(sentence)  #search string for trigger word in database
+    trigger=find_term(sentence,"t")  #search string for trigger word in database
     if trigger!="#@false":
         subject = find_term(sentence,"s") #search message for subject
         if subject!="#@false":
@@ -409,7 +409,19 @@ update()      #find an update for the system
 while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
-    
+    mute = button_check()
+    if mute == True:
+       time.sleep(1)
+       stop_listening(wait_for_stop=False)    #stop listening
+       while True:   #stop searching
+              state = GPIO.input(BUTTON)
+              #unmute when button is pressed again.
+              if state:
+                      print("off")
+              else:
+                      print("on")
+                      break
+              time.sleep(1)
     if user_message == "/add trigger":  #add trigger word command
         add_trigger()
     elif user_message == "/add subject":    #add subject word command
