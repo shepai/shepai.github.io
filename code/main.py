@@ -64,13 +64,12 @@ def error_pixels():
        time.sleep(1)
 def button_check():
        #provide a mute button to stop the system
-       global stop_listening()
        state = GPIO.input(BUTTON)  #get button input
        if state:
               print("not_mute ")
        else:
               print("on")   #button is pressed
-              stop_listening()
+              
               while True:   #stop searching
                   state = GPIO.input(BUTTON)
                   
@@ -153,7 +152,6 @@ def getVoice():
     global rec
     global m
     global connection_errors
-    global stop_listening()
     try:
            
            voiceReply = "#1"
