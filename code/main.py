@@ -70,6 +70,7 @@ def button_check():
               return False
        else:
               print("on")   #button is pressed
+              out("Mute mode")
               return True
            
 def update():
@@ -163,9 +164,15 @@ def getVoice():
                    mute = button_check()
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
+               
+               if voiceReply == None:
+                      voiceReply = ""
+               elif voiceReply == "#1":     #if nothing was said
+                      voiceReply = ""
                if mute == True:
                      time.sleep(1)
                      stop_listening(wait_for_stop=False)    #stop listening
+                     pixels.off() #stop the LEDs
                      while True:   #stop searching
                          state = GPIO.input(BUTTON)
                          #unmute when button is pressed again.
@@ -175,11 +182,9 @@ def getVoice():
                              print("on")
                              break
                          time.sleep(1)
-               if voiceReply == None:
-                      voiceReply = ""
-               if voiceReply == "#1":     #if nothing was said
-                      voiceReply = ""
-               stop_listening(wait_for_stop=False)    #stop listening
+                     voiceReply = ""
+               else:
+                      stop_listening(wait_for_stop=False)    #stop listening
                pixels.off() #stop the LEDs
                time.sleep(0.2)     #
            else:   #no connection
@@ -200,7 +205,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
     string = getVoice() #get voice input
     if "robot" in string:
            if "robot keyboard" in string:
-                     string = input()#type mode
+                     string = input("Please type: ")#type mode
            else:
                      string = (string.replace("robot ","",1))#getrid of call sign
            pixels.think()   #show the user it is thinking
@@ -210,10 +215,17 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
            return "" #nothing said to robot
 def validate(): #get a valid speech input from the user
     string = ""
+    breaker = 0
     while string == "": #loop till something
+        time.sleep(0.5)     #give time for catch up
         string = PutIn("Please tell me") #get voice or text input
-        
-    return string
+        if string == "exit":
+               breaker = 1#break if the system is told to exit
+               break
+    if breaker == 1:
+           return None      #tell the code not to add anthing
+    else:
+           return string
 def internet():
        conn = httplib.HTTPConnection("www.google.com", timeout=5)
        try:
@@ -228,6 +240,7 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
     #locate the arduino port
     try:
        #output using onboard TTS
+       pixels.speak()
        os.system("espeak '"+string+"' 2>/dev/null")            
     except:
            #no connection
@@ -328,36 +341,39 @@ def find(trigger, subject, command):
     if output == "none":    #nothing found in data
         out("Nothing in my data... Please tell me, how, you, would like, me to respond")
         say = validate() #get a valid user input
-        if say == "add action":
-            exit = 1
-            while exit == 1:
-                say = PutIn("What is the name of your action?")
-                try:    #look for file
-                    file = open("action/"+say+".py","r")
-                    file.close()
-                    exit = 0
-                except:
-                    out("There is no such file")
-            say = "!A! "+"action/"+say+".py"    #save in format
+        if say != None:
+               if say == "add action":
+                   exit = 1
+                   while exit == 1:
+                       say = PutIn("What is the name of your action?")
+                       try:    #look for file
+                           file = open("action/"+say+".py","r")
+                           file.close()
+                           exit = 0
+                       except:
+                           out("There is no such file")
+                   say = "!A! "+"action/"+say+".py"    #save in format
 
-        file = open(system_pathway+"knowledge.xml","r")    #open database
-        r = file.read() #read data
-        file.close()
-        r = r.replace("</data>","") #remove end
-        r = r + "\t<phrase name=\"command"+str(num)+"\">\n"
-        r = r + "\t<trigger>"+trigger+"</trigger>\n"
-        r = r + "\t<subject>"+subject+"</subject>\n"
-        r = r + "\t<command>"+command+"</command>\n"
-        r = r + "\t<output>"+say+"</output>\n"
-        r = r + "\t</phrase>\n"
-        r = r + "\t</data>\n"
-        #write to file in format
-        #print(r)
-        #time.sleep(4)
-        file = open(system_pathway+"knowledge.xml","w")    #open database
-        file.write(r) #write to file
-        file.close()
-        output = say
+               file = open(system_pathway+"knowledge.xml","r")    #open database
+               r = file.read() #read data
+               file.close()
+               r = r.replace("</data>","") #remove end
+               r = r + "\t<phrase name=\"command"+str(num)+"\">\n"
+               r = r + "\t<trigger>"+trigger+"</trigger>\n"
+               r = r + "\t<subject>"+subject+"</subject>\n"
+               r = r + "\t<command>"+command+"</command>\n"
+               r = r + "\t<output>"+say+"</output>\n"
+               r = r + "\t</phrase>\n"
+               r = r + "\t</data>\n"
+               #write to file in format
+               #print(r)
+               #time.sleep(4)
+               file = open(system_pathway+"knowledge.xml","w")    #open database
+               file.write(r) #write to file
+               file.close()
+               output = say
+        else:
+               output = "I didn't add anything, as you told me not to."
     return output
 
 def add_layer():    #add a layer to the data network
