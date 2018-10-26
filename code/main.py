@@ -159,7 +159,7 @@ def getVoice():
                #out("red light","s")#show lights on LED
                pixels.listen()    #output eye to the user
                timer = 0
-               while voiceReply == "#1" and timer <15 and mute = False:
+               while voiceReply == "#1" and timer <15 and mute == False:
                    mute = button_check()
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
