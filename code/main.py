@@ -175,6 +175,8 @@ def getVoice():
                              print("on")
                              break
                          time.sleep(1)
+               if voiceReply == None:
+                      voiceReply = ""
                if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
                stop_listening(wait_for_stop=False)    #stop listening
