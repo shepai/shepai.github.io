@@ -55,7 +55,7 @@ def audioCheck():
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
               m = sr.Microphone()
        except:
-              out("Problem connecting to microphone","t")
+              out("Problem connecting to microphone")
               error_pixels()
 def error_pixels():
        #the pixels desplayed for an error
@@ -67,18 +67,10 @@ def button_check():
        state = GPIO.input(BUTTON)  #get button input
        if state:
               print("not_mute ")
+              return False
        else:
               print("on")   #button is pressed
-              
-              while True:   #stop searching
-                  state = GPIO.input(BUTTON)
-                  
-                  if state:
-                      print("off")
-                  else:
-                      print("on")
-                      break
-                  time.sleep(1)
+              return True
            
 def update():
        try:
@@ -106,13 +98,13 @@ def update():
                      print("No update needed")
               else:
                      #update
-                     out("updating...","t")
+                     out("updating...")
                      current = open(system_pathway+"main.py","w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
        except:
-              out("Error finding update","t")
+              out("Error finding update")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 
 
@@ -126,24 +118,24 @@ def callback(recognizer, audio):
         voiceReply = (rec.recognize_google(audio))
         print("you said "+str(voiceReply))
     except sr.UnknownValueError:    #unkown reply
-        #out("Could not understand","t")
+        #out("Could not understand")
         voiceReply = ""
     except sr.RequestError as e:
         print("error: {0}".format(e))
-        #out("error understanding","t")
+        #out("error understanding")
         voiceReply = ""
     except KeyError:
-        #out("I do not understand what you are saying","t")   #no reply
+        #out("I do not understand what you are saying")   #no reply
         #pixels.think()
         voiceReply = ""
     except ValueError:
         #no reply
-        #out("Sorry, I did not get that","t")
+        #out("Sorry, I did not get that")
         
         voiceReply = ""
     except LookupError:
         #no reply
-        #out("sorry, I did not get that","t")
+        #out("sorry, I did not get that")
         voiceReply = ""
 
 def getVoice():
@@ -152,6 +144,7 @@ def getVoice():
     global rec
     global m
     global connection_errors
+    mute = False
     try:
            
            voiceReply = "#1"
@@ -166,10 +159,22 @@ def getVoice():
                #out("red light","s")#show lights on LED
                pixels.listen()    #output eye to the user
                timer = 0
-               while voiceReply == "#1" and timer <15:
-                   button_check()
+               while voiceReply == "#1" and timer <15 and mute = False:
+                   mute = button_check()
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
+               if mute == True:
+                     time.sleep(1)
+                     stop_listening(wait_for_stop=False)    #stop listening
+                     while True:   #stop searching
+                         state = GPIO.input(BUTTON)
+                         #unmute when button is pressed again.
+                         if state:
+                             print("off")
+                         else:
+                             print("on")
+                             break
+                         time.sleep(1)
                if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
                stop_listening(wait_for_stop=False)    #stop listening
@@ -178,7 +183,7 @@ def getVoice():
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
-                      out("There is an error conencting to the internet","t")
+                      out("There is an error conencting to the internet")
                       #voiceReply = input(": ")   #alternate method
                       connection_errors = 0 #reset check
     except:
@@ -188,7 +193,7 @@ def getVoice():
            error_pixels()
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
-    out(string,"t")#method of output
+    out(string)#method of output
     string = ""
     string = getVoice() #get voice input
     if "robot" in string:
@@ -217,48 +222,18 @@ def internet():
            conn.close()
            error_pixels()
            return False
-def out(string,method):    #use fundtion so method of output can be changed for hardware
+def out(string):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
     try:
-           
-           if method == "t":
-              #output using onboard TTS
-              os.system("espeak '"+string+"' 2>/dev/null")
-           else:
-              try:
-                  pts= prtlst.comports()
-                  string1 = pts[0]
-                  #print(string1[0])
-                  hardware_port = string1[0]
-                  for pt in pts:
-                      #print(pt)
-                      if "USB" in pt[1]: #check "USB" string in device description
-                          #print(pt)
-                          COMs.append(pt[0])
-                  #output to com
-                  #print(string)#method of output  
-                  ser = serial.Serial(hardware_port, 9600)
-                  a = 0
-                  #print("opening :"+hardware_port)
-                  if string == None:
-                      string = ""
-                  string+= "/"  #tells the board to output
-                  
-                  while a < len(string):  #send message through
-                              ser.write(string[a].encode("ascii"))
-                              a += 1
-                  ser.close() #close ports
-              except:
-                     print(string)#output using print if no hardware found
-                     error_pixels()
-                     
+       #output using onboard TTS
+       os.system("espeak '"+string+"' 2>/dev/null")            
     except:
            #no connection
            print(string)
            error_pixels()
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
-    trigger=find_term(sentence,"t")  #search string for trigger word in database
+    trigger=find_term(sentence)  #search string for trigger word in database
     if trigger!="#@false":
         subject = find_term(sentence,"s") #search message for subject
         if subject!="#@false":
@@ -276,14 +251,14 @@ def search(sentence):   #search through data to find if in
                     AI = AI.replace("!A! ","")
                     os.system("sudo python3 "+system_pathway+AI)
                 else:
-                    out(AI,"t")
+                    out(AI)
                 
             else:   #no command word found
-                out("No command found","t")
+                out("No command found")
         else:   #no subject found
-            out("No subject found","t")
+            out("No subject found")
     else:   #no trigger found
-        out("No trigger found","t")
+        out("No trigger found")
 
 def find_term(message,Stype):
         #find the word and its type
@@ -349,7 +324,7 @@ def find(trigger, subject, command):
         #print(trig+sub+com)
         num += 1
     if output == "none":    #nothing found in data
-        out("Nothing in my data... Please tell me, how, you, would like, me to respond","t")
+        out("Nothing in my data... Please tell me, how, you, would like, me to respond")
         say = validate() #get a valid user input
         if say == "add action":
             exit = 1
@@ -422,7 +397,7 @@ print(r)    #output on screen the eye in file
 #os.system("sudo alsactl restore")#turn volume up
 #os.system("sudo amixer set Master 100%")#turn volume up
 time.sleep(1)
-out("starting SHEP","t")
+out("starting SHEP")
 audioCheck()
 time.sleep(0.25)
 update()      #find an update for the system
