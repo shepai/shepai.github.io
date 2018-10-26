@@ -35,6 +35,13 @@ import time
 import colorsys
 from pixels import Pixels #found in folder
 pixels = Pixels()
+#button
+import RPi.GPIO as GPIO
+
+BUTTON = 17#define mute button
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(BUTTON, GPIO.IN)
 
 system_pathway = "/home/pi/AI/Python_coursework/"
 connection_errors = 0
@@ -55,6 +62,24 @@ def error_pixels():
        pixels.off()
        pixels.wakeup()
        time.sleep(1)
+def button_check():
+       global stop_listening()
+       state = GPIO.input(BUTTON)  #get button input
+       if state:
+              print("not_mute ")
+       else:
+              print("on")   #button is pressed
+              stop_listening()
+              while True:   #stop searching
+                  state = GPIO.input(BUTTON)
+                  
+                  if state:
+                      print("off")
+                  else:
+                      print("on")
+                      break
+                  time.sleep(1)
+           
 def update():
        try:
               file = open(system_pathway+"test.txt","w")
@@ -127,6 +152,7 @@ def getVoice():
     global rec
     global m
     global connection_errors
+    global stop_listening()
     try:
            
            voiceReply = "#1"
@@ -142,6 +168,7 @@ def getVoice():
                pixels.listen()    #output eye to the user
                timer = 0
                while voiceReply == "#1" and timer <15:
+                   button_check()
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
                if voiceReply == "#1":     #if nothing was said
