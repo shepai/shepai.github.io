@@ -63,6 +63,7 @@ def error_pixels():
        pixels.wakeup()
        time.sleep(1)
 def button_check():
+       #provide a mute button to stop the system
        global stop_listening()
        state = GPIO.input(BUTTON)  #get button input
        if state:
@@ -126,7 +127,7 @@ def callback(recognizer, audio):
         voiceReply = (rec.recognize_google(audio))
         print("you said "+str(voiceReply))
     except sr.UnknownValueError:    #unkown reply
-        out("Could not understand","t")
+        #out("Could not understand","t")
         voiceReply = ""
     except sr.RequestError as e:
         print("error: {0}".format(e))
@@ -173,7 +174,7 @@ def getVoice():
                    timer += 1
                if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
-               stop_listening()    #stop listening
+               stop_listening(wait_for_stop=False)    #stop listening
                pixels.off() #stop the LEDs
                time.sleep(0.2)     #
            else:   #no connection
