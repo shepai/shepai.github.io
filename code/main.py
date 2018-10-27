@@ -165,11 +165,8 @@ def getVoice():
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
                
-               if voiceReply == None:
-                      voiceReply = ""
-               elif voiceReply == "#1":     #if nothing was said
-                      voiceReply = ""
-               if mute == True:
+               
+               if mute == True: #means the button has been pressed
                      time.sleep(1)
                      stop_listening(wait_for_stop=False)    #stop listening
                      pixels.off() #stop the LEDs
@@ -183,8 +180,15 @@ def getVoice():
                              break
                          time.sleep(1)
                      voiceReply = ""
-               else:
+               if voiceReply == None:
+                      voiceReply = ""
                       stop_listening(wait_for_stop=False)    #stop listening
+               elif voiceReply == "#1":     #if nothing was said
+                      voiceReply = ""
+                      stop_listening(wait_for_stop=False)    #stop listening
+               else:
+                      stop_listening()    #stop listening and find
+                      
                pixels.off() #stop the LEDs
                time.sleep(0.2)     #
            else:   #no connection
