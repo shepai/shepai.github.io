@@ -204,6 +204,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
     string = ""
     string = getVoice() #get voice input
     if "robot" in string:
+           print("----------------------------------")
            if "robot keyboard" in string:
                      string = input("Please type: ")#type mode
            else:
@@ -215,34 +216,32 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
            return "" #nothing said to robot
 def validate(): #get a valid speech input from the user
     string = ""
-    breaker = 0
+    
     while string == "": #loop till something
         time.sleep(0.5)     #give time for catch up
         string = PutIn("Please tell me") #get voice or text input
-        if "exit" in string:
-               print("exiting...")
-               breaker = 1#break if the system is told to exit
-               break
-    if breaker == 1:
+    #the long if statement below is so the user can stop the device
+    if string.replace(" ","") == "exit" or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
+           print("exiting...")
            return None      #tell the code not to add anthing
     else:
-           return string
+           return string #return the string
 def internet():
-       conn = httplib.HTTPConnection("www.google.com", timeout=5)
+       conn = httplib.HTTPConnection("www.google.com", timeout=5) #attempt connection
        try:
            conn.request("HEAD", "/")
            conn.close()
-           return True
+           return True #show there is a connection
        except:
            conn.close()
            error_pixels()
-           return False
+           return False #show there is not a connection
 def out(string):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
     try:
        #output using onboard TTS
-       pixels.speak()
-       os.system("espeak '"+string+"' 2>/dev/null")            
+       pixels.speak() #coulourful look
+       os.system("espeak '"+string+"' 2>/dev/null")       
     except:
            #no connection
            print(string)
