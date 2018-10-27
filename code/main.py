@@ -138,7 +138,7 @@ def callback(recognizer, audio):
         #no reply
         #out("sorry, I did not get that")
         voiceReply = ""
-
+       
 def getVoice():
     #get a voice input
     global voiceReply
@@ -213,6 +213,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
            time.sleep(0.2)
            return string  #return input
     else:
+           print("---nothing")
            return "" #nothing said to robot
 def validate(): #get a valid speech input from the user
     string = ""
@@ -220,6 +221,7 @@ def validate(): #get a valid speech input from the user
     while string == "": #loop till something
         time.sleep(0.5)     #give time for catch up
         string = PutIn("Please tell me") #get voice or text input
+        print(string)
     #the long if statement below is so the user can stop the device
     if string.replace(" ","") == "exit" or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
            print("exiting...")
