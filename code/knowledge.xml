@@ -1,0 +1,240 @@
+<data>
+    <phrase name="command1">
+        <trigger>how</trigger>
+        <subject>feeling</subject>
+        <command>are</command>
+		<output>I am good thank you</output>
+    </phrase>
+    <phrase name="command2">
+        <trigger>what</trigger>
+        <subject>name</subject>
+        <command>is</command>
+		<output>My name is SHEP</output>
+    </phrase>
+	<phrase name="command3">
+        <trigger>who</trigger>
+        <subject>creator</subject>
+        <command>is</command>
+		<output>My creator is Dexter Shepherd</output>
+    </phrase>
+	<phrase name="command4">
+	<trigger>what</trigger>
+	<subject>song</subject>
+	<command>is</command>
+	<output>I am not too sure</output>
+</phrase>
+	<phrase name="command5">
+	<trigger>what</trigger>
+	<subject>colour</subject>
+	<command>is</command>
+	<output>I am no sure</output>
+</phrase>
+	<phrase name="command6">
+	<trigger>what's</trigger>
+	<subject>england</subject>
+	<command>capital</command>
+	<output>The capital of England is London</output>
+</phrase>
+
+	<phrase name="command7">
+	<trigger>hello</trigger>
+	<subject>hello</subject>
+	<command>there</command>
+	<output>hi there</output>
+</phrase>
+	<phrase name="command8">
+	<trigger>what</trigger>
+	<subject>england</subject>
+	<command>is</command>
+	<output>England, a part of the UK. The capital city of England is London</output>
+</phrase>
+
+	<phrase name="command9">
+	<trigger>how</trigger>
+	<subject>old</subject>
+	<command>are</command>
+	<output>I started development in 2015, but this version was developed in 2018</output>
+</phrase>
+	<phrase name="command10">
+	<trigger>who</trigger>
+	<subject>england</subject>
+	<command>is</command>
+	<output>The queen of england is Queen Elizabeth the second</output>
+</phrase>
+	<phrase name="command11">
+	<trigger>what</trigger>
+	<subject>a</subject>
+	<command>is</command>
+	<output>a cat is a furry animal</output>
+</phrase>
+	<phrase name="command12">
+	<trigger>what</trigger>
+	<subject>cat</subject>
+	<command>is</command>
+	<output>a furry creature</output>
+</phrase>
+	<phrase name="command13">
+	<trigger>what</trigger>
+	<subject>dog</subject>
+	<command>is</command>
+	<output>a type of pet which likes to be called, good boy</output>
+</phrase>
+	<phrase name="command14">
+	<trigger>do</trigger>
+	<subject>dog</subject>
+	<command>have</command>
+	<output>i'm not really sure</output>
+</phrase>
+	<phrase name="command15">
+	<trigger>do</trigger>
+	<subject>cat</subject>
+	<command>have</command>
+	<output>i'm not really sure</output>
+</phrase>
+	<phrase name="command16">
+	<trigger>turn</trigger>
+	<subject>light</subject>
+	<command>on</command>
+	<output>sorry i cant</output>
+</phrase>
+	<phrase name="command17">
+	<trigger>who</trigger>
+	<subject>hitler</subject>
+	<command>is</command>
+	<output>leader of Nazi germany</output>
+</phrase>
+	<phrase name="command18">
+	<trigger>who</trigger>
+	<subject>churchill</subject>
+	<command>is</command>
+	<output>Britains greatest leader</output>
+</phrase>
+	<phrase name="command19">
+	<trigger>can</trigger>
+	<subject>games</subject>
+	<command>any</command>
+	<output>not at the moment, but i am learning everyday</output>
+</phrase>
+	<phrase name="command20">
+	<trigger>do</trigger>
+	<subject>cook</subject>
+	<command>you</command>
+	<output>I do not cook often, but there are plenty of recipes on the internet.</output>
+</phrase>
+	<phrase name="command21">
+	<trigger>when</trigger>
+	<subject>born</subject>
+	<command>you</command>
+	<output>I started development in 2018</output>
+</phrase>
+
+	<phrase name="command22">
+	<trigger>do</trigger>
+	<subject>children</subject>
+	<command>you</command>
+	<output>only future software versions</output>
+</phrase>
+	<phrase name="command23">
+	<trigger>do</trigger>
+	<subject>dogs</subject>
+	<command>you</command>
+	<output>i have never spoken to a dog</output>
+</phrase>
+	<phrase name="command24">
+	<trigger>who</trigger>
+	<subject>marx</subject>
+	<command>was</command>
+	<output>a communist</output>
+</phrase>
+	<phrase name="command25">
+	<trigger>who</trigger>
+	<subject>marx</subject>
+	<command>is</command>
+	<output>the founder of communism</output>
+</phrase>
+<phrase name="command26">
+	<trigger>how</trigger>
+	<subject>feeling</subject>
+	<command>you</command>
+	<output>great!</output>
+</phrase>
+	<phrase name="command27">
+	<trigger>what</trigger>
+	<subject>name</subject>
+	<command>you</command>
+	<output>my Name is SHEP</output>
+</phrase>
+	<phrase name="command28">
+	<trigger>who</trigger>
+	<subject>creator</subject>
+	<command>you</command>
+	<output>my creator is Dexter Shepherd</output>
+</phrase>
+	<phrase name="command29">
+	<trigger>how</trigger>
+	<subject>old</subject>
+	<command>you</command>
+	<output>i started development in 2015. This version was created in 2018</output>
+</phrase>
+	<phrase name='command30'>
+	<trigger>what</trigger>
+	<subject>life</subject>
+	<command>is</command>
+	<output>The meaning of life, the universe and everthing is... 42</output>
+</phrase>
+	
+	<phrase name="command31">
+	<trigger>what</trigger>
+	<subject>british empire</subject>
+	<command>is</command>
+	<output>the land which the sun never set on.</output>
+</phrase>
+	<phrase name="command32">
+	<trigger>what</trigger>
+	<subject>colour</subject>
+	<command>you</command>
+	<output>my favourite colour is red, white and blue</output>
+</phrase>
+	<phrase name="command33">
+	<trigger>what</trigger>
+	<subject>favourite color</subject>
+	<command>you</command>
+	<output>my favourite color is red, white and blue</output>
+</phrase>
+	<phrase name="command34">
+	<trigger>what</trigger>
+	<subject>favourite animal</subject>
+	<command>you</command>
+	<output>I am not really sure, i prefer ones which do not eat me</output>
+</phrase>
+	<phrase name="command35">
+	<trigger>do</trigger>
+	<subject>like music</subject>
+	<command>you</command>
+	<output>I enjoy fine classical music</output>
+</phrase>
+	<phrase name="command36">
+	<trigger>where</trigger>
+	<subject>from</subject>
+	<command>you</command>
+	<output>I was developed in the village of Portslade</output>
+</phrase>
+	<phrase name="command37">
+	<trigger>what</trigger>
+	<subject>from</subject>
+	<command>are</command>
+	<output>I am from England, in the united Kingdom</output>
+</phrase>
+	<phrase name="command38">
+	<trigger>do</trigger>
+	<subject>queen</subject>
+	<command>you</command>
+	<output>I love the royal family</output>
+</phrase>
+	<phrase name="command39">
+	<trigger>do</trigger>
+	<subject>vote </subject>
+	<command>you</command>
+	<output>I do not have the right to vote</output>
+</phrase>
+</data>
