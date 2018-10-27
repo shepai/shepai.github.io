@@ -219,7 +219,8 @@ def validate(): #get a valid speech input from the user
     while string == "": #loop till something
         time.sleep(0.5)     #give time for catch up
         string = PutIn("Please tell me") #get voice or text input
-        if string == "exit":
+        if "exit" in string:
+               print("exiting...")
                breaker = 1#break if the system is told to exit
                break
     if breaker == 1:
