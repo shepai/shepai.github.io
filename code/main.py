@@ -265,7 +265,7 @@ def search(sentence):   #search through data to find if in
                 #print(subject)
                 #print(command)
                 AI = find(trigger,subject,command)  #search database
-                AI = find(trigger,subject,command)  #search database
+                
                 if AI[:3] == "!A!":
                     #action
                     print("ACTION")
