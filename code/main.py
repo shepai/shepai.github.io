@@ -319,7 +319,7 @@ def add_word(phrase,Type):  #add a word to the data
     word = "" #the word to save
     for i in range(len(phrase)): #loop round all the words
            out("Is. "+str(phrase[i])+". Your word, or in your word") #ask if that is the users word
-           choice = putIn("")
+           choice = getVoice() #does not require "robot"
            if "yes" in choice or "yep": #different answers
                   out("Great!")
                   word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
