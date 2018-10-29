@@ -177,6 +177,7 @@ def getVoice():
                              print("off")
                          else:
                              print("on")
+                             out("Unmuted")
                              break
                          time.sleep(1)
                      voiceReply = ""
@@ -227,8 +228,8 @@ def validate(): #get a valid speech input from the user
         string = PutIn("Sorry, I didn't get that. ") #get voice or text input
         print(string)
     #the long if statement below is so the user can stop the device
-    if string.replace(" ","") == "exit" or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
-           print("exiting...")
+    if "exit" in string or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
+           print("I will not saving the sentence")
            return None      #tell the code not to add anthing
     else:
            return string #return the string
@@ -324,9 +325,11 @@ def add_word(phrase,Type):  #add a word to the data
                   word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
            elif "no" in choice or "nope" in choice: #different answers
                   print("No word")
-           elif "cancel" in choice or "exit" in choice:
+           elif "cancel" in choice or "exit" in choice: #user does not want to add
                   out("Exiting.")
                   word = ""
+           elif "finished" in choice or "finish" in choice:
+                  out("Saving your word")
            else:
                   out("Sorry, I didn't get that")
                   i-=1 #go back to prior position
