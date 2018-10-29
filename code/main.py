@@ -224,7 +224,7 @@ def validate(): #get a valid speech input from the user
     
     while string == "": #loop till something
         time.sleep(0.5)     #give time for catch up
-        string = PutIn("Please tell me") #get voice or text input
+        string = PutIn("Sorry, I didn't get that. ") #get voice or text input
         print(string)
     #the long if statement below is so the user can stop the device
     if string.replace(" ","") == "exit" or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
@@ -276,10 +276,13 @@ def search(sentence):   #search through data to find if in
                 
             else:   #no command word found
                 out("No command found")
+                add_word(sentence,'c')
         else:   #no subject found
             out("No subject found")
+            add_word(sentence,'s')
     else:   #no trigger found
         out("No trigger found")
+        add_word(sentence,'t')
 
 def find_term(message,Stype):
         #find the word and its type
@@ -309,28 +312,32 @@ def find_term(message,Stype):
         else:
             return "#@false" #the command to say nothing found
         
-def add_command():  #add a command word to the data
-    print("add command")
-    value=PutIn("Input your command word")
-    file = open(system_pathway +"c.txt","a")
-    file.write(value)
-    file.write(",")
-    file.close()
-def add_subject():  #add a subject to the data
-    print("add subject")
-    value=PutIn("Input your subject word")
-    file = open(system_pathway +"s.txt","a")
-    file.write(value)
-    file.write(",")
-    file.close()
-    
-def add_trigger():    #add a trigger word to the data
-    print("add vocabulary")
-    value=PutIn("Input your trigger word")
-    file = open(system_pathway +"t.txt","a")
-    file.write(value)
-    file.write(",")
-    file.close()
+def add_word(phrase,Type):  #add a word to the data
+    out("Your sentence is '"+str(phrase))
+    phrase = phrase.split() #make it a list
+    word = "" #the word to save
+    for i in range(len(phrase)): #loop round all the words
+           out("Is. "+str(phrase[i])+". Your word, or in your word") #ask if that is the users word
+           choice = putIn("")
+           if "yes" in choice or "yep": #different answers
+                  out("Great!")
+                  word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
+           elif "no" in choice or "nope" in choice: #different answers
+                  print("No word")
+           elif "cancel" in choice or "exit" in choice:
+                  out("Exiting.")
+                  word = ""
+           else:
+                  out("Sorry, I didn't get that")
+                  i-=1 #go back to prior position
+    #add word to correct file
+    if word != "":
+           file = open(system_pathway +str(Type)+".txt","a")
+           file.write(word)
+           file.write(",")
+           file.close()
+    else:
+           out("Adding aborted")
 def find(trigger, subject, command):
     tree = ET.parse(system_pathway+"knowledge.xml")
     root = tree.getroot()
@@ -345,7 +352,7 @@ def find(trigger, subject, command):
         #print(trig+sub+com)
         num += 1
     if output == "none":    #nothing found in data
-        out("Nothing in my data... Please tell me, how, you, would like, me to respond")
+        out("Nothing in my data... Please tell me, how you would like me, to respond")
         say = validate() #get a valid user input
         if say != None:
                if say == "add action":
@@ -357,7 +364,7 @@ def find(trigger, subject, command):
                            file.close()
                            exit = 0
                        except:
-                           out("There is no such file")
+                           out("There is no such file."+str(say))
                    say = "!A! "+"action/"+say+".py"    #save in format
 
                file = open(system_pathway+"knowledge.xml","r")    #open database
@@ -382,33 +389,6 @@ def find(trigger, subject, command):
                output = "I didn't add anything, as you told me not to."
     return output
 
-def add_layer():    #add a layer to the data network
-    print("adding layer")
-    #nothing here
-def search_layer(): #search for a layer
-    print("adding layer")
-    #nothing here
-def add_variable(vocab):
-    value = PutIn("Input a variable")
-    print(value)
-    value = value.replace(" ","_")
-    file = open(system_pathway +"variables.txt","a")
-    file.write(value)
-    file.write(" ")
-    file.close()
-    words1 = Umessage.split()   #send users message to a list
-    file.close()
-    #write to the file
-    file = open(system_pathway +vocab+"/" +"start.txt","w")
-    file.write(stri)
-    file.write("*")
-    file.write(vocab+".txt")
-    file.write("/")
-    file.close()
-
-    
-
-
 
 exit = 0
 
@@ -431,35 +411,21 @@ update()      #find an update for the system
 while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
-    mute = button_check()
-    if mute == True:
-       time.sleep(1)
-       stop_listening(wait_for_stop=False)    #stop listening
-       while True:   #stop searching
-              state = GPIO.input(BUTTON)
-              #unmute when button is pressed again.
-              if state:
-                      print("off")
-              else:
-                      print("on")
-                      break
-              time.sleep(1)
-    if user_message == "/add trigger":  #add trigger word command
-        add_trigger()
-    elif user_message == "/add subject":    #add subject word command
-        add_subject()
-    elif user_message == "/add command":    #add command word command
-        add_command()
-    elif user_message == "/add layer":  #add layer command
-        add_layer()
-    elif user_message == "/add variable":   #add variable command
-        add_variable()
-    elif user_message == "/exit" or user_message == "exit":   #leave program
-        exit = 1
+    if user_message == "options":
+           listOfMessage = PutIn("Options. What shall I do?") #get userinput
+           if "about" in listOfMessage:
+                  out("I am SHEP. A adaptable digital assistant AI developed by Dexter Shepherd, for his A level coursework")
+                  time.sleep(0.5)
+                  out("I am here to serve")
+                  #tell about system
+           elif "exit" in listOfMessage:   #leave program
+               exit = 1
+           elif "update" in listOfMessage: #update the system. --For development
+               update()
+           else:
+              out("Sorry I didn't get that. Are you sure that is an option?")
     elif user_message == "":    #no data
         print("")#waste space to do nothing
-    elif user_message == "/update":
-        update()
     else:
         search(user_message)
     
