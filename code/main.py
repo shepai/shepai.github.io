@@ -314,11 +314,11 @@ def find_term(message,Stype):
             return "#@false" #the command to say nothing found
         
 def add_word(phrase,Type):  #add a word to the data
-    out("Your sentence is '"+str(phrase))
+    out("Your sentence is '"+phrase)
     phrase = phrase.split() #make it a list
     word = "" #the word to save
     for i in range(len(phrase)): #loop round all the words
-           out("Is. "+str(phrase[i])+". Your word, or in your word") #ask if that is the users word
+           out("Is. "+phrase[i]+". Your word, or in your word") #ask if that is the users word
            choice = getVoice() #does not require "robot"
            if "yes" in choice or "yep": #different answers
                   out("Great!")
@@ -335,6 +335,7 @@ def add_word(phrase,Type):  #add a word to the data
                   i-=1 #go back to prior position
     #add word to correct file
     if word != "":
+           out("Saving now. Your phrase is. "+word)
            file = open(system_pathway +str(Type)+".txt","a")
            file.write(word)
            file.write(",")
