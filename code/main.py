@@ -315,10 +315,12 @@ def find_term(message,Stype):
         
 def add_word(phrase,Type):  #add a word to the data
     out("Your sentence is '"+phrase)
+    print("---")
     phrase = phrase.split() #make it a list
     word = "" #the word to save
     for i in range(len(phrase)): #loop round all the words
-           out("Is. "+phrase[i]+". Your word, or in your word") #ask if that is the users word
+           currentSearch = phrase[i]
+           out("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
            choice = getVoice() #does not require "robot"
            if "yes" in choice or "yep": #different answers
                   out("Great!")
