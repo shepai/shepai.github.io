@@ -323,11 +323,12 @@ def add_word(phrase,Type):  #add a word to the data
            currentSearch = phrase[i]
            out("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
            choice = getVoice() #does not require "robot"
-           if "yes" in choice or "yep": #different answers
+           if "yes" in choice or "yep" in choice: #different answers
                   out("Great!")
                   word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
            elif "no" in choice or "nope" in choice: #different answers
                   print("No word")
+                  out("Okay, next")
            elif "cancel" in choice or "exit" in choice: #user does not want to add
                   out("Exiting.")
                   word = ""
