@@ -1,4 +1,5 @@
-
+#!/usr/bin/env/ python
+#the previous line tells the interpreter how to run this code
 __author__ = "Dexter Shepherd"
 __version__ = "0.0.5"
 __license__ = "none"
