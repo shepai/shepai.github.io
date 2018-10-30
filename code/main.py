@@ -315,7 +315,7 @@ def find_term(message,Stype):
             return "#@false" #the command to say nothing found
         
 def add_word(phrase,Type):  #add a word to the data
-    out("Your sentence is '"+phrase)
+    out("Your sentence is "+phrase)
     print("---")
     phrase = phrase.split() #make it a list
     word = "" #the word to save
