@@ -321,10 +321,11 @@ def add_word(phrase,Type):  #add a word to the data
     word = "" #the word to save
     for i in range(len(phrase)): #loop round all the words
            currentSearch = phrase[i]
+           print(currentSearch)
            out("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
            choice = getVoice() #does not require "robot"
            if "yes" in choice or "yep" in choice: #different answers
-                  out("Great!")
+                  out("Great! Adding it")
                   word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
            elif "no" in choice or "nope" in choice: #different answers
                   print("No word")
@@ -335,7 +336,7 @@ def add_word(phrase,Type):  #add a word to the data
            elif "finished" in choice or "finish" in choice:
                   out("Saving your word")
            else:
-                  out("Sorry, I didn't get that")
+                  out("Sorry, I did not get that")
                   i-=1 #go back to prior position
     #add word to correct file
     if word != "":
