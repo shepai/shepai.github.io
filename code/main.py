@@ -337,7 +337,8 @@ def add_word(phrase,Type):  #add a word to the data
                   out("Saving your word")
            else:
                   out("Sorry, I did not get that")
-                  i-=1 #go back to prior position
+                  i-=2 #go back to prior position
+           time.sleep(1)
     #add word to correct file
     if word != "":
            out("Saving now. Your phrase is. "+word)
