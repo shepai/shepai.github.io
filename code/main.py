@@ -319,7 +319,8 @@ def add_word(phrase,Type):  #add a word to the data
     print("---")
     phrase = phrase.split() #make it a list
     word = "" #the word to save
-    for i in range(len(phrase)): #loop round all the words
+    i = 0
+    while i <(len(phrase)): #loop round all the words
            currentSearch = phrase[i]
            print(currentSearch)
            out("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
@@ -337,7 +338,8 @@ def add_word(phrase,Type):  #add a word to the data
                   out("Saving your word")
            else:
                   out("Sorry, I did not get that")
-                  i-=2 #go back to prior position
+                  i=i-1 #go back to prior position
+           i=i+1 #increase iteration
            time.sleep(1)
     #add word to correct file
     if word != "":
