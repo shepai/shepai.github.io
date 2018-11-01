@@ -327,7 +327,7 @@ def add_word(phrase,Type):  #add a word to the data
            choice = getVoice() #does not require "robot"
            if "yes" in choice or "yep" in choice: #different answers
                   out("Great! Adding it")
-                  word += phrase[i] #get the word to save, and lots of them if it is a big sentence         
+                  word += phrase[i] +" " #get the word to save, and lots of them if it is a big sentence         
            elif "no" in choice or "nope" in choice: #different answers
                   print("No word")
                   out("Okay, next")
@@ -344,7 +344,7 @@ def add_word(phrase,Type):  #add a word to the data
     #add word to correct file
     if word != "":
            out("Saving now. Your phrase is. "+word)
-           file = open(system_pathway +str(Type)+".txt","a")
+           file = open(system_pathway +Type+".txt","a")
            file.write(word)
            file.write(",")
            file.close()
