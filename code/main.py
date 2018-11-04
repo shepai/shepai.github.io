@@ -1,5 +1,4 @@
-#!/usr/bin/env/ python
-#the previous line tells the interpreter how to run this code
+
 __author__ = "Dexter Shepherd"
 __version__ = "0.0.5"
 __license__ = "none"
@@ -36,13 +35,6 @@ import time
 import colorsys
 from pixels import Pixels #found in folder
 pixels = Pixels()
-#button
-import RPi.GPIO as GPIO
-
-BUTTON = 17#define mute button
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUTTON, GPIO.IN)
 
 system_pathway = "/home/pi/AI/Python_coursework/"
 connection_errors = 0
@@ -56,24 +48,13 @@ def audioCheck():
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
               m = sr.Microphone()
        except:
-              out("Problem connecting to microphone")
+              out("Problem connecting to microphone","t")
               error_pixels()
 def error_pixels():
        #the pixels desplayed for an error
        pixels.off()
        pixels.wakeup()
        time.sleep(1)
-def button_check():
-       #provide a mute button to stop the system
-       state = GPIO.input(BUTTON)  #get button input
-       if state:
-              print("not_mute ")
-              return False
-       else:
-              print("on")   #button is pressed
-              out("Mute mode")
-              return True
-           
 def update():
        try:
               file = open(system_pathway+"test.txt","w")
@@ -100,13 +81,13 @@ def update():
                      print("No update needed")
               else:
                      #update
-                     out("updating...")
+                     out("updating...","t")
                      current = open(system_pathway+"main.py","w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
        except:
-              out("Error finding update")
+              out("Error finding update","t")
 #system_pathway = "sudo python3 /home/pi/Documents/applications/AI/main.py"
 
 
@@ -120,33 +101,32 @@ def callback(recognizer, audio):
         voiceReply = (rec.recognize_google(audio))
         print("you said "+str(voiceReply))
     except sr.UnknownValueError:    #unkown reply
-        #out("Could not understand")
+        out("Could not understand","t")
         voiceReply = ""
     except sr.RequestError as e:
         print("error: {0}".format(e))
-        #out("error understanding")
+        #out("error understanding","t")
         voiceReply = ""
     except KeyError:
-        #out("I do not understand what you are saying")   #no reply
+        #out("I do not understand what you are saying","t")   #no reply
         #pixels.think()
         voiceReply = ""
     except ValueError:
         #no reply
-        #out("Sorry, I did not get that")
+        #out("Sorry, I did not get that","t")
         
         voiceReply = ""
     except LookupError:
         #no reply
-        #out("sorry, I did not get that")
+        #out("sorry, I did not get that","t")
         voiceReply = ""
-       
+
 def getVoice():
     #get a voice input
     global voiceReply
     global rec
     global m
     global connection_errors
-    mute = False
     try:
            
            voiceReply = "#1"
@@ -161,95 +141,91 @@ def getVoice():
                #out("red light","s")#show lights on LED
                pixels.listen()    #output eye to the user
                timer = 0
-               while voiceReply == "#1" and timer <15 and mute == False:
-                   mute = button_check()
+               while voiceReply == "#1" and timer <15:
                    time.sleep(1)#listen for 1 seconds
                    timer += 1
-               
-               
-               if mute == True: #means the button has been pressed
-                     time.sleep(1)
-                     stop_listening(wait_for_stop=False)    #stop listening
-                     pixels.off() #stop the LEDs
-                     while True:   #stop searching
-                         state = GPIO.input(BUTTON)
-                         #unmute when button is pressed again.
-                         if state:
-                             print("off")
-                         else:
-                             print("on")
-                             out("Unmuted")
-                             break
-                         time.sleep(1)
-                     voiceReply = ""
-               if voiceReply == None:
+               if voiceReply == "#1":     #if nothing was said
                       voiceReply = ""
-                      stop_listening(wait_for_stop=False)    #stop listening
-               elif voiceReply == "#1":     #if nothing was said
-                      voiceReply = ""
-                      stop_listening(wait_for_stop=False)    #stop listening
-               else:
-                      stop_listening()    #stop listening and find
-                      
+               stop_listening()    #stop listening
                pixels.off() #stop the LEDs
                time.sleep(0.2)     #
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
-                      out("There is an error conencting to the internet")
+                      out("There is an error conencting to the internet","t")
                       #voiceReply = input(": ")   #alternate method
                       connection_errors = 0 #reset check
     except:
            #no microphone or internet error
            audioCheck()
-           #out("There was an error connecting to microphone")
+           out("There was an error connecting to microphone")
            error_pixels()
     return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
-    out(string)#method of output
+    out(string,"t")#method of output
     string = ""
     string = getVoice() #get voice input
     if "robot" in string:
-           print("----------------------------------")
            if "robot keyboard" in string:
-                     string = input("Please type: ")#type mode
+                     string = input()#type mode
            else:
                      string = (string.replace("robot ","",1))#getrid of call sign
            pixels.think()   #show the user it is thinking
            time.sleep(0.2)
            return string  #return input
     else:
-           print("---nothing")
            return "" #nothing said to robot
 def validate(): #get a valid speech input from the user
     string = ""
-    
     while string == "": #loop till something
-        time.sleep(0.5)     #give time for catch up
-        string = PutIn("Sorry, I didn't get that. ") #get voice or text input
-        print(string)
-    #the long if statement below is so the user can stop the device
-    if "exit" in string or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
-           print("I will not saving the sentence")
-           return None      #tell the code not to add anthing
-    else:
-           return string #return the string
+        string = PutIn("Please tell me") #get voice or text input
+        
+    return string
 def internet():
-       conn = httplib.HTTPConnection("www.google.com", timeout=5) #attempt connection
+       conn = httplib.HTTPConnection("www.google.com", timeout=5)
        try:
            conn.request("HEAD", "/")
            conn.close()
-           return True #show there is a connection
+           return True
        except:
            conn.close()
            error_pixels()
-           return False #show there is not a connection
-def out(string):    #use fundtion so method of output can be changed for hardware
+           return False
+def out(string,method):    #use fundtion so method of output can be changed for hardware
     #locate the arduino port
     try:
-       #output using onboard TTS
-       pixels.speak() #coulourful look
-       os.system("espeak '"+string+"' 2>/dev/null")       
+           
+           if method == "t":
+              #output using onboard TTS
+              os.system("espeak '"+string+"' 2>/dev/null")
+           else:
+              try:
+                  pts= prtlst.comports()
+                  string1 = pts[0]
+                  #print(string1[0])
+                  hardware_port = string1[0]
+                  for pt in pts:
+                      #print(pt)
+                      if "USB" in pt[1]: #check "USB" string in device description
+                          #print(pt)
+                          COMs.append(pt[0])
+                  #output to com
+                  #print(string)#method of output  
+                  ser = serial.Serial(hardware_port, 9600)
+                  a = 0
+                  #print("opening :"+hardware_port)
+                  if string == None:
+                      string = ""
+                  string+= "/"  #tells the board to output
+                  
+                  while a < len(string):  #send message through
+                              ser.write(string[a].encode("ascii"))
+                              a += 1
+                  ser.close() #close ports
+              except:
+                     print(string)#output using print if no hardware found
+                     error_pixels()
+                     
     except:
            #no connection
            print(string)
@@ -267,24 +243,21 @@ def search(sentence):   #search through data to find if in
                 #print(subject)
                 #print(command)
                 AI = find(trigger,subject,command)  #search database
-                
+                AI = find(trigger,subject,command)  #search database
                 if AI[:3] == "!A!":
                     #action
                     print("ACTION")
                     AI = AI.replace("!A! ","")
                     os.system("sudo python3 "+system_pathway+AI)
                 else:
-                    out(AI)
+                    out(AI,"t")
                 
             else:   #no command word found
-                out("No command found")
-                add_word(sentence,'c')
+                out("No command found","t")
         else:   #no subject found
-            out("No subject found")
-            add_word(sentence,'s')
+            out("No subject found","t")
     else:   #no trigger found
-        out("No trigger found")
-        add_word(sentence,'t')
+        out("No trigger found","t")
 
 def find_term(message,Stype):
         #find the word and its type
@@ -314,42 +287,28 @@ def find_term(message,Stype):
         else:
             return "#@false" #the command to say nothing found
         
-def add_word(phrase,Type):  #add a word to the data
-    out("Your sentence is "+phrase)
-    print("---")
-    phrase = phrase.split() #make it a list
-    word = "" #the word to save
-    i = 0
-    while i <(len(phrase)): #loop round all the words
-           currentSearch = phrase[i]
-           print(currentSearch)
-           out("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
-           choice = getVoice() #does not require "robot"
-           if "yes" in choice or "yep" in choice: #different answers
-                  out("Great! Adding it")
-                  word += phrase[i] +" " #get the word to save, and lots of them if it is a big sentence         
-           elif "no" in choice or "nope" in choice: #different answers
-                  print("No word")
-                  out("Okay, next")
-           elif "cancel" in choice or "exit" in choice: #user does not want to add
-                  out("Exiting.")
-                  word = ""
-           elif "finished" in choice or "finish" in choice:
-                  out("Saving your word")
-           else:
-                  out("Sorry, I did not get that")
-                  i=i-1 #go back to prior position
-           i=i+1 #increase iteration
-           time.sleep(1)
-    #add word to correct file
-    if word != "":
-           out("Saving now. Your phrase is. "+word)
-           file = open(system_pathway +Type+".txt","a")
-           file.write(word)
-           file.write(",")
-           file.close()
-    else:
-           out("Adding aborted")
+def add_command():  #add a command word to the data
+    print("add command")
+    value=PutIn("Input your command word")
+    file = open(system_pathway +"c.txt","a")
+    file.write(value)
+    file.write(",")
+    file.close()
+def add_subject():  #add a subject to the data
+    print("add subject")
+    value=PutIn("Input your subject word")
+    file = open(system_pathway +"s.txt","a")
+    file.write(value)
+    file.write(",")
+    file.close()
+    
+def add_trigger():    #add a trigger word to the data
+    print("add vocabulary")
+    value=PutIn("Input your trigger word")
+    file = open(system_pathway +"t.txt","a")
+    file.write(value)
+    file.write(",")
+    file.close()
 def find(trigger, subject, command):
     tree = ET.parse(system_pathway+"knowledge.xml")
     root = tree.getroot()
@@ -364,42 +323,66 @@ def find(trigger, subject, command):
         #print(trig+sub+com)
         num += 1
     if output == "none":    #nothing found in data
-        out("Nothing in my data... Please tell me, how you would like me, to respond")
+        out("Nothing in my data... Please tell me, how, you, would like, me to respond","t")
         say = validate() #get a valid user input
-        if say != None:
-               if say == "add action":
-                   exit = 1
-                   while exit == 1:
-                       say = PutIn("What is the name of your action?")
-                       try:    #look for file
-                           file = open("action/"+say+".py","r")
-                           file.close()
-                           exit = 0
-                       except:
-                           out("There is no such file."+str(say))
-                   say = "!A! "+"action/"+say+".py"    #save in format
+        if say == "add action":
+            exit = 1
+            while exit == 1:
+                say = PutIn("What is the name of your action?")
+                try:    #look for file
+                    file = open("action/"+say+".py","r")
+                    file.close()
+                    exit = 0
+                except:
+                    out("There is no such file")
+            say = "!A! "+"action/"+say+".py"    #save in format
 
-               file = open(system_pathway+"knowledge.xml","r")    #open database
-               r = file.read() #read data
-               file.close()
-               r = r.replace("</data>","") #remove end
-               r = r + "\t<phrase name=\"command"+str(num)+"\">\n"
-               r = r + "\t<trigger>"+trigger+"</trigger>\n"
-               r = r + "\t<subject>"+subject+"</subject>\n"
-               r = r + "\t<command>"+command+"</command>\n"
-               r = r + "\t<output>"+say+"</output>\n"
-               r = r + "\t</phrase>\n"
-               r = r + "\t</data>\n"
-               #write to file in format
-               #print(r)
-               #time.sleep(4)
-               file = open(system_pathway+"knowledge.xml","w")    #open database
-               file.write(r) #write to file
-               file.close()
-               output = say
-        else:
-               output = "I didn't add anything, as you told me not to."
+        file = open(system_pathway+"knowledge.xml","r")    #open database
+        r = file.read() #read data
+        file.close()
+        r = r.replace("</data>","") #remove end
+        r = r + "\t<phrase name=\"command"+str(num)+"\">\n"
+        r = r + "\t<trigger>"+trigger+"</trigger>\n"
+        r = r + "\t<subject>"+subject+"</subject>\n"
+        r = r + "\t<command>"+command+"</command>\n"
+        r = r + "\t<output>"+say+"</output>\n"
+        r = r + "\t</phrase>\n"
+        r = r + "\t</data>\n"
+        #write to file in format
+        #print(r)
+        #time.sleep(4)
+        file = open(system_pathway+"knowledge.xml","w")    #open database
+        file.write(r) #write to file
+        file.close()
+        output = say
     return output
+
+def add_layer():    #add a layer to the data network
+    print("adding layer")
+    #nothing here
+def search_layer(): #search for a layer
+    print("adding layer")
+    #nothing here
+def add_variable(vocab):
+    value = PutIn("Input a variable")
+    print(value)
+    value = value.replace(" ","_")
+    file = open(system_pathway +"variables.txt","a")
+    file.write(value)
+    file.write(" ")
+    file.close()
+    words1 = Umessage.split()   #send users message to a list
+    file.close()
+    #write to the file
+    file = open(system_pathway +vocab+"/" +"start.txt","w")
+    file.write(stri)
+    file.write("*")
+    file.write(vocab+".txt")
+    file.write("/")
+    file.close()
+
+    
+
 
 
 exit = 0
@@ -410,10 +393,10 @@ f = open(system_pathway+"eye.txt","r")
 r = f.read()
 f.close()
 print(r)    #output on screen the eye in file
-#os.system("sudo alsactl restore")#turn volume up
+os.system("sudo alsactl restore")#turn volume up
 #os.system("sudo amixer set Master 100%")#turn volume up
 time.sleep(1)
-out("starting SHEP")
+out("starting SHEP","t")
 audioCheck()
 time.sleep(0.25)
 update()      #find an update for the system
@@ -423,21 +406,23 @@ update()      #find an update for the system
 while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
-    if user_message == "options":
-           listOfMessage = PutIn("Options. What shall I do?") #get userinput
-           if "about" in listOfMessage:
-                  out("I am SHEP. A adaptable digital assistant AI developed by Dexter Shepherd, for his A level coursework")
-                  time.sleep(0.5)
-                  out("I am here to serve")
-                  #tell about system
-           elif "exit" in listOfMessage:   #leave program
-               exit = 1
-           elif "update" in listOfMessage: #update the system. --For development
-               update()
-           else:
-              out("Sorry I didn't get that. Are you sure that is an option?")
+    
+    if user_message == "/add trigger":  #add trigger word command
+        add_trigger()
+    elif user_message == "/add subject":    #add subject word command
+        add_subject()
+    elif user_message == "/add command":    #add command word command
+        add_command()
+    elif user_message == "/add layer":  #add layer command
+        add_layer()
+    elif user_message == "/add variable":   #add variable command
+        add_variable()
+    elif user_message == "/exit" or user_message == "exit":   #leave program
+        exit = 1
     elif user_message == "":    #no data
         print("")#waste space to do nothing
+    elif user_message == "/update":
+        update()
     else:
         search(user_message)
     
