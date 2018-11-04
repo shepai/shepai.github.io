@@ -385,19 +385,20 @@ def checkInfo():
        while y <= 4:
               if internet() == False:
                      time.sleep(1) #give time to connect
+              y += 1
        while internet() == False: #loop till a network is found
               ID = input("Enter your Wi-Fi name: ")
               password = input("Enter your Wi-Fi password: ")
        check = ["name","title","birthday"]
        print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
-       out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
-
+       
        for i in range(len(check)):
            try: #if file is a thing it will read and be fine
                   file = open(system_pathway+check[i]+".txt","r") 
                   r = file.read()
                   file.close()
                   if r == "":      #there is no data
+                         out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
                          out("Please type your "+check[i]) 
                          data = input("Please type your "+check[i]+": ")
                          file = open(system_pathway+check[i]+".txt","w")
@@ -405,7 +406,8 @@ def checkInfo():
                          file.close()
            except: #the file is not found and needs to be added
                 #print("No file found")
-                out("Please type your name")
+                out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
+                out("Please type your "+check[i])
                 data = input("Please type your "+check[i]+": ")
                 file = open(system_pathway+check[i]+".txt","w")
                 r = file.write(data)
@@ -423,7 +425,7 @@ print(r)    #output on screen the eye in file
 #os.system("sudo alsactl restore")#turn volume up
 #os.system("sudo amixer set Master 100%")#turn volume up
 time.sleep(1)
-checkInfo() #check the user's infomation
+#checkInfo() #check the user's infomation
 out("starting SHEP")
 audioCheck()
 time.sleep(0.25)
