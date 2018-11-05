@@ -138,10 +138,10 @@ def getVoice():
                          time.sleep(1)
                r.dynamic_energy_threshold = False #set ackground noise to silence
                with m as source:    #listen audio
-                  audio = r.adjust_for_ambient_noise(source) #adjust audio
+                  r.adjust_for_ambient_noise(source) #adjust audio
                   print ("Speak Now")
                   pixels.listen()    #output eye to the user
-                  audio = r.listen(source, timeout=1)                   # listen for the first phrase and extract it into audio data
+                  audio = r.listen(source)                   # listen for the first phrase and extract it into audio data
                pixels.off() #stop the LEDs
                print(">>")
                timer = 0
