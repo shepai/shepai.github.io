@@ -109,13 +109,13 @@ def update():
               print("Error finding update")
     
 def getVoice():
-           #get a voice input
-           global voiceReply
-           global rec
-           global m
-           global connection_errors
-           mute = False
-    #try:
+    #get a voice input
+    global voiceReply
+    global rec
+    global m
+    global connection_errors
+    mute = False
+    try:
            
            voiceReply = ""
            connection = internet()
@@ -136,13 +136,13 @@ def getVoice():
                              out("Unmuted")
                              break
                          time.sleep(1)
-               r.dynamic_energy_threshold = False #set ackground noise to silence
+               rec.dynamic_energy_threshold = False #set ackground noise to silence
                with m as source:    #listen audio
-                  r.adjust_for_ambient_noise(source) #adjust audio
+                  rec.adjust_for_ambient_noise(source) #adjust audio
                   print(str(r.adjust_for_ambient_noise(source)))
                   print ("Speak Now")
                   pixels.listen()    #output eye to the user
-                  audio = r.listen(source,timeout=8)                   # listen for the first phrase and extract it into audio data
+                  audio = rec.listen(source,timeout=8)                   # listen for the first phrase and extract it into audio data
                pixels.off() #stop the LEDs
                print(">>")
                timer = 0
@@ -176,12 +176,12 @@ def getVoice():
                       out("There is an error conencting to the internet")
                       #voiceReply = input(": ")   #alternate method
                       connection_errors = 0 #reset check
-    #except:
-    #       #no microphone or internet error
-    #       audioCheck()
-    #       #out("There was an error connecting to microphone")
-    #       error_pixels()
-           return voiceReply.lower()   #return voice
+    except:
+           #no microphone or internet error
+           audioCheck()
+           #out("There was an error connecting to microphone")
+           error_pixels()
+    return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string)#method of output
     string = ""
