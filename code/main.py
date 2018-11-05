@@ -121,7 +121,7 @@ def getVoice():
            connection = internet()
            if connection == True:  #connection found
                connection_errors = 0 #show there is a strong connection
-               r.pause_threshold = 0.6
+               #r.pause_threshold = 0.6
                time.sleep(1)#listen for 1 seconds
                mute = button_check()
                if mute == True: #means the button has been pressed
@@ -136,13 +136,13 @@ def getVoice():
                              out("Unmuted")
                              break
                          time.sleep(1)
-               #r.dynamic_energy_threshold = True #set ackground noise to silence
+               r.dynamic_energy_threshold = False #set ackground noise to silence
                with m as source:    #listen audio
-                  audio = r.adjust_for_ambient_noise(source) #adjust audio
+                  r.adjust_for_ambient_noise(source) #adjust audio
                   print(str(r.adjust_for_ambient_noise(source)))
                   print ("Speak Now")
                   pixels.listen()    #output eye to the user
-                  audio = r.listen(source)                   # listen for the first phrase and extract it into audio data
+                  audio = r.listen(source,timeout=8)                   # listen for the first phrase and extract it into audio data
                pixels.off() #stop the LEDs
                print(">>")
                timer = 0
