@@ -136,10 +136,10 @@ def getVoice():
                              out("Unmuted")
                              break
                          time.sleep(1)
-               #rec.dynamic_energy_threshold = False #set ackground noise to silence
+               rec.dynamic_energy_threshold = False #set ackground noise to silence
                with m as source:    #listen audio
-                  rec.adjust_for_ambient_noise(source) #adjust audio
-                  print(str(r.adjust_for_ambient_noise(source)))
+                  #rec.adjust_for_ambient_noise(source) #adjust audio
+                  
                   print ("Speak Now")
                   pixels.listen()    #output eye to the user
                   audio = rec.listen(source,timeout=8)                   # listen for the first phrase and extract it into audio data
