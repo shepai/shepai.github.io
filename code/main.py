@@ -181,7 +181,7 @@ def getVoice():
     #       audioCheck()
     #       #out("There was an error connecting to microphone")
     #       error_pixels()
-    return voiceReply.lower()   #return voice
+           return voiceReply.lower()   #return voice
 def PutIn(string):  #use fundtion so method of output can be changed for hardware
     out(string)#method of output
     string = ""
