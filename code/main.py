@@ -52,7 +52,7 @@ def audioCheck():
        global m
        try:
               #variables to listen to audio with
-              rec = sr.Recognizer(language = "en-GB") #Queen's English
+              rec = sr.Recognizer() 
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
               m = sr.Microphone()
        except:
@@ -146,7 +146,7 @@ def getVoice():
                print(">>")
                timer = 0
                try:
-                      voiceReply = (rec.recognize_google(audio))
+                      voiceReply = (rec.recognize_google(audio,language = "en-GB"))
                       print("you said "+str(voiceReply))
                       if "could not understand" in voiceReply.lower(): #prevent annoying output
                              voiceReply = ""
@@ -415,7 +415,9 @@ def checkInfo():
                      
 
 exit = 0
-
+############################################################################
+#main algorithm loop
+############################################################################
 #start up functions
 os.system("clear")  # on linux / os x
 f = open(system_pathway+"eye.txt","r")
