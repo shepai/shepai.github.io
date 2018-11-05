@@ -280,11 +280,11 @@ def find_term(message,Stype):
                 string = string.replace(",","")
                 array.append(string)
                 string = ""
-                
+       
             string += r[i]
         #print(array)
         for i in range(len(array)):
-            if array[i] in message:  #if word in file
+            if array[i] in message+" ":  #if word in file
                 #x can be added to and a list of subjects is compiled
                 #for future versions
                 x = i
@@ -314,8 +314,10 @@ def add_word(phrase,Type):  #add a word to the data
            elif "cancel" in choice or "exit" in choice: #user does not want to add
                   out("Exiting.")
                   word = ""
+                  break
            elif "finished" in choice or "finish" in choice:
                   out("Saving your word")
+                  break
            else:
                   out("Sorry, I did not get that")
                   i=i-1 #go back to prior position
