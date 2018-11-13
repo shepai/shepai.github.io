@@ -462,13 +462,16 @@ def checkInfo():
                      time.sleep(0.5)
        check = ["name","title","birthday"]
        print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
-       out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
+       to_output_once = "Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam"
        for i in range(len(check)):
            try: #if file is a thing it will read and be fine
                   file = open(system_pathway+check[i]+".txt","r") 
                   r = file.read()
                   file.close()
-                  if r == "":      #there is no data
+                  
+                  if r == "":      #there is no data    
+                         out(to_output_once)
+                         to_output_once = ""
                          out("Please type your "+check[i])
                          string = "Please type your "+check[i]+": "
                          data = input(string)
@@ -477,7 +480,8 @@ def checkInfo():
                          file.close()
            except: #the file is not found and needs to be added
                 #print("No file found")
-                #out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
+                out(to_output_once)
+                to_output_once = ""
                 string = "Please type your "+check[i]+": "
                 data = input(string)
                 file = open(system_pathway+check[i]+".txt","w")
