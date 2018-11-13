@@ -140,39 +140,45 @@ def getVoice():
                              break
                          time.sleep(1)
                rec.dynamic_energy_threshold = False #set ackground noise to silence
-               #
+               t0 = 0 #set the timer
                with m as source:    #listen audio
                   audio = rec.adjust_for_ambient_noise(source) #adjust audio
                   print ("Speak Now")
+                  t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
                   audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
+               t1 = time.time() #take a second reading of the time
+               total = t1-t0 #work out how long it took
                pixels.off() #stop the LEDs
                print(">>")
                timer = 0
-               try:
-                      voiceReply = (rec.recognize_google(audio,language = "en-GB"))
-                      print("you said "+str(voiceReply))
-                      if "could not understand" in voiceReply.lower(): #prevent annoying output
+               if total < 15: #it will take too long to convert otherwise
+                      try:
+                             voiceReply = (rec.recognize_google(audio,language = "en-GB"))
+                             print("you said "+str(voiceReply))
+                             if "could not understand" in voiceReply.lower(): #prevent annoying output
+                                    voiceReply = ""
+                      except sr.UnknownValueError:    #unkown reply
+                             #out("Could not understand")
                              voiceReply = ""
-               except sr.UnknownValueError:    #unkown reply
-                      #out("Could not understand")
-                      voiceReply = ""
-               except sr.RequestError as e:
-                      print("error: {0}".format(e))
-                      #out("error understanding")
-                      voiceReply = ""
-               except KeyError:
-                      #out("I do not understand what you are saying")   #no reply
-                      #pixels.think()
-                      voiceReply = ""
-               except ValueError:
-                      #no reply
-                      #out("Sorry, I did not get that")
-                      voiceReply = ""
-               except LookupError:
-                      #no reply
-                      #out("sorry, I did not get that")
-                      voiceReply = ""
+                      except sr.RequestError as e:
+                             print("error: {0}".format(e))
+                             #out("error understanding")
+                             voiceReply = ""
+                      except KeyError:
+                             #out("I do not understand what you are saying")   #no reply
+                             #pixels.think()
+                             voiceReply = ""
+                      except ValueError:
+                             #no reply
+                             #out("Sorry, I did not get that")
+                             voiceReply = ""
+                      except LookupError:
+                             #no reply
+                             #out("sorry, I did not get that")
+                             voiceReply = ""
+               else:
+                      print("Took too long to respond...")
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
