@@ -125,7 +125,7 @@ def getVoice():
            if connection == True:  #connection found
                connection_errors = 0 #show there is a strong connection
                #r.pause_threshold = 0.6
-               time.sleep(0.5)#listen for 1 seconds
+               time.sleep(0.5)#give user chance to press button
                mute = button_check()
                if mute == True: #means the button has been pressed
                      pixels.off() #stop the LEDs
@@ -196,7 +196,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
            else:
                      string = (string.replace("robot ","",1))#getrid of call sign
            pixels.think()   #show the user it is thinking
-           time.sleep(0.2)
+           time.sleep(0.1)
            return string  #return input
     else:
            print("---nothing")
@@ -462,14 +462,13 @@ def checkInfo():
                      time.sleep(0.5)
        check = ["name","title","birthday"]
        print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
-       
+       out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
        for i in range(len(check)):
            try: #if file is a thing it will read and be fine
                   file = open(system_pathway+check[i]+".txt","r") 
                   r = file.read()
                   file.close()
                   if r == "":      #there is no data
-                         out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
                          out("Please type your "+check[i])
                          string = "Please type your "+check[i]+": "
                          data = input(string)
@@ -478,7 +477,7 @@ def checkInfo():
                          file.close()
            except: #the file is not found and needs to be added
                 #print("No file found")
-                out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
+                #out("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
                 string = "Please type your "+check[i]+": "
                 data = input(string)
                 file = open(system_pathway+check[i]+".txt","w")
@@ -491,6 +490,7 @@ exit = 0
 #main algorithm loop
 ############################################################################
 #start up functions
+update()      #find an update for the system
 os.system("clear")  # on linux / os x
 f = open(system_pathway+"eye.txt","r")
 r = f.read()
@@ -503,7 +503,7 @@ checkInfo() #check the user's infomation
 out("starting SHEP")
 audioCheck()
 time.sleep(0.25)
-update()      #find an update for the system
+
 #pixels.wakeup()    #output eye to the user
 
 
