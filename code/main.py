@@ -9,14 +9,17 @@ import sys
 import os
 import re
 import time
+import re
+from subprocess import Popen, STDOUT, PIPE
 #input timer
 from threading import Thread
-#import the internet connection library
+#import the internet connection libraries
 try:
        import httplib
 except:
        import http.client as httplib
 from urllib.request import urlopen
+from wifi import Cell, Scheme
 #data handling library
 import xml.etree.ElementTree as ET
 #serial communication library
@@ -62,7 +65,7 @@ def error_pixels():
        #the pixels desplayed for an error
        pixels.off()
        pixels.wakeup()
-       time.sleep(1)
+       time.sleep(0.2)
 def button_check():
        #provide a mute button to stop the system
        state = GPIO.input(BUTTON)  #get button input
@@ -122,7 +125,7 @@ def getVoice():
            if connection == True:  #connection found
                connection_errors = 0 #show there is a strong connection
                #r.pause_threshold = 0.6
-               time.sleep(1)#listen for 1 seconds
+               time.sleep(0.5)#listen for 1 seconds
                mute = button_check()
                if mute == True: #means the button has been pressed
                      pixels.off() #stop the LEDs
@@ -173,7 +176,7 @@ def getVoice():
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
-                      out("There is an error conencting to the internet")
+                      out("There is an error connecting to the internet")
                       #voiceReply = input(": ")   #alternate method
                       connection_errors = 0 #reset check
     except:
@@ -231,6 +234,27 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
            #no connection
            print(string)
            error_pixels()
+def edit():
+    trigger=find_term(sentence,"t")  #search string for trigger word in database
+    if trigger!="#@false":
+        subject = find_term(sentence,"s") #search message for subject
+        if subject!="#@false":
+            command = find_term(sentence,"c") #search message for command
+            if command!="#@false":
+                AI = find(trigger,subject,command)  #search database
+                
+            else:   #no command word found
+                out("No command found")
+                time.sleep(1)
+                add_word(sentence,'c')
+        else:   #no subject found
+            out("No subject found")
+            time.sleep(1)
+            add_word(sentence,'s')
+    else:   #no trigger found
+        out("No trigger found")
+        time.sleep(1)
+        add_word(sentence,'t')
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
     trigger=find_term(sentence,"t")  #search string for trigger word in database
@@ -382,6 +406,49 @@ def find(trigger, subject, command):
         else:
                output = "I didn't add anything, as you told me not to."
     return output
+def wifi():
+#wifi connection function
+       batcmd="nmcli dev wifi"
+       result = subprocess.check_output(batcmd,shell = True)
+       result = result.decode('utf-8') # needed in python 3
+       if result == "":
+           print("No network found")
+       else:
+           print(result)
+           
+           ls = re.split("\n |  |\t ",result) #clear of waste
+           new = []
+           for i in range(len(ls)): #sort waste
+               if ls[i] != "" and ls[i] != " ":
+                   new.append(ls[i])    
+           new = new[8:] #sort more waste
+           ssids = []
+           x = 0
+           y = 1
+           while x < len(new)-1: #create list of things
+               ssids.append(new[x])
+               print(str(y)+") "+new[x])
+               x += 7
+               y += 1
+           num = len(ssids)+1
+           while num > len(ssids):
+                  num = int(input("Which number would you like: "))
+                  num = num - 1 #equalize it with list numbers
+                  if num < 0:
+                      num = len(ssids) +1 #loop bigger than the array
+           ID = ssids[num]
+           passkey = input("Password: ")
+           try:
+                print("Connecting... ")
+                handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+                #sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+                sleep(5) # wait for the password prompt to occur (if there is one, i'm on Linux and sudo will always ask me for a password so i'm just assuming windows isn't retarded).
+                print ((handle.stdout.readline().strip()).decode('utf-8'))
+                
+
+           except:
+                  print (handle.stdout.readline().strip())
+                  print("Couldn't connect to the network... ")
 def checkInfo():
        #check the users info and type any if not found.
        y=0
@@ -390,8 +457,8 @@ def checkInfo():
                      time.sleep(1) #give time to connect
               y += 1
        while internet() == False: #loop till a network is found
-              ID = input("Enter your Wi-Fi name: ")
-              password = input("Enter your Wi-Fi password: ")
+              wifi()
+              time.sleep(0.5)
        check = ["name","title","birthday"]
        print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
        
@@ -430,7 +497,7 @@ print(r)    #output on screen the eye in file
 #os.system("sudo alsactl restore")#turn volume up
 #os.system("sudo amixer set Master 100%")#turn volume up
 time.sleep(1)
-#checkInfo() #check the user's infomation
+checkInfo() #check the user's infomation
 out("starting SHEP")
 audioCheck()
 time.sleep(0.25)
@@ -454,6 +521,12 @@ while(exit ==0):
                update()
            else:
               out("Sorry I didn't get that. Are you sure that is an option?")
+    elif "edit" in user_message: #edit sentence
+        user_message = ""
+        while user_message == "":
+               user_message = PutIn("Which sentence shall I edit?") #get userinput
+        search(user_message)
+               
     elif user_message == "":    #no data
         print("")#waste space to do nothing
     else:
