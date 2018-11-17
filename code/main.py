@@ -143,7 +143,7 @@ def getVoice():
                rec.dynamic_energy_threshold = False #set ackground noise to silence
                t0 = 0 #set the timer
                with m as source:    #listen audio
-                  
+                  audio = rec.adjust_for_ambient_noise(source) #adjust audio
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
@@ -182,7 +182,7 @@ def getVoice():
                       
                else:
                       print("Took too long to respond...")
-                      audio = rec.adjust_for_ambient_noise(source) #adjust audio
+                      
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
