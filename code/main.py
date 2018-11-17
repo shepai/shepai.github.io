@@ -203,6 +203,8 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
                      string = (string.replace("robot ","",1))#getrid of call sign
            pixels.think()   #show the user it is thinking
            time.sleep(0.1)
+           if "robot" == string:
+                  string = ""
            return string  #return input
     else:
            print("---nothing")
