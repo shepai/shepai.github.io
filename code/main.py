@@ -259,7 +259,7 @@ def edit(sentence):
                 if AI == "/00/00/00": #there is not a sentence
                        out("This is not a sentence currently saved")
                 else:
-                      output("What shall I replace that with? ")
+                      out("What shall I replace that with? ")
                       replacement = validate() # get the user's input
                       file = open(system_pathway+"knowledge.xml","r")    #open database
                       r = file.read() #read data
@@ -575,11 +575,11 @@ while(exit ==0):
         user_message = ""
         while user_message == "":
                user_message = PutIn("Which sentence shall I edit?") #get userinput
-        search(user_message)
+        edit(user_message)
                
     elif user_message == "":    #no data
         print("")#waste space to do nothing
     else:
-        edit(user_message)
+        search(user_message)
     
 sys.exit()  #stop the program
