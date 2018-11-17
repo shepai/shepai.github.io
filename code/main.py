@@ -247,15 +247,38 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
            #no connection
            print(string)
            error_pixels()
-def edit():
+def edit(sentence):
+    #edit the sentence the user has inputted
     trigger=find_term(sentence,"t")  #search string for trigger word in database
     if trigger!="#@false":
         subject = find_term(sentence,"s") #search message for subject
         if subject!="#@false":
             command = find_term(sentence,"c") #search message for command
             if command!="#@false":
-                AI = find(trigger,subject,command)  #search database
-                
+                AI = find(trigger,subject,command,1)  #search database
+                if AI == "/00/00/00": #there is not a sentence
+                       out("This is not a sentence currently saved")
+                else:
+                      output("What shall I replace that with? ")
+                      replacement = validate() # get the user's input
+                      file = open(system_pathway+"knowledge.xml","r")    #open database
+                      r = file.read() #read data
+                      file.close()
+                      
+                      temp = temp + "\t<trigger>"+trigger+"</trigger>\n"
+                      temp = temp + "\t<subject>"+subject+"</subject>\n"
+                      temp = temp + "\t<command>"+command+"</command>\n"
+                      temp2 = temp + "\t<output>"+replacement+"</output>\n"
+                      temp = temp + "\t<output>"+AI+"</output>\n"
+                      r = r.replace(temp,temp2)
+                      out("replacing...")
+                      #write to file in format
+                      #print(r)
+                      #time.sleep(4)
+                      file = open(system_pathway+"knowledge.xml","w")    #open database
+                      file.write(r) #write to file
+                      file.close()
+
             else:   #no command word found
                 out("No command found")
                 time.sleep(1)
@@ -280,16 +303,17 @@ def search(sentence):   #search through data to find if in
                 #print(trigger)
                 #print(subject)
                 #print(command)
-                AI = find(trigger,subject,command)  #search database
+                AI = find(trigger,subject,command,0)  #search database
                 
                 if AI[:3] == "!A!":
                     #action
                     print("ACTION")
                     AI = AI.replace("!A! ","")
                     os.system("sudo python3 "+system_pathway+AI)
+                    
                 else:
                     out(AI)
-                
+
             else:   #no command word found
                 out("No command found")
                 time.sleep(1)
@@ -369,7 +393,7 @@ def add_word(phrase,Type):  #add a word to the data
            file.close()
     else:
            out("Adding aborted")
-def find(trigger, subject, command):
+def find(trigger, subject, command,Type):
     tree = ET.parse(system_pathway+"knowledge.xml")
     root = tree.getroot()
     output = "none"
@@ -383,8 +407,16 @@ def find(trigger, subject, command):
         #print(trig+sub+com)
         num += 1
     if output == "none":    #nothing found in data
+        if Type == 0: #learn if this is enabled
+               output = learn(trigger,subject,command,num)
+        else:
+               output = "/00/00/00" #nothing in data
+    return output
+def learn(trigger,subject,command,num):
+        #teach the AI
         out("Nothing in my data... Please tell me, how you would like me, to respond")
         say = validate() #get a valid user input
+        output = ""
         if say != None:
                if say == "add action":
                    exit = 1
@@ -418,7 +450,7 @@ def find(trigger, subject, command):
                output = say
         else:
                output = "I didn't add anything, as you told me not to."
-    return output
+        return output
 def wifi():
 #wifi connection function
        batcmd="nmcli dev wifi"
@@ -501,7 +533,6 @@ def checkInfo():
                 r = file.write(data)
                 file.close()
                      
-
 exit = 0
 ############################################################################
 #main algorithm loop
@@ -540,7 +571,7 @@ while(exit ==0):
                update()
            else:
               out("Sorry I didn't get that. Are you sure that is an option?")
-    elif "edit" in user_message: #edit sentence
+    elif "edit" == user_message: #edit sentence
         user_message = ""
         while user_message == "":
                user_message = PutIn("Which sentence shall I edit?") #get userinput
@@ -549,6 +580,6 @@ while(exit ==0):
     elif user_message == "":    #no data
         print("")#waste space to do nothing
     else:
-        search(user_message)
+        edit(user_message)
     
 sys.exit()  #stop the program
