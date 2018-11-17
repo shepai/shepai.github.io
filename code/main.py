@@ -235,6 +235,7 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
     try:
        #output using onboard TTS
        pixels.speak() #coulourful look
+       string = string.replace("'","") #prevent an apostriphe messing it up.
        os.system("espeak '"+string+"' 2>/dev/null")       
     except:
            #no connection
