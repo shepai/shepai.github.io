@@ -264,7 +264,7 @@ def edit(sentence):
                       file = open(system_pathway+"knowledge.xml","r")    #open database
                       r = file.read() #read data
                       file.close()
-                      
+                      temp = ""
                       temp = temp + "\t<trigger>"+trigger+"</trigger>\n"
                       temp = temp + "\t<subject>"+subject+"</subject>\n"
                       temp = temp + "\t<command>"+command+"</command>\n"
