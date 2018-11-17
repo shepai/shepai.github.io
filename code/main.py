@@ -139,10 +139,11 @@ def getVoice():
                              out("Unmuted")
                              break
                          time.sleep(1)
+               print("setting...")
                rec.dynamic_energy_threshold = False #set ackground noise to silence
                t0 = 0 #set the timer
                with m as source:    #listen audio
-                  audio = rec.adjust_for_ambient_noise(source) #adjust audio
+                  
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
@@ -177,8 +178,11 @@ def getVoice():
                              #no reply
                              #out("sorry, I did not get that")
                              voiceReply = ""
+                             
+                      
                else:
                       print("Took too long to respond...")
+                      audio = rec.adjust_for_ambient_noise(source) #adjust audio
            else:   #no connection
                connection_errors += 1
                if connection_errors == 4:
@@ -202,7 +206,7 @@ def PutIn(string):  #use fundtion so method of output can be changed for hardwar
            else:
                      string = (string.replace("robot ","",1))#getrid of call sign
            pixels.think()   #show the user it is thinking
-           time.sleep(0.1)
+           
            if "robot" == string:
                   string = ""
            return string  #return input
@@ -213,8 +217,8 @@ def validate(): #get a valid speech input from the user
     string = ""
     
     while string == "": #loop till something
-        time.sleep(0.5)     #give time for catch up
-        string = PutIn("Sorry, I didn't get that. ") #get voice or text input
+        time.sleep(0.1)     #give time for catch up
+        string = PutIn("What shall I add? ") #get voice or text input
         print(string)
     #the long if statement below is so the user can stop the device
     if "exit" in string or string.replace(" ","") == "cancel" or string.replace(" ","") == "stop":
