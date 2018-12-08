@@ -513,7 +513,8 @@ def listUSB():
         if i < (len(list)):
                 
             if "/" not in list[i]: #no pathway so in fact
-                errors.append(list[i-6]) #make list of bad one's
+                devices.append(list[i-6]) #make list of bad one's
+                pathway.append(list[i])
             else: #pathway
                 devices.append(list[i-6])
                 pathway.append(list[i])
@@ -524,6 +525,7 @@ def listUSB():
         print(devices[i]+"---"+pathway[i])
         try:
             copyFiles(pathway[i]+"/AI/actions",system_pathway+"/action") #look for file and copy it
+            
             copyFiles(system_pathway,pathway[i]+"/AI/data")
             out("Files copied")
         except:
@@ -601,18 +603,22 @@ while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
     if user_message == "options":
-           listOfMessage = PutIn("Options. What shall I do?") #get userinput
-           if "about" in listOfMessage:
-                  out("I am SHEP. A adaptable digital assistant AI developed by Dexter Shepherd, for his A level coursework")
-                  time.sleep(0.5)
-                  out("I am here to serve")
-                  #tell about system
-           elif "exit" in listOfMessage:   #leave program
-               exit = 1
-           elif "update" in listOfMessage: #update the system. --For development
-               update()
-           else:
-              out("Sorry I didn't get that. Are you sure that is an option?")
+           while "cancel" not in listOfMessage:
+                  listOfMessage = PutIn("Options. What shall I do?") #get userinput
+                  if "about" in listOfMessage:
+                         out("I am SHEP. A adaptable digital assistant AI developed by Dexter Shepherd, for his A level coursework")
+                         time.sleep(0.5)
+                         out("I am here to serve")
+                         #tell about system
+                         break
+                  elif "exit" in listOfMessage:   #leave program
+                      exit = 1
+                      break
+                  elif "update" in listOfMessage: #update the system. --For development
+                      update()
+                      break
+                  else:
+                     out("Sorry I didn't get that. Are you sure that is an option?")
     elif "edit" == user_message: #edit sentence
         user_message = ""
         while user_message == "":
