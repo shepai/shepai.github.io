@@ -603,6 +603,7 @@ while(exit ==0):
     os.system("clear")  # on linux / os x
     user_message = PutIn("") #get userinput
     if user_message == "options":
+           listOfMessage = ""
            while "cancel" not in listOfMessage:
                   listOfMessage = PutIn("Options. What shall I do?") #get userinput
                   if "about" in listOfMessage:
