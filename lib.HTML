@@ -98,6 +98,44 @@ myBot.addWord(<font color="green">"you"</font>,<font color="green">"c"</font>)<b
 myBot.edit(<font color="green">"what is your name"</font>)<br/>
 <br/>
 		</div>
+		This shows ways to use the functions. You may be making a game and want multiple AI's, and all to communicate. The below shows a communication demo between AI's
+			<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI
+<br/><br/>
+				<br/>sprite1 = AI(<font color="green">"Droid"</font>, <font color="green">"Jeffery"</font>,<font color="green">"Droid.xml"</font>) <font color="red">#an AI </font>
+				<br/>sprite2 = AI(<font color="green">"Jeffery"</font>, <font color="green">"Jeffery"</font>,<font color="green">"jeff.xml"</font>)
+				<br/><font color="red">###################################</font>
+				<br/><font color="purple">print</font>(<font color="green">"\nTwo AI convo two"</font>)
+				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>,1) <font color="red">#check data</font>
+				<br/><font color="purple">print</font>(<font color="green">"Droid: "</font>+value)
+				<br/><font color="orange">if</font> value != <font color="green">"/00/00/00"</font>:
+				<br/><t>    trigger = sprite2.find_term(value,<font color="green">"t"</font>)
+				<br/><t>    subject = sprite2.find_term(value,<font color="green">"s"</font>)
+				<br/><t>    command = sprite2.find_term(value,<font color="green">"c"</font>)
+				<br/><t>    value = sprite2.find(trigger,subject,command,1) <font color="red">#check data</font>
+				<br/><font color="purple">print</font>(<font color="green">"Jeff: "</font>+value)
+<br/><br/>
+				<br/><font color="red">###########################################</font>
+				<br/><font color="purple">print</font>(<font color="green">"\nTwo AI convo one"</font>)
+				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>,1) <font color="red">#check data</font>
+				<br/><font color="purple">print</font>(<font color="green">"Droid: "</font>+value)
+<br/>
+				<br/><font color="orange">if</font> value != <font color="green">"/00/00/00"</font>:
+<br/><t>    value = sprite2.search(value)
+				<br/><font color="purple">print</font>(<font color="green">"Jeff: "</font>+value)
+
+		</div>
+				The files "jeff.xml" and "Droid.xml" both go as following: 
+				<br/>
+				Jeff
+				<br/>
+					<img src="assets/Jeff.png">
+    
+
+				
+				<br/>Droid
+				<div>
+					<img src="assets/Droid.png">
+				</div>
 	  </div>
 	  </p>
   </div>
