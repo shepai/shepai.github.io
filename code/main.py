@@ -11,6 +11,10 @@ import re
 import time
 import re
 from subprocess import Popen, STDOUT, PIPE
+#import the file managment libraries
+from distutils.dir_util import copy_tree
+import ctypes
+import fileinput
 #input timer
 from threading import Thread
 #import the internet connection libraries
@@ -29,15 +33,16 @@ import serial
 import speech_recognition as sr
 #speech output lib
 import pyttsx3
+#eye
+import time
+import colorsys
+from pixels import Pixels #found in folder
 #global variables
 global rec
 global m
 global system_pathway
 global connection_errors
-#eye
-import time
-import colorsys
-from pixels import Pixels #found in folder
+
 pixels = Pixels()
 #button
 import RPi.GPIO as GPIO
@@ -494,6 +499,42 @@ def wifi():
            except:
                   print (handle.stdout.readline().strip())
                   print("Couldn't connect to the network... ")
+def listUSB():
+    #get all the USBs and find the writeable and readable ones,
+    list = os.popen("lsblk").read()
+    list = list.split()
+    i=7
+    errors=[]
+    devices=[]
+    pathway=[]
+    while i < (len(list)):
+        
+        i+=6
+        if i < (len(list)):
+                
+            if "/" not in list[i]: #no pathway so in fact
+                errors.append(list[i-6]) #make list of bad one's
+            else: #pathway
+                devices.append(list[i-6])
+                pathway.append(list[i])
+                i+=1
+    
+    print("\nGood devices:")
+    for i in range(len(devices)):
+        print(devices[i]+"---"+pathway[i])
+        try:
+            copyFiles(pathway[i]+"/AI/actions")
+            out("Files copied")
+        except:
+            print("Cannot be done!")
+        
+def copyFiles(directory,):
+    # copy subdirectory example
+    fromDirectory = directory
+    toDirectory = system_pathway+"/action"
+
+    copy_tree(fromDirectory, toDirectory)
+
 def checkInfo():
        #check the users info and type any if not found.
        y=0
@@ -576,7 +617,8 @@ while(exit ==0):
         while user_message == "":
                user_message = PutIn("Which sentence shall I edit?") #get userinput
         edit(user_message)
-               
+    elif "add action" in user_message or "add function" in user_message:
+        listUSB()
     elif user_message == "":    #no data
         print("")#waste space to do nothing
     else:
