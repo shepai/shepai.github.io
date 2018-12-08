@@ -523,7 +523,7 @@ def listUSB():
     for i in range(len(devices)):
         print(devices[i]+"---"+pathway[i])
         try:
-            copyFiles(pathway[i]+"/AI/actions")
+            copyFiles(pathway[i]+"/AI/actions") #look for file and copy it
             out("Files copied")
         except:
             print("Cannot be done!")
@@ -617,8 +617,8 @@ while(exit ==0):
         while user_message == "":
                user_message = PutIn("Which sentence shall I edit?") #get userinput
         edit(user_message)
-    elif "add action" in user_message or "add function" in user_message:
-        listUSB()
+    elif "add action" in user_message or "add function" in user_message or "and function" in user_message or "and action" in user_message:
+        listUSB() #read USB files onto AI
     elif user_message == "":    #no data
         print("")#waste space to do nothing
     else:
