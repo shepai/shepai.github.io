@@ -523,15 +523,16 @@ def listUSB():
     for i in range(len(devices)):
         print(devices[i]+"---"+pathway[i])
         try:
-            copyFiles(pathway[i]+"/AI/actions") #look for file and copy it
+            copyFiles(pathway[i]+"/AI/actions",system_pathway+"/action") #look for file and copy it
+            copyFiles(system_pathway,pathway[i]+"/AI/data")
             out("Files copied")
         except:
             print("Cannot be done!")
         
-def copyFiles(directory,):
+def copyFiles(directory,to):
     # copy subdirectory example
     fromDirectory = directory
-    toDirectory = system_pathway+"/action"
+    toDirectory = to
 
     copy_tree(fromDirectory, toDirectory)
 
