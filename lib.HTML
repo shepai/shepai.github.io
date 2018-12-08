@@ -51,7 +51,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI</div>
 		The library has several functions the user can use.
 		<br />
-		<i>class</i> = <b>AI</b>(<i>AI_name</i>,<i>user_owner</i>) -- This declares the AI with it's name and the name of the user.
+		<i>class</i> = <b>AI</b>(<i>AI_name</i>,<i>user_owner</i>,<i>datafile</i>) -- This declares the AI with it's name and the name of the user. The datafile must be a string and an xml file
 		<br />
 		<i>string</i> = <i>class</i>.<b>search</b>(<i>string</i>) -- will look for the trigger, subject and command in the AI then if they are present, check for an output. If nothing is present, it will return whats missing.
 	    <br />
@@ -68,12 +68,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/>
 		<i>class</i>.<b>out</b>(<i>string</i>) -- Output as a string, but can be changed.
 		<br/>
+		<i>class</i>.<b>setFile</b>(<i>string</i>) -- Change the datafile to a different one
+		<br/>
 		<i>string</i> = <i>class</i>.<b>learn</b>(<i>"trigger"</i>,<i>"subject"</i>,<i>"command"</i>,<i>position</i>) -- Asks for a input
 		<br/><br/>
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
 		<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI
 <br/>
-			myBot = AI(<font color="green">"Jeff"</font>, <font color="green">"user"</font>) #an AI called 'Jeff' and owned by 'user'
+			myBot = AI(<font color="green">"Jeff"</font>, <font color="green">"user"</font>,<font color="green">"knowledge.xml"</font>) <font color="red">#an AI called 'Jeff' and owned by 'user'</font>
 
 <br/>
 
