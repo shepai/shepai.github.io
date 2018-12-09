@@ -514,7 +514,13 @@ def listUSB():
                 
             if "/" not in list[i]: #no pathway so in fact
                 devices.append(list[i-6]) #make list of bad one's
-                pathway.append(list[i])
+                os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
+                #create a mount
+                if "└─" in errors[i+1]:
+                   errors[i+1] = errors[i+1].replace("└─","")
+                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
+               
+                pathway.append("/media/usbstick")
             else: #pathway
                 devices.append(list[i-6])
                 pathway.append(list[i])
@@ -530,6 +536,7 @@ def listUSB():
             out("Files copied")
         except:
             print("Cannot be done!")
+    time.sleep(1)
         
 def copyFiles(directory,to):
     # copy subdirectory example
