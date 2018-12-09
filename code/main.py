@@ -514,11 +514,11 @@ def listUSB():
                 
             if "/" not in list[i]: #no pathway so in fact
                 devices.append(list[i-6]) #make list of bad one's
-                os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
+                os.system("sudo mount -t vfat -o rw /dev/"+list[i]+" /media/usbstick/")
                 #create a mount
-                if "└─" in errors[i+1]:
-                   errors[i+1] = errors[i+1].replace("└─","")
-                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
+                if "└─" in list[i+1]:
+                   errors[i+1] = list[i+1].replace("└─","")
+                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+list[i]+" /media/usbstick/")
                
                 pathway.append("/media/usbstick")
             else: #pathway
