@@ -507,7 +507,7 @@ def listUSB():
     errors=[]
     devices=[]
     pathway=[]
-    while i < (len(list)):
+    while i < (len(list)-1):
         
         i+=6
         if i < (len(list)-1):
