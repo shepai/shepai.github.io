@@ -525,8 +525,8 @@ def listUSB():
                 i+=1
     #show to user
     print("Bad devices:")
-    for i in range(len(errors)):
-        print(errors[i])
+    for i in range(len(errors)-1):
+        print(errors[i]-1)
         os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
         #create a mount
         if "└─" in errors[i+1]:
