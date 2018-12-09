@@ -500,43 +500,56 @@ def wifi():
                   print (handle.stdout.readline().strip())
                   print("Couldn't connect to the network... ")
 def listUSB():
-    #get all the USBs and find the writeable and readable ones,
     list = os.popen("lsblk").read()
+    print(list)
     list = list.split()
     i=7
     errors=[]
     devices=[]
     pathway=[]
-    while i < (len(list)-1):
+    
+    list = os.popen("lsblk").read()
+    list = list.split()
+    while i < (len(list)):
         
         i+=6
-        if i < (len(list)-1):
+        if i < (len(list)):
                 
             if "/" not in list[i]: #no pathway so in fact
-                devices.append(list[i-6]) #make list of bad one's
-                os.system("sudo mount -t vfat -o rw /dev/"+list[i]+" /media/usbstick/")
-                #create a mount
-                if "└─" in list[i+1]:
-                   errors[i+1] = list[i+1].replace("└─","")
-                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+list[i]+" /media/usbstick/")
-               
-                pathway.append("/media/usbstick")
+                errors.append(list[i-6]) #make list of bad one's
+                
+                
             else: #pathway
                 devices.append(list[i-6])
                 pathway.append(list[i])
                 i+=1
-    
+    #show to user
+    print("Bad devices:")
+    for i in range(len(errors)):
+        print(errors[i])
+        os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
+        #create a mount
+        if "└─" in errors[i+1]:
+            errors[i+1] = errors[i+1].replace("└─","")
+            os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
+        
+        try:
+            copyFiles("/media/usbstick/AI/actions","/home/pi/AI/Python_coursework/action")
+            out("Files copied")
+            copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+
+        except:
+            print("Cannot be done!")
     print("\nGood devices:")
     for i in range(len(devices)):
         print(devices[i]+"---"+pathway[i])
         try:
-            copyFiles(pathway[i]+"/AI/actions",system_pathway+"/action") #look for file and copy it
-            
-            copyFiles(system_pathway,pathway[i]+"/AI/data")
+            copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
             out("Files copied")
+            copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
         except:
             print("Cannot be done!")
-    time.sleep(1)
+
         
 def copyFiles(directory,to):
     # copy subdirectory example
