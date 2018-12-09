@@ -426,11 +426,17 @@ def learn(trigger,subject,command,num):
                if say == "add action":
                    exit = 1
                    while exit == 1:
-                       say = PutIn("What is the name of your action?")
+                       #find the action
+                       out("What is the name of your action?")
+                       say = getVoice() #get voice input
+                       if say.replace(" ","") == "exit": #see if user says exit
+                              break #break
+                       
                        try:    #look for file
                            file = open("action/"+say+".py","r")
                            file.close()
                            exit = 0
+                           #add to file and set break onn next loop
                        except:
                            out("There is no such file."+str(say))
                    say = "!A! "+"action/"+say+".py"    #save in format
@@ -625,7 +631,8 @@ while(exit ==0):
     if user_message == "options":
            listOfMessage = ""
            while "cancel" not in listOfMessage:
-                  listOfMessage = PutIn("Options. What shall I do?") #get userinput
+                  out("Options. What shall I do?")
+                  listOfMessage = getVoice() #get userinput
                   if "about" in listOfMessage:
                          out("I am SHEP. A adaptable digital assistant AI developed by Dexter Shepherd, for his A level coursework")
                          time.sleep(0.5)
@@ -643,7 +650,8 @@ while(exit ==0):
     elif "edit" == user_message: #edit sentence
         user_message = ""
         while user_message == "":
-               user_message = PutIn("Which sentence shall I edit?") #get userinput
+               out("Which sentence shall I edit?")
+               user_message = getVoice() #get userinput
         edit(user_message)
     elif "add action" in user_message or "add function" in user_message or "and function" in user_message or "and action" in user_message:
         listUSB() #read USB files onto AI
