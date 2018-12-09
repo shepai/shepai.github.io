@@ -510,7 +510,7 @@ def listUSB():
     while i < (len(list)):
         
         i+=6
-        if i < (len(list)):
+        if i < (len(list)-1):
                 
             if "/" not in list[i]: #no pathway so in fact
                 devices.append(list[i-6]) #make list of bad one's
