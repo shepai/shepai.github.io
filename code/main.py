@@ -27,6 +27,9 @@ except:
        import http.client as httplib
 from urllib.request import urlopen
 from wifi import Cell, Scheme
+#page reading libs
+from lxml import html
+import requests
 #data handling library
 import xml.etree.ElementTree as ET
 #serial communication library
@@ -255,6 +258,24 @@ def out(string):    #use fundtion so method of output can be changed for hardwar
            #no connection
            print(string)
            error_pixels()
+def getWord(word): #use an online thesarus
+       try:
+              oxford="https://en.oxforddictionaries.com/thesaurus/"+word #location
+              page = requests.get(oxford)
+              tree = html.fromstring(page.content)
+              syn = tree.xpath('//span[@class="syn"]/text()') #strip html away
+              string = ""
+              for i in range(len(syn)):
+                  string+=syn[i]
+
+              string=string.replace("'","")
+              list=string.split(",")
+              for i in range(len(syn)):
+                  print(list[i])
+              return list
+       except:
+              print("error")
+              return None
 def edit(sentence):
     #edit the sentence the user has inputted
     trigger=find_term(sentence,"t")  #search string for trigger word in database
@@ -336,31 +357,27 @@ def search(sentence):   #search through data to find if in
         add_word(sentence,'t')
 
 def find_term(message,Stype):
-        #find the word and its type
-        file = open(system_pathway+Stype+".txt","r")   #search vocab file
-        r = file.read() 
-        file.close()
-        x = -1
-        array= []
-        string =""
-        for i in range(len(r)):
-            if r[i] == ",":  #break up each phrase or word
-                #string = string.replace("","")
-                string = string.replace(",","")
-                array.append(string)
-                string = ""
-       
-            string += r[i]
-        #print(array)
-        for i in range(len(array)):
-            if array[i] in message+" ":  #if word in file
-                #x can be added to and a list of subjects is compiled
-                #for future versions
-                x = i
-                break
-        if x >= 0:
+       #find the word and its type
+       tree = ET.parse(system_pathway+Stype+".xml")
+       root = tree.getroot()
+       array=[]
+       string=""
+       x=-1
+       for node in tree.iter('phrase'):#check each phrase
+           ips = node.findall("sub") #check each sub catogory
+           test=[]
+           for ip in ips:
+               string+=ip.text+","
+           
+           test = string.split(",")
+           
+           for i in range(len(test)):
+                  if test[i] in message and test[i] != "": #check each word
+                         x+=1
+                         array.append(test[i]) #compile list of subjects
+       if x >= 0:
             return array[x] #return the keyword
-        else:
+       else:
             return "#@false" #the command to say nothing found
         
 def add_word(phrase,Type):  #add a word to the data
@@ -395,12 +412,36 @@ def add_word(phrase,Type):  #add a word to the data
     #add word to correct file
     if word != "":
            out("Saving now. Your phrase is. "+word)
-           file = open(system_pathway +Type+".txt","a")
-           file.write(word)
-           file.write(",")
+           addition = ET.parse(system_pathway+Type+".xml")
+           root = addition.getroot()
+           num = 1
+           for i in root.findall("phrase"): #counts the current amount
+                     num += 1
+           file = open(system_pathway+Type+".xml","r")    #open database
+           r = file.read() #read data
            file.close()
+                      
+           r = r.replace("</data>","") #remove end
+           r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
+           list=getWord(word)
+           num=1
+           if list != None:
+                             
+              for i in range(len(list)):
+                     if list[i] != "":
+                            r = r+"\t<sub>"+list[i]+"</sub>\n"
+                            num+=1
+           r = r+"\t<sub>"+word+"</sub>\n"
+           r = r + "\t</phrase>\n"
+           r = r + "\t</data>\n"
+            
+           file = open(system_pathway+Type+".xml","w")    #open database
+           file.write(r) #write to file
+           file.close()
+                  
     else:
            out("Adding aborted")
+
 def find(trigger, subject, command,Type):
     tree = ET.parse(system_pathway+"knowledge.xml")
     root = tree.getroot()
