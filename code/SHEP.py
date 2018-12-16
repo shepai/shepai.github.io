@@ -1,3 +1,5 @@
+___Version___="0.1.1"
+___Author___ ="Dexter Shepherd"
 import xml.etree.ElementTree as ET
 #for Python version 3 or above
 import sys
@@ -51,6 +53,24 @@ class AI:
            return input()  #return input
        def out(myAI,string):    #use fundtion so method of output can be changed for hardware
            print(string)#method of output
+       def getWord(myAI,word): #use an online thesarus
+              try:
+                     oxford="https://en.oxforddictionaries.com/thesaurus/"+word #location
+                     page = requests.get(oxford)
+                     tree = html.fromstring(page.content)
+                     syn = tree.xpath('//span[@class="syn"]/text()') #strip html away
+                     string = ""
+                     for i in range(len(syn)):
+                         string+=syn[i]
+
+                     string=string.replace("'","")
+                     list=string.split(",")
+                     for i in range(len(syn)):
+                         print(list[i])
+                     return list
+              except:
+                     print("error")
+                     return None
        def edit(myAI,sentence):
            #edit the sentence the user has inputted
            trigger=myAI.find_term(sentence,"t")  #search string for trigger word in database
@@ -131,36 +151,32 @@ class AI:
                return "No trigger"
 
        def find_term(myAI,message,Stype):
-               #find the word and its type
-               file = open(system_pathway+Stype+".txt","r")   #search vocab file
-               r = file.read() 
-               file.close()
-               x = -1
-               array= []
-               string =""
-               for i in range(len(r)):
-                   if r[i] == ",":  #break up each phrase or word
-                       #string = string.replace("","")
-                       string = string.replace(",","")
-                       array.append(string)
-                       string = ""
-                       
-                   string += r[i]
-               ##print(array)
-               for i in range(len(array)):
-                   if array[i] in message:  #if word in file
-                       #x can be added to and a list of subjects is compiled
-                       #for future versions
-                       x = i
-                       break
-               if x >= 0:
+              #find the word and its type
+              tree = ET.parse(system_pathway+Stype+".xml")
+              root = tree.getroot()
+              array=[]
+              string=""
+              x=-1
+              for node in tree.iter('phrase'):#check each phrase
+                  ips = node.findall("sub") #check each sub catogory
+                  test=[]
+                  for ip in ips:
+                      string+=ip.text+","
+                  
+                  test = string.split(",")
+                  
+                  for i in range(len(test)):
+                         if test[i] in message and test[i] != "": #check each word
+                                x+=1
+                                array.append(test[i]) #compile list of subjects
+              if x >= 0:
                    return array[x] #return the keyword
-               else:
+              else:
                    return "#@false" #the command to say nothing found
 
        def add_word(myAI,phrase,Type):  #add a word to the data
            ##myAI.out("Your sentence is "+phrase)
-           #print("---")
+           ##print("---")
            phrase = phrase.split() #make it a list
            word = "" #the word to save
            i = 0
@@ -168,13 +184,37 @@ class AI:
            word = myAI.PutIn("Enter your word or words: ")
            #add word to correct file
            if word != "":
-                  #myAI.out("Saving now. Your phrase is. "+word)
-                  file = open(system_pathway +Type+".txt","a")
-                  file.write(word)
-                  file.write(",")
-                  file.close()
-           
+                      myAI.out("Saving now. Your phrase is. "+word)
        
+                      
+                      addition = ET.parse(system_pathway+Type+".xml")
+                      root = addition.getroot()
+                      num = 1
+                      for i in root.findall("phrase"): #finds all the things to do with this
+                             num += 1
+                      file = open(system_pathway+Type+".xml","r")    #open database
+                      r = file.read() #read data
+                      file.close()
+                      
+                      r = r.replace("</data>","") #remove end
+                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
+                      list=getWord(word)
+                      num=1
+                      if list != None:
+                             
+                             for i in range(len(list)):
+                                    if list[i] != "":
+                                           r = r+"\t<sub>"+list[i]+"</sub>\n"
+                                           num+=1
+                      r = r+"\t<sub>"+word+"</sub>\n"
+                      r = r + "\t</phrase>\n"
+                      r = r + "\t</data>\n"
+                      #write to file in format
+                      ##print(r)
+                      #time.sleep(4)
+                      file = open(system_pathway+Type+".xml","w")    #open database
+                      file.write(r) #write to file
+                      file.close()
        def find(myAI,trigger, subject, command,Type):
            tree = ET.parse(system_pathway+myAI.file)
            root = tree.getroot()
@@ -234,12 +274,35 @@ class AI:
                       output = "I didn't add anything, as you told me not to."
                return output
        def addWord(myAI,string,Type):
-                  #the ser can add words this way
-                  #myAI.out("Saving now.")
-                  file = open(system_pathway +Type+".txt","a")
-                  file.write(string)
-                  file.write(",")
-                  file.close()
+                      #data for the AI to add
+                      addition = ET.parse(system_pathway+Type+".xml")
+                      root = addition.getroot()
+                      num = 1
+                      for i in root.findall("phrase"): #finds all the things to do with this
+                             num += 1
+                      file = open(system_pathway+Type+".xml","r")    #open database
+                      r = file.read() #read data
+                      file.close()
+                      
+                      r = r.replace("</data>","") #remove end
+                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
+                      list=getWord(word)
+                      num=1
+                      if list != None:
+                             #if there are words to be found
+                             for i in range(len(list)):
+                                    if list[i] != "":
+                                           r = r+"\t<sub>"+list[i]+"</sub>\n"
+                                           num+=1
+                      r = r+"\t<sub>"+word+"</sub>\n"
+                      r = r + "\t</phrase>\n"
+                      r = r + "\t</data>\n"
+                      #write to file in format
+                      ##print(r)
+                      #time.sleep(4)
+                      file = open(system_pathway+Type+".xml","w")    #open database
+                      file.write(r) #write to file
+                      file.close()
        def start_program(myAI):
               exit = 0
               while(exit ==0):
@@ -252,4 +315,4 @@ class AI:
                       myAI.search(user_message)
                       
 
-#d = AI("RR","FF","EE")
+
