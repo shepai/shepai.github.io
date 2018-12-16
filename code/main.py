@@ -426,7 +426,7 @@ def add_word(phrase,Type):  #add a word to the data
            list=getWord(word)
            num=1
            if word[-1:]==" ":
-                  word[-1:]=""
+                  word[-1]=""
            if list != None:
                              
               for i in range(len(list)):
