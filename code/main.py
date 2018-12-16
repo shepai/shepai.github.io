@@ -701,6 +701,8 @@ while(exit ==0):
                out("Which sentence shall I edit?")
                user_message = getVoice() #get userinput
         edit(user_message)
+    elif "shutdown" == user_message or "shut down" == user_message: #shut down system
+           os.system("sudo shutdown –h") #shutown command
     elif "add action" in user_message or "add function" in user_message or "and function" in user_message or "and action" in user_message:
         listUSB() #read USB files onto AI
     elif user_message == "":    #no data
