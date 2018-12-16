@@ -278,11 +278,11 @@ def getWord(word): #use an online thesarus
               return None
 def edit(sentence):
     #edit the sentence the user has inputted
-    trigger=find_term(sentence,"t")  #search string for trigger word in database
+    trigger=find_term(sentence,"trigger")  #search string for trigger word in database
     if trigger!="#@false":
-        subject = find_term(sentence,"s") #search message for subject
+        subject = find_term(sentence,"subject") #search message for subject
         if subject!="#@false":
-            command = find_term(sentence,"c") #search message for command
+            command = find_term(sentence,"command") #search message for command
             if command!="#@false":
                 AI = find(trigger,subject,command,1)  #search database
                 if AI == "/00/00/00": #there is not a sentence
@@ -311,22 +311,22 @@ def edit(sentence):
             else:   #no command word found
                 out("No command found")
                 time.sleep(1)
-                add_word(sentence,'c')
+                add_word(sentence,'command')
         else:   #no subject found
             out("No subject found")
             time.sleep(1)
-            add_word(sentence,'s')
+            add_word(sentence,'subject')
     else:   #no trigger found
         out("No trigger found")
         time.sleep(1)
-        add_word(sentence,'t')
+        add_word(sentence,'trigger')
 def search(sentence):   #search through data to find if in
     #print("searching "+sentence)
-    trigger=find_term(sentence,"t")  #search string for trigger word in database
+    trigger=find_term(sentence,"trigger")  #search string for trigger word in database
     if trigger!="#@false":
-        subject = find_term(sentence,"s") #search message for subject
+        subject = find_term(sentence,"subject") #search message for subject
         if subject!="#@false":
-            command = find_term(sentence,"c") #search message for command
+            command = find_term(sentence,"command") #search message for command
             if command!="#@false":
                 #all words needed found
                 #print(trigger)
@@ -346,15 +346,15 @@ def search(sentence):   #search through data to find if in
             else:   #no command word found
                 out("No command found")
                 time.sleep(1)
-                add_word(sentence,'c')
+                add_word(sentence,'command')
         else:   #no subject found
             out("No subject found")
             time.sleep(1)
-            add_word(sentence,'s')
+            add_word(sentence,'subject')
     else:   #no trigger found
         out("No trigger found")
         time.sleep(1)
-        add_word(sentence,'t')
+        add_word(sentence,'trigger')
 
 def find_term(message,Stype):
        #find the word and its type
@@ -706,4 +706,5 @@ while(exit ==0):
     else:
         search(user_message)
     
-sys.exit()  #stop the program
+#end program with error to allow system continuation
+f=3/0
