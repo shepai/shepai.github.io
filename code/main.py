@@ -641,10 +641,12 @@ while(exit ==0):
                          break
                   elif "exit" in listOfMessage:   #leave program
                       exit = 1
-                      break
+                      listOfMessage = "cancel"
                   elif "update" in listOfMessage: #update the system. --For development
                       update()
                       break
+                  elif "cancel" in listOfMessage:
+                      out("Okay!")
                   else:
                      out("Sorry I didn't get that. Are you sure that is an option?")
     elif "edit" == user_message: #edit sentence
