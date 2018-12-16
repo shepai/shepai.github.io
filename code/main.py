@@ -10,7 +10,10 @@ import os
 import re
 import time
 import re
+#clear up type errors
 from subprocess import Popen, STDOUT, PIPE
+from subprocess import *
+import subprocess
 #import the file managment libraries
 from distutils.dir_util import copy_tree
 import ctypes
