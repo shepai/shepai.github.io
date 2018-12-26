@@ -79,6 +79,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/><br/>
 		<i>string</i> = <i>class</i>.<b>findWiki</b>(<i></i>) -- Check wikipedia for infomation and returns either the value or 
 		<br/><br/>
+		<i>class</i>.<b>listUSB</b>(<i></i>) -- check all USB ports and copy over files into the action folder. Take note certain modules will need to be installed. This only works with Linux
+		<br/><br/>
 		<br/><br/><br/>
 		</div>
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
@@ -97,8 +99,8 @@ myBot.addWord(<font color="green">"how"</font>,<font color="green">"t"</font>)<b
 myBot.addWord(<font color="green">"feeling"</font>,<font color="green">"s"</font>)<br/>
 myBot.addWord(<font color="green">"you"</font>,<font color="green">"c"</font>)<br/>
 <br/>
-<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"you"</font>,1)) <font color="red">#check data</font><br/>
-<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"no word"</font>,<font color="green">"no word"</font>,<font color="green">"no word"</font>,1)) <font color="red">#check data</font><br/>
+<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"you"</font>)) <font color="red">#check data</font><br/>
+<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"no word"</font>,<font color="green">"no word"</font>,<font color="green">"no word"</font>)) <font color="red">#check data</font><br/>
 <font color="red">#put the 1 as a 0 to enable automatic learning</font><br/>
 <br/>
 myBot.edit(<font color="green">"what is your name"</font>)<br/>
@@ -111,18 +113,18 @@ myBot.edit(<font color="green">"what is your name"</font>)<br/>
 				<br/>sprite2 = AI(<font color="green">"Jeffery"</font>, <font color="green">"Jeffery"</font>,<font color="green">"jeff.xml"</font>)
 				<br/><font color="red">###################################</font>
 				<br/><font color="purple">print</font>(<font color="green">"\nTwo AI convo two"</font>)
-				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>,1) <font color="red">#check data</font>
+				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>) <font color="red">#check data</font>
 				<br/><font color="purple">print</font>(<font color="green">"Droid: "</font>+value)
 				<br/><font color="orange">if</font> value != <font color="green">"/00/00/00"</font>:
 				<br/><t>    trigger = sprite2.find_term(value,<font color="green">"t"</font>)
 				<br/><t>    subject = sprite2.find_term(value,<font color="green">"s"</font>)
 				<br/><t>    command = sprite2.find_term(value,<font color="green">"c"</font>)
-				<br/><t>    value = sprite2.find(trigger,subject,command,1) <font color="red">#check data</font>
+				<br/><t>    value = sprite2.find(trigger,subject,command) <font color="red">#check data</font>
 				<br/><font color="purple">print</font>(<font color="green">"Jeff: "</font>+value)
 <br/><br/>
 				<br/><font color="red">###########################################</font>
 				<br/><font color="purple">print</font>(<font color="green">"\nTwo AI convo one"</font>)
-				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>,1) <font color="red">#check data</font>
+				<br/>value = sprite1.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"are"</font>) <font color="red">#check data</font>
 				<br/><font color="purple">print</font>(<font color="green">"Droid: "</font>+value)
 <br/>
 				<br/><font color="orange">if</font> value != <font color="green">"/00/00/00"</font>:
