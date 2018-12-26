@@ -115,7 +115,7 @@ def OUTPUT(string):#output method
            #no connection
            print(string)
            error_pixels()
-def INPUT(string):#input method
+def voice():#input method
     mute = False
     try:
            
@@ -194,6 +194,25 @@ def INPUT(string):#input method
            #OUTPUT("There was an error connecting to microphone")
            error_pixels()
     return voiceReply.lower()   #return voice
+
+def INPUT(string):
+    OUTPUT(string)#method of output
+    string = ""
+    string = getVoice() #get voice input
+    if "robot" in string:
+           print("----------------------------------")
+           if "robot keyboard" in string:
+                     string = input("Please type: ")#type mode
+           else:
+                     string = (string.replace("robot ","",1))#getrid of call sign
+           pixels.think()   #show the user it is thinking
+           
+           if "robot" == string:
+                  string = ""
+           return string  #return input
+    else:
+           print("---nothing")
+           return "" #nothing said to robot
 def pickPhrase():
     words = INPUT("Select the words you want: ")
     return words
@@ -221,7 +240,6 @@ exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
     User = INPUT("Your message ")
-    r = myBot.search(User)
     
     if User == "edit": #edit a sentence
         sentence = INPUT("Say the sentence that I shall edit ")
@@ -232,7 +250,10 @@ while exit == False:
         myBot.listUSB()
     elif User == "exit":
         exit=True
+    elif User == "":
+        r = ""
     else:
+        r = myBot.search(User) #check the AI
         if add_mode == True:
             if r == "No trigger": #add phrases to make word
                 OUTPUT("No trigger found")
