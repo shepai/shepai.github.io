@@ -177,18 +177,21 @@ class AI:
               array=[]
               string=""
               x=-1
-              for node in tree.iter('phrase'):#check each phrase
-                  ips = node.findall("sub") #check each sub catogory
-                  test=[]
-                  for ip in ips:
-                      string+=ip.text+","
-                  
-                  test = string.split(",")
-                  
-                  for i in range(len(test)):
-                         if test[i] in message and test[i] != "": #check each word
-                                x+=1
-                                array.append(test[i]) #compile list of subjects
+              try:
+                     for node in tree.iter('phrase'):#check each phrase
+                         ips = node.findall("sub") #check each sub catogory
+                         test=[]
+                         for ip in ips:
+                             string+=ip.text+","
+                         
+                         test = string.split(",")
+                         
+                         for i in range(len(test)):
+                                if test[i] in message and test[i] != "": #check each word
+                                       x+=1
+                                       array.append(test[i]) #compile list of subjects
+              except:
+                     print("--")
               if x >= 0:
                    return array[x] #return the keyword
               else:
@@ -354,16 +357,74 @@ class AI:
                       file = open(system_pathway+Type+".xml","w")    #open database
                       file.write(r) #write to file
                       file.close()
+       def listUSB(myAI):
+           list = os.popen("lsblk").read()
+           print(list)
+           list = list.split()
+           i=7
+           errors=[]
+           devices=[]
+           pathway=[]
+           
+           list = os.popen("lsblk").read()
+           list = list.split()
+           while i < (len(list)):
+               
+               i+=6
+               if i < (len(list)):
+                       
+                   if "/" not in list[i]: #no pathway so in fact
+                       errors.append(list[i-6]) #make list of bad one's
+                       
+                       
+                   else: #pathway
+                       devices.append(list[i-6])
+                       pathway.append(list[i])
+                       i+=1
+           #show to user
+           print("Bad devices:")
+           for i in range(len(errors)-1):
+               print(errors[i])
+               os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
+               #create a mount
+               if "└─" in errors[i+1]:
+                   errors[i+1] = errors[i+1].replace("└─","")
+                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
+               
+               try:
+                   copyFiles("/media/usbstick/AI/actions","/home/pi/AI/Python_coursework/action")
+                   myAI.out("Files copied")
+                   copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+
+               except:
+                   print("Cannot be done!")
+           print("\nGood devices:")
+           for i in range(len(devices)):
+               print(devices[i]+"---"+pathway[i])
+               try:
+                   copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
+                   out("Files copied")
+                   copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+               except:
+                   print("Cannot be done!")
+
+               
+       def copyFiles(myAI,directory,to):
+           # copy subdirectory example
+           fromDirectory = directory
+           toDirectory = to
+
+           copy_tree(fromDirectory, toDirectory)
        def start_program(myAI):
-              exit = 0
-              while(exit ==0):
-                  #print("Enter: ")    
-                  user_message = myAI.PutIn("Your message: ") #get userinput
-                  
-                  if user_message == "/exit":
-                         exit=1
-                  else:
-                      myAI.search(user_message)
+                     exit = 0
+                     while(exit ==0):
+                         #print("Enter: ")    
+                         user_message = myAI.PutIn("Your message: ") #get userinput
+                         
+                         if user_message == "/exit":
+                                exit=1
+                         else:
+                             myAI.search(user_message)
                       
 
 
