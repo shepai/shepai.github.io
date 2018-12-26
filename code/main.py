@@ -30,8 +30,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON, GPIO.IN)
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
-
-myBot.setpath("/home/pi/AI/Python_coursework/")
+system_pathway = "/home/pi/AI/Python_coursework/"
+myBot.setpath(system_pathway)
 
 def audioCheck():
        global rec
@@ -262,3 +262,4 @@ while exit == False:
         
     OUTPUT("Robot message: "+r)
 
+update()
