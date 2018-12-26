@@ -215,9 +215,41 @@ def INPUT(string):
     else:
            print("---nothing")
            return "" #nothing said to robot
-def pickPhrase():
-    words = INPUT("Select the words you want: ")
-    return words
+def pickPhrase(phrase):
+    OUTPUT("Your sentence is "+phrase)
+    print("---")
+    phrase = phrase.split() #make it a list
+    word = "" #the word to save
+    i = 0
+    while i <(len(phrase)): #loop round all the words
+           currentSearch = phrase[i]
+           print(currentSearch)
+           OUTPUT("Is. "+currentSearch+". Your word, or in your word") #ask if that is the users word
+           choice = getVoice() #does not require "robot"
+           if "yes" in choice or "yep" in choice: #different answers
+                  OUTPUT("Great! Adding it")
+                  word += phrase[i] +" " #get the word to save, and lots of them if it is a big sentence         
+           elif "no" in choice or "nope" in choice: #different answers
+                  print("No word")
+                  OUTPUT("Okay, next")
+           elif "cancel" in choice or "exit" in choice: #user does not want to add
+                  OUTPUT("Exiting.")
+                  word = ""
+                  break
+           elif "finished" in choice or "finish" in choice:
+                  OUTPUT("Saving your word")
+                  break
+           else:
+                  out("Sorry, I did not get that")
+                  i=i-1 #go back to prior position
+           i=i+1 #increase iteration
+           time.sleep(1)
+    #add word to correct file
+    if word != "":
+        return words
+    else:
+        OUTPUT("aborted")
+        return "ABORTED"
 
 def add(to_add):
     #get the type to add
@@ -340,15 +372,21 @@ while exit == False:
         if add_mode == True:
             if r == "No trigger": #add phrases to make word
                 OUTPUT("No trigger found")
-                myBot.addWord(pickPhrase(),"trigger")
+                phrase = pickPhrase(User)
+                if phrase != "ABORTED":
+                    myBot.addWord(phrase,"trigger")
                 r = ""
             elif r == "No subject": #add phrases to make word
                 OUTPUT("No subject found")
-                myBot.addWord(pickPhrase(),"subject")
+                phrase = pickPhrase(User)
+                if phrase != "ABORTED":
+                    myBot.addWord(phrase,"subject")
                 r = ""
             elif r == "No command": #add phrases to make word
                 OUTPUT("No command found")
-                myBot.addWord(pickPhrase(),"command")
+                phrase = pickPhrase(User)
+                if phrase != "ABORTED":
+                    myBot.addWord(Phrase,"command")
                 r = ""
             elif r == "/actions/": #an action has just been played.
                 print("Action played")
