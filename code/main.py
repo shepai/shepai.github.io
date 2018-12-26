@@ -246,7 +246,7 @@ def pickPhrase(phrase):
            time.sleep(1)
     #add word to correct file
     if word != "":
-        return words
+        return word
     else:
         OUTPUT("aborted")
         return "ABORTED"
