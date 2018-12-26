@@ -116,7 +116,7 @@ def OUTPUT(string):#output method
            #no connection
            print(string)
            error_pixels()
-def voice():#input method
+def getVoice():#input method
     mute = False
     try:
            
@@ -232,11 +232,91 @@ def add(to_add):
             else:
                 valid = myBot.addAction(userInput)#check the filename and add
                 to_add = ">action"
-                
-                                    
-    
     return to_add
+def wifi():
+#wifi connection function
+       batcmd="nmcli dev wifi"
+       result = subprocess.check_output(batcmd,shell = True)
+       result = result.decode('utf-8') # needed in python 3
+       if result == "":
+           print("No network found")
+       else:
+           print(result)
+           
+           ls = re.split("\n |  |\t ",result) #clear of waste
+           new = []
+           for i in range(len(ls)): #sort waste
+               if ls[i] != "" and ls[i] != " ":
+                   new.append(ls[i])    
+           new = new[8:] #sort more waste
+           ssids = []
+           x = 0
+           y = 1
+           while x < len(new)-1: #create list of things
+               ssids.append(new[x])
+               print(str(y)+") "+new[x])
+               x += 7
+               y += 1
+           num = len(ssids)+1
+           while num > len(ssids):
+                  num = int(input("Which number would you like: "))
+                  num = num - 1 #equalize it with list numbers
+                  if num < 0:
+                      num = len(ssids) +1 #loop bigger than the array
+           ID = ssids[num]
+           passkey = input("Password: ")
+           try:
+                print("Connecting... ")
+                handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
+                #sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+                sleep(5) # wait for the password prompt to occur (if there is one, i'm on Linux and sudo will always ask me for a password so i'm just assuming windows isn't retarded).
+                print ((handle.stdout.readline().strip()).decode('utf-8'))
+                
+
+           except:
+                  print (handle.stdout.readline().strip())
+                  print("Couldn't connect to the network... ")
+def checkInfo():
+       #check the users info and type any if not found.
+       y=0
+       while y <= 4:
+              if internet() == False:
+                     time.sleep(1) #give time to connect
+              y += 1
+       while internet() == False: #loop till a network is found
+              while internet() == False: #prevent wrong IDs
+                     wifi()
+                     time.sleep(0.5)
+       check = ["name","title","birthday"]
+       print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
+       to_output_once = "Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam"
+       for i in range(len(check)):
+           try: #if file is a thing it will read and be fine
+                  file = open(system_pathway+check[i]+".txt","r") 
+                  r = file.read()
+                  file.close()
+                  
+                  if r == "":      #there is no data    
+                         out(to_output_once)
+                         to_output_once = ""
+                         out("Please type your "+check[i])
+                         string = "Please type your "+check[i]+": "
+                         data = input(string)
+                         file = open(system_pathway+check[i]+".txt","w")
+                         r = file.write(data)
+                         file.close()
+           except: #the file is not found and needs to be added
+                #print("No file found")
+                out(to_output_once)
+                to_output_once = ""
+                string = "Please type your "+check[i]+": "
+                data = input(string)
+                file = open(system_pathway+check[i]+".txt","w")
+                r = file.write(data)
+                file.close()
+checkInfo()
 update()
+
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
