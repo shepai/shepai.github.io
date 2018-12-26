@@ -116,6 +116,7 @@ def OUTPUT(string):#output method
            #no connection
            print(string)
            error_pixels()
+           
 def getVoice():#input method
     mute = False
     try:
@@ -320,7 +321,7 @@ update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
-    User = INPUT("Your message ")
+    User = INPUT("")
     
     if User == "edit": #edit a sentence
         sentence = INPUT("Say the sentence that I shall edit ")
@@ -367,6 +368,6 @@ while exit == False:
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,to_add)
                 r = ""
         
-    OUTPUT("Robot message: "+r)
+    OUTPUT(r)
 
 
