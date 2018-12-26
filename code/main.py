@@ -30,6 +30,7 @@ from wifi import Cell, Scheme
 #page reading libs
 from lxml import html
 import requests
+from bs4 import BeautifulSoup
 #data handling library
 import xml.etree.ElementTree as ET
 #serial communication library
@@ -463,30 +464,101 @@ def find(trigger, subject, command,Type):
         else:
                output = "/00/00/00" #nothing in data
     return output
+def findWiki(word,command):
+       try:
+              word = word.replace(" ","_")
+              string = ""
+              url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
+              html = urlopen(url).read()
+              soup = BeautifulSoup(html)
+
+              # kill all script and style elements
+              for script in soup(["script", "style"]):
+                  script.extract()    # rip it out
+
+              # get text
+              text = soup.get_text()
+
+              # break into lines and remove leading and trailing space on each
+              lines = (line.strip() for line in text.splitlines())
+              # break multi-headlines into a line each
+              chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+              # drop blank lines
+              text = '\n'.join(chunk for chunk in chunks if chunk)
+
+              if command in text: #the command is found
+                     
+                     #find the word
+                     position = text.find(command)
+
+                     print (position)
+                     sentence = False
+                     string = ""
+                     while sentence == False: #get position at begining of sentence
+                            position-=1
+                            
+                            if text[position] == "\n" or position == 0:
+                                   sentence = True
+                     sentence = False #reuse variable for memory speed
+                     
+                     while sentence == False:
+                            
+                            position+=1
+                            
+                            string+=text[position]
+                            if text[position] == ".":
+                                   sentence = True
+                     print(string)
+                     return string
+
+       except:
+              print("No page found")
+              #carry on as normal
+              return ""
+
+
 def learn(trigger,subject,command,num):
         #teach the AI
-        out("Nothing in my data... Please tell me, how you would like me, to respond")
-        say = validate() #get a valid user input
-        output = ""
-        if say != None:
-               if say == "add action":
-                   exit = 1
-                   while exit == 1:
-                       #find the action
-                       out("What is the name of your action?")
-                       say = getVoice() #get voice input
-                       if say.replace(" ","") == "exit": #see if user says exit
-                              break #break
-                       
-                       try:    #look for file
-                           file = open("action/"+say+".py","r")
-                           file.close()
-                           exit = 0
-                           #add to file and set break onn next loop
-                       except:
-                           out("There is no such file."+str(say))
-                   say = "!A! "+"action/"+say+".py"    #save in format
+        yesno = False
+        no = False
+        word_to_add = findWiki(subject,command)
+        if word_to_add != "":
+                out("Is... "+word_to_add)
+                time.sleep(1)
+                out("A good response? ")
+                
+                while yesno == False:
+                       say = validate() #get a valid user input
+                       if "yes" in say or "no" in say:
+                              yesno = True
+                if "yes" in say:
+                       say = word_to_add
+                else:
+                       no = True
+        if word_to_add == "" or no == True:
+               out("Nothing in my data... Please tell me, how you would like me, to respond")
+               say = validate() #get a valid user input
+               output = ""
+               if say != None:
+                      if say == "add action":
+                          exit = 1
+                          while exit == 1:
+                              #find the action
+                              out("What is the name of your action?")
+                              say = getVoice() #get voice input
+                              if say.replace(" ","") == "exit": #see if user says exit
+                                     break #break
+                              
+                              try:    #look for file
+                                  file = open("action/"+say+".py","r")
+                                  file.close()
+                                  exit = 0
+                                  #add to file and set break onn next loop
+                              except:
+                                  out("There is no such file."+str(say))
+                          say = "!A! "+"action/"+say+".py"    #save in format
 
+        if "cancel" no in say or "exit" not in say:
                file = open(system_pathway+"knowledge.xml","r")    #open database
                r = file.read() #read data
                file.close()
@@ -506,7 +578,7 @@ def learn(trigger,subject,command,num):
                file.close()
                output = say
         else:
-               output = "I didn't add anything, as you told me not to."
+               output="cancelling"
         return output
 def wifi():
 #wifi connection function
@@ -702,7 +774,7 @@ while(exit ==0):
                user_message = getVoice() #get userinput
         edit(user_message)
     elif "shutdown" == user_message or "shut down" == user_message: #shut down system
-           os.system("sudo shutdown –h") #shutown command
+           os.system("sudo shutdown –h") #shutdown command
     elif "add action" in user_message or "add function" in user_message or "and function" in user_message or "and action" in user_message:
         listUSB() #read USB files onto AI
     elif user_message == "":    #no data
