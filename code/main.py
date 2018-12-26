@@ -317,7 +317,7 @@ def checkInfo():
                 file.close()
 checkInfo()
 update()
-
+myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
