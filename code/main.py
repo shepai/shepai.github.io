@@ -216,7 +216,7 @@ def add(to_add):
                                     
     
     return to_add
-
+update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
@@ -228,38 +228,43 @@ while exit == False:
         to_add = INPUT("What shall I replace it with? ")
         replace = add(to_add)
         myBot.edit(sentence,replace)
-    if add_mode == True:
-        if r == "No trigger": #add phrases to make word
-            OUTPUT("No trigger found")
-            myBot.addWord(pickPhrase(),"trigger")
-            r = ""
-        elif r == "No subject": #add phrases to make word
-            OUTPUT("No subject found")
-            myBot.addWord(pickPhrase(),"subject")
-            r = ""
-        elif r == "No command": #add phrases to make word
-            OUTPUT("No command found")
-            myBot.addWord(pickPhrase(),"command")
-            r = ""
-        elif r == "/actions/": #an action has just been played.
-            print("Action played")
-            r = ""
-        elif r == "/00/00/00": #no action is fond
-            print("Learning... a moment please")
-            word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
-            
-            if word_to_add != "": #if something is found
-                    myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
-            if word_to_add == "":
-                #the wiki is not going to be added
-                to_add = INPUT("Nothing in my data, What shall I add?")
-                to_add = add(to_add)
-                print(to_add)
-                if to_add != ">action" or to_add != "action" or to_add != "an action":
-                    
-                    myBot.learn(myBot.trigger,myBot.subject,myBot.command,to_add)
-            r = ""
+    elif User == "add action":
+        myBot.listUSB()
+    elif User == "exit":
+        exit=True
+    else:
+        if add_mode == True:
+            if r == "No trigger": #add phrases to make word
+                OUTPUT("No trigger found")
+                myBot.addWord(pickPhrase(),"trigger")
+                r = ""
+            elif r == "No subject": #add phrases to make word
+                OUTPUT("No subject found")
+                myBot.addWord(pickPhrase(),"subject")
+                r = ""
+            elif r == "No command": #add phrases to make word
+                OUTPUT("No command found")
+                myBot.addWord(pickPhrase(),"command")
+                r = ""
+            elif r == "/actions/": #an action has just been played.
+                print("Action played")
+                r = ""
+            elif r == "/00/00/00": #no action is fond
+                print("Learning... a moment please")
+                word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
+                
+                if word_to_add != "": #if something is found
+                        myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
+                if word_to_add == "":
+                    #the wiki is not going to be added
+                    to_add = INPUT("Nothing in my data, What shall I add?")
+                    to_add = add(to_add)
+                    print(to_add)
+                    if to_add != ">action" or to_add != "action" or to_add != "an action":
+                        
+                        myBot.learn(myBot.trigger,myBot.subject,myBot.command,to_add)
+                r = ""
         
     OUTPUT("Robot message: "+r)
 
-update()
+
