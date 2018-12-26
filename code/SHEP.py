@@ -7,6 +7,21 @@ import os
 import re
 import time
 import inspect
+from lxml import html
+from subprocess import *
+import subprocess
+
+try:
+       import httplib
+except:
+       import http.client as httplib
+
+from urllib.request import urlopen
+import urllib
+
+#####################################
+from bs4 import BeautifulSoup
+import re
 
 class AI:
        
@@ -18,6 +33,10 @@ class AI:
            myAI.name = name
            myAI.age = user
            myAI.file = file
+           myAI.subject = ""
+           myAI.trigger = ""
+           myAI.command = ""
+           myAI.num_of_commands = 0
        def setFile(myAI,string):#set the file to a different one
               myAI.file = string
        def setpath(myAI,string):#set the file to a different one
@@ -71,21 +90,21 @@ class AI:
               except:
                      print("error")
                      return None
-       def edit(myAI,sentence):
+       def edit(myAI,sentence,replacement):
            #edit the sentence the user has inputted
-           trigger=myAI.find_term(sentence,"t")  #search string for trigger word in database
+           trigger=myAI.find_term(sentence,"trigger")  #search string for trigger word in database
            if trigger!="#@false":
-               subject = myAI.find_term(sentence,"s") #search message for subject
+               subject = myAI.find_term(sentence,"subject") #search message for subject
                if subject!="#@false":
-                   command = myAI.find_term(sentence,"c") #search message for command
+                   command = myAI.find_term(sentence,"command") #search message for command
                    if command!="#@false":
-                       AI = myAI.find(trigger,subject,command,1)  #search database
+                       AI = myAI.find(trigger,subject,command)  #search database
                        if AI == "/00/00/00": #there is not a sentence
                               #myAI.out("This is not a sentence currently saved")
                               return "This is not a sentence currently saved"
                        else:
                              #myAI.out("What shall I replace that with? ")
-                             replacement = myAI.PutIn("What shall I replace it with?") # get the user's input
+                             
                              file = open(system_pathway+myAI.file,"r")    #open database
                              r = file.read() #read data
                              file.close()
@@ -100,7 +119,7 @@ class AI:
                              #write to file in format
                              ##print(r)
                              #time.sleep(4)
-                             file = open(system_pathway+"knowledge.xml","w")    #open database
+                             file = open(system_pathway+myAI.file,"w")    #open database
                              file.write(r) #write to file
                              file.close()
                              return "replaced"
@@ -120,22 +139,23 @@ class AI:
                return "No trigger"
        def search(myAI,sentence):   #search through data to find if in
            #print("searching '"+sentence+"'")
-           trigger=myAI.find_term(sentence,"t")  #search string for trigger word in database
+           trigger=myAI.find_term(sentence,"trigger")  #search string for trigger word in database
            if trigger!="#@false":
-               subject = myAI.find_term(sentence,"s") #search message for subject
+               subject = myAI.find_term(sentence,"subject") #search message for subject
                if subject!="#@false":
-                   command = myAI.find_term(sentence,"c") #search message for command
+                   command = myAI.find_term(sentence,"command") #search message for command
                    if command!="#@false":
                        #all words needed found
-                       #print(trigger)
-                       #print(subject)
-                       #print(command)
-                       AI = myAI.find(trigger,subject,command,0)  #search database
+                       myAI.subject = subject
+                       myAI.trigger = trigger
+                       myAI.command = command
+                       AI = myAI.find(trigger,subject,command)  #search database
+                       
                        if AI[:3] == "!A!":
                            #action
                            #print("ACTION")
                            AI = AI.replace("!A! ","")
-                           os.system("sudo python3 "+system_pathway+AI)
+                           os.system("sudo python3 "+system_pathway+"action/"+AI)
                            return "/action/"
                        else:
                            return AI
@@ -174,48 +194,8 @@ class AI:
               else:
                    return "#@false" #the command to say nothing found
 
-       def add_word(myAI,phrase,Type):  #add a word to the data
-           ##myAI.out("Your sentence is "+phrase)
-           ##print("---")
-           phrase = phrase.split() #make it a list
-           word = "" #the word to save
-           i = 0
-           
-           word = myAI.PutIn("Enter your word or words: ")
-           #add word to correct file
-           if word != "":
-                      myAI.out("Saving now. Your phrase is. "+word)
        
-                      
-                      addition = ET.parse(system_pathway+Type+".xml")
-                      root = addition.getroot()
-                      num = 1
-                      for i in root.findall("phrase"): #finds all the things to do with this
-                             num += 1
-                      file = open(system_pathway+Type+".xml","r")    #open database
-                      r = file.read() #read data
-                      file.close()
-                      
-                      r = r.replace("</data>","") #remove end
-                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
-                      list=getWord(word)
-                      num=1
-                      if list != None:
-                             
-                             for i in range(len(list)):
-                                    if list[i] != "":
-                                           r = r+"\t<sub>"+list[i]+"</sub>\n"
-                                           num+=1
-                      r = r+"\t<sub>"+word+"</sub>\n"
-                      r = r + "\t</phrase>\n"
-                      r = r + "\t</data>\n"
-                      #write to file in format
-                      ##print(r)
-                      #time.sleep(4)
-                      file = open(system_pathway+Type+".xml","w")    #open database
-                      file.write(r) #write to file
-                      file.close()
-       def find(myAI,trigger, subject, command,Type):
+       def find(myAI,trigger, subject, command):
            tree = ET.parse(system_pathway+myAI.file)
            root = tree.getroot()
            output = "none"
@@ -228,52 +208,123 @@ class AI:
                    output = i.find("output").text  #find the saved output
                ##print(trig+sub+com)
                num += 1
+           myAI.num_of_commands = num
            if output == "none":    #nothing found in data
-               if Type == 0: #learn if this is enabled
-                      output = myAI.learn(trigger,subject,command,num)
-               else:
-                      output = "/00/00/00" #nothing in data
+               output = "/00/00/00" #nothing in data
+           
            return output
-       def learn(myAI,trigger,subject,command,num):
-               #teach the AI
-               #myAI.out("Nothing in my data... Please tell me, how you would like me, to respond")
-               say = myAI.PutIn("") #get a valid user input
-               output = ""
-               if say != None:
-                      if say == "add action":
-                          exit = 1
-                          while exit == 1:
-                              say = myAI.PutIn("What is the name of your action?")
-                              try:    #look for file
-                                  file = open("action/"+say+".py","r")
-                                  file.close()
-                                  exit = 0
-                              except:
-                                  myAI.out("There is no such file."+str(say))
-                          say = "!A! "+"action/"+say+".py"    #save in format
+       def findWiki(myAI,word,command):
+              try:
+                     word = word.replace(" ","_")
+                     string = ""
+                     url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
+                     html = urlopen(url).read()
+                     soup = BeautifulSoup(html)
 
-                      file = open(system_pathway+"knowledge.xml","r")    #open database
-                      r = file.read() #read data
-                      file.close()
-                      r = r.replace("</data>","") #remove end
-                      r = r + "\t<phrase name=\"command"+str(num)+"\">\n"
-                      r = r + "\t<trigger>"+trigger+"</trigger>\n"
-                      r = r + "\t<subject>"+subject+"</subject>\n"
-                      r = r + "\t<command>"+command+"</command>\n"
-                      r = r + "\t<output>"+say+"</output>\n"
-                      r = r + "\t</phrase>\n"
-                      r = r + "\t</data>\n"
-                      #write to file in format
-                      ##print(r)
-                      #time.sleep(4)
-                      file = open(system_pathway+myAI.file,"w")    #open database
-                      file.write(r) #write to file
-                      file.close()
-                      output = say
-               else:
-                      output = "I didn't add anything, as you told me not to."
-               return output
-       def addWord(myAI,string,Type):
+                     # kill all script and style elements
+                     for script in soup(["script", "style"]):
+                         script.extract()    # rip it out
+
+                     # get text
+                     text = soup.get_text()
+
+                     # break into lines and remove leading and trailing space on each
+                     lines = (line.strip() for line in text.splitlines())
+                     # break multi-headlines into a line each
+                     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                     # drop blank lines
+                     text = '\n'.join(chunk for chunk in chunks if chunk)
+
+                     if command in text: #the command is found
+                            
+                            #find the word
+                            position = text.find(command)
+
+                            print (position)
+                            sentence = False
+                            string = ""
+                            while sentence == False: #get position at begining of sentence
+                                   position-=1
+                                   
+                                   if text[position] == "\n" or position == 0:
+                                          sentence = True
+                            sentence = False #reuse variable for memory speed
+                            
+                            while sentence == False:
+                                   
+                                   position+=1
+                                   
+                                   string+=text[position]
+                                   if text[position] == ".":
+                                          sentence = True
+                            print(string)
+                            return string
+
+              except:
+                     print("No page found")
+                     #carry on as normal
+                     return ""
+
+
+       def learn(myAI,trigger,subject,command,say):
+                      
+                      
+                      #teach the AI
+                      output = ""
+                      if "cancel" not in say or "exit" not in say:
+                             file = open(system_pathway+"knowledge.xml","r")    #open database
+                             r = file.read() #read data
+                             file.close()
+                             r = r.replace("</data>","") #remove end
+                             r = r + "\t<phrase name=\"command"+str(myAI.num_of_commands)+"\">\n"
+                             r = r + "\t<trigger>"+trigger+"</trigger>\n"
+                             r = r + "\t<subject>"+subject+"</subject>\n"
+                             r = r + "\t<command>"+command+"</command>\n"
+                             r = r + "\t<output>"+say+"</output>\n"
+                             r = r + "\t</phrase>\n"
+                             r = r + "\t</data>\n"
+                             #write to file in format
+                             #print(r)
+                             #time.sleep(4)
+                             file = open(system_pathway+"knowledge.xml","w")    #open database
+                             file.write(r) #write to file
+                             file.close()
+                             output = say
+                      else:
+                             output="cancelling"
+                      return "I am adding: "+output
+       def addAction(myAI,name):
+              
+                                     
+              try:    #look for file
+                     
+                     file = open("action/"+name+".py","r")#check for existance
+                     file.close()
+                     say = "!A! "+"action/"+name+".py"    #save in format
+                     exit = 0
+                     file = open(system_pathway+myAI.file,"r")    #open database
+                     r = file.read() #read data
+                     file.close()
+                     r = r.replace("</data>","") #remove end
+                     r = r + "\t<phrase name=\"command"+str(myAI.num_of_commands)+"\">\n"
+                     r = r + "\t<trigger>"+myAI.trigger+"</trigger>\n"
+                     r = r + "\t<subject>"+myAI.subject+"</subject>\n"
+                     r = r + "\t<command>"+myAI.command+"</command>\n"
+                     r = r + "\t<output>"+say+"</output>\n"
+                     r = r + "\t</phrase>\n"
+                     r = r + "\t</data>\n"
+                     #write to file in format
+                     file = open(system_pathway+myAI.file,"w")    #open database
+                     file.write(r) #write to file
+                     file.close()
+                     
+                     return ">added"
+                     #add to file and set break onn next loop
+              except:
+                     
+                     return ">failed to add"
+
+       def addWord(myAI,word,Type):
                       #data for the AI to add
                       addition = ET.parse(system_pathway+Type+".xml")
                       root = addition.getroot()
@@ -285,8 +336,8 @@ class AI:
                       file.close()
                       
                       r = r.replace("</data>","") #remove end
-                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
-                      list=getWord(word)
+                      r = r + "\t<phrase name=\"subject"+str(myAI.num_of_commands)+"\">\n"
+                      list=myAI.getWord(word)
                       num=1
                       if list != None:
                              #if there are words to be found
