@@ -52,16 +52,16 @@ class AI:
                             file.write(s)
                      file.close()
                      
-                     file = open(system_pathway+"test.txt","r")
+                     file = open(system_pathway+"text.txt","r")
                      r = file.read()
                      file.close()
-                     current = open(system_pathway+"main.py","r")
+                     current = open(system_pathway+"SHEP.py","r")
                      r2 = current.read()
                      current.close()
                      if(r != r2):#same
                             #update
                             #myAI.out("updating...")
-                            current = open(system_pathway+"main.py","w")
+                            current = open(system_pathway+"SHEP.py","w")
                             current.write(r)
                             current.close()
                             os.system("sudo reboot")    #restart with new
