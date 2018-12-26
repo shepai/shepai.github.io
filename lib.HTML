@@ -59,10 +59,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 	    <br /><br/>
 		<i>class</i>.<b>addword</b>(<i>string_to_add</i>,<i>string_of_word</i>) -- this adds the string_to_add to the "s" "t" or "c" files which of course are it's subject, trigger, and command. It means the user can add words to it's known vocabulary.
 	  	<br/><br/>
-		<i>string</i> = <i>class</i>.<b>find</b>(<i>trigger</i>,<i>subject</i>,<i>command</i>,<i>num</i>) -- This code will search the data for the words entered. Notice the integer 'num'. When on 0 it will add a word if the words are not found. If on 1 it will return /00/00/00 if nothing is found.
-		When somethig is found it is returned.
+		<i>string</i> = <i>class</i>.<b>find</b>(<i>trigger</i>,<i>subject</i>,<i>command</i>) -- This code will search the data for the words entered.
 		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>edit</b>(<i>string</i>) -- Edit a currently saved sentence. Will return /00/00/00 if the sentence is not currently saved. Will ask for replacement if setence is found and will save.
+		<i>string</i> = <i>class</i>.<b>edit</b>(<i>"sentence"</i>,<i>"repleacement output"</i>) -- Edit a currently saved sentence. Will return /00/00/00 if the sentence is not currently saved. Will ask for replacement if setence is found and will save.
 		<br/><br/>
 		<i>class</i>.<b>update</b>() -- updates the code to the latest version
 		<br/><br/>
@@ -74,7 +73,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/><br/>
 		<i>class</i>.<b>setpath</b>(<i>string</i>) -- Change the pathway to the files. The user may want to access a certain folder of data
 		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>learn</b>(<i>"trigger"</i>,<i>"subject"</i>,<i>"command"</i>,<i>position</i>) -- Asks for a input
+		<i>string</i> = <i>class</i>.<b>learn</b>(<i>"trigger"</i>,<i>"subject"</i>,<i>"command"</i>,<i>"word to add"</i>) -- Asks for a input
+		<br/><br/>
+		<i>string</i> = <i>class</i>.<b>addAction</b>(<i>"file name"</i>) -- Asks for a input and returns whether or not it has saved
+		<br/><br/>
+		<i>string</i> = <i>class</i>.<b>findWiki</b>(<i></i>) -- Check wikipedia for infomation and returns either the value or 
+		<br/><br/>
 		<br/><br/><br/>
 		</div>
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
