@@ -13,6 +13,7 @@ from wifi import Cell, Scheme
 from subprocess import Popen, STDOUT, PIPE
 from subprocess import *
 import subprocess
+import os
 #eye
 import time
 import colorsys
