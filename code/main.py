@@ -240,7 +240,7 @@ def pickPhrase(phrase):
                   OUTPUT("Saving your word")
                   break
            else:
-                  out("Sorry, I did not get that")
+                  OUTPUT("Sorry, I did not get that")
                   i=i-1 #go back to prior position
            i=i+1 #increase iteration
            time.sleep(1)
@@ -330,9 +330,9 @@ def checkInfo():
                   file.close()
                   
                   if r == "":      #there is no data    
-                         out(to_output_once)
+                         OUTPUT(to_output_once)
                          to_output_once = ""
-                         out("Please type your "+check[i])
+                         OUTPUT("Please type your "+check[i])
                          string = "Please type your "+check[i]+": "
                          data = input(string)
                          file = open(system_pathway+check[i]+".txt","w")
@@ -340,7 +340,7 @@ def checkInfo():
                          file.close()
            except: #the file is not found and needs to be added
                 #print("No file found")
-                out(to_output_once)
+                OUTPUT(to_output_once)
                 to_output_once = ""
                 string = "Please type your "+check[i]+": "
                 data = input(string)
