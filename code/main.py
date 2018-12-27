@@ -356,14 +356,16 @@ while exit == False:
     User = INPUT("")
     
     if User == "edit": #edit a sentence
-        sentence = INPUT("Say the sentence that I shall edit ")
+        sentence = ""
+        while sentence == "": #get a valid input
+               sentence = INPUT("Say the sentence that I shall edit ")
         to_add = INPUT("What shall I replace it with? ")
-        replace = add(to_add)
+        replace = add(to_add) #get the replacement (action or...)
         myBot.edit(sentence,replace)
         OUTPUT("replaced with new")
-    elif User == "add action":
+    elif User == "add action": #add an action
         myBot.listUSB()
-    elif User == "exit":
+    elif User == "exit": #exit the program
         exit=True
     elif User == "":
         r = ""
@@ -393,7 +395,7 @@ while exit == False:
                 print("Action played")
                 r = ""
             elif r == "/00/00/00": #no action is fond
-                print("Learning... a moment please")
+                OUTPUT("Learning... a moment please")
                 word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
                 
                 if word_to_add != "": #if something is found
