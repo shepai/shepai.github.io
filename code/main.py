@@ -363,8 +363,8 @@ while exit == False:
         while to_add == "": #get a valid input
                to_add = INPUT("What shall I replace it with? ")
         replace = add(to_add) #get the replacement (action or...)
-        myBot.edit(sentence,replace)
-        OUTPUT("replaced with new")
+        toOut= myBot.edit(sentence,replace)
+        OUTPUT(toOut)
     elif User == "add action": #add an action
         myBot.listUSB()
     elif User == "exit": #exit the program
