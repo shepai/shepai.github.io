@@ -52,7 +52,7 @@ class AI:
                             file.write(s)
                      file.close()
                      
-                     file = open(system_pathway+"text.txt","r")
+                     file = open(system_pathway+"test.txt","r")
                      r = file.read()
                      file.close()
                      current = open(system_pathway+"SHEP.py","r")
