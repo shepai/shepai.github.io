@@ -360,6 +360,7 @@ while exit == False:
         to_add = INPUT("What shall I replace it with? ")
         replace = add(to_add)
         myBot.edit(sentence,replace)
+        OUTPUT("replaced with new")
     elif User == "add action":
         myBot.listUSB()
     elif User == "exit":
@@ -386,7 +387,7 @@ while exit == False:
                 OUTPUT("No command found")
                 phrase = pickPhrase(User)
                 if phrase != "ABORTED":
-                    myBot.addWord(Phrase,"command")
+                    myBot.addWord(phrase,"command")
                 r = ""
             elif r == "/actions/": #an action has just been played.
                 print("Action played")
