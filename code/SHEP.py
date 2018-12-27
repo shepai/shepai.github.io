@@ -339,7 +339,7 @@ class AI:
                       file.close()
                       
                       r = r.replace("</data>","") #remove end
-                      r = r + "\t<phrase name=\"subject"+str(myAI.num_of_commands)+"\">\n"
+                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
                       list=myAI.getWord(word)
                       num=1
                       if list != None:
