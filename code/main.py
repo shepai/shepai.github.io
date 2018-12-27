@@ -357,9 +357,11 @@ while exit == False:
     
     if User == "edit": #edit a sentence
         sentence = ""
+        to_add = ""
         while sentence == "": #get a valid input
                sentence = INPUT("Say the sentence that I shall edit ")
-        to_add = INPUT("What shall I replace it with? ")
+        while to_add == "": #get a valid input
+               to_add = INPUT("What shall I replace it with? ")
         replace = add(to_add) #get the replacement (action or...)
         myBot.edit(sentence,replace)
         OUTPUT("replaced with new")
