@@ -368,7 +368,7 @@ while exit == False:
         r = ""
     elif User != None:
         
-        r = myBot.search(User) #check the AI
+        r = myBot.search(User+" ") #check the AI
         if add_mode == True:
             if r == "No trigger": #add phrases to make word
                 OUTPUT("No trigger found")
