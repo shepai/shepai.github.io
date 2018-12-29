@@ -14,6 +14,7 @@ from subprocess import Popen, STDOUT, PIPE
 from subprocess import *
 import subprocess
 import os
+import re
 #eye
 import time
 import colorsys
