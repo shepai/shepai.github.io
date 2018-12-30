@@ -411,7 +411,7 @@ while exit == False:
                     if to_add != ">action" or to_add != "action" or to_add != "an action":
                         
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,to_add)
-                r = ""
+                r = to_add
         
     OUTPUT(r)
 
