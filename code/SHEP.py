@@ -220,57 +220,77 @@ class AI:
            return output
        def findWiki(myAI,word,command):
               with warnings.catch_warnings():
+                     warnings.simplefilter("ignore")
+                     
+                     word = word.replace(" ","_")
+                     string = ""
+
                      try:
-                            word = word.replace(" ","_")
-                            string = ""
-                            url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
-                            html = urlopen(url).read()
-                            soup = BeautifulSoup(html)
+                                   url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
+                                   html = urlopen(url).read()
+                                   soup = BeautifulSoup(html)
 
-                            # kill all script and style elements
-                            for script in soup(["script", "style"]):
-                                script.extract()    # rip it out
+                                   # kill all script and style elements
+                                   for script in soup(["script", "style"]):
+                                       script.extract()    # rip it out
 
-                            # get text
-                            text = soup.get_text()
-                            text = text.lower()
+                                   # get text
+                                   text = soup.get_text()
+                                   text = text.lower()
 
-                            # break into lines and remove leading and trailing space on each
-                            lines = (line.strip() for line in text.splitlines())
-                            # break multi-headlines into a line each
-                            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-                            # drop blank lines
-                            text = '\n'.join(chunk for chunk in chunks if chunk)
-
-                            if command in text: #the command is found
-                                   
-                                   #find the word
-                                   position = text.find(command)
-
-                                   print (position)
-                                   sentence = False
-                                   string = ""
-                                   while sentence == False: #get position at begining of sentence
-                                          position-=1
+                                   # break into lines and remove leading and trailing space on each
+                                   lines = (line.strip() for line in text.splitlines())
+                                   # break multi-headlines into a line each
+                                   chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                                   # drop blank lines
+                                   text = '\n'.join(chunk for chunk in chunks if chunk)
+                                   #print(text+"\n\n\n\n\n\n")
+                                   ToGo = []
+                                   if command in text: #the command is found
                                           
-                                          if text[position] == "\n" or position == 0:
-                                                 sentence = True
-                                   sentence = False #reuse variable for memory speed
-                                   
-                                   while sentence == False:
-                                          
-                                          position+=1
-                                          
-                                          string+=text[position]
-                                          if text[position] == ".":
-                                                 sentence = True
-                                   print(string)
-                                   return string
+                                          #find the words
+                                          p2 = [m.start() for m in re.finditer(" "+command+" ", text)]
+                                          for i in range(len(p2)): #loop through all the positions
+                                                 position = p2[i] #get first position
+                                                 
+
+                                                 #print (position)
+                                                 sentence = False
+                                                 string = ""
+                                                 while sentence == False: #get position at begining of sentence
+                                                        position-=1
+                                                        
+                                                        if text[position] == "\n" or position == 0 or position == ".":
+                                                               sentence = True
+                                                        
+                                                 sentence = False #reuse variable for memory speed
+                                                 
+                                                 while sentence == False:
+                                                        
+                                                        position+=1
+                                                        
+                                                        string+=text[position]
+                                                        if text[position] == "." or text[position] == "\n" or position == len(text):
+                                                               sentence = True
+                                                 
+                                                 ToGo.append(string)
+                                          string = ""
+                                          for i in range(len(ToGo)):
+                                                 if " "+word+" " in ToGo[i]: #try find accurate answer
+                                                        string = ToGo[i]
+                                                        break #first is most accurate
+                                                        
+                                                 #print(ToGo[i])
+                                          if string == "": #if none found go with first
+                                                 string = ToGo[0]
+                                          #returned to the user
+                                          return string
 
                      except:
                             print("No page found")
                             #carry on as normal
                             return ""
+
 
 
        def learn(myAI,trigger,subject,command,say):
