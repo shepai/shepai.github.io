@@ -22,6 +22,7 @@ import urllib
 #####################################
 from bs4 import BeautifulSoup
 import re
+import warnings
 
 class AI:
        
@@ -155,8 +156,9 @@ class AI:
                            #action
                            #print("ACTION")
                            AI = AI.replace("!A! ","")
-                           os.system("sudo python3 "+system_pathway+"action/"+AI)
-                           return "/action/"
+                           print("sudo python3 "+system_pathway+AI)
+                           os.system("sudo python3 "+system_pathway+AI)
+                           return "/actions/"
                        else:
                            return AI
                            
@@ -217,56 +219,58 @@ class AI:
            
            return output
        def findWiki(myAI,word,command):
-              try:
-                     word = word.replace(" ","_")
-                     string = ""
-                     url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
-                     html = urlopen(url).read()
-                     soup = BeautifulSoup(html)
-
-                     # kill all script and style elements
-                     for script in soup(["script", "style"]):
-                         script.extract()    # rip it out
-
-                     # get text
-                     text = soup.get_text()
-
-                     # break into lines and remove leading and trailing space on each
-                     lines = (line.strip() for line in text.splitlines())
-                     # break multi-headlines into a line each
-                     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-                     # drop blank lines
-                     text = '\n'.join(chunk for chunk in chunks if chunk)
-
-                     if command in text: #the command is found
-                            
-                            #find the word
-                            position = text.find(command)
-
-                            print (position)
-                            sentence = False
+              with warnings.catch_warnings():
+                     try:
+                            word = word.replace(" ","_")
                             string = ""
-                            while sentence == False: #get position at begining of sentence
-                                   position-=1
-                                   
-                                   if text[position] == "\n" or position == 0:
-                                          sentence = True
-                            sentence = False #reuse variable for memory speed
-                            
-                            while sentence == False:
-                                   
-                                   position+=1
-                                   
-                                   string+=text[position]
-                                   if text[position] == ".":
-                                          sentence = True
-                            print(string)
-                            return string
+                            url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
+                            html = urlopen(url).read()
+                            soup = BeautifulSoup(html)
 
-              except:
-                     print("No page found")
-                     #carry on as normal
-                     return ""
+                            # kill all script and style elements
+                            for script in soup(["script", "style"]):
+                                script.extract()    # rip it out
+
+                            # get text
+                            text = soup.get_text()
+                            text = text.lower()
+
+                            # break into lines and remove leading and trailing space on each
+                            lines = (line.strip() for line in text.splitlines())
+                            # break multi-headlines into a line each
+                            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                            # drop blank lines
+                            text = '\n'.join(chunk for chunk in chunks if chunk)
+
+                            if command in text: #the command is found
+                                   
+                                   #find the word
+                                   position = text.find(command)
+
+                                   print (position)
+                                   sentence = False
+                                   string = ""
+                                   while sentence == False: #get position at begining of sentence
+                                          position-=1
+                                          
+                                          if text[position] == "\n" or position == 0:
+                                                 sentence = True
+                                   sentence = False #reuse variable for memory speed
+                                   
+                                   while sentence == False:
+                                          
+                                          position+=1
+                                          
+                                          string+=text[position]
+                                          if text[position] == ".":
+                                                 sentence = True
+                                   print(string)
+                                   return string
+
+                     except:
+                            print("No page found")
+                            #carry on as normal
+                            return ""
 
 
        def learn(myAI,trigger,subject,command,say):
@@ -392,9 +396,9 @@ class AI:
                    os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
                
                try:
-                   copyFiles("/media/usbstick/AI/actions","/home/pi/AI/Python_coursework/action")
+                   copyFiles("/media/usbstick/AI/actions",system_pathway+"/action")
                    myAI.out("Files copied")
-                   copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+                   copyFiles(system_pathway,pathway[i]+"/AI/data")
 
                except:
                    print("Cannot be done!")
