@@ -151,7 +151,8 @@ class AI:
                        myAI.trigger = trigger
                        myAI.command = command
                        AI = myAI.find(trigger,subject,command)  #search database
-                       
+                       if AI == None: #validate
+                              AI = ""
                        if AI[:3] == "!A!":
                            #action
                            #print("ACTION")
@@ -284,12 +285,12 @@ class AI:
                                           if string == "": #if none found go with first
                                                  string = ToGo[0]
                                           #returned to the user
-                                          return string
+                                          
 
                      except:
                             print("No page found")
                             #carry on as normal
-                            return ""
+                     return string
 
 
 
@@ -452,3 +453,5 @@ class AI:
                       
 
 
+#f=AI("","","")
+#print(f.findWiki("name","is"))

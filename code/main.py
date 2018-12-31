@@ -405,7 +405,8 @@ while exit == False:
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
                 if word_to_add == "":
                     #the wiki is not going to be added
-                    to_add = INPUT("Nothing in my data, What shall I add?")
+                    while to_add == "":
+                           to_add = INPUT("Nothing in my data, What shall I add?")
                     to_add = add(to_add)
                     print(to_add)
                     if to_add != ">action" or to_add != "action" or to_add != "an action":
