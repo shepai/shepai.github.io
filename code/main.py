@@ -389,6 +389,7 @@ while exit == False:
                 to_add = ""
                 if word_to_add != "": #if something is found
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
+                        to_add = word_to_add
                 if word_to_add == "":
                     #the wiki is not going to be added
                     
