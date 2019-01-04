@@ -168,7 +168,7 @@ def getVoice():#input method
            audioCheck()
            #OUTPUT("There was an error connecting to microphone")
            error_pixels()
-    return voiceReply.lower()   #return voice
+    return voiceReply #return voice
 
 def INPUT(string):
     OUTPUT(string)#method of output
@@ -187,7 +187,14 @@ def INPUT(string):
            
            if "robot" == string:
                   string = ""
-           return string  #return input
+           words = string.split()
+           title=""
+           for i in range(len(words)):#find all the capital letters
+                  if (words[i])(0).isupper():
+                         title+=(words[i])+" "#gather subject
+           if find_term(title,"subject") == "#@false":#the word is not a subject
+                  myBot.addWord(phrase,"trigger")
+           return string.lower()   #return voice  #return input
     else:
            print("---nothing")
            return "" #nothing said to robot
