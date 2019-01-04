@@ -383,11 +383,12 @@ while exit == False:
             elif r == "/00/00/00": #no action is fond
                 OUTPUT("Learning... a moment please")
                 word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
-                
+                to_add = ""
                 if word_to_add != "": #if something is found
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
                 if word_to_add == "":
                     #the wiki is not going to be added
+                    
                     while to_add == "":
                            to_add = INPUT("Nothing in my data, What shall I add?")
                     to_add = add(to_add)
