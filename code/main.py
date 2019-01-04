@@ -174,7 +174,7 @@ def INPUT(string):
     OUTPUT(string)#method of output
     string = ""
     string = getVoice() #get voice input
-    if "robot" in string:
+    if "robot" in string and "cancel" not in string:
            print("----------------------------------")
            file=open(system_pathway+"action/input.txt",'w')
            file.write(string)
@@ -193,8 +193,8 @@ def INPUT(string):
                   if (words[i])[0].isupper():
                          title+=(words[i])+" "#gather subject
            if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
-                  myBot.addWord(title.lower(),"subject")
-                  print("Adding new word",title.lower())
+                  myBot.addWord(title.lower()[:-1],"subject")
+                  print("Adding new word",title.lower()[:-1])
            return string.lower()   #return voice  #return input
     else:
            print("---nothing")
@@ -342,11 +342,12 @@ while exit == False:
     if User == "edit": #edit a sentence
         sentence = ""
         to_add = ""
+        replace = ""
         while sentence == "": #get a valid input
                sentence = INPUT("Say the sentence that I shall edit ")
         while to_add == "": #get a valid input
                to_add = INPUT("What shall I replace it with? ")
-        replace = add(to_add) #get the replacement (action or...)
+               replace = add(to_add) #get the replacement (action or...)
         toOut= myBot.edit(sentence,replace)
         OUTPUT(toOut)
     elif User == "add action": #add an action
