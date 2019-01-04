@@ -242,10 +242,12 @@ def add(to_add):
         add=True
         while valid != ">added":
             userInput = INPUT("What is the file name")
+            if userInput[:-1] == " ":
+                   userInput = userInput[:-1]
             if "cancel" == userInput or "exit" == userInput:
                 #allow the user to change their mind and not add
                 valid = ">added"
-                OUTPUTPUT("I shall not add an action")
+                OUTPUT("I shall not add an action")
             else:
                 valid = myBot.addAction(userInput)#check the filename and add
                 to_add = ">action"
@@ -347,7 +349,7 @@ while exit == False:
                sentence = INPUT("Say the sentence that I shall edit ")
         while to_add == "": #get a valid input
                to_add = INPUT("What shall I replace it with? ")
-               replace = add(to_add) #get the replacement (action or...)
+        replace = add(to_add) #get the replacement (action or...)
         toOut= myBot.edit(sentence,replace)
         OUTPUT(toOut)
     elif User == "add action": #add an action
