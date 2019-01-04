@@ -192,9 +192,9 @@ def INPUT(string):
            for i in range(len(words)):#find all the capital letters
                   if (words[i])[0].isupper():
                          title+=(words[i])+" "#gather subject
-           if myBot.find_term(title,"subject") == "#@false" and title != None and title != "":#the word is not a subject
+           if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
                   myBot.addWord(title,"subject")
-                  print("Adding new word",title)
+                  print("Adding new word",title.lower())
            return string.lower()   #return voice  #return input
     else:
            print("---nothing")
