@@ -193,7 +193,7 @@ def INPUT(string):
                   if (words[i])[0].isupper():
                          title+=(words[i])+" "#gather subject
            if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
-                  myBot.addWord(title,"subject")
+                  myBot.addWord(title.lower(),"subject")
                   print("Adding new word",title.lower())
            return string.lower()   #return voice  #return input
     else:
