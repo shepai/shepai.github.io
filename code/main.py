@@ -23,13 +23,6 @@ from pixels import Pixels #found in folder
 #speech recognition lib
 import speech_recognition as sr
 pixels = Pixels()
-#button
-import RPi.GPIO as GPIO
-
-BUTTON = 17#define mute button
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUTTON, GPIO.IN)
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
@@ -61,16 +54,7 @@ def error_pixels():
        pixels.off()
        pixels.wakeup()
        time.sleep(0.2)
-def button_check():
-       #provide a mute button to stop the system
-       state = GPIO.input(BUTTON)  #get button input
-       if state:
-              print("not_mute ")
-              return False
-       else:
-              print("on")   #button is pressed
-              OUTPUT("Mute mode")
-              return True
+
            
 def update():
        try:
@@ -112,14 +96,15 @@ def OUTPUT(string):#output method
        #output using onboard TTS
        pixels.speak() #coulourful look
        string = string.replace("'","") #prevent an apostriphe messing it up.
-       os.system("espeak '"+string+"' 2>/dev/null")       
+       os.system("espeak '"+string+"' 2>/dev/null")
+       
     except:
            #no connection
            print(string)
            error_pixels()
            
 def getVoice():#input method
-    mute = False
+    
     try:
            
            voiceReply = ""
@@ -127,20 +112,7 @@ def getVoice():#input method
            if connection == True:  #connection found
                connection_errors = 0 #show there is a strong connection
                #r.pause_threshold = 0.6
-               time.sleep(0.5)#give user chance to press button
-               mute = button_check()
-               if mute == True: #means the button has been pressed
-                     pixels.off() #stop the LEDs
-                     while True:   #stop searching
-                         state = GPIO.input(BUTTON)
-                         #unmute when button is pressed again.
-                         if state:
-                             print("off")
-                         else:
-                             print("on")
-                             OUTPUT("Unmuted")
-                             break
-                         time.sleep(1)
+               
                print("setting...")
                rec.dynamic_energy_threshold = False #set ackground noise to silence
                t0 = 0 #set the timer
@@ -204,6 +176,9 @@ def INPUT(string):
     string = getVoice() #get voice input
     if "robot" in string:
            print("----------------------------------")
+           file=open(system_pathway+"action/input.txt",'w')
+           file.write(string)
+           file.close()
            if "robot keyboard" in string:
                      string = input("Please type: ")#type mode
            else:
