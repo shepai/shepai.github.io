@@ -45,8 +45,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
       <p>The Python library uses the newest V0.0.5 code. It works with a text interface, but can be modified for the user's preferences in the file.
 	  <br />
 		  The AI can be used by the user in Python. This means your projects can be intelligent learning systems. SHEP is created as an object
-		  <font color="blue"><a href="downloads.HTML">Download the library</a></font> to get started! the file "SHEP.py" will need to be in the same folder as your code. You can include 
-		  it using the following line:
+		  <font color="blue"><a href="downloads.HTML">Download the library</a></font> to get started! The file "SHEP.py" will need to be in the same folder as your code. 
+		  For the SHEP library to run, you will need to use any Python 3 and have certain libraries installed.
+		<h5><b>Libraries</b></h5>
+		  <ul>
+			  <li>lxml</li>
+			  <li>urllib</li>
+			  <li>bs4</li>
+		</ul>
+		<h5><b>Using SHEP</b></h5>
+		  You can include the SHEP library using the following line:
 		  <br />
 		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI</div>
 		<br/>
@@ -78,6 +86,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<i>string</i> = <i>class</i>.<b>addAction</b>(<i>"file name"</i>) -- Asks for a input and returns whether or not it has saved
 		<br/><br/>
 		<i>string</i> = <i>class</i>.<b>findWiki</b>(<i></i>) -- Check wikipedia for infomation and returns either the value or 
+		<br/><br/>
+		<i>class</i>.<b>addsubject</b>(<i>string</i>) -- Automatically find most likely to be a subject and add
 		<br/><br/>
 		<i>class</i>.<b>listUSB</b>(<i></i>) -- check all USB ports and copy over files into the action folder. Take note certain modules will need to be installed. This only works with Linux
 		<br/><br/>
