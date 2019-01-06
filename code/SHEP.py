@@ -172,7 +172,27 @@ class AI:
            else:   #no trigger found
                #myAI.out("No trigger found")
                return "No trigger"
+       def addSubject(myAI,message):
+           #automatically add subject with left over strings
+           string=""
+           word = message.split()
+           for i in range(len(word)):
+               if myAI.find_term(word[i],"trigger") == "#@false" and myAI.find_term(word[i],"subject") == "#@false" and myAI.find_term(word[i],"command") == "#@false":
+                   string += word[i]+" " #if word is not known
+               else:
+                   string+"." #split words up
 
+           if myAI.find_term(message,"trigger") != "#@false" and myAI.find_term(message,"command") != "#@false" and myAI.find_term(message,"subject") == "#@false":
+               #use left over as subject
+               use = string.split(".")
+               string=""#reset string
+               temp = 0
+               for i in range(len(use)): #find largest word for subject
+                   if len(use[i]) >= temp:
+                       temp =len(use[i])
+                       string = use[i]
+               myAI.addWord(string,"subject")
+           
        def find_term(myAI,message,Stype):
               #find the word and its type
               tree = ET.parse(system_pathway+Stype+".xml")

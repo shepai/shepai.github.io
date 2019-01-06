@@ -189,12 +189,20 @@ def INPUT(string):
                   string = ""
            words = string.split()
            title=""
+           myBot.addSubject(string) #add words which are leftover
+           ######################################################
+           #if a name of a place is mentioned it is checked and added to data
+           middlewords=""
            for i in range(len(words)):#find all the capital letters
                   if (words[i])[0].isupper():
-                         title+=(words[i])+" "#gather subject
+                         title+=(words[i])+middlewords+" "#gather subject
+                         middlewords=""
+                  elif title != "":#get words between words
+                         middlewords+=words[i]+" "
            if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
                   myBot.addWord(title.lower()[:-1],"subject")
                   print("Adding new word",title.lower()[:-1])
+           #######################################################
            return string.lower()   #return voice  #return input
     else:
            print("---nothing")
@@ -251,6 +259,7 @@ def add(to_add):
             else:
                 valid = myBot.addAction(userInput)#check the filename and add
                 to_add = ">action"
+                
     return to_add
 def wifi():
 #wifi connection function
@@ -390,6 +399,7 @@ while exit == False:
                 if word_to_add != "": #if something is found
                         myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
                         to_add = word_to_add
+                        
                 if word_to_add == "":
                     #the wiki is not going to be added
                     
