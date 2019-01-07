@@ -296,15 +296,23 @@ class AI:
                                                  
                                                  ToGo.append(string)
                                           string = ""
+                                          newWord = word.split("_")
+                           
                                           for i in range(len(ToGo)):
-                                                 if " "+word+" " in ToGo[i]: #try find accurate answer
+                                                 counter = 0
+                                                 
+                                                 for y in range(len(newWord)):
+                                                        #accurate finder
+                                                        if " "+newWord[y]+" " in " "+ToGo[i]+" " and "this article" not in ToGo[i]: #try find accurate answer
+                                                               counter +=1
+                                                               print(newWord[y],counter)
+                                                 if counter == len(newWord):
                                                         string = ToGo[i]
                                                         break #first is most accurate
-                                                        
                                                  #print(ToGo[i])
                                           if string == "": #if none found go with first
                                                  string = ToGo[0]
-                                          #returned to the user
+                                          #return to user below                                          #returned to the user
                                           
 
                      except:
