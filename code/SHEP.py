@@ -305,7 +305,6 @@ class AI:
                                                         #accurate finder
                                                         if " "+newWord[y]+" " in " "+ToGo[i]+" " and "this article" not in ToGo[i]: #try find accurate answer
                                                                counter +=1
-                                                               print(newWord[y],counter)
                                                  if counter == len(newWord):
                                                         string = ToGo[i]
                                                         break #first is most accurate
@@ -482,4 +481,4 @@ class AI:
 
 
 #f=AI("","","")
-#print(f.findWiki("name","is"))
+#print(f.findWiki("walt disney","was"))
