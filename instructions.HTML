@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<title>SHEP AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico" />
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-sidenav a {padding:20px}
+</style>
+<body>
+
+<!-- Sidenav (hidden by default) -->
+<nav class="w3-sidenav w3-card-2 w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:20%;min-width:300px" id="mySidenav">
+  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-closenav">Close Menu</a>
+  <a href="index.html" onclick="w3.close()">Home</a>
+  <a href="index.html#about" onclick="w3_close()">About</a>
+	<a href="instructions.HTML" onclick="w3_close()">Instructions</a>
+  <a href="troubleshooting.HTML" onclick="w3_close()">Troubleshooting</a>
+	<a href="contact.HTML" onclick="w3_close()">Contact</a>
+  
+</nav>
+
+<!-- Top menu -->
+<div class="w3-top">
+  <div class="w3-black w3-xlarge w3-padding-xlarge" style="max-width:40000px;margin:auto">
+    <div class="w3-opennav w3-left w3-hover-text-grey" onclick="w3_open()">☰</div>
+    <div class="w3-right">By Dexter Shepherd - dextershep@gmail.com</div>
+    <div class="w3-center">SHEP AI</div>
+  </div>
+</div>
+
+  <!-- Pagination -->
+  <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+  <hr id="about">
+
+  <!-- About Section -->
+  <div class="w3-container w3-padding-32 w3-center">  
+    <h3>Instructions</h3><br>
+    <img src="assets/home.jpg" alt="AI" class="w3-image" style="display:block;margin:auto" width="250" height="533">
+    <div class="w3-padding-32">
+      <h4><b>Getting started</b></h4>
+      
+      <p>Get your SHEP and plug in an HDMI
+cable, connecting it to a monitor or
+screen. Then plug your keyboard
+into SHEP’s USB ports. After this you
+may power it on. You will see a black
+screen, wait for it to load and you
+will be given Wi-Fi options. Simply
+enter the number of your network
+and it’s password. </p>
+		<img src="assets/wifi.png" alt="AI" class="w3-image" style="display:block;margin:auto" width="500" height="533">
+      <p>After this it will ask you to fill out
+information about you. This is so
+SHEP knows you.
+After set up, you no longer need to
+use the keyboard or HDMI – unless
+you change your Wi-Fi.</p>
+		<h4><b>Using SHEP</b></h4>
+      <p>The LEDs will flash about to show
+SHEP is thinking. When the LEDs
+stop flashing and hold still, SHEP is
+listening to what you say. Always
+start your sentence with “robot”.
+“Robot what is your name”
+“Robot how are you feeling”
+SHEP will ignore you if you either
+don’t say “robot”, or speak when
+the LEDs are not holding steady</p>
+		<p>When SHEP does not understand,
+the AI will prompt you saying why it
+does not understand. SHEP uses 3
+keywords or key-phrases to
+understand. A trigger word which
+defines what type of sentence it is.
+“Who” “What” “how” would all
+signify questions. Subject words are
+the key point of the sentence such
+as “Winston Churchill” in the
+question “who is Winston Churchill”.</p>
+		<p>The final word is a word which
+identifies the information for the
+subject. “who is Alan Turing” where
+“is” is the command. “how old is
+Alan Turing” where “old” is the
+command. In the data it would learn
+who he is, his age and any other key
+information. Along the way SHEP
+learns words with similar meaning
+without the user needing to teach
+them.</p>
+		<p>If all the words are added, but SHEP
+does not have them in it’s memory,
+SHEP will use the Internet to find an
+answer. SHEP will either find one, or
+ask you how to respond. This is
+where you can teach SHEP. SHEP
+saves all answers in it’s data – so if
+you are unhappy with the saved
+reply, you can change it.</p>
+		<h4><b>Editing</b></h4>
+		<p>To edit SHEP’s data you can say
+“robot edit”
+SHEP will ask you which sentence
+and what to replace it with. You do
+not have to say “robot” at the
+			beginning of these.</p>
+		<h4><b>Actions</b></h4>
+		<p>If you want SHEP to do more than
+learn how to reply, when adding or
+editing a sentence SHEP. SHEP will
+ask how should it respond, and you
+can say “action” or “an action”. You
+can then say what the file is called
+and SHEP will add it. The files are
+python files, and can be added
+through a USB.</p>
+		<p>On your USB flash drive, create a
+folder called “AI” then inside that
+create another folder called
+“actions”. This must be directly
+accessible “Devicename/AI/actions”
+To transfer data, put your actions in
+the actions folder, plug your USB
+device into SHEP and say “robot add
+action”. SHEP will automatically read
+and transfer your files.</p>
+		<p></p>
+		<p></p>
+		<p></p>
+		
+	  </div>
+  </div>
+  <hr>
+  
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32">
+    <div class="w3-third">
+      <h3></h3>
+      <p></p>
+      <p></p>
+    </div>
+  
+   
+
+    <div class="w3-third w3-serif">
+      <h3></h3>
+      <p>
+        
+      </p>
+    </div>
+  </footer>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidenav
+function w3_open() {
+    document.getElementById("mySidenav").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidenav").style.display = "none";
+}
+</script>
+
+</body>
+</html>
