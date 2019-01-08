@@ -210,7 +210,7 @@ class AI:
                          test = string.split(",")
                          
                          for i in range(len(test)):
-                                if test[i] in message+" " and test[i] != "": #check each word
+                                if " "+test[i]+" " in " "+message+" " and test[i] != "": #check each word
                                        x+=1
                                        array.append(test[i]) #compile list of subjects
               except:
