@@ -195,7 +195,8 @@ class AI:
                    if len(use[i]) >= temp:
                        temp =len(use[i])
                        string = use[i]
-               myAI.addWord(string,"subject")
+               if len(string) >= 2:
+                      myAI.addWord(string,"subject")
            
        def find_term(myAI,message,Stype):
               #find the word and its type
