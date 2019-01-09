@@ -200,7 +200,7 @@ def INPUT(string):
                   elif title != "":#get words between words
                          middlewords+=words[i]+" "
            if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
-                  if len(title.lower()) >= 2:
+                  if len(title.lower()[:-1]) >= 2:
                          myBot.addWord(title.lower()[:-1],"subject")
                          print("Adding new word",title.lower()[:-1])
            #######################################################
