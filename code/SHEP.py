@@ -176,21 +176,22 @@ class AI:
            #automatically add subject with left over strings
            string=""
            word = message.split()
-           for i in range(len(word)):
-               if myAI.find_term(word[i],"trigger") == "#@false" and myAI.find_term(word[i],"subject") == "#@false" and myAI.find_term(word[i],"command") == "#@false":
-                   string += word[i]+" " #if word is not known
-               else:
-                   string+"." #split words up
+           trig = myAI.find_term(message,"trigger")
+           com = myAI.find_term(message,"command")
            
-           if myAI.find_term(message,"trigger") != "#@false" and myAI.find_term(message,"command") != "#@false" and myAI.find_term(message,"subject") == "#@false":
+           if trig != "#@false" and com != "#@false" and myAI.find_term(message,"subject") == "#@false":
                #use left over as subject
-               string = string.replace(myAI.trigger,"") #remove words whih found their way in
-               string = string.replace(myAI.command,"") #^
-               string = string.replace("..",".")#clear up sentences which are not there
-               use = string.split(".")
+               
+               message = message.replace(trig,".") #remove words whih found their way in
+               message = message.replace(com,".") #^
+               
+               
+               use = message.split(".")
                string=""#reset string
                temp = 0
+               
                for i in range(len(use)): #find largest word for subject
+                   
                    if len(use[i]) >= temp:
                        temp =len(use[i])
                        string = use[i]
