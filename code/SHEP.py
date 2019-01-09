@@ -181,9 +181,12 @@ class AI:
                    string += word[i]+" " #if word is not known
                else:
                    string+"." #split words up
-
+           
            if myAI.find_term(message,"trigger") != "#@false" and myAI.find_term(message,"command") != "#@false" and myAI.find_term(message,"subject") == "#@false":
                #use left over as subject
+               string = string.replace(myAI.trigger,"") #remove words whih found their way in
+               string = string.replace(myAI.command,"") #^
+               string = string.replace("..",".")#clear up sentences which are not there
                use = string.split(".")
                string=""#reset string
                temp = 0
