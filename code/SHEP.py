@@ -142,10 +142,10 @@ class AI:
            #print("searching '"+sentence+"'")
            trigger=myAI.find_term(sentence,"trigger")  #search string for trigger word in database
            if trigger!="#@false":
-               subject = myAI.find_term(sentence,"subject") #search message for subject
-               if subject!="#@false":
-                   command = myAI.find_term(sentence,"command") #search message for command
-                   if command!="#@false":
+               command = myAI.find_term(sentence,"command") #search message for command
+               if command!="#@false":
+                   subject = myAI.find_term(sentence,"subject") #search message for subject
+                   if subject!="#@false":
                        #all words needed found
                        myAI.subject = subject
                        myAI.trigger = trigger
@@ -163,12 +163,12 @@ class AI:
                        else:
                            return AI
                            
-                   else:   #no command word found
+                   else:   #no subject found
                        #myAI.out("No command found")
-                       return "No command"
-               else:   #no subject found
+                       return "No subject"
+               else:   #no command word found
                    #myAI.out("No subject found")
-                   return "No subject"
+                   return "No command"
            else:   #no trigger found
                #myAI.out("No trigger found")
                return "No trigger"
