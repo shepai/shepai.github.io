@@ -189,7 +189,7 @@ def INPUT(string):
                   string = ""
            words = string.split()
            title=""
-           myBot.addSubject(string) #add words which are leftover
+           
            ######################################################
            #if a name of a place is mentioned it is checked and added to data
            middlewords=""
@@ -200,8 +200,9 @@ def INPUT(string):
                   elif title != "":#get words between words
                          middlewords+=words[i]+" "
            if myBot.find_term(title.lower(),"subject") == "#@false" and title != None and title != "":#the word is not a subject
-                  myBot.addWord(title.lower()[:-1],"subject")
-                  print("Adding new word",title.lower()[:-1])
+                  if len(title.lower()) >= 2:
+                         myBot.addWord(title.lower()[:-1],"subject")
+                         print("Adding new word",title.lower()[:-1])
            #######################################################
            return string.lower()   #return voice  #return input
     else:
@@ -286,8 +287,11 @@ def wifi():
                x += 7
                y += 1
            num = len(ssids)+1
-           while num > len(ssids):
-                  num = int(input("Which number would you like: "))
+           while num > len(ssids) or num <= 0:
+                  try:
+                         num = int(input("Which number would you like: "))
+                  except:
+                         print("Invalid input:")
                   num = num - 1 #equalize it with list numbers
                   if num < 0:
                       num = len(ssids) +1 #loop bigger than the array
@@ -368,7 +372,7 @@ while exit == False:
     elif User == "":
         r = ""
     elif User != None:
-        
+        myBot.addSubject(User) #add words which are leftover
         r = myBot.search(User+" ") #check the AI
         if add_mode == True:
             if r == "No trigger": #add phrases to make word
