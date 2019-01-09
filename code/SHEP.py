@@ -89,7 +89,7 @@ class AI:
                          print(list[i])
                      return list
               except:
-                     print("error")
+                     
                      return None
        def edit(myAI,sentence,replacement):
            #edit the sentence the user has inputted
@@ -210,7 +210,7 @@ class AI:
                          test = string.split(",")
                          
                          for i in range(len(test)):
-                                if " "+test[i]+" " in " "+message+" " and test[i] != "": #check each word
+                                if test[i] in " "+message+" " and test[i] != "": #check each word
                                        x+=1
                                        array.append(test[i]) #compile list of subjects
               except:
