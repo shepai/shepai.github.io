@@ -310,63 +310,7 @@ def wifi():
            except:
                   print (handle.stdout.readline().strip())
                   print("Couldn't connect to the network... ")
-def listUSB():
-           list = os.popen("lsblk").read()
-           print(list)
-           list = list.split()
-           i=7
-           errors=[]
-           devices=[]
-           pathway=[]
-           
-           list = os.popen("lsblk").read()
-           list = list.split()
-           while i < (len(list)):
-               
-               i+=6
-               if i < (len(list)):
-                       
-                   if "/" not in list[i]: #no pathway so in fact
-                       errors.append(list[i-6]) #make list of bad one's
-                       
-                       
-                   else: #pathway
-                       devices.append(list[i-6])
-                       pathway.append(list[i])
-                       i+=1
-           #show to user
-           print("Bad devices:")
-           for i in range(len(errors)-1):
-               print(errors[i])
-               os.system("sudo mount -t vfat -o rw /dev/"+errors[i]+" /media/usbstick/")
-               #create a mount
-               if "└─" in errors[i+1]:
-                   errors[i+1] = errors[i+1].replace("└─","")
-                   os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
-               
-               try:
-                   copyFiles("/media/usbstick/AI/actions",system_pathway+"/action")
-                   myAI.out("Files copied")
-                   copyFiles(system_pathway,pathway[i]+"/AI/data")
 
-               except:
-                   print("Cannot be done!")
-           print("\nGood devices:")
-           for i in range(len(devices)):
-               print(devices[i]+"---"+pathway[i])
-               try:
-                   copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
-                   out("Files copied")
-                   copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
-               except:
-                   print("Cannot be done!")
-
-def copyFiles(directory,to):
-           # copy subdirectory example
-           fromDirectory = directory
-           toDirectory = to
-
-           copy_tree(fromDirectory, toDirectory)
 def checkInfo():
        #check the users info and type any if not found.
        y=0
@@ -425,7 +369,9 @@ while exit == False:
         toOut= myBot.edit(sentence,replace)
         OUTPUT(toOut)
     elif User == "add action" or User == "and action" or User == "addaction" or User == "add actions" or User == "and actions": #add an action
-        listUSB()
+        
+        list = os.popen("sudo python3 /home/pi/AI/USB2.py").read()
+        print(list)
         OUTPUT("Copying files!")
     elif User == "exit": #exit the program
         exit=True
