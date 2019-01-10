@@ -360,7 +360,8 @@ class AI:
                      
                      file = open("action/"+name+".py","r")#check for existance
                      file.close()
-                     say = "!A! "+"action/"+name+".py"    #save in format
+                     filepathway = "action/"+name+".py".replace(" ","\ ")
+                     say = "!A! "+ filepathway   #save in format
                      exit = 0
                      file = open(system_pathway+myAI.file,"r")    #open database
                      r = file.read() #read data
