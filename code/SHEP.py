@@ -358,28 +358,14 @@ class AI:
                                      
               try:    #look for file
                      
-                     file = open("action/"+name+".py","r")#check for existance
+                     file = open(system_pathway+"action/"+name+".py","r")#check for existance
                      file.close()
-                     filepathway = "action/"+name+".py".replace(" ","\ ")
+                     #gets here without error means file exists
+                     filepathway = ("action/"+name+".py").replace(" ","\ ")
                      say = "!A! "+ filepathway   #save in format
-                     exit = 0
-                     file = open(system_pathway+myAI.file,"r")    #open database
-                     r = file.read() #read data
-                     file.close()
-                     r = r.replace("</data>","") #remove end
-                     r = r + "\t<phrase name=\"command"+str(myAI.num_of_commands)+"\">\n"
-                     r = r + "\t<trigger>"+myAI.trigger+"</trigger>\n"
-                     r = r + "\t<subject>"+myAI.subject+"</subject>\n"
-                     r = r + "\t<command>"+myAI.command+"</command>\n"
-                     r = r + "\t<output>"+say+"</output>\n"
-                     r = r + "\t</phrase>\n"
-                     r = r + "\t</data>\n"
-                     #write to file in format
-                     file = open(system_pathway+myAI.file,"w")    #open database
-                     file.write(r) #write to file
-                     file.close()
                      
-                     return ">added"
+                     
+                     return say
                      #add to file and set break onn next loop
               except:
                      

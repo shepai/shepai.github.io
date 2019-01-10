@@ -247,20 +247,20 @@ def pickPhrase(phrase):
 def add(to_add):
     #get the type to add
     if to_add == "action" or to_add == "an action":
-        valid=""
+        valid=">failed to add"
         add=True
-        while valid != ">added":
+        while valid == ">failed to add":
             userInput = INPUT("What is the file name")
-            if userInput[:-1] == " ":
-                   userInput = userInput[:-1]
             if "cancel" == userInput or "exit" == userInput:
                 #allow the user to change their mind and not add
                 valid = ">added"
                 OUTPUT("I shall not add an action")
             else:
                 valid = myBot.addAction(userInput)#check the filename and add
-                to_add = ">action"
+                to_add = valid
                 
+                                    
+    
     return to_add
 def wifi():
 #wifi connection function
