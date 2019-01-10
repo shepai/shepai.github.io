@@ -158,6 +158,7 @@ class AI:
                            #print("ACTION")
                            AI = AI.replace("!A! ","")
                            print("sudo python3 "+system_pathway+AI)
+                           #os.popen("sudo python3 "+system_pathway+AI).read()
                            os.system("sudo python3 "+system_pathway+AI)
                            return "/actions/"
                        else:
@@ -436,9 +437,9 @@ class AI:
                    os.system("sudo mount -t vfat -o uid=pi,gid=pi /dev/"+errors[i]+" /media/usbstick/")
                
                try:
-                   copyFiles("/media/usbstick/AI/actions",system_pathway+"/action")
+                   myAI.copyFiles("/media/usbstick/AI/actions",system_pathway+"/action")
                    myAI.out("Files copied")
-                   copyFiles(system_pathway,pathway[i]+"/AI/data")
+                   myAI.copyFiles(system_pathway,pathway[i]+"/AI/data")
 
                except:
                    print("Cannot be done!")
@@ -446,9 +447,9 @@ class AI:
            for i in range(len(devices)):
                print(devices[i]+"---"+pathway[i])
                try:
-                   copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
-                   out("Files copied")
-                   copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+                   myAI.copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
+                   myAI.out("Files copied")
+                   myAI.copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
                except:
                    print("Cannot be done!")
 
