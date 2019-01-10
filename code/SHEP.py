@@ -359,10 +359,11 @@ class AI:
                                      
               try:    #look for file
                      
-                     file = open(system_pathway+"action/"+name+".py","r")#check for existance
+                     file = open(system_pathway+"actions/"+name+".py","r")#check for existance
                      file.close()
+                     
                      #gets here without error means file exists
-                     filepathway = ("action/"+name+".py").replace(" ","\ ")
+                     filepathway = ("actions/"+name+".py").replace(" ","\ ")
                      say = "!A! "+ filepathway   #save in format
                      
                      
