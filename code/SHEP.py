@@ -447,9 +447,9 @@ class AI:
            for i in range(len(devices)):
                print(devices[i]+"---"+pathway[i])
                try:
-                   myAI.copyFiles(pathway[i]+"/AI/actions","/home/pi/AI/Python_coursework/action")
+                   myAI.copyFiles(pathway[i]+"/AI/actions",system_pathway+"action")
                    myAI.out("Files copied")
-                   myAI.copyFiles("/home/pi/AI/Python_coursework/",system_pathway,pathway[i]+"/AI/data")
+                   myAI.copyFiles(system_pathway,system_pathway,pathway[i]+"/AI/data")
                except:
                    print("Cannot be done!")
 
