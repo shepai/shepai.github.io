@@ -367,8 +367,9 @@ while exit == False:
         replace = add(to_add) #get the replacement (action or...)
         toOut= myBot.edit(sentence,replace)
         OUTPUT(toOut)
-    elif User == "add action": #add an action
+    elif User == "add action" or User == "and action": #add an action
         myBot.listUSB()
+        OUTPUT("Copying files!")
     elif User == "exit": #exit the program
         exit=True
     elif User == "":
