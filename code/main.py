@@ -256,6 +256,8 @@ def add(to_add):
                 valid = ">added"
                 OUTPUT("I shall not add an action")
             else:
+                while (userInput[len(userInput)-1] == " "):
+                       userInput = userInput[:-1]
                 valid = myBot.addAction(userInput)#check the filename and add
                 to_add = valid
                 
