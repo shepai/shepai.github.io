@@ -45,27 +45,32 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     <div class="w3-padding-32">
       <h4><b>SHEP</b></h4>
       <h6><i>A computer would only deserve to be called intelligent if it could deceive a human into believing that it was human. - Alan Turing</i></h6>
-      <p>The system is able to read a main file and create files and create pathway links depending on what is in the input. <br />The system is able to expand its knowledge through a series of text files with links to eachother. 
+		
+		<br/>
+		<h3>The current system</h3>
+		<p>The system currently works out what sort of word each word is within the sentence. After Beta trials of V0.1.1, we found that allowing the user to add
+			command words nd trigger words both confused, and wasted the time of the user. SHEP would need to pick out parts of sentences, and see what mattered.
+			Code was written to take lots of sentences, convert each word to it's word type (verbs, adversb, nouns ect...) and calculate where they appear.
+			We used this data to write SHEP's vocabulary functions.
+			<br/><br/>
+			Next a subroutine which researched the internet for answers was developed. Last time, the Wikipedia page fell short of what we needed in terms of infomation.
+			The latest version researches using a browser, it finds key infomation and saves a link. The link is opened every time, so information is kept up to date.
+			<br/><br/>
+			We continue to work on hardware, making the voice recognition accurate and faster. We want to make it easier to add actions, and indeed get SHEP researching
+			how to write python code and saving it, from stack overflow. This means SHEP could write functions to control hardware, and give the user instrutions on what to set up.
+			
+			<br/><br/>
+			<h3>Older versions</h3>
+		<h5>0.0.2</h5>
+      <p>The system is able to read a main file and create files and create pathway links depending on what is in the input. The system is able to expand its knowledge through a series of text files with links to eachother. 
 
-The system has speech to text for its main input.<br /> By using serial communication, the AI can receive and send data to an Arduino, this Arduino has servos which can read <br />its own position so the user can record actions and play them on command. The data from the servos will store on a local SD card.
-<br />
+The system has speech to text for its main input. By using serial communication, the AI can receive and send data to an Arduino, this Arduino has servos which can read <br />its own position so the user can record actions and play them on command. The data from the servos will store on a local SD card.
+
 The AI has audio output text to speech on top to make it a full audio I/O system. The system has a graphical interface which allows you to interact.
-<br />
-The system has a data file organized alphabetically with every word in the English language, the user has added, and what they categorize as. 
-<br />
-This system runs on raspberry pi and desktop although SHEP is programmed into the Pi. 
-
-<br /><br />Lots of people ask; "why is SHEP called SHEP?". SHEP is named SHEP as its developer was Dexter Shepherd 
-<br />and his name could be shortned down. Dexter named his AI after himself because it builds trust in an AI when it has a human connection.
-<br />Dexter Shepherd feels that SHEP being named after him shows more passion and commitment to SHEP and the project.
-<br /><br />SHEP has been under development since 2014 and the theory of SHEP developed since 2013. 
-<br />SHEP's first verson was on C++ written by Dexter Shepherd. SHEP didnt work as the theory was still under development
-<br />but SHEP continued as a project. 
-<br />It was only until 2015 SHEP became a learning algorithm and started to develop rapidly from a text = data analyser all the way to a network of files linking using a database on the English language.
-<br /><br />SHEP is currently being developed so it can not only learn from the user, but learn from watching people communicate and saving these respnonses in its data. 
-<br />This is a bit like how a human learns.
-<br />
+The system has a data file organized alphabetically with every word in the English language, the user has added, and what they categorize as. This system runs on raspberry pi and desktop, although SHEP is set up on the Pi. 
+		  <br/>
 <img src="assets/prod.jpg" alt="SHEP GUI	" style="width:304px;height:200px;">
+		  <br/>
 <br />Above shows SHEP on a touchscreen TFT. This is SHEP's head, the USB ports on the side are used to connect to an external sound card, a wireless internet dongle and an Arduino for serial output (actions)
 <br /><br />We want SHEP's data files to expand in knowledge and social responses so SHEP can appear to be human and appear to be understanding.
 SHEP is being developed further so it can reply based on the topic of conversation instead of just reading and writing what is in its data. 
@@ -83,7 +88,11 @@ We want SHEP to further be able to apply logic to input and output by recording 
 <br /><br />This SHEP Code is Copyright by Dexter Shepherd on the 18/02/2017 as SHEP AI©
 <br /><br />The voice input demo will require a USB speech to text device. Any device which sends through a string of text and enter button will work. SHEP
 is being developed to have USB inputs which work specifically using cameras and voice recognition.
-<br />SHEP has a menu which allows you to read infomation and add to its English language database. SHEP sorts 
+<br />SHEP has a menu which allows you to read infomation and add to its English language database. 
+		  <br/>
+		  <br/>
+		  
+		  SHEP formerly sorted
 data out into a trigger word, subject word and comand word. 
 <br />In the sentence "how are you feeling", we see "how" as the triger to trigger a question, "feeling" as the subject and
 "you" is the command. "how" tells the computer what kind of sentence it is, this case being a question. "feeling" tells the computer what you are
@@ -97,6 +106,16 @@ such as "how do you sing", "sing" would be the command to differ from "are".
 <br />"is" = command
 <br /><br />There will be a file called Churchill which gathers data about him. Command words will 
 create infomation keypoints in SHEP's brain. "is" "born" "job".
+		  
+
+<br /><br />SHEP has been under development since 2014 and the theory of SHEP developed since 2013. 
+<br />SHEP's first verson was on C++ written by Dexter Shepherd. SHEP didn't work as the theory was still under development
+<br />but SHEP continued as a project. 
+<br />It was only until 2015 SHEP became a learning algorithm and started to develop rapidly from a text data analyser, all the way to a network of files linking the English language.
+<br /><br />SHEP is currently being developed so it can not only learn from the user, but learn from watching people communicate and saving these respnonses in its data. 
+<br />This is based off of how a human learns.
+<br />
+
 </div>
   </div>
   <hr>
