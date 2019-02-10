@@ -28,7 +28,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 <div class="w3-top">
   <div class="w3-black w3-xlarge w3-padding-xlarge" style="max-width:40000px;margin:auto">
     <div class="w3-opennav w3-left w3-hover-text-grey" onclick="w3_open()">☰</div>
-    <div class="w3-right">By Dexter Shepherd - dextershep@gmail.com</div>
+    <div class="w3-right">By Dexter Shepherd</div>
     <div class="w3-center">SHEP AI</div>
   </div>
 </div>
@@ -58,8 +58,46 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			<br/><br/>
 			We continue to work on hardware, making the voice recognition accurate and faster. We want to make it easier to add actions, and indeed get SHEP researching
 			how to write python code and saving it, from stack overflow. This means SHEP could write functions to control hardware, and give the user instrutions on what to set up.
+		<br/><br/>	
+			<hr id="aidemo">
+		<h3>Demo</h3>
 			
-			<br/><br/>
+			Below shows a basic version of the AI. It does not have learning abilities. 
+			
+		<div class="w3-container w3-padding-32 w3-center"> 
+			<div class="AIbox">
+				<p id="AIoutput">>Use the bottom of the console to type
+					
+					</p>
+				<br/>
+				<div class="inputline">>>> <input type="text" id="AIinput" class="codeinput" name="fname"><br></div>
+				
+		</div>
+		</div>
+		<hr>
+		<script>
+			function getAI(p1, p2) {
+			  return p1 * p2;
+			}
+			
+			var User = document.getElementById("AIinput");
+			User.addEventListener("keyup", function(event) {
+			  event.preventDefault();
+			  if (event.keyCode === 13) {
+				var text = document.getElementById("AIoutput");
+				var lines = (text.innerHTML).split('>');
+				if (lines.length >= 7)
+				{
+					lines=lines.splice(1,lines.length);
+					text = lines.join('>');
+					document.getElementById("AIoutput").innerHTML  = text;
+				}
+				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(User.value);
+				document.getElementById("AIinput").value = "";
+				
+			  }
+			});
+		</script>
 			<h3>Older versions</h3>
 		<h5>0.0.2</h5>
       <p>The system is able to read a main file and create files and create pathway links depending on what is in the input. The system is able to expand its knowledge through a series of text files with links to eachother. 

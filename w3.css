@@ -377,3 +377,29 @@ pre {
 .comments{
 	color:red;	
 }
+.AIbox{
+	background-color: black;
+	width:750px;
+	height: 200px;
+	color:white;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+	position: relative;
+	font-family: 'Courier New', Courier, monospace
+	
+	
+}
+.codeinput{
+	background-color: black;
+	color:white;
+	border-style: none;
+	outline: none;
+	width:700px;
+	
+}
+.inputline{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
