@@ -377,44 +377,45 @@ pre {
 .comments{
 	color:red;	
 }
+
 .AIbox{
 	background-color: black;
-	width:750px;
+	width:80%;
 	height: 200px;
 	color:white;
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
 	position: relative;
-	float: left;
+	
 	font-family: 'Courier New', Courier, monospace
 	
 	
 }
 .AIbox1{
 	background-color: #cc0000;
-	width:750px;
+	width:80%;
 	height: 200px;
 	color:orange;
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
 	position: relative;
-	float: left;
+	
 	font-family: 'Courier New', Courier, monospace
 	
 	
 }
 .AIbox2{
 	background-color: blue;
-	width:750px;
+	width:80%;
 	height: 200px;
 	color:white;
 	margin-left:auto;
 	margin-right:auto;
 	text-align:left;
 	position: relative;
-	float: left;
+	
 	font-family: 'Courier New', Courier, monospace
 	
 	
@@ -424,7 +425,7 @@ pre {
 	color:white;
 	border-style: none;
 	outline: none;
-	width:700px;
+	width:80%;
 	
 }
 .codeinput1{
@@ -432,7 +433,7 @@ pre {
 	color:orange;
 	border-style: none;
 	outline: none;
-	width:700px;
+	width:80%;
 	
 }
 .codeinput2{
@@ -440,7 +441,7 @@ pre {
 	color:white;
 	border-style: none;
 	outline: none;
-	width:700px;
+	width:80%;
 	
 }
 .inputline{
@@ -453,11 +454,11 @@ pre {
 	margin-left:auto;
 	margin-right:auto;
 	
-	width:800px;
+	width:80%;
 	height: 200px;
 	position: relative;
 }
-.btn-group button {
+.btn-group {
   background-color: white; /* Green background */
   border: 1px solid black; /* Green border */
   color: black; /* White text */
@@ -465,16 +466,9 @@ pre {
   cursor: pointer; /* Pointer/hand icon */
   width: 25px; /* Set a width if needed */
   display: block; /* Make the buttons appear below each other */
-	float: right;
+	
 	
 }
 
-.btn-group button:not(:last-child) {
-  border-bottom: none; /* Prevent double borders */
-}
 
-/* Add a background color on hover */
-.btn-group button:hover {
-  background-color: white;
-	
-}
+
