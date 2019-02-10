@@ -76,14 +76,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		</div>
 		<hr>
 		<script>
-			function getAI(p1, p2) {
-			  return p1 * p2;
+			function getAI(Userinput) {
+			  return "nothing";
 			}
-			
-			var User = document.getElementById("AIinput");
-			User.addEventListener("keyup", function(event) {
-			  event.preventDefault();
-			  if (event.keyCode === 13) {
+			function write(message)
+			{
 				var text = document.getElementById("AIoutput");
 				var lines = (text.innerHTML).split('>');
 				if (lines.length >= 7)
@@ -92,9 +89,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					text = lines.join('>');
 					document.getElementById("AIoutput").innerHTML  = text;
 				}
-				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(User.value);
+				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
 				document.getElementById("AIinput").value = "";
+			}
+			var User = document.getElementById("AIinput");
+			User.addEventListener("keyup", function(event) {
+			  event.preventDefault();
+			  if (event.keyCode === 13) {
+				write(User.value);
 				
+				write("Robot message: "+getAI(User));
 			  }
 			});
 		</script>
