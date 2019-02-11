@@ -49,15 +49,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/>
 		<h3>The current system</h3>
 		<p>The system currently works out what sort of word each word is within the sentence. After Beta trials of V0.1.1, we found that allowing the user to add
-			command words nd trigger words both confused, and wasted the time of the user. SHEP would need to pick out parts of sentences, and see what mattered.
-			Code was written to take lots of sentences, convert each word to it's word type (verbs, adversb, nouns ect...) and calculate where they appear.
+			command words and trigger words both confused, and wasted the time of the user. SHEP would need to pick out parts of sentences, and see what mattered.
+			Code was written to take lots of sentences, convert each word to it's word type (verbs, adverbs, nouns ect...) and calculate where they appear.
 			We used this data to write SHEP's vocabulary functions.
 			<br/><br/>
-			Next a subroutine which researched the internet for answers was developed. Last time, the Wikipedia page fell short of what we needed in terms of infomation.
-			The latest version researches using a browser, it finds key infomation and saves a link. The link is opened every time, so information is kept up to date.
+			Next a subroutine which researched the internet for answers was developed. Last time, the Wikipedia page fell short of what we needed in terms of information.
+			The latest version researches using a browser, it finds key information and saves a link. The link is opened every time, so information is kept up to date.
 			<br/><br/>
 			We continue to work on hardware, making the voice recognition accurate and faster. We want to make it easier to add actions, and indeed get SHEP researching
-			how to write python code and saving it, from stack overflow. This means SHEP could write functions to control hardware, and give the user instrutions on what to set up.
+			how to write python code and saving it, from stack overflow. This means SHEP could write functions to control hardware, and give the user instructions on what to set up.
 		<br/><br/>	
 			<hr id="aidemo">
 		<h3>Demo</h3>
@@ -80,8 +80,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
       <li><a class="w3-hover-black" onClick="A()">1</a></li>
       <li><a class="w3-hover-black" onClick="B()">2</a></li>
       <li><a class="w3-hover-black" onClick="C()">3</a></li>
-      
-      
+      <li><a class="w3-hover-black" onClick="D()">4</a></li>
+      <li><a class="w3-hover-black" onClick="E()">5</a></li>
+	  <li><a class="w3-hover-black" onClick="F()">6</a></li>
     </ul>
   </div>
 			
@@ -103,6 +104,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function C(){
 				document.getElementById("AIinput").className = "codeinput2";
 				document.getElementById("consoleC").className = "AIbox2";
+			}
+			function D(){
+				document.getElementById("AIinput").className = "codeinput3";
+				document.getElementById("consoleC").className = "AIbox3";
+			}
+			function E(){
+				document.getElementById("AIinput").className = "codeinput4";
+				document.getElementById("consoleC").className = "AIbox4";
+			}
+			function F(){
+				document.getElementById("AIinput").className = "codeinput5";
+				document.getElementById("consoleC").className = "AIbox5";
 			}
 			function includes(string,substring){
 				var x=0
@@ -189,7 +202,7 @@ The system has a data file organized alphabetically with every word in the Engli
 		  <br/>
 <img src="assets/prod.jpg" alt="SHEP GUI	" style="width:304px;height:200px;">
 		  <br/>
-<br />Above shows SHEP on a touchscreen TFT. This is SHEP's head, the USB ports on the side are used to connect to an external sound card, a wireless internet dongle and an Arduino for serial output (actions)
+<br />Above shows SHEP on a touch screen TFT. This is SHEP's head, the USB ports on the side are used to connect to an external sound card, a wireless internet dongle and an Arduino for serial output (actions)
 <br /><br />We want SHEP's data files to expand in knowledge and social responses so SHEP can appear to be human and appear to be understanding.
 SHEP is being developed further so it can reply based on the topic of conversation instead of just reading and writing what is in its data. 
 We want SHEP to further be able to apply logic to input and output by recording lgic in its data. This means SHEP could apply knowledge to different situations.
@@ -202,17 +215,17 @@ We want SHEP to further be able to apply logic to input and output by recording 
 		
 		  <br /><br /><td><a href="downloads/manual.pdf"download>Version 0.0.6 instructions</a></td>
 <br /><br />
-<br /><br />Demo SHEP does not have audio capibilities however it uses text.
+<br /><br />Demo SHEP does not have audio capabilities however it uses text.
 <br /><br />This SHEP Code is Copyright by Dexter Shepherd on the 18/02/2017 as SHEP AI©
 <br /><br />The voice input demo will require a USB speech to text device. Any device which sends through a string of text and enter button will work. SHEP
 is being developed to have USB inputs which work specifically using cameras and voice recognition.
-<br />SHEP has a menu which allows you to read infomation and add to its English language database. 
+<br />SHEP has a menu which allows you to read information and add to its English language database. 
 		  <br/>
 		  <br/>
 		  
 		  SHEP formerly sorted
-data out into a trigger word, subject word and comand word. 
-<br />In the sentence "how are you feeling", we see "how" as the triger to trigger a question, "feeling" as the subject and
+data out into a trigger word, subject word and command word. 
+<br />In the sentence "how are you feeling", we see "how" as the trigger to trigger a question, "feeling" as the subject and
 "you" is the command. "how" tells the computer what kind of sentence it is, this case being a question. "feeling" tells the computer what you are
  talking about, in this case being feelings. "you" tells the computer you are asking it how it is feeling, within the "feeling" folder it will have "you" and the
 		   learned response.
@@ -223,14 +236,14 @@ such as "how do you sing", "sing" would be the command to differ from "are".
 <br />"Churchill" = subject
 <br />"is" = command
 <br /><br />There will be a file called Churchill which gathers data about him. Command words will 
-create infomation keypoints in SHEP's brain. "is" "born" "job".
+create information key points in SHEP's brain. "is" "born" "job".
 		  
 
 <br /><br />SHEP has been under development since 2014 and the theory of SHEP developed since 2013. 
-<br />SHEP's first verson was on C++ written by Dexter Shepherd. SHEP didn't work as the theory was still under development
+<br />SHEP's first version was on C++ written by Dexter Shepherd. SHEP didn't work as the theory was still under development
 <br />but SHEP continued as a project. 
 <br />It was only until 2015 SHEP became a learning algorithm and started to develop rapidly from a text data analyser, all the way to a network of files linking the English language.
-<br /><br />SHEP is currently being developed so it can not only learn from the user, but learn from watching people communicate and saving these respnonses in its data. 
+<br /><br />SHEP is currently being developed so it can not only learn from the user, but learn from watching people communicate and saving these responses in its data. 
 <br />This is based off of how a human learns.
 <br />
 
@@ -276,27 +289,20 @@ function w3_close() {
 		function createCORSRequest(method, url) {
 		  var xhr = new XMLHttpRequest();
 		  if ("withCredentials" in xhr) {
-
 			// Check if the XMLHttpRequest object has a "withCredentials" property.
 			// "withCredentials" only exists on XMLHTTPRequest2 objects.
 			xhr.open(method, url, true);
-
 		  } else if (typeof XDomainRequest != "undefined") {
-
 			// Otherwise, check if XDomainRequest.
 			// XDomainRequest only exists in IE, and is IE's way of making CORS requests.
 			xhr = new XDomainRequest();
 			xhr.open(method, url);
-
 		  } else {
-
 			// Otherwise, CORS is not supported by the browser.
 			xhr = null;
-
 		  }
 		  return xhr;
 		}
-
 	var xhr = createCORSRequest('GET', "https://www.google.com/");
 	if (!xhr) {
 	  throw new Error('CORS not supported');

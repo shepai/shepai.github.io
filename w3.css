@@ -420,6 +420,48 @@ pre {
 	
 	
 }
+.AIbox3{
+	background-color: green;
+	width:80%;
+	height: 200px;
+	color:black;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+	position: relative;
+	
+	font-family: 'Courier New', Courier, monospace
+	
+	
+}
+.AIbox4{
+	background-color: white;
+	width:80%;
+	height: 200px;
+	color:blue;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+	position: relative;
+	
+	font-family: 'Courier New', Courier, monospace
+	
+	
+}
+.AIbox5{
+	background-color: purple;
+	width:80%;
+	height: 200px;
+	color:pink;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+	position: relative;
+	
+	font-family: 'Courier New', Courier, monospace
+	
+	
+}
 .codeinput{
 	background-color: black;
 	color:white;
@@ -439,6 +481,30 @@ pre {
 .codeinput2{
 	background-color: blue;
 	color:white;
+	border-style: none;
+	outline: none;
+	width:80%;
+	
+}
+.codeinput3{
+	background-color: green;
+	color:white;
+	border-style: none;
+	outline: none;
+	width:80%;
+	
+}
+.codeinput4{
+	background-color: white;
+	color:blue;
+	border-style: none;
+	outline: none;
+	width:80%;
+	
+}
+.codeinput5{
+	background-color: purple;
+	color:pink;
 	border-style: none;
 	outline: none;
 	width:80%;
@@ -469,6 +535,4 @@ pre {
 	
 	
 }
-
-
 
