@@ -32,59 +32,78 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     <div class="w3-center">SHEP AI</div>
   </div>
 </div>
-  
+
+         
+	
+	</script>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
-
+  <div id="test">
   <!-- First Photo Grid-->
   <div class="w3-row-padding w3-padding-16 w3-center" id="food">
-    <div class="w3-quarter">
+    <div class="w3-quarter btn" >
+		<a href="development.HTML">
       <img src="assets/develop.jpeg" alt="AI" style="width:100%">
-      <h3><a href="development.HTML">The development</a></h3>
+      <h3><a >The development</a></h3>
       <p>We started off using the Arduino uno however we needed more memory so upgraded to the mega. The AI is based off of microcontrollers. In recent versions however, the AI has been written on python and uses the USB serial port to output to servos.</p>
-    </div>
-    <div class="w3-quarter">
+		</a>
+			</div>
+    <div class="w3-quarter btn" >
+		<a href="versions.HTML">
       <img src="assets/1.jpg" alt="1" style="width:100%">
-      <h3><a href="versions.HTML">The different versions</a></h3>
+      <h3><a >The different versions</a></h3>
       <p>The project started as a text based interface however we continue to advance our inputs, and user experience.</p>
-    </div>
-    <div class="w3-quarter">
+		</a>
+			</div>
+    <div class="w3-quarter btn" >
+		<a href="lib.HTML">
       <img src="assets/python.png" alt="US" style="width:100%">
-      <h3><a href="lib.HTML">AI library</a></h3>
+      <h3><a >AI library</a></h3>
       <p>Get the SHEP AI python library, and look at our tutorials on how to use the library for your own projects.</p>
-       
+		</a>
     </div>
-    <div class="w3-quarter">
+    <div class="w3-quarter btn" >
+		<a href="manual.HTML">
       <img src="assets/design.jpg" alt="3D" style="width:100%">
-      <h3><a href="manual.HTML">The manual labour</a></h3>
+      <h3><a >The manual labour</a></h3>
       <p>How we put the AI together and the design process. This involves 3D printing, soldering and alot of late nights thinking things over...</p>
-    </div>
+		</a>
+			</div>
   </div>
-  
+  <br>
   <!-- Second Photo Grid-->
   <div class="w3-row-padding w3-padding-16 w3-center">
-    <div class="w3-quarter"> 
+    <div class="w3-quarter btn"> 
+		<a href="products.HTML">
       <img src="assets/robot2.jpg" alt="robot raspberry pi" style="width:100%">
-      <h3><a href="products.HTML">Our products</a></h3>
+      <h3><a >Our products</a></h3>
       <p>Check out our products and what we can offer</p>
+			</a>
     </div>
-    <div class="w3-quarter">
+    <div class="w3-quarter btn">
+		<a href="SHEP.HTML">
       <img src="assets/eye.png" alt="happy" style="width:100%">
-      <h3><a href="SHEP.HTML">Meet SHEP</a></h3>
+      <h3><a >Meet SHEP</a></h3>
       <p>SHEP may not be a fully sentient being like a human, but humanity is far off that. SHEP has a network of files which allows it to sort infomation into catogorizies, this gives a more accurate output</p>
-    </div>
-    <div class="w3-quarter">
+		</a>
+		</div>
+    <div class="w3-quarter btn">
       <img src="assets/eyes.png" alt="personality" style="width:100%">
-      <h3><a href="AI.HTML">Personality AIs</a></h3>
+		<a href="AI.HTML"> 
+      <h3><a >Personality AIs</a></h3>
       <p>Check out the different personalities SHEP comes in! download the different AIs part of the SHEP family</p>
-    </div>
-    <div class="w3-quarter">
+		</a>
+			</div>
+    <div class="w3-quarter btn">
+		<a  href="downloads.HTML">
       <img src="assets/download.jpg" alt="" style="width:100%">
-      <h3><a href="downloads.HTML">Downloads</a></h3>
+      <h3><a>Downloads</a></h3>
       <p>All the downloads for all versions of the software</p>
+		</a>
     </div>
   </div>
-	
+
+</div>	
   <!-- Pagination -->
   <!--<div class="w3-center w3-padding-32">
     <ul class="w3-pagination">
@@ -146,12 +165,10 @@ This all sounds rather technical, to sum it up; SHEP is a learning system which 
 <body>
 
 <div class="w3-content w3-section" style="max-width:500px">
-  <img class="mySlides" src="assets/sad.png" style="width:100%">
-  <img class="mySlides" src="assets/happy.png" style="width:100%">
-  <img class="mySlides" src="assets/face2.png" style="width:100%">
+  
 </div>
 
-<script>
+	<script>
 var myIndex = 0;
 carousel();
 
@@ -196,7 +213,8 @@ function carousel() {
 <!-- End page content -->
 </div>
 
-<script>
+
+	<script>
 // Script to open and close sidenav
 function w3_open() {
     document.getElementById("mySidenav").style.display = "block";
