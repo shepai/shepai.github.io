@@ -24,27 +24,11 @@ from pixels import Pixels #found in folder
 import speech_recognition as sr
 pixels = Pixels()
 
-#initialize global variables
-global timer
-timer = time.time()
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
 myBot.setpath(system_pathway)
 
-def audioCheck():
-       global rec
-       global m
-       
-       try:
-              #variables to listen to audio with
-              rec = sr.Recognizer() 
-              #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-              m = sr.Microphone()
-              
-       except:
-              OUTPUT("Problem connecting to microphone")
-              error_pixels()
 def internet():
        conn = httplib.HTTPConnection("www.google.com", timeout=5) #attempt connection
        try:
@@ -116,21 +100,14 @@ def OUTPUT(string):#output method
            print(string)
            error_pixels()
            
-def getVoice():#input method
-           global timer
-           voiceReply = ""
-           connection_errors = 0 #show there is a strong connection
-           print("setting...")
+def getVoice(source):#input method
            rec.dynamic_energy_threshold = False #set ackground noise to silence
-           t0 = 0 #set the timer
-           with m as source:    #listen audio
-                  if ((timer-time.time())/60) > 4: #every four minuets
-                         audio = rec.adjust_for_ambient_noise(source) #adjust audio
-                         timer=time.time()
-                  print ("Speak Now")
-                  t0 = time.time() #start a timer to prevent the search going on too long
-                  pixels.listen()    #output eye to the user
-                  audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
+           t0 = time.time() #set the timer
+           audio = rec.adjust_for_ambient_noise(source) #adjust audio
+           print ("Speak Now")
+           t0 = time.time() #start a timer to prevent the search going on too long
+           pixels.listen()    #output eye to the user
+           audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
            t1 = time.time() #take a second reading of the time
            total = t1-t0 #work out how long it took
            pixels.off() #stop the LEDs
@@ -145,16 +122,16 @@ def getVoice():#input method
                       except:
                              voiceReply="" 
            else:
-                      print("Took too long to respond...")
-                      audioCheck()
-    
+                      print("I'm sorry, I didn't get that")
+                      
+                      
            return voiceReply #return voice
 
-def INPUT(string):
+def INPUT(string,source):
     OUTPUT(string)#method of output
     string = ""
     try:
-           string = getVoice() #get voice input
+           string = getVoice(source) #get voice input
     except:
            #no microphone or internet error
            audioCheck()
@@ -270,44 +247,48 @@ update()
 myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
+try:
+       rec = sr.Recognizer()
+       with sr.Microphone() as source:
+              while exit == False:
+                  print("Your message ")
+                  User = INPUT("",source)
+                  User = User.lower()
+                  r = ""
+                  if User == "edit": #edit a sentence
+                      sentence = INPUT("Say the sentence that I shall edit ",source)
+                      to_add = INPUT("What shall I replace it with? ",source)
+                      replace = add(to_add)
+                      myBot.edit(sentence,replace)
+                  elif User == "add action":
+                      myBot.listUSB()
+                  elif User == "exit":
+                      exit=True#end
+                  else:
+                      
+                      r = myBot.search(User)
+                      if add_mode == True:
+                          
+                          if r == "/00/00/00": #no action is fond
+                              print("Learning... a moment please")
+                              #word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
+                              word_to_add = myBot.research(User)
+                              if word_to_add != "" and word_to_add != None: #if something is found
+                                      r = myBot.learn(User,myBot.listOfVocab,"!L!"+word_to_add)
+                                      
+                              if word_to_add == "":
+                                  #the wiki is not going to be added
+                                  to_add = INPUT("Nothing in my data, What shall I add?",source)
+                                  to_add = add(to_add)
+                                  r = to_add
+                                  if r != "cancel":
+                                      
+                                      if to_add != ">action" and to_add != "action" and to_add != "an action":
+                                          
+                                          r = myBot.learn(User,myBot.listOfVocab,to_add)
+                              
+                  print("Robot message: ")    
+                  OUTPUT(r)
 
-while exit == False:
-    print("Your message ")
-    User = INPUT("")
-    User = User.lower()
-    r = ""
-    if User == "edit": #edit a sentence
-        sentence = INPUT("Say the sentence that I shall edit ")
-        to_add = INPUT("What shall I replace it with? ")
-        replace = add(to_add)
-        myBot.edit(sentence,replace)
-    elif User == "add action":
-        myBot.listUSB()
-    elif User == "exit":
-        exit=True#end
-    else:
-        
-        r = myBot.search(User)
-        if add_mode == True:
-            
-            if r == "/00/00/00": #no action is fond
-                print("Learning... a moment please")
-                #word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
-                word_to_add = myBot.research(User)
-                if word_to_add != "" and word_to_add != None: #if something is found
-                        r = myBot.learn(User,myBot.listOfVocab,"!L!"+word_to_add)
-                        
-                if word_to_add == "":
-                    #the wiki is not going to be added
-                    to_add = INPUT("Nothing in my data, What shall I add?")
-                    to_add = add(to_add)
-                    r = to_add
-                    if r != "cancel":
-                        
-                        if to_add != ">action" and to_add != "action" and to_add != "an action":
-                            
-                            r = myBot.learn(User,myBot.listOfVocab,to_add)
-                
-        
-    OUTPUT("Robot message: "+r)
-
+except:
+       OUTPUT("There was an error. Make sure the microphone and internet connections are fine. Then turn me on and off again")
