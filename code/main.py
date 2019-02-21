@@ -130,11 +130,11 @@ def getVoice(source):#input method
 def INPUT(string,source):
     OUTPUT(string)#method of output
     string = ""
-    try:
+    if True:
            string = getVoice(source) #get voice input
-    except:
+    else:
            #no microphone or internet error
-           audioCheck()
+           
            error_pixels()
            if not(internet()):
                   OUTPUT("There is an error connecting to the internet")
@@ -269,7 +269,7 @@ if True:
                       myBot.listUSB()
                   elif User == "exit":
                       exit=True#end
-                  else:
+                  elif User != "":
                       
                       r = myBot.search(User)
                       if add_mode == True:
