@@ -210,6 +210,7 @@ def wifi():
                          num = int(input("Which number would you like: "))
                   except:
                          OUTPUT("Invalid input:")
+                         num = len(ssids)+1 #make sure the number is out of bounds
                   num = num - 1 #equalize it with list numbers
                   if num < 0:
                       num = len(ssids) +1 #loop bigger than the array
