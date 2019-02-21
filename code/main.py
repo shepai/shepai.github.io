@@ -207,7 +207,7 @@ def wifi():
            num = len(ssids)+1
            while num > len(ssids) or num <= 0:
                   try:
-                         num = int(OUTPUT("Which number would you like: "))
+                         num = int(input("Which number would you like: "))
                   except:
                          OUTPUT("Invalid input:")
                   num = num - 1 #equalize it with list numbers
