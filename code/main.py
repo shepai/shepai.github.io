@@ -100,7 +100,7 @@ def OUTPUT(string):#output method
            print(string)
            error_pixels()
            
-def getVoice(source):#input method
+def getVoice():#input method
        voiceReply =""
        if True:
            rec = sr.Recognizer()
@@ -136,7 +136,7 @@ def INPUT(string):
     OUTPUT(string)#method of output
     string = ""
     if True:
-           string = getVoice(source) #get voice input
+           string = getVoice() #get voice input
     else:
            #no microphone or internet error
            
