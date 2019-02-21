@@ -1,0 +1,563 @@
+<data>
+
+	<phrase name="command1">
+	<word>how</word>
+	<word>are</word>
+	<word>you</word>
+	<output>I am great thank you</output>
+	</phrase>
+	
+	
+	<phrase name="command2">
+	<word>what</word>
+	<word>is</word>
+	<word>your</word>
+	<word>name</word>
+	<output>my name is SHEP</output>
+	</phrase>
+	
+	<phrase name="command3">
+	<word>what</word>
+	<word>is</word>
+	<word>your</word>
+	<word>name</word>
+	<output>my name is SHEP</output>
+	</phrase>
+	
+	<phrase name="command4">
+	<word>what</word>
+	<word>is</word>
+	<word>my</word>
+	<word>name</word>
+	<output>your name is Dexter</output>
+	</phrase>
+	
+	<phrase name="command5">
+	<word>who</word>
+	<word>is</word>
+	<word>your</word>
+	<word>best</word>
+	<word>friend</word>
+	<output>I like SHEP version 0.1.5, it makes me feel good about myself</output>
+	</phrase>
+
+	<phrase name="command8">
+	<word>do</word>
+	<word>you</word>
+	<word>like</word>
+	<word>to</word>
+	<word>dacne</word>
+	<output>cancel</output>
+	</phrase>
+	
+	<phrase name="command9">
+	<word>do</word>
+	<word>you</word>
+	<word>like</word>
+	<word>to</word>
+	<word>dance</word>
+	<output>i am not a fan</output>
+	</phrase>
+	
+	<phrase name="command10">
+	<word>hi</word>
+	<word>there</word>
+	<output>hello</output>
+	</phrase>
+	
+	<phrase name="command11">
+	<word>hello</word>
+	<output>hi there</output>
+	</phrase>
+	
+	<phrase name="command12">
+	<word>who</word>
+	<word>is</word>
+	<word>the</word>
+	<word>queen</word>
+	<word>of</word>
+	<word>england</word>
+	<output>!L!https://www.bing.com/search?q=who+is+the+queen+of+england</output>
+	</phrase>
+	
+	<phrase name="command13">
+	<word>what</word>
+	<word>is</word>
+	<word>the</word>
+	<word>time</word>
+	<output>!L!https://www.bing.com/search?q=what+is+the+time</output>
+	</phrase>
+	
+	<phrase name="command14">
+	<word>what</word>
+	<word>day</word>
+	<word>is</word>
+	<word>it</word>
+	<output>!L!https://www.bing.com/search?q=what+day+is+it</output>
+	</phrase>
+	
+	<phrase name="command15">
+	<word>what</word>
+	<word>is</word>
+	<word>the</word>
+	<word>date</word>
+	<word>today</word>
+	<output>!L!https://www.bing.com/search?q=what+is+the+date+today</output>
+	</phrase>
+	
+	<phrase name="command16">
+	<word>who</word>
+	<word>is</word>
+	<word>barack</word>
+	<word>obama</word>
+	<output>!L!https://www.bing.com/search?q=who+is+barack+obama</output>
+	</phrase>
+	
+	<phrase name="command17">
+	<word>who</word>
+	<word>is</word>
+	<word>theresa</word>
+	<word>may</word>
+	<output>!L!https://www.bing.com/search?q=who+is+theresa+may</output>
+	</phrase>
+	
+	<phrase name="command18">
+	<word>what</word>
+	<word>is</word>
+	<word>the</word>
+	<word>date</word>
+	<output>!L!https://www.bing.com/search?q=what+is+the+date</output>
+	</phrase>
+	
+	<phrase name="command19">
+	<word>the</word>
+	<word>weather</word>
+	<word>was</word>
+	<word>today</word>
+	<output>what did the weather do?</output>
+	</phrase>
+	
+	<phrase name="command20">
+	<word>the</word>
+	<word>weather</word>
+	<word>was</word>
+	<word>today</word>
+	<output>what did the weather do?</output>
+	</phrase>
+	
+	<phrase name="command21">
+	<word>why</word>
+	<word>is</word>
+	<word>the</word>
+	<word>earth</word>
+	<output>!L!https://www.bing.com/search?q=why+is+the+earth+round</output>
+	</phrase>
+	
+	<phrase name="command22">
+	<word>who</word>
+	<word>is</word>
+	<word>john</word>
+	<word>shepherd</word>
+	<word>brighton</word>
+	<output>!L!https://www.bing.com/search?q=who+is+john+shepherd+brighton</output>
+	</phrase>
+	
+	<phrase name="command23">
+	<word>what</word>
+	<word>does</word>
+	<word>chiral</word>
+	<output>!L!https://www.bing.com/search?q=what+does+chiral+mean</output>
+	</phrase>
+	
+	<phrase name="command24">
+	<word>what</word>
+	<word>is</word>
+	<word>an</word>
+	<word>adjective</word>
+	<output>!L!https://www.bing.com/search?q=what+is+an+adjective</output>
+	</phrase>
+	
+	<phrase name="command25">
+	<word>what</word>
+	<word>is</word>
+	<word>the</word>
+	<word>capital</word>
+	<word>of</word>
+	<word>england</word>
+	<output>!L!https://www.bing.com/search?q=what+is+the+capital+of+england</output>
+	</phrase>
+	
+	<phrase name="command26">
+	<word>when</word>
+	<word>was</word>
+	<word>prince</word>
+	<word>philip</word>
+	<word>born</word>
+	<output>!L!https://www.bing.com/search?q=when+was+prince+philip+born</output>
+	</phrase>
+	
+	<phrase name="command27">
+	<word>who</word>
+	<word>is</word>
+	<word>david</word>
+	<word>cameron</word>
+	<output>!L!https://www.bing.com/search?q=who+is+david+cameron</output>
+	</phrase>
+	
+	<phrase name="command28">
+	<word>who</word>
+	<word>was</word>
+	<word>adolf</word>
+	<word>hitler</word>
+	<output>!L!https://www.bing.com/search?q=who+was+adolf+hitler</output>
+	</phrase>
+	
+	<phrase name="command29">
+	<word>what</word>
+	<word>was</word>
+	<word>the</word>
+	<word>nazi</word>
+	<output>!L!https://www.bing.com/search?q=what+was+the+nazi+party</output>
+	</phrase>
+	
+	<phrase name="command30">
+	<word>when</word>
+	<word>did</word>
+	<word>france</word>
+	<word>the</word>
+	<word>ruhr</word>
+	<output>!L!https://www.bing.com/search?q=when+did+france+invade+the+ruhr</output>
+	</phrase>
+	
+	<phrase name="command31">
+	<word>god</word>
+	<word>save</word>
+	<word>the</word>
+	<word>queen</word>
+	<output>God save the Queen!</output>
+	</phrase>
+	
+	<phrase name="command32">
+	<word>who</word>
+	<word>are</word>
+	<word>the</word>
+	<word>ymca</word>
+	<output>!L!https://www.bing.com/search?q=who+are+the+ymca</output>
+	</phrase>
+	
+	<phrase name="command31">
+	<word>who</word>
+	<word>are</word>
+	<word>you</word>
+	<output>I am SHEP, the learning digital assistant</output>
+	</phrase>
+	
+	<phrase name="command32">
+	<word>who</word>
+	<word>is</word>
+	<word>maria</word>
+	<word>caulfield</word>
+	<output>!L!https://www.bing.com/search?q=who+is+maria+caulfield</output>
+	</phrase>
+	
+	<phrase name="command33">
+	<word>who</word>
+	<word>is</word>
+	<word>jacob</word>
+	<word>rees</word>
+	<word>mogg</word>
+	<output>A Conservative MP and brexitier</output>
+	</phrase>
+	
+	<phrase name="command34">
+	<word>what</word>
+	<word>is</word>
+	<word>your</word>
+	<word>colour</word>
+	<output>I like blue and red</output>
+	</phrase>
+	
+	<phrase name="command35">
+	<word>how</word>
+	<word>many</word>
+	<word>roads</word>
+	<word>a</word>
+	<word>man</word>
+	<word>walk</word>
+	<word>down</word>
+	<output>many many before you can call him a man</output>
+	</phrase>
+	
+	<phrase name="command36">
+	<word>who</word>
+	<word>was</word>
+	<word>the</word>
+	<word>last</word>
+	<word>viceroy</word>
+	<word>of</word>
+	<word>india</word>
+	<output>!L!https://www.bing.com/search?q=who+was+the+last+viceroy+of+india</output>
+	</phrase>
+	
+	<phrase name="command37">
+	<word>when</word>
+	<word>did</word>
+	<word>india</word>
+	<word>independent</word>
+	<output>!L!https://www.bing.com/search?q=when+did+india+become+independent</output>
+	</phrase>
+	
+	<phrase name="command38">
+	<word>when</word>
+	<word>did</word>
+	<word>the</word>
+	<word>uk</word>
+	<word>independant</word>
+	<output>!L!https://www.bing.com/search?q=when+did+the+uk+become+independant</output>
+	</phrase>
+	
+	<phrase name="command39">
+	<word>when</word>
+	<word>did</word>
+	<word>the</word>
+	<word>uk</word>
+	<word>independent</word>
+	<output>!L!https://www.bing.com/search?q=when+did+the+uk+become+independent</output>
+	</phrase>
+	
+	<phrase name="command40">
+	<word>who</word>
+	<word>was</word>
+	<word>louis</word>
+	<word>mountbatten</word>
+	<output>!L!https://www.bing.com/search?q=who+was+louis+mountbatten</output>
+	</phrase>
+	
+	<phrase name="command41">
+	<word>who</word>
+	<word>is</word>
+	<word>prince</word>
+	<word>philip</word>
+	<output>!L!https://www.bing.com/search?q=who+is+prince+philip</output>
+	</phrase>
+	
+	<phrase name="command42">
+	<word>how</word>
+	<word>old</word>
+	<word>is</word>
+	<word>earth</word>
+	<output>!L!https://www.bing.com/search?q=how+old+is+earth</output>
+	</phrase>
+	
+	<phrase name="command43">
+	<word>what</word>
+	<word>is</word>
+	<word>a</word>
+	<word>dog</word>
+	<output>!L!https://www.bing.com/search?q=what+is+a+dog</output>
+	</phrase>
+	
+	<phrase name="command44">
+	<word>who</word>
+	<word>is</word>
+	<word>the</word>
+	<word>emperor</word>
+	<word>of</word>
+	<word>china</word>
+	<output>!L!https://www.bing.com/search?q=who+is+the+emperor+of+china</output>
+	</phrase>
+	
+	<phrase name="command45">
+	<word>what</word>
+	<word>does</word>
+	<word>ego</word>
+	<output>!L!https://www.bing.com/search?q=what+does+ego+mean</output>
+	</phrase>
+	
+	<phrase name="command46">
+	<word>here</word>
+	<word>we</word>
+	<word>again</word>
+	<output>what do you mean</output>
+	</phrase>
+	
+	<phrase name="command47">
+	<word>who</word>
+	<word>was</word>
+	<word>king</word>
+	<word>george</word>
+	<word>iv</word>
+	<output>!L!https://www.bing.com/search?q=who+was+king+george+iv</output>
+	</phrase>
+	
+	<phrase name="command48">
+	<word>who</word>
+	<word>was</word>
+	<word>george</word>
+	<word>vi</word>
+	<output>!L!https://www.bing.com/search?q=who+was+george+vi</output>
+	</phrase>
+	
+	<phrase name="command49">
+	<word>when</word>
+	<word>was</word>
+	<word>the</word>
+	<word>night</word>
+	<word>of</word>
+	<word>glass</word>
+	<output>!L!https://www.bing.com/search?q=when+was+the+night+of+broken+glass</output>
+	</phrase>
+	
+	<phrase name="command50">
+	<word>who</word>
+	<word>was</word>
+	<word>howard</word>
+	<word>carter</word>
+	<output>!L!https://www.bing.com/search?q=who+was+howard+carter</output>
+	</phrase>
+	
+	<phrase name="command51">
+	<word>who</word>
+	<word>is</word>
+	<word>dexter</word>
+	<word>shepherd</word>
+	<output>Dexter Rio Charles Shepherd is my creator</output>
+	</phrase>
+	
+	<phrase name="command52">
+	<word>who</word>
+	<word>was</word>
+	<word>uncle</word>
+	<word>ben</word>
+	<output>!L!https://www.bing.com/search?q=who+was+uncle+ben</output>
+	</phrase>
+	
+	<phrase name="command53">
+	<word>when</word>
+	<word>was</word>
+	<word>the</word>
+	<word>film</word>
+	<word>the</word>
+	<word>mummy</word>
+	<output>!L!https://www.bing.com/search?q=when+was+the+film+the+mummy+made</output>
+	</phrase>
+	
+	<phrase name="command54">
+	<word>when</word>
+	<word>was</word>
+	<word>the</word>
+	<word>film</word>
+	<word>star</word>
+	<word>wars</word>
+	<output>!L!https://www.bing.com/search?q=when+was+the+film+star+wars+made</output>
+	</phrase>
+	
+	<phrase name="command55">
+	<word>what</word>
+	<word>was</word>
+	<word>the</word>
+	<word>british</word>
+	<word>empire</word>
+	<output>!L!https://www.bing.com/search?q=what+was+the+british+empire</output>
+	</phrase>
+	
+	<phrase name="command56">
+	<word>how</word>
+	<word>do</word>
+	<word>you</word>
+	<word>tie</word>
+	<word>a</word>
+	<word>tie</word>
+	<output>!L!https://www.bing.com/search?q=how+do+you+tie+a+tie</output>
+	</phrase>
+	
+	<phrase name="command57">
+	<word>how</word>
+	<word>to</word>
+	<word>tie</word>
+	<word>a</word>
+	<word>trinity</word>
+	<word>knot</word>
+	<output>!L!https://www.bing.com/search?q=how+to+tie+a+trinity+knot</output>
+	</phrase>
+	
+	<phrase name="command58">
+	<word>what</word>
+	<word>is</word>
+	<word>a</word>
+	<word>pith</word>
+	<word>helmet</word>
+	<output>!L!https://www.bing.com/search?q=what+is+a+pith+helmet</output>
+	</phrase>
+	
+	<phrase name="command59">
+	<word>what</word>
+	<word>does</word>
+	<word>aqueous</word>
+	<output>!L!https://www.bing.com/search?q=what+does+aqueous+mean</output>
+	</phrase>
+	
+	<phrase name="command60">
+	<word>where</word>
+	<word>is</word>
+	<word>germany</word>
+	<output>In europe</output>
+	</phrase>
+	
+	<phrase name="command61">
+	<word>where</word>
+	<word>is</word>
+	<word>paris</word>
+	<output>!L!https://www.bing.com/search?q=where+is+paris</output>
+	</phrase>
+	
+	<phrase name="command62">
+	<word>who</word>
+	<word>was</word>
+	<word>supreme</word>
+	<word>commander</word>
+	<word>of</word>
+	<word>the</word>
+	<word>allied</word>
+	<word>forces</word>
+	<output>!L!https://www.bing.com/search?q=who+was+supreme+commander+of+the+allied+forces</output>
+	</phrase>
+	
+	<phrase name="command63">
+	<word>are</word>
+	<word>you</word>
+	<word>the</word>
+	<word>viceroy</word>
+	<output>!L!https://www.bing.com/search?q=are+you+the+viceroy</output>
+	</phrase>
+	
+	<phrase name="command64">
+	<word>do</word>
+	<word>you</word>
+	<word>like</word>
+	<word>chicken</word>
+	<output>I have never had it</output>
+	</phrase>
+	
+	<phrase name="command65">
+	<word>how</word>
+	<word>old</word>
+	<word>are</word>
+	<word>you</word>
+	<output>I started development in 2015, my latest software version was made in 2019</output>
+	</phrase>
+	
+	<phrase name="command66">
+	<word>hi</word>
+	<output>hello</output>
+	</phrase>
+	
+	<phrase name="command67">
+	<word>hello</word>
+	<word>there</word>
+	<word>my</word>
+	<word>dear</word>
+	<word>friend</word>
+	<output>hi</output>
+	</phrase>
+	</data>
