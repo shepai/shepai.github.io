@@ -1,4 +1,4 @@
-___Version___="0.0.6"
+___Version___="0.0.7"
 ___Author___ ="Dexter Shepherd"
 from SHEP import AI
 import time
@@ -242,10 +242,10 @@ def checkInfo():
                      time.sleep(0.5)
 def setUP(content1,content2):
        file=open(system_pathway+"vocab.xml","w")
-       file.write(content1)
+       file.write(content2)
        file.close()
        file=open(system_pathway+"knowledge.xml","w")
-       file.write(content2)
+       file.write(content1)
        file.close()
 checkInfo()
 
