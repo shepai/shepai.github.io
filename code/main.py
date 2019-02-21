@@ -242,7 +242,7 @@ def setUP(content1,content2):
        file.write(content2)
        file.close()
 checkInfo()
-audioCheck()
+
 update()
 myBot.update()
 exit = False #exit decider
