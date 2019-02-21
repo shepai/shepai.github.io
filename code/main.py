@@ -102,14 +102,16 @@ def OUTPUT(string):#output method
            
 def getVoice(source):#input method
        voiceReply =""
-       try:
+       if True:
+           rec = sr.Recognizer()
            rec.dynamic_energy_threshold = False #set ackground noise to silence
-           t0 = time.time() #set the timer
-           audio = rec.adjust_for_ambient_noise(source) #adjust audio
-           print ("Speak Now")
-           t0 = time.time() #start a timer to prevent the search going on too long
-           pixels.listen()    #output eye to the user
-           audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
+           t0 = 0 #set the timer
+           with sr.Microphone() as source:
+                  audio = rec.adjust_for_ambient_noise(source) #adjust audio
+                  print ("Speak Now")
+                  t0 = time.time() #start a timer to prevent the search going on too long
+                  pixels.listen()    #output eye to the user
+                  audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
            t1 = time.time() #take a second reading of the time
            total = t1-t0 #work out how long it took
            pixels.off() #stop the LEDs
@@ -125,12 +127,12 @@ def getVoice(source):#input method
                              voiceReply="" 
            else:
                       print("I'm sorry, I didn't get that")
-       except:
+       else:
               voiceReply =""
                       
        return voiceReply #return voice
 
-def INPUT(string,source):
+def INPUT(string):
     OUTPUT(string)#method of output
     string = ""
     if True:
@@ -251,19 +253,16 @@ update()
 myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
-if True:
-       rec = sr.Recognizer()
-       with sr.Microphone() as source:
-              while exit == False:
+while exit == False:
                   print("Your message ")
-                  User = INPUT("",source)
+                  User = INPUT("")
                   User = User.lower()
                   r = ""
                   if User == "edit": #edit a sentence
-                      sentence = INPUT("Say the sentence that I shall edit ",source)
+                      sentence = INPUT("Say the sentence that I shall edit ")
                       to_add=""
                       while to_add == "":
-                             to_add = INPUT("What shall I replace it with? ",source)
+                             to_add = INPUT("What shall I replace it with? ")
                              replace = add(to_add)
                       if replace != "cancel":
                              myBot.edit(sentence,replace)
@@ -289,7 +288,7 @@ if True:
                                   #the wiki is not going to be added
                                   to_add=""
                                   while to_add == "":
-                                         to_add = INPUT("Nothing in my data, What shall I add?",source)
+                                         to_add = INPUT("Nothing in my data, What shall I add?")
                                          to_add = add(to_add)
                                   r = to_add
                                   if r != "cancel":
@@ -301,5 +300,3 @@ if True:
                   print("Robot message: ")    
                   OUTPUT(r)
 
-else:
-       OUTPUT("There was an error. Make sure the microphone and internet connections are fine. Then turn me on and off again")
