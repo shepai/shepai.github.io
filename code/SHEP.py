@@ -1,4 +1,4 @@
-___Version___="0.1.1"
+___Version___="0.1.2"
 ___Author___ ="Dexter Shepherd"
 import xml.etree.ElementTree as ET
 #for Python version 3 or above
@@ -22,6 +22,7 @@ import urllib
 #####################################
 from bs4 import BeautifulSoup
 import re
+import requests
 import warnings
 
 class AI:
@@ -34,9 +35,7 @@ class AI:
            myAI.name = name
            myAI.age = user
            myAI.file = file
-           myAI.subject = ""
-           myAI.trigger = ""
-           myAI.command = ""
+           myAI.listOfVocab = []
            myAI.num_of_commands = 0
        def setFile(myAI,string):#set the file to a different one
               myAI.file = string
@@ -92,255 +91,332 @@ class AI:
                      
                      return None
        def edit(myAI,sentence,replacement):
-           #edit the sentence the user has inputted
-           trigger=myAI.find_term(sentence,"trigger")  #search string for trigger word in database
-           if trigger!="#@false":
-               subject = myAI.find_term(sentence,"subject") #search message for subject
-               if subject!="#@false":
-                   command = myAI.find_term(sentence,"command") #search message for command
-                   if command!="#@false":
-                       AI = myAI.find(trigger,subject,command)  #search database
-                       if AI == "/00/00/00": #there is not a sentence
-                              #myAI.out("This is not a sentence currently saved")
-                              return "This is not a sentence currently saved"
-                       else:
+                   words = myAI.find_term(sentence) #search message for subject
+                   myAI.listOfVocab = words #assign the global need          
+                   AI = myAI.find(words)  #search database
+                   if AI == None: #validate
+                              AI = replacement
+                   
+                   if AI == "/00/00/00": #there is not a sentence
+                       #myAI.out("This is not a sentence currently saved")
+                       return "This is not a sentence currently saved"
+                   else:
                              #myAI.out("What shall I replace that with? ")
                              
                              file = open(system_pathway+myAI.file,"r")    #open database
                              r = file.read() #read data
                              file.close()
                              temp = ""
-                             temp = temp + "\t<trigger>"+trigger+"</trigger>\n"
-                             temp = temp + "\t<subject>"+subject+"</subject>\n"
-                             temp = temp + "\t<command>"+command+"</command>\n"
+                             words = myAI.find_term(sentence) #search message for subject
+                             for i in range(len(words)):
+                                    temp = temp + "\t<word>"+words[i]+"</word>\n"
+                             
                              temp2 = temp + "\t<output>"+replacement+"</output>\n"
                              temp = temp + "\t<output>"+AI+"</output>\n"
                              r = r.replace(temp,temp2)
-                             #myAI.out("replacing...")
-                             #write to file in format
-                             ##print(r)
-                             #time.sleep(4)
+
                              file = open(system_pathway+myAI.file,"w")    #open database
                              file.write(r) #write to file
                              file.close()
                              return "replaced"
                        
-                   else:   #no command word found
-                       #myAI.out("No command found")
-                       time.sleep(1)
-                       return "No command"
-               else:   #no subject found
-                   #myAI.out("No subject found")
-                   time.sleep(1)
-                   return "No subject"
-           else:   
-               #myAI.out("No trigger found")
-               time.sleep(1)
-               #add_word(myAI,sentence,'t')
-               return "No trigger"
        def search(myAI,sentence):   #search through data to find if in
-           #print("searching '"+sentence+"'")
-           trigger=myAI.find_term(sentence,"trigger")  #search string for trigger word in database
-           if trigger!="#@false":
-               command = myAI.find_term(sentence,"command") #search message for command
-               if command!="#@false":
-                   subject = myAI.find_term(sentence,"subject") #search message for subject
-                   if subject!="#@false":
-                       #all words needed found
-                       myAI.subject = subject
-                       myAI.trigger = trigger
-                       myAI.command = command
-                       AI = myAI.find(trigger,subject,command)  #search database
-                       if AI == None: #validate
+                   words = myAI.find_term(sentence) #search message for subject
+                   myAI.listOfVocab = words #assign the global need       
+                       
+                   AI = myAI.find(words)  #search database
+                   if AI == None: #validate
                               AI = ""
-                       if AI[:3] == "!A!":
+                   if AI[:3] == "!A!":
                            #action
                            #print("ACTION")
+                           #output the sentence to the file.
+                           file = open(system_pathway+"actions/"+input.txt,"w")
+                           file.write(sentence)
+                           file.close()
+
                            AI = AI.replace("!A! ","")
                            print("sudo python3 "+system_pathway+AI)
                            #os.popen("sudo python3 "+system_pathway+AI).read()
                            os.system("sudo python3 "+system_pathway+AI)
                            return "/actions/"
-                       else:
+                   elif AI[:3] == "!L!":
+                          #open link
+                          with warnings.catch_warnings():
+                                 warnings.simplefilter("ignore")#ignore promptd
+                                 url=AI.replace("!L!","")#remove codes
+                                 string=""
+                                 html1 = urlopen(url).read()#read information
+                                 page = requests.get(url)
+                                 class_find = ["mod","dc_mn","rwrl rwrl_sec rwrl_padref rwrl_hastitle","rwrl rwrl_pri rwrl_padref","rcABP rcABPfocus","Z0LcW","b_focusTextLarge","b_focusTextMedium"]
+                                 for i in range(len(class_find)):
+                                        try: #try all the different classes
+                                               soup = BeautifulSoup(html1)
+                                               soup = soup.find("div", {"class":class_find[i]})
+                                               # kill all script and style elements
+                                               for script in soup(["script", "style"]):
+                                                      script.extract()    # rip it out
+                                               # get text
+                                               text = soup.get_text()
+                                               # break into lines and remove leading and trailing space on each
+                                               lines = (line.strip() for line in text.splitlines())
+                                               # break multi-headlines into a line each
+                                               chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                                               # drop blank lines
+                                               text = '\n'.join(chunk for chunk in chunks if chunk)
+                                               string=text
+                                               break #break when found (order of priority
+                                        except:
+                                               error=1
+                          return string
+                   else:
                            return AI
                            
-                   else:   #no subject found
-                       #myAI.out("No command found")
-                       return "No subject"
-               else:   #no command word found
-                   #myAI.out("No subject found")
-                   return "No command"
-           else:   #no trigger found
-               #myAI.out("No trigger found")
-               return "No trigger"
-       def addSubject(myAI,message):
-           #automatically add subject with left over strings
-           string=""
-           word = message.split()
-           trig = myAI.find_term(message,"trigger")
-           com = myAI.find_term(message,"command")
-           
-           if trig != "#@false" and com != "#@false" and myAI.find_term(message,"subject") == "#@false":
-               #use left over as subject
-               
-               message = message.replace(trig,".") #remove words whih found their way in
-               message = message.replace(com,".") #^
-               
-               
-               use = message.split(".")
-               string=""#reset string
-               temp = 0
-               
-               for i in range(len(use)): #find largest word for subject
                    
-                   if len(use[i]) >= temp:
-                       temp =len(use[i])
-                       string = use[i]
-               if len(string) >= 2:
-                      myAI.addWord(string,"subject")
            
-       def find_term(myAI,message,Stype):
+       def find_term(myAI,message):
               #find the word and its type
-              tree = ET.parse(system_pathway+Stype+".xml")
+              tree = ET.parse(system_pathway+"vocab.xml")
               root = tree.getroot()
               array=[]
               string=""
-              x=-1
-              try:
-                     for node in tree.iter('phrase'):#check each phrase
-                         ips = node.findall("sub") #check each sub catogory
-                         test=[]
-                         for ip in ips:
-                             string+=ip.text+","
-                         
-                         test = string.split(",")
-                         
-                         for i in range(len(test)):
-                                if test[i] in " "+message+" " and test[i] != "": #check each word
-                                       x+=1
-                                       array.append(test[i]) #compile list of subjects
-              except:
-                     print("--")
-              if x >= 0:
-                   return array[x] #return the keyword
+              #validate the file
+              file = open(system_pathway+"vocab.xml","r")
+              r=file.read()
+              file.close()
+              
+              message = message.split()
+              if len(r)>16:
+                     
+                            for node in tree.iter('phrase'):#check each phrase
+                                ips = node.findall("sub") #check each sub catogory
+                                test=[]
+                                for ip in ips:
+                                    string+=ip.text+","
+                                test = string.split(",")
+                                type = ""
+                                x=0
+                            for i in range(len(message)):
+                                       for j in range(len(test)):
+                                              if " "+message[i]+" " in "  "+test[j]+"  " and message[i] != "" and test[j] != "": #check each word
+                                                     x=j+1#save number
+                                                     
+                                       if x == 0: #word not found must be added
+                                                     types=myAI.wordAdder(message[i])
+                                                     
+                                                     if len(types[0]) > 0:
+                                                            type = "ts" #trigs and subs
+                                                     elif len(types[2]) > 0:
+                                                            type = "ci" #command and identifiers
+                                                     elif len(types[3]) > 0:
+                                                            type = "ss" #subjects and slang
+                                                     else:
+                                                            type = "i"
+                                                     if type != "i":#save word
+                                                         myAI.addWord(message[i],type)
+                                                         array.append(message[i])
+                                       else:
+                                              array.append(message[i]) #compile list of subjects
+                                       x=0
+                     
               else:
-                   return "#@false" #the command to say nothing found
+                     #add words if need adding
+                     for i in range(len(message)):
+                            types=myAI.wordAdder(message[i])
+                            
+                            if len(types[0]) > 0:
+                                   type = "ts" #trigs and subs
+                            elif len(types[2]) > 0:
+                                   type = "ci" #command and identifiers
+                            elif len(types[3]) > 0:
+                                   type = "ss" #subjects and slang
+                            else:
+                                   type = "i"
+                            if type != "i":#save word
+                                   myAI.addWord(message[i],type)          
+                                                         
+              return array #return the keywords
+              
 
        
-       def find(myAI,trigger, subject, command):
+       def find(myAI,message):
            tree = ET.parse(system_pathway+myAI.file)
            root = tree.getroot()
            output = "none"
            num = 1
-           for i in root.findall("phrase"): #finds all the things to do with this
-               trig = i.find("trigger").text
-               sub = i.find("subject").text
-               com = i.find("command").text
-               if trig == trigger and sub == subject and com == command:   #locates data
-                   output = i.find("output").text  #find the saved output
-               ##print(trig+sub+com)
-               num += 1
+           string = ""
+           x=0
+           if True: #used for debugging
+                     for node in tree.iter('phrase'):#check each phrase
+                         ips = node.findall("word") #check each sub catogory
+                         test=[]
+                         num += 1 #global counter
+                         for ip in ips:
+                             string+=ip.text+","
+                         if len(string)>1:    
+                                if string[len(string)-1]==",": #remove uneeded spaces
+                                       string = string[:-1]
+                         
+                         test = string.split(",")
+                         
+                         for j in range(len(message)):
+                                #gather words 
+                                for i in range(len(test)):
+                                       
+                                       if " "+test[i]+" " in "  "+message[j]+"  " and str(test[i]) != "": #check each word
+                                              x+=1#gather the amount of words which are found
+                                
+                                       if x == (len(test)) and ((x > 3 and len(message) > 3) or (x<=3 and len(message)<=3)): #all words
+                                              string=""
+                                              ips = node.findall("output") #check each sub catogory
+                                              
+                                              for ip in ips:
+                                                  string+=ip.text+","
+                                              output = (string.split(","))[0] #first output
+                                                 
+                         
+                         x=0
+                         string=""
+           
            myAI.num_of_commands = num
            if output == "none":    #nothing found in data
                output = "/00/00/00" #nothing in data
            
            return output
-       def findWiki(myAI,word,command):
+       def wordAdder(myAI,words):
+                  sentence = words
+                  words=words.split() #split the words
+                  phrases=[[]for i in range(5)]
+                  for i in range(len(words)):
+                      word=words[i]
+                      #get each word
+                      
+                      s=""
+                      try:
+                             
+                          #get each word and find out what type of word it is           
+                          oxford="https://en.oxforddictionaries.com/definition/"+word
+                          page = requests.get(oxford)
+                          tree = html.fromstring(page.content)
+                          #get it by class of word
+                          syn = tree.xpath('//span[@class="pos"]/text()')
+                          
+                          for i in range(len(syn)):
+                              s+=syn[i]+" "
+                      except:
+                          print("") #no page is found
+                      s = s.upper()
+                      
+                      
+                      
+                      #split all the terms down into the following
+                      if  ("PRONOUN" in s) and "ADJECTIVE" not in s:
+                              phrases[0].append(word) #add to the possible subjects and triggers
+                              
+                      elif ("NOUN" in s):
+                          phrases[3].append(word)
+                          phrases[4].append(s)
+                      elif ("VERB" in s and "ADVERB" not in s):
+                              phrases[1].append(word) #Ignore uneeded detail
+                      elif "DETERMINER" in s or "ABBREVIATION" in s or "POSSESSIVE DETERMINER" in s or "ADVERB" in s or "ADJECTIVE" in s:
+                          #command words and identifiers
+                          phrases[2].append(word)
+                      else:#the connecting words and unknown
+                          #mixture of subjects and slang words
+                              phrases[3].append(word)
+                              phrases[4].append(s)
+                      #split all the terms down into the following
+                      
+                      #return wanted word
+                  return phrases
+
+       def research(myAI,word):
               with warnings.catch_warnings():
-                     warnings.simplefilter("ignore")
+                     warnings.simplefilter("ignore")#ignore promptd
+                     word=word.replace("+","%2B") #if equations are wanted
                      
-                     word = word.replace(" ","_")
+                     word = word.replace(" ","+")
                      string = ""
-
+                     
+                     #get links -- r.html.absolute_links
+                     url = "https://www.bing.com/search?q="+word #page we want
                      try:
-                                   url = "https://en.wikipedia.org/wiki/"+word #wiki page we want
-                                   html = urlopen(url).read()
-                                   soup = BeautifulSoup(html)
+                                   html1 = urlopen(url).read()
+                                   
+                                   try:
+                                        page = requests.get(url)
+                                        class_find = ["dc_mn","rwrl rwrl_sec rwrl_padref rwrl_hastitle","rwrl rwrl_pri rwrl_padref","rcABP rcABPfocus","Z0LcW","b_focusTextLarge","b_focusTextMedium"]
+                                        for i in range(len(class_find)):
+                                               
+                                               try: #try all the different classes
+                                                      soup = BeautifulSoup(html1)
+                                                      soup = soup.find("div", {"class":class_find[i]})
+                                                      # kill all script and style elements
+                                                      
+                                                      for script in soup(["script", "style"]):
+                                                            script.extract()    # rip it out
+                                                            
 
-                                   # kill all script and style elements
-                                   for script in soup(["script", "style"]):
-                                       script.extract()    # rip it out
+                                                      # get text
+                                                      text = soup.get_text()
 
-                                   # get text
-                                   text = soup.get_text()
-                                   text = text.lower()
+                                                      # break into lines and remove leading and trailing space on each
+                                                      lines = (line.strip() for line in text.splitlines())
+                                                      # break multi-headlines into a line each
+                                                      chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                                                      # drop blank lines
+                                                      text = '\n'.join(chunk for chunk in chunks if chunk)
+                                                      string=text
+                                                      break
+                                               except:
+                                                      error=1
+                                   except:
+                                          #this part of the code takes all the information
+                                          #not used yet but will be soon
+                                          soup = BeautifulSoup(html1)
+                                          # kill all script and style elements
+                                          for script in soup(["script", "style"]):
+                                              script.extract()    # rip it out
 
-                                   # break into lines and remove leading and trailing space on each
-                                   lines = (line.strip() for line in text.splitlines())
-                                   # break multi-headlines into a line each
-                                   chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-                                   # drop blank lines
-                                   text = '\n'.join(chunk for chunk in chunks if chunk)
-                                   #print(text+"\n\n\n\n\n\n")
-                                   ToGo = []
-                                   if command in text: #the command is found
+                                          # get text
+                                          text = soup.get_text()
+                                          text = text.lower()
+
+                                          # break into lines and remove leading and trailing space on each
+                                          lines = (line.strip() for line in text.splitlines())
+                                          # break multi-headlines into a line each
+                                          chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                                          # drop blank lines
+                                          text = '\n'.join(chunk for chunk in chunks if chunk)
                                           
-                                          #find the words
-                                          p2 = [m.start() for m in re.finditer(" "+command+" ", text)]
-                                          for i in range(len(p2)): #loop through all the positions
-                                                 position = p2[i] #get first position
-                                                 
-
-                                                 #print (position)
-                                                 sentence = False
-                                                 string = ""
-                                                 while sentence == False: #get position at begining of sentence
-                                                        position-=1
-                                                        
-                                                        if text[position] == "\n" or position == 0 or position == ".":
-                                                               sentence = True
-                                                        
-                                                 sentence = False #reuse variable for memory speed
-                                                 
-                                                 while sentence == False:
-                                                        
-                                                        position+=1
-                                                        
-                                                        string+=text[position]
-                                                        if text[position] == "." or text[position] == "\n" or position == len(text):
-                                                               sentence = True
-                                                 
-                                                 ToGo.append(string)
-                                          string = ""
-                                          newWord = word.split("_")
-                           
-                                          for i in range(len(ToGo)):
-                                                 counter = 0
-                                                 
-                                                 for y in range(len(newWord)):
-                                                        #accurate finder
-                                                        if " "+newWord[y]+" " in " "+ToGo[i]+" " and "this article" not in ToGo[i]: #try find accurate answer
-                                                               counter +=1
-                                                 if counter == len(newWord):
-                                                        string = ToGo[i]
-                                                        break #first is most accurate
-                                                 #print(ToGo[i])
-                                          if string == "": #if none found go with first
-                                                 string = ToGo[0]
-                                          #return to user below                                          #returned to the user
-                                          
+                                          string = text
+                                   
 
                      except:
                             print("No page found")
                             #carry on as normal
-                     return string
+                     #print(string)
+                     if string != "":
+                            return url #returned url so it can be researched
+                                                        
+                     else:
+                            return ""
 
 
 
-       def learn(myAI,trigger,subject,command,say):
-                      
-                      
+       def learn(myAI,sentence,words,say):
                       #teach the AI
                       output = ""
+                      say=say.replace(",",".")#commas do not work
                       if "cancel" not in say or "exit" not in say:
                              file = open(system_pathway+"knowledge.xml","r")    #open database
                              r = file.read() #read data
                              file.close()
                              r = r.replace("</data>","") #remove end
                              r = r + "\t<phrase name=\"command"+str(myAI.num_of_commands)+"\">\n"
-                             r = r + "\t<trigger>"+trigger+"</trigger>\n"
-                             r = r + "\t<subject>"+subject+"</subject>\n"
-                             r = r + "\t<command>"+command+"</command>\n"
+                             for i in range(len(words)): #add needed words
+                                    r = r + "\t<word>"+words[i]+"</word>\n"
+                             
                              r = r + "\t<output>"+say+"</output>\n"
                              r = r + "\t</phrase>\n"
                              r = r + "\t</data>\n"
@@ -353,10 +429,8 @@ class AI:
                              output = say
                       else:
                              output="cancelling"
-                      return "I am adding: "+output
-       def addAction(myAI,name):
-              
-                                     
+                      return "I am adding: "+myAI.search(sentence) #show user how it will add
+       def addAction(myAI,name):                      
               try:    #look for file
                      
                      file = open(system_pathway+"actions/"+name+".py","r")#check for existance
@@ -375,34 +449,35 @@ class AI:
 
        def addWord(myAI,word,Type):
                       #data for the AI to add
-                      addition = ET.parse(system_pathway+Type+".xml")
+                      
+                      if word == None:
+                             word=""
+                      addition = ET.parse(system_pathway+"vocab.xml")
                       root = addition.getroot()
                       num = 1
                       for i in root.findall("phrase"): #finds all the things to do with this
                              num += 1
-                      file = open(system_pathway+Type+".xml","r")    #open database
+                      file = open(system_pathway+"vocab.xml","r")    #open database
                       r = file.read() #read data
                       file.close()
-                      
+                      #write in format
                       r = r.replace("</data>","") #remove end
-                      r = r + "\t<phrase name=\"subject"+str(num)+"\">\n"
-                      list=myAI.getWord(word)
+                      r = r + "\t<phrase name=\"Word"+str(num)+"\">\n"
+                      
                       num=1
-                      if list != None:
-                             #if there are words to be found
-                             for i in range(len(list)):
-                                    if list[i] != "":
-                                           r = r+"\t<sub>"+list[i]+"</sub>\n"
-                                           num+=1
-                      r = r+"\t<sub>"+word+"</sub>\n"
-                      r = r + "\t</phrase>\n"
-                      r = r + "\t</data>\n"
-                      #write to file in format
-                      ##print(r)
-                      #time.sleep(4)
-                      file = open(system_pathway+Type+".xml","w")    #open database
-                      file.write(r) #write to file
-                      file.close()
+                      if word != "" and word != None:
+                             if word[0] == " ":
+                                    word=word[1:len(word)]#make sure word is good format
+                             #write the sub and type into the file
+                             r = r+"\t<sub>"+" "+word+"</sub>\n"
+                             r = r+"\t<type>"+" "+Type+"</type>\n"
+                             r = r + "\t</phrase>\n"
+                             r = r + "\t</data>\n"
+                             #write to file in format
+                             
+                             file = open(system_pathway+"vocab.xml","w")    #open database
+                             file.write(r) #write to file
+                             file.close()
        def listUSB(myAI):
            list = os.popen("lsblk").read()
            print(list)
@@ -474,5 +549,7 @@ class AI:
                       
 
 
-#f=AI("","","")
-#print(f.findWiki("walt disney","was"))
+#f=AI("","","knowledge.xml") 
+#x=input()
+#print(f.research(x))
+#f.learn(f.listOfVocab,input("answer:"))
