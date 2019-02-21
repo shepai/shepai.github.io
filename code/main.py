@@ -101,6 +101,8 @@ def OUTPUT(string):#output method
            error_pixels()
            
 def getVoice(source):#input method
+       voiceReply =""
+       try:
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = time.time() #set the timer
            audio = rec.adjust_for_ambient_noise(source) #adjust audio
@@ -123,7 +125,8 @@ def getVoice(source):#input method
                              voiceReply="" 
            else:
                       print("I'm sorry, I didn't get that")
-                      
+       except:
+              voiceReply =""
                       
            return voiceReply #return voice
 
