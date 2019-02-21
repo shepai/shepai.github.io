@@ -25,8 +25,8 @@ import speech_recognition as sr
 pixels = Pixels()
 
 #initialize global variables
-global audio
-
+global timer
+timer = time.time()
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
@@ -35,13 +35,13 @@ myBot.setpath(system_pathway)
 def audioCheck():
        global rec
        global m
-       global audio
+       
        try:
               #variables to listen to audio with
               rec = sr.Recognizer() 
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
               m = sr.Microphone()
-              audio = rec.adjust_for_ambient_noise(source) #adjust audio
+              
        except:
               OUTPUT("Problem connecting to microphone")
               error_pixels()
@@ -117,14 +117,16 @@ def OUTPUT(string):#output method
            error_pixels()
            
 def getVoice():#input method
-           global audio
-    
+           global timer
            voiceReply = ""
            connection_errors = 0 #show there is a strong connection
            print("setting...")
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
            with m as source:    #listen audio
+                  if ((timer-time.time())/60) > 4: #every four minuets
+                         audio = rec.adjust_for_ambient_noise(source) #adjust audio
+                         timer=time.time()
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
@@ -271,7 +273,7 @@ add_mode = True #defines whether the AI should ADD or not
 
 while exit == False:
     print("Your message ")
-    User = INPUT()
+    User = INPUT("")
     User = User.lower()
     r = ""
     if User == "edit": #edit a sentence
