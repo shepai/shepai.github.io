@@ -144,7 +144,7 @@ def getVoice():#input method
                              voiceReply="" 
            else:
                       print("Took too long to respond...")
-                      audio = rec.adjust_for_ambient_noise(source) #adjust audio
+                      audioCheck()
     
            return voiceReply #return voice
 
@@ -270,7 +270,8 @@ exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 
 while exit == False:
-    User = INPUT("Your message ")
+    print("Your message ")
+    User = INPUT()
     User = User.lower()
     r = ""
     if User == "edit": #edit a sentence
