@@ -26,7 +26,7 @@ pixels = Pixels()
 
 #initialize global variables
 global audio
-global rec
+
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
@@ -35,11 +35,13 @@ myBot.setpath(system_pathway)
 def audioCheck():
        global rec
        global m
+       global audio
        try:
               #variables to listen to audio with
               rec = sr.Recognizer() 
               #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
               m = sr.Microphone()
+              audio = rec.adjust_for_ambient_noise(source) #adjust audio
        except:
               OUTPUT("Problem connecting to microphone")
               error_pixels()
@@ -266,7 +268,7 @@ update()
 myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
-audio = rec.adjust_for_ambient_noise(source) #adjust audio
+
 while exit == False:
     User = INPUT("Your message ")
     User = User.lower()
