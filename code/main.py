@@ -247,7 +247,7 @@ update()
 myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
-try:
+if True:
        rec = sr.Recognizer()
        with sr.Microphone() as source:
               while exit == False:
@@ -257,9 +257,14 @@ try:
                   r = ""
                   if User == "edit": #edit a sentence
                       sentence = INPUT("Say the sentence that I shall edit ",source)
-                      to_add = INPUT("What shall I replace it with? ",source)
-                      replace = add(to_add)
-                      myBot.edit(sentence,replace)
+                      to_add=""
+                      while to_add == "":
+                             to_add = INPUT("What shall I replace it with? ",source)
+                             replace = add(to_add)
+                      if replace != "cancel":
+                             myBot.edit(sentence,replace)
+                      else:
+                             OUTPUT("cancelling")
                   elif User == "add action":
                       myBot.listUSB()
                   elif User == "exit":
@@ -278,8 +283,10 @@ try:
                                       
                               if word_to_add == "":
                                   #the wiki is not going to be added
-                                  to_add = INPUT("Nothing in my data, What shall I add?",source)
-                                  to_add = add(to_add)
+                                  to_add=""
+                                  while to_add == "":
+                                         to_add = INPUT("Nothing in my data, What shall I add?",source)
+                                         to_add = add(to_add)
                                   r = to_add
                                   if r != "cancel":
                                       
@@ -290,5 +297,5 @@ try:
                   print("Robot message: ")    
                   OUTPUT(r)
 
-except:
+else:
        OUTPUT("There was an error. Make sure the microphone and internet connections are fine. Then turn me on and off again")
