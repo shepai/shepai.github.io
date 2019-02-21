@@ -274,7 +274,7 @@ if True:
                   elif User == "exit":
                       exit=True#end
                   elif User != "":
-                      
+                      print("--searching")
                       r = myBot.search(User)
                       if add_mode == True:
                           
