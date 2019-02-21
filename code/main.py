@@ -278,6 +278,8 @@ while exit == False:
         myBot.edit(sentence,replace)
     elif User == "add action":
         myBot.listUSB()
+    elif User == "exit":
+        exit=True#end
     else:
         
         r = myBot.search(User)
