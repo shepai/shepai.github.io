@@ -207,7 +207,7 @@ def wifi():
        result = subprocess.check_output(batcmd,shell = True)
        result = result.decode('utf-8') # needed in python 3
        if result == "":
-           OUT("No networks found")
+           OUTPUT("No networks found")
        else:
            print(result)
            
@@ -257,7 +257,7 @@ def checkInfo():
                      time.sleep(0.5)
 def setUP(content1,content2):
        file=open(system_pathway+"vocab.xml","w")
-       file.write(conent1)
+       file.write(content1)
        file.close()
        file=open(system_pathway+"knowledge.xml","w")
        file.write(content2)
