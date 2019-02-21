@@ -56,12 +56,12 @@ def update():
                      file.write(s)
               cont1=""
               cont2=""
-              for line in urlopen("https://shepai.github.io/code/knowledge.xml"):
+              for line in urlopen("https://shepai.github.io/code/knowledge.txt"):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
                      #print(s)
                      cont1+=s
-              for line in urlopen("https://shepai.github.io/code/vocab.xml"):
+              for line in urlopen("https://shepai.github.io/code/vocab.txt"):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
                      #print(s)
