@@ -187,6 +187,7 @@ def add(to_add):
     return to_add
 def wifi():
 #wifi connection function
+       OUTPUT("Please select a Wi Fi network")
        batcmd="nmcli dev wifi"
        result = subprocess.check_output(batcmd,shell = True)
        result = result.decode('utf-8') # needed in python 3
@@ -288,7 +289,7 @@ while exit == False:
                                   #the wiki is not going to be added
                                   to_add=""
                                   while to_add == "":
-                                         to_add = INPUT("Nothing in my data, What shall I add?")
+                                         to_add = INPUT("How would ou like me to respond to that?")
                                          to_add = add(to_add)
                                   r = to_add
                                   if r != "cancel":
