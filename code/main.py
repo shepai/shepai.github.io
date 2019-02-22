@@ -144,7 +144,7 @@ def INPUT(string):
            if not(internet()):
                   OUTPUT("There is an error connecting to the internet")
                   wifi()
-    if "robot" in string and "cancel" not in string:
+    if "robot" in string:
            print("----------------------------------")
            file=open(system_pathway+"action/input.txt",'w')
            file.write(string)
