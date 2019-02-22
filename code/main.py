@@ -102,7 +102,7 @@ def OUTPUT(string):#output method
            
 def getVoice():#input method
        voiceReply =""
-       if True:
+       try:
            rec = sr.Recognizer()
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
@@ -127,7 +127,7 @@ def getVoice():#input method
                              voiceReply="" 
            else:
                       print("I'm sorry, I didn't get that")
-       else:
+       except:
               voiceReply =""
                       
        return voiceReply #return voice
