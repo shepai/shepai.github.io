@@ -1,4 +1,4 @@
-___Version___="0.0.6"
+___Version___="0.0.7"
 ___Author___ ="Dexter Shepherd"
 from SHEP import AI
 import time
@@ -14,37 +14,21 @@ from subprocess import Popen, STDOUT, PIPE
 from subprocess import *
 import subprocess
 import os
+import re
 #eye
 import time
 import colorsys
 from pixels import Pixels #found in folder
-#import serial.tools.list_ports as prtlst
+
 #speech recognition lib
 import speech_recognition as sr
 pixels = Pixels()
-#button
-import RPi.GPIO as GPIO
 
-BUTTON = 17#define mute button
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUTTON, GPIO.IN)
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
 myBot.setpath(system_pathway)
 
-def audioCheck():
-       global rec
-       global m
-       try:
-              #variables to listen to audio with
-              rec = sr.Recognizer() 
-              #Typlcal sample rates are 44.1 kHz (CD), 48 kHz, 88.2 kHz, or 96 kHz.
-              m = sr.Microphone()
-       except:
-              OUTPUT("Problem connecting to microphone")
-              error_pixels()
 def internet():
        conn = httplib.HTTPConnection("www.google.com", timeout=5) #attempt connection
        try:
@@ -60,34 +44,19 @@ def error_pixels():
        pixels.off()
        pixels.wakeup()
        time.sleep(0.2)
-def button_check():
-       #provide a mute button to stop the system
-       state = GPIO.input(BUTTON)  #get button input
-       if state:
-              print("not_mute ")
-              return False
-       else:
-              print("on")   #button is pressed
-              OUTPUT("Mute mode")
-              return True
+
            
 def update():
        try:
-              file = open(system_pathway+"test.txt","w")
+              file = open(system_pathway+"temp.txt","w")
               for line in urlopen("https://shepai.github.io/code/main.py"):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
                      #print(s)
                      file.write(s)
+              
               file.close()
-              file = open(system_pathway+"eye.txt","w")
-              for line in urlopen("https://shepai.github.io/code/eye.txt"):
-                     #decode the file and write it to the Pi
-                     s = line.decode('utf-8')
-                     print(s)
-                     file.write(s)
-              file.close()
-              file = open(system_pathway+"test.txt","r")
+              file = open(system_pathway+"temp.txt","r")
               r = file.read()
               file.close()
               current = open(system_pathway+"main.py","r")
@@ -109,100 +78,73 @@ def OUTPUT(string):#output method
     #locate the arduino port
     try:
        #output using onboard TTS
+       print(string)
        pixels.speak() #coulourful look
        string = string.replace("'","") #prevent an apostriphe messing it up.
-       os.system("espeak '"+string+"' 2>/dev/null")       
+       os.system("espeak '"+string+"' 2>/dev/null")
+       
     except:
            #no connection
            print(string)
            error_pixels()
            
 def getVoice():#input method
-    mute = False
-    try:
-           
-           voiceReply = ""
-           connection = internet()
-           if connection == True:  #connection found
-               connection_errors = 0 #show there is a strong connection
-               #r.pause_threshold = 0.6
-               time.sleep(0.5)#give user chance to press button
-               mute = button_check()
-               if mute == True: #means the button has been pressed
-                     pixels.off() #stop the LEDs
-                     while True:   #stop searching
-                         state = GPIO.input(BUTTON)
-                         #unmute when button is pressed again.
-                         if state:
-                             print("off")
-                         else:
-                             print("on")
-                             OUTPUT("Unmuted")
-                             break
-                         time.sleep(1)
-               print("setting...")
-               rec.dynamic_energy_threshold = False #set ackground noise to silence
-               t0 = 0 #set the timer
-               with m as source:    #listen audio
-                  audio = rec.adjust_for_ambient_noise(source) #adjust audio
+       voiceReply =""
+       print("here 1")
+       try:
+           rec = sr.Recognizer()
+           rec.dynamic_energy_threshold = False #set ackground noise to silence
+           t0 = 0 #set the timer
+           print("here 2")
+           #r.energy_threshold = 50
+           #r.dynamic_ energy_threshold = False
+           with sr.Microphone() as source:
+                  print("here 3")
+                  rec.adjust_for_ambient_noise(source, duration=1.5) #adjust audio
+                  print("here 4")
+                  print(audio)
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
                   audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
-               t1 = time.time() #take a second reading of the time
-               total = t1-t0 #work out how long it took
-               pixels.off() #stop the LEDs
-               print(">>")
-               timer = 0
-               if total < 15: #it will take too long to convert otherwise
+           t1 = time.time() #take a second reading of the time
+           total = t1-t0 #work out how long it took
+           pixels.off() #stop the LEDs
+           print(">>")
+           timer = 0
+           if total < 15: #it will take too long to convert otherwise
                       try:
                              voiceReply = (rec.recognize_google(audio,language = "en-GB"))
                              print("you said "+str(voiceReply))
                              if "could not understand" in voiceReply.lower(): #prevent annoying output
                                     voiceReply = ""
-                      except sr.UnknownValueError:    #unkown reply
-                             #OUTPUT("Could not understand")
-                             voiceReply = ""
-                      except sr.RequestError as e:
-                             print("error: {0}".format(e))
-                             #OUTPUT("error understanding")
-                             voiceReply = ""
-                      except KeyError:
-                             #OUTPUT("I do not understand what you are saying")   #no reply
-                             #pixels.think()
-                             voiceReply = ""
-                      except ValueError:
-                             #no reply
-                             #OUTPUT("Sorry, I did not get that")
-                             voiceReply = ""
-                      except LookupError:
-                             #no reply
-                             #OUTPUT("sorry, I did not get that")
-                             voiceReply = ""
-                             
+                      except:
+                             voiceReply="" 
+           else:
+                      print("I'm sorry, I didn't get that")
+       except:
+              voiceReply =""
                       
-               else:
-                      print("Took too long to respond...")
-                      
-           else:   #no connection
-               connection_errors += 1
-               if connection_errors == 4:
-                      OUTPUT("There is an error connecting to the internet")
-                      #voiceReply = input(": ")   #alternate method
-                      connection_errors = 0 #reset check
-    except:
-           #no microphone or internet error
-           audioCheck()
-           #OUTPUT("There was an error connecting to microphone")
-           error_pixels()
-    return voiceReply.lower()   #return voice
+       return voiceReply #return voice
 
 def INPUT(string):
-    OUTPUT(string)#method of output
+    if string != "":
+           OUTPUT(string)#method of output
     string = ""
-    string = getVoice() #get voice input
+    if True:
+           string = getVoice() #get voice input
+    else:
+           #no microphone or internet error
+           
+           error_pixels()
+           if not(internet()):
+                  OUTPUT("There is an error connecting to the internet")
+                  wifi()
     if "robot" in string:
            print("----------------------------------")
+           file=open(system_pathway+"action/input.txt",'w')
+           file.write(string)
+           file.close()
            if "robot keyboard" in string:
                      string = input("Please type: ")#type mode
            else:
@@ -211,36 +153,42 @@ def INPUT(string):
            
            if "robot" == string:
                   string = ""
-           return string  #return input
+           words = string.split()
+           title=""
     else:
-           print("---nothing")
-           return "" #nothing said to robot
-def pickPhrase():
-    words = INPUT("Select the words you want: ")
-    return words
+           string=""
+
+    return string.lower()   #return voice  #return input
+    
+
 
 def add(to_add):
     #get the type to add
     if to_add == "action" or to_add == "an action":
-        valid=""
+        valid=">failed to add"
         add=True
-        while valid != ">added":
+        while valid == ">failed to add":
             userInput = INPUT("What is the file name")
             if "cancel" == userInput or "exit" == userInput:
                 #allow the user to change their mind and not add
                 valid = ">added"
-                OUTPUTPUT("I shall not add an action")
+                OUTPUT("I shall not add an action")
             else:
+                while (userInput[len(userInput)-1] == " "):
+                       userInput = userInput[:-1] 
                 valid = myBot.addAction(userInput)#check the filename and add
-                to_add = ">action"
+                to_add = valid
+                                    
+    
     return to_add
 def wifi():
 #wifi connection function
+       OUTPUT("Please select a Wi Fi network")
        batcmd="nmcli dev wifi"
        result = subprocess.check_output(batcmd,shell = True)
        result = result.decode('utf-8') # needed in python 3
        if result == "":
-           print("No network found")
+           OUTPUT("No networks found")
        else:
            print(result)
            
@@ -259,13 +207,18 @@ def wifi():
                x += 7
                y += 1
            num = len(ssids)+1
-           while num > len(ssids):
-                  num = int(input("Which number would you like: "))
+           while num > len(ssids) or num <= 0:
+                  try:
+                         num = int(input("Which number would you like: "))
+                  except:
+                         OUTPUT("Invalid input:")
+                         num = len(ssids)+10 #make sure the number is out of bounds
                   num = num - 1 #equalize it with list numbers
                   if num < 0:
                       num = len(ssids) +1 #loop bigger than the array
            ID = ssids[num]
-           passkey = input("Password: ")
+           OUTPUT("Please enter the password: ")
+           passkey = input()
            try:
                 print("Connecting... ")
                 handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
@@ -275,99 +228,75 @@ def wifi():
                 
 
            except:
-                  print (handle.stdout.readline().strip())
-                  print("Couldn't connect to the network... ")
+                  #print (handle.stdout.readline().strip())
+                  OUTPUT("Couldn't connect to the network... ")
+
 def checkInfo():
        #check the users info and type any if not found.
-       y=0
-       while y <= 4:
-              if internet() == False:
-                     time.sleep(1) #give time to connect
-              y += 1
+       time.sleep(4)
        while internet() == False: #loop till a network is found
               while internet() == False: #prevent wrong IDs
                      wifi()
                      time.sleep(0.5)
-       check = ["name","title","birthday"]
-       print("Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam")
-       to_output_once = "Your name is what I will know you as, and your title is how I will address you. For example: hello, sir. or hello, madam"
-       for i in range(len(check)):
-           try: #if file is a thing it will read and be fine
-                  file = open(system_pathway+check[i]+".txt","r") 
-                  r = file.read()
-                  file.close()
-                  
-                  if r == "":      #there is no data    
-                         out(to_output_once)
-                         to_output_once = ""
-                         out("Please type your "+check[i])
-                         string = "Please type your "+check[i]+": "
-                         data = input(string)
-                         file = open(system_pathway+check[i]+".txt","w")
-                         r = file.write(data)
-                         file.close()
-           except: #the file is not found and needs to be added
-                #print("No file found")
-                out(to_output_once)
-                to_output_once = ""
-                string = "Please type your "+check[i]+": "
-                data = input(string)
-                file = open(system_pathway+check[i]+".txt","w")
-                r = file.write(data)
-                file.close()
+def setUP(content1,content2):
+       #used to install the latest vocab files.
+       file=open(system_pathway+"vocab.xml","w")
+       file.write(content2)
+       file.close()
+       file=open(system_pathway+"knowledge.xml","w")
+       file.write(content1)
+       file.close()
 checkInfo()
-update()
 
+update()
+myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
-    User = INPUT("")
-    
-    if User == "edit": #edit a sentence
-        sentence = INPUT("Say the sentence that I shall edit ")
-        to_add = INPUT("What shall I replace it with? ")
-        replace = add(to_add)
-        myBot.edit(sentence,replace)
-    elif User == "add action":
-        myBot.listUSB()
-    elif User == "exit":
-        exit=True
-    elif User == "":
-        r = ""
-    else:
-        r = myBot.search(User) #check the AI
-        if add_mode == True:
-            if r == "No trigger": #add phrases to make word
-                OUTPUT("No trigger found")
-                myBot.addWord(pickPhrase(),"trigger")
-                r = ""
-            elif r == "No subject": #add phrases to make word
-                OUTPUT("No subject found")
-                myBot.addWord(pickPhrase(),"subject")
-                r = ""
-            elif r == "No command": #add phrases to make word
-                OUTPUT("No command found")
-                myBot.addWord(pickPhrase(),"command")
-                r = ""
-            elif r == "/actions/": #an action has just been played.
-                print("Action played")
-                r = ""
-            elif r == "/00/00/00": #no action is fond
-                print("Learning... a moment please")
-                word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
-                
-                if word_to_add != "": #if something is found
-                        myBot.learn(myBot.trigger,myBot.subject,myBot.command,word_to_add)
-                if word_to_add == "":
-                    #the wiki is not going to be added
-                    to_add = INPUT("Nothing in my data, What shall I add?")
-                    to_add = add(to_add)
-                    print(to_add)
-                    if to_add != ">action" or to_add != "action" or to_add != "an action":
-                        
-                        myBot.learn(myBot.trigger,myBot.subject,myBot.command,to_add)
-                r = ""
-        
-    OUTPUT(r)
-
+                  print("Your message ")
+                  
+                  User = INPUT("")
+                  User = User.lower()
+                  r = ""
+                  if User == "edit": #edit a sentence
+                      sentence = INPUT("Say the sentence that I shall edit ")
+                      to_add=""
+                      while to_add == "":
+                             to_add = INPUT("What shall I replace it with? ")
+                             replace = add(to_add)
+                      if replace != "cancel":
+                             myBot.edit(sentence,replace)
+                      else:
+                             OUTPUT("cancelling")
+                  elif User == "add action":
+                      myBot.listUSB()
+                  elif User == "exit":
+                      exit=True#end
+                  elif User != "":
+                      print("--searching")
+                      r = myBot.search(User)
+                      if add_mode == True:
+                          
+                          if r == "/00/00/00": #no action is fond
+                              print("Learning... a moment please")
+                              #word_to_add = myBot.findWiki(myBot.subject,myBot.command) #check wiki
+                              word_to_add = myBot.research(User)
+                              if word_to_add != "" and word_to_add != None: #if something is found
+                                      r = myBot.learn(User,myBot.listOfVocab,"!L!"+word_to_add)
+                                      
+                              if word_to_add == "":
+                                  #the wiki is not going to be added
+                                  to_add=""
+                                  while to_add == "":
+                                         to_add = INPUT("How would ou like me to respond to that?")
+                                         to_add = add(to_add)
+                                  r = to_add
+                                  if r != "cancel":
+                                      
+                                      if to_add != ">action" and to_add != "action" and to_add != "an action":
+                                          
+                                          r = myBot.learn(User,myBot.listOfVocab,to_add)
+                              
+                  print("Robot message: ")    
+                  OUTPUT(r)
 
