@@ -217,7 +217,8 @@ def wifi():
                   if num < 0:
                       num = len(ssids) +1 #loop bigger than the array
            ID = ssids[num]
-           passkey = OUTPUT("Please enter the password: ")
+           OUTPUT("Please enter the password: ")
+           passkey = input()
            try:
                 print("Connecting... ")
                 handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
