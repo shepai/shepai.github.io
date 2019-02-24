@@ -54,19 +54,7 @@ def update():
                      s = line.decode('utf-8')
                      #print(s)
                      file.write(s)
-              cont1=""
-              cont2=""
-              for line in urlopen("https://shepai.github.io/code/knowledge.txt"):
-                     #decode the file and write it to the Pi
-                     s = line.decode('utf-8')
-                     #print(s)
-                     cont1+=s
-              for line in urlopen("https://shepai.github.io/code/vocab.txt"):
-                     #decode the file and write it to the Pi
-                     s = line.decode('utf-8')
-                     #print(s)
-                     cont2+=s
-              setUP(cont1,cont2)#add the files
+              
               file.close()
               file = open(system_pathway+"temp.txt","r")
               r = file.read()
