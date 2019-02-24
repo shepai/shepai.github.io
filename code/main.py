@@ -302,7 +302,7 @@ while exit == False:
                               
                   print("Robot message: ")
                   try:
-                         thread.start_new_thread( OUTPUT, ("Thread-1", r, ) )#output quickly in the background
+                         thread.start_new_thread( OUTPUT, (r,) )#output quickly in the background
                   except:
                          OUTPUT(r)#output slower in procedural method
               
