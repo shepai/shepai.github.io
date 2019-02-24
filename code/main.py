@@ -15,6 +15,8 @@ from subprocess import *
 import subprocess
 import os
 import re
+#parallel programming
+import _thread as thread
 #eye
 import time
 import colorsys
@@ -298,6 +300,10 @@ while exit == False:
                                           
                                           r = myBot.learn(User,myBot.listOfVocab,to_add)
                               
-                  print("Robot message: ")    
-                  OUTPUT(r)
+                  print("Robot message: ")
+                  try:
+                         thread.start_new_thread( OUTPUT, ("Thread-1", r, ) )#output quickly in the background
+                  except:
+                         OUTPUT(r)#output slower in procedural method
+              
 
