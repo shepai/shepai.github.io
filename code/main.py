@@ -128,7 +128,8 @@ def getVoice():#input method
        return voiceReply #return voice
 
 def INPUT(string):
-    OUTPUT(string)#method of output
+    if string != "":
+           OUTPUT(string)#method of output
     string = ""
     if True:
            string = getVoice() #get voice input
@@ -252,6 +253,7 @@ exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
 while exit == False:
                   print("Your message ")
+                  
                   User = INPUT("")
                   User = User.lower()
                   r = ""
