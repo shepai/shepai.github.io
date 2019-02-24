@@ -23,9 +23,7 @@ from pixels import Pixels #found in folder
 #speech recognition lib
 import speech_recognition as sr
 pixels = Pixels()
-#global vairables
-global timeDecide
-timeDecide = True
+
 
 myBot = AI("SHEP", "user","knowledge.xml") #SHEP is called in
 system_pathway = "/home/pi/AI/Python_coursework/"
@@ -91,16 +89,13 @@ def OUTPUT(string):#output method
            error_pixels()
            
 def getVoice():#input method
-       global timeDecide
        voiceReply =""
        try:
            rec = sr.Recognizer()
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
            with sr.Microphone() as source:
-                  if timeDecide == True:
-                         audio = rec.adjust_for_ambient_noise(source) #adjust audio
-                         timeDecide = False
+                  audio = rec.adjust_for_ambient_noise(source, duration=1) #adjust audio
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
@@ -248,12 +243,8 @@ update()
 myBot.update()
 exit = False #exit decider
 add_mode = True #defines whether the AI should ADD or not
-t0 = time.time()
 while exit == False:
                   print("Your message ")
-                  if time.time()-t0 > 20:#every 20 seconds
-                         timeDeide = True#check threshold
-                         t0 = time.time()#restart timer
                   User = INPUT("")
                   User = User.lower()
                   r = ""
