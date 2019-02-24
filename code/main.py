@@ -96,13 +96,13 @@ def getVoice():#input method
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
            print("here 2")
-           #r.energy_threshold = 50
+           rec.energy_threshold = 50
            #r.dynamic_ energy_threshold = False
            with sr.Microphone() as source:
                   print("here 3")
-                  audio = rec.adjust_for_ambient_noise(source, duration=1.5) #adjust audio
+                  rec.adjust_for_ambient_noise(source, duration=1.5) #adjust audio
                   print("here 4")
-                  print(audio)
+                  
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
@@ -271,6 +271,7 @@ while exit == False:
                   elif User == "add action":
                       myBot.listUSB()
                   elif User == "exit":
+                      OUTPUT("Goodbye!")
                       exit=True#end
                   elif User != "":
                       print("--searching")
