@@ -100,7 +100,7 @@ def getVoice():#input method
            #r.dynamic_ energy_threshold = False
            with sr.Microphone() as source:
                   print("here 3")
-                  audio = rec.adjust_for_ambient_noise(source, duration=1) #adjust audio
+                  audio = rec.adjust_for_ambient_noise(source, duration=1.5) #adjust audio
                   print("here 4")
                   print(audio)
                   print ("Speak Now")
@@ -227,7 +227,7 @@ def wifi():
                 
 
            except:
-                  print (handle.stdout.readline().strip())
+                  #print (handle.stdout.readline().strip())
                   OUTPUT("Couldn't connect to the network... ")
 
 def checkInfo():
