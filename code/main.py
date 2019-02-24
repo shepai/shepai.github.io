@@ -90,12 +90,19 @@ def OUTPUT(string):#output method
            
 def getVoice():#input method
        voiceReply =""
+       print("here 1")
        try:
            rec = sr.Recognizer()
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
+           print("here 2")
+           #r.energy_threshold = 50
+           #r.dynamic_ energy_threshold = False
            with sr.Microphone() as source:
+                  print("here 3")
                   audio = rec.adjust_for_ambient_noise(source, duration=1) #adjust audio
+                  print("here 4")
+                  print(audio)
                   print ("Speak Now")
                   t0 = time.time() #start a timer to prevent the search going on too long
                   pixels.listen()    #output eye to the user
