@@ -38,7 +38,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 	</script>
 <!-- !PAGE CONTENT! -->
 <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
-  <div id="test">
+  <div id="slideA">
   <!-- First Photo Grid-->
   <div class="w3-row-padding w3-padding-16 w3-center" id="food">
     <div class="w3-quarter btn" >
@@ -71,6 +71,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			</div>
   </div>
   <br>
+	</div>
+	<div id="slideB" style="display: none;">
   <!-- Second Photo Grid-->
   <div class="w3-row-padding w3-padding-16 w3-center">
     <div class="w3-quarter btn"> 
@@ -103,17 +105,49 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     </div>
   </div>
 
-</div>	
-  <!-- Pagination -->
-  <!--<div class="w3-center w3-padding-32">
-    <ul class="w3-pagination">
-      <li><a class="w3-black" href="index.html">1</a></li>
-      <li><a class="w3-hover-black" href="index2.HTML" >2</a></li>
-      <li><a class="w3-hover-black" href="#">3</a></li>
-      <li><a class="w3-hover-black" href="#">4</a></li>
-      <li><a class="w3-hover-black" href="index2.HTML">»</a></li>
+</div>
+	  <div id="slideC" style="display: none;">
+  <!-- First Photo Grid-->
+  <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+    <div class="w3-quarter btn" >
+		<a href="robots.HTML">
+      <img src="assets/robots4.jpg" alt="AI" style="width:100%">
+      <h3><a >Robotics</a></h3>
+      <p>See more of the robots we are developing. Robotics is difficut</p>
+		</a>
+			</div>
+    <div class="w3-quarter btn" >
+		<a href="actions.HTML">
+      <img src="assets/Droid.png" alt="1" style="width:100%">
+      <h3><a >Actions</a></h3>
+      <p>The AI can run actions, which are small python programs it executes, when </p>
+		</a>
+			</div>
+    <div class="w3-quarter btn" >
+		<a href="lib.HTML">
+      <img src="assets/python.png" alt="US" style="width:100%">
+      <h3><a >Robotics library</a></h3>
+      <p>A Robotics library to work along side the SHEP library is currently in the making. Find out more here.</p>
+		</a>
+    </div>
+    <div class="w3-quarter btn" >
+		<a href="manual.HTML">
+      <img src="assets/design.jpg" alt="3D" style="width:100%">
+      <h3><a >The manual labour</a></h3>
+      <p>How we put the AI together and the design process. This involves 3D printing, soldering and alot of late nights thinking things over...</p>
+		</a>
+			</div>
+  </div>
+  <br>
+  
+</div>
+	<div class="w3-center w3-padding-32">
+    <ul class="w3-pagination .btn-group">
+      <li><a class="w3-hover-black" onClick="A()">1</a></li>
+      <li><a class="w3-hover-black" onClick="B()">2</a></li>
+	  <li><a class="w3-hover-black" onClick="C()">3</a></li>
     </ul>
-  </div>-->
+  </div>
   
   <hr id="about">
 
@@ -169,8 +203,42 @@ This all sounds rather technical, to sum it up; SHEP is a learning system which 
 </div>
 
 	<script>
+			function A(){
+				var x = document.getElementById("slideA");
+			  
+				x.style.display = "block";
+				var y = document.getElementById("slideB");
+			  
+				y.style.display = "none";
+				var z = document.getElementById("slideC");
+			  
+				z.style.display = "none";
+			  
+			}
+			function B(){
+				var x = document.getElementById("slideB");
+			  
+				x.style.display = "block";
+				var y = document.getElementById("slideA");
+			  
+				y.style.display = "none";
+				var z = document.getElementById("slideC");
+			  
+				z.style.display = "none";
+			}
+		function C(){
+				var x = document.getElementById("slideB");
+			  
+				x.style.display = "none";
+				var y = document.getElementById("slideA");
+			  
+				y.style.display = "none";
+			var z = document.getElementById("slideC");
+			  
+				z.style.display = "block";
+			}
 var myIndex = 0;
-carousel();
+
 
 function carousel() {
     var i;
