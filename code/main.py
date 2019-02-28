@@ -209,7 +209,7 @@ def wifi():
                x += 7
                y += 1
            num = len(ssids)+1
-           while num > len(ssids) or num <= 0:
+           while num+1 > len(ssids) or num+1 <= 0:
                   try:
                          num = int(input("Which number would you like: "))
                   except:
@@ -218,6 +218,7 @@ def wifi():
                   num = num - 1 #equalize it with list numbers
                   if num < 0:
                       num = len(ssids) +1 #loop bigger than the array
+           
            ID = ssids[num]
            OUTPUT("Please enter the password: ")
            passkey = input()
