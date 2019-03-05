@@ -205,11 +205,12 @@ def wifi():
            y = 1
            while x < len(new)-1: #create list of things
                ssids.append(new[x])
-               print(str(y)+") "+new[x])
                x += 7
-               y += 1
+           for i in range(len(ssids)):
+                  print(str(y)+") "+ssids[i])
+                  y+=1
            num = len(ssids)+1
-           while num+1 > len(ssids) or num+1 <= 0:
+           while num > len(ssids) or num <= 0:
                   try:
                          num = int(input("Which number would you like: "))
                   except:
