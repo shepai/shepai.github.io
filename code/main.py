@@ -227,7 +227,7 @@ def wifi():
                 print("Connecting... ")
                 handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
                 #sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-                sleep(5) # wait for the password prompt to occur (if there is one, i'm on Linux and sudo will always ask me for a password so i'm just assuming windows isn't retarded).
+                time.sleep(5) # wait for the password prompt to occur (if there is one, i'm on Linux and sudo will always ask me for a password so i'm just assuming windows isn't retarded).
                 print ((handle.stdout.readline().strip()).decode('utf-8'))
                 
 
