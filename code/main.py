@@ -98,8 +98,8 @@ def getVoice():#input method
            rec.dynamic_energy_threshold = False #set ackground noise to silence
            t0 = 0 #set the timer
            print("here 2")
-           rec.energy_threshold = 50
-           #r.dynamic_ energy_threshold = False
+           #rec.energy_threshold = 50
+           
            with sr.Microphone() as source:
                   print("here 3")
                   rec.adjust_for_ambient_noise(source) #adjust audio
