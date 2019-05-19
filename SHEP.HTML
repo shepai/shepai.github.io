@@ -160,14 +160,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}
 			  return string;
 			}
-			function loadDoc(file) {
+			function loadDoc(file) { //read a file
 			  var xhttp = new XMLHttpRequest();
 			  xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-				  console.log(this.responseText);
+				  var text=this.responseText;
+				  if(text != null){
+					  //text is present
+					  return text
+				  }
 				}
 			  };
-			  xhttp.open("GET", file, true);
+			  xhttp.open("GET", file, true); //open the specific file
 			  xhttp.send();
 			}
 			console.log("file:"+loadDoc("test.asp"));
