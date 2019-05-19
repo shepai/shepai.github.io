@@ -161,19 +161,22 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  return string;
 			}
 			function loadDoc(file) { //read a file
+				var text=null;
+				while(text == null){
 			  var xhttp = new XMLHttpRequest();
 			  xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-				  var text=this.responseText;
+				  text=this.responseText;
 				  if(text != null){
 					  //text is present
 					  console.log(text);
-					  return(text);
+					  
 				  }
 				}
 			  };
 			  xhttp.open("GET", file, true); //open the specific file
 			  xhttp.send();
+				}return text;
 			}
 			console.log("file:"+loadDoc("test.asp"));
 			function write(message)
