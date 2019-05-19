@@ -203,6 +203,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				User.addEventListener("keyup", function(event) {
 				  event.preventDefault();
 				  if (event.keyCode === 13) {
+					 console.log("file:"+textFile);
 					write(User.value);
 					console.log(User.value);
 					write("Robot message: "+getAI(User.value.toLowerCase()));
