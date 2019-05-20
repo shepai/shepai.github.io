@@ -141,12 +141,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				var numbers=0;
 				for(var i=0;i<phrases.length;i++){
 					//sort each words and where they link to.
-				     var splitted = ((phrases[i].split(',')[0]).split(':')) //get splitted words
+				     var splitted = ((phrases[i].replace("↵", "").split(',')[0]).split(':')) //get splitted words
 					 
 					 numbers = (splitted.length);  //get the size of it
 					 console.log(numbers+":::"+splitted); //alert user the size
 					 
-					 array.push(splitted.replace("↵", "") ); //add array to array
+					 array.push(splitted); //add array to array
 					 
 				}
 				console.log(array);
@@ -200,22 +200,24 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				Userinput=Userinput.split(" ")
 				console.log("length"+Userinput.length);
 				for(var i=0;i<words.length;i++){
+					
 					for(var j=0;j<words[i].length;j++){
-						console.log(words[i][j]+","+Userinput[j]);
+						//console.log(words[i][j]+","+Userinput[j]);
 						if(words[i][j]==Userinput[j]){current+=1;}//count each time the word is the same
 						//future versions check here for words in slightly different orders
 					}
-					console.log("counter current:"+current+","+counter);
-					if(counter <current){
+					
+					if(counter <current && Userinput.length==words[i].length){
 						//find most likely sentence
 						counter = current;
 						console.log("id"+saveID);
 						saveID=i;
 					}
+					console.log("ID:",saveID," Words:",words[i][0],"::",Userinput[0],"Counter:",counter);
 					current=0;
 				}
 				
-				if(counter == words[saveID].length){ //check if this is the found word
+				if(counter == words[saveID].length && counter==Userinput.length){ //check if this is the found word
 					string="It is found!";
 				}else{
 					string="I don't know that one. How would you like me to respond in the future?";
@@ -251,7 +253,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				
 				var text = document.getElementById("AIoutput");
 				var lines = (text.innerHTML).split('>');
-				if (lines.length >= 7)
+				if (lines.length >= 6)
 				{
 					lines=lines.splice(1,lines.length);
 					text = lines.join('>');
@@ -277,7 +279,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					  	if(checker==true){ //do this once
 							if(textFile==null){
 							  //if in debug mode
-							  textFile="hello:there,hi#hi,hello#"+document.cookie.replace("↵", "") ; //format of data
+							  textFile="hello:there,hi#hi,hello#" ; //format of data
 						  }else{
 							  textFile=textFile+document.cookie.replace("↵", "") ; //format of data
 						  }	
