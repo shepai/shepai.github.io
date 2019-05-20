@@ -261,14 +261,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				
 			}
 				
-				//textFile="hello:there,hi#hi,hello#"+document.cookie //format of data
+				//
   				var User = document.getElementById("AIinput");
 				
 				User.addEventListener("keyup", function(event) {
 					//listen for keys
 				  event.preventDefault();
+				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
+					  if(textFile==null){
+						  //if in debug mode
+						  textFile="hello:there,hi#hi,hello#"+document.cookie //format of data
+					  }else{
+						  textFile=textFile+document.cookie //format of data
+					  }
 					  write(User.value);
 					  if(learn == false)
 					  {
