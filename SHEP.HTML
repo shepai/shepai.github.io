@@ -118,19 +118,52 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIinput").className = "codeinput5";
 				document.getElementById("consoleC").className = "AIbox5";
 			}
+			
+			var previous="";
+			var learn = false; //will the sysrem learn
+			function sort()
+			{
+				//sort the memory content into an array
+				var phrases= textFile.split(';');
+				console.log(phrases.length);
+				var array=[];
+				var numbers=0;
+				for(var i=0;i<phrases.length;i++){
+					//sort each words and where they link to.
+				     var splitted = ((phrases[i].split(',')[0]).split(':')) //get splitted words
+					 var answer = 
+					 numbers = (splitted.length);  
+					 console.log(numbers);
+					 for(var j=0;j<numbers;j++)
+					 {
+						 array.push(splitted);
+					 }
+				}
+				console.log(array);
+				return phrases;
+				
+			}
+			function writeTo(words, answers)
+			{
+				//write the textFile in the format
+				textFile = textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + ";";
+				console.log(textFile);
+			}
+			
 			function includes(string,substring){
-				var x=0
+				//returns if a substring is within a substring
+				var x=0;
 				var i=0;
 				var j=0;
 				var state=false;
-				console.log(string.length);
+				//console.log(string.length);
 				for (i=0;i<string.length;i++){
 					
 					for(j=0;j<substring.length;j++){
-						console.log(string[x+1]);
+						//console.log(string[x+1]);
 						if (j < string.length){
-							console.log(string[x+1]);
-							console.log(string[j]);
+							//console.log(string[x+1]);
+							//console.log(string[j]);
 							if (string[x+i] == substring[j]){
 								x++;
 								
@@ -147,8 +180,23 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				return state
 			}
 			function getAI(Userinput) {
-				var string="";
-				console.log(Userinput);
+				//main algorithm
+				var string="";var counter=0;var found=false;var current=0;var saveID=0;
+				//console.log(Userinput);
+				var words=sort();
+				//clear the string of needed characters
+				Userinput=Userinput.replace(/,/gi,"");
+				Userinput=Userinput.replace(/:/gi,"");
+				Userinput=Userinput.replace(/;/gi,"");
+				Userinput=Userinput.split(" ")
+				for(var i=0;i<Userinput.length;i++){
+					for(var j=0;j<words[i].length;j++){
+						
+					}
+					if(counter <current){
+						//find most likely sentence
+					}
+				}
 				if(includes(Userinput,"hello")){
 					string="hi";
 				}else if(includes(Userinput,"hi")){
@@ -156,14 +204,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}else if(includes(Userinput,"how are you")){
 					string="I am good thank you";
 				}else{
-					string="Sorry, my webpage responses are limited.";
+					string="I don't know that one. How would you like me to respond in the future?";
+					learn = true; //learn mode on
 				}
 			  return string;
 			}
-			var textFile=null;
-			loadDoc("test.asp");
+			var textFile=null; //define the file
+			loadDoc("test.asp"); //load the file needed
 			function loadDoc(file) { //read a file
-				
+				//takes a while to fully load
 			
 			  var xhttp = new XMLHttpRequest();
 			  xhttp.onreadystatechange = function() {
@@ -180,9 +229,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  xhttp.send();
 			}
 			
-			console.log("file:"+textFile);
+			console.log("file:"+textFile); //output the file
 			function write(message)
 			{
+				//output in the console box
 				message=message.replace('>', '');
 				
 				var text = document.getElementById("AIoutput");
@@ -201,13 +251,29 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
   				var User = document.getElementById("AIinput");
 				
 				User.addEventListener("keyup", function(event) {
+					//listen for keys
 				  event.preventDefault();
 				  if (event.keyCode === 13) {
+					  //enter key pressed
+					  write(User.value);
+					  if(learn == false)
+					  {
+					  textFile="hello:there,hi;hi,hello;" //format of data
+					  
 					 console.log("file:"+textFile);
-					write(User.value);
-					console.log(User.value);
+					
+					//console.log(User.value);
+					previous=User.value;
 					write("Robot message: "+getAI(User.value.toLowerCase()));
-					document.getElementById("AIinput").value = "";
+					
+					
+					  }else{
+						//learn mode
+						 writeTo(previous,User.value);
+						  learn=false; //make learn mode be off
+						  
+					  }
+					  document.getElementById("AIinput").value = "";
 				  }
 				});
 		 	
