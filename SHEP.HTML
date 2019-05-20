@@ -263,23 +263,26 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				
 				//
   				var User = document.getElementById("AIinput");
-				
+				var checker=true;
 				User.addEventListener("keyup", function(event) {
 					//listen for keys
 				  event.preventDefault();
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
-					  if(textFile==null){
-						  //if in debug mode
-						  textFile="hello:there,hi#hi,hello#"+document.cookie.replace("↵", "") ; //format of data
-					  }else{
-						  textFile=textFile+document.cookie.replace("↵", "") ; //format of data
-					  }
+					  
 					  write(User.value);
 					  if(learn == false)
 					  {
-					  
+					  	if(checker==0){ //do this once
+							if(textFile==null){
+							  //if in debug mode
+							  textFile="hello:there,hi#hi,hello#"+document.cookie.replace("↵", "") ; //format of data
+						  }else{
+							  textFile=textFile+document.cookie.replace("↵", "") ; //format of data
+						  }	
+							checker=false;
+						}
 					  
 					 console.log("file:"+textFile);
 					
