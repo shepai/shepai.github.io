@@ -11,7 +11,7 @@
 body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 .w3-sidenav a {padding:20px}
 </style>
-<body>
+<body onload="cookieprompt()">
 
 <!-- Sidenav (hidden by default) -->
 <nav class="w3-sidenav w3-card-2 w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:20%;min-width:300px" id="mySidenav">
@@ -94,6 +94,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		
 		
 		<script>
+			var cookiePermission=false;
+			function cookieprompt(){ //get permission from the user
+				
+				if (window.confirm('SHEP uses cookies to store data, native to your device. By clicking okay, you agree for the AI to store data. Cancel to read out cookie policy')) 
+				{
+				cookiePermission=true;
+				}else{
+					window.location.href='cookie.html';
+				};
+			}
 			function A(){
 				document.getElementById("AIinput").className = "codeinput";
 				document.getElementById("consoleC").className = "AIbox";
@@ -131,16 +141,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				for(var i=0;i<phrases.length;i++){
 					//sort each words and where they link to.
 				     var splitted = ((phrases[i].split(',')[0]).split(':')) //get splitted words
-					 var answer = 
-					 numbers = (splitted.length);  
-					 console.log(numbers);
-					 for(var j=0;j<numbers;j++)
-					 {
-						 array.push(splitted);
-					 }
+					 
+					 numbers = (splitted.length);  //get the size of it
+					 console.log(numbers+":::"+splitted); //alert user the size
+					 
+					 array.push(splitted); //add array to array
+					 
 				}
 				console.log(array);
-				return phrases;
+				return array;
 				
 			}
 			function writeTo(words, answers)
@@ -166,10 +175,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 							//console.log(string[j]);
 							if (string[x+i] == substring[j]){
 								x++;
-								
 							}
-						}
-						
+						}	
 					}
 					if(x == substring.length){
 						state=true;
@@ -189,20 +196,25 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				Userinput=Userinput.replace(/:/gi,"");
 				Userinput=Userinput.replace(/;/gi,"");
 				Userinput=Userinput.split(" ")
-				for(var i=0;i<Userinput.length;i++){
+				console.log("length"+Userinput.length);
+				for(var i=0;i<words.length;i++){
 					for(var j=0;j<words[i].length;j++){
-						
+						console.log(words[i][j]+","+Userinput[j]);
+						if(words[i][j]==Userinput[j]){current+=1;}//count each time the word is the same
+						//future versions check here for words in slightly different orders
 					}
+					console.log("counter current:"+current+","+counter);
 					if(counter <current){
 						//find most likely sentence
+						counter = current;
+						console.log("id"+saveID);
+						saveID=i;
 					}
+					current=0;
 				}
-				if(includes(Userinput,"hello")){
-					string="hi";
-				}else if(includes(Userinput,"hi")){
-					string="hello";
-				}else if(includes(Userinput,"how are you")){
-					string="I am good thank you";
+				
+				if(counter == words[saveID].length){ //check if this is the found word
+					string="It is found!";
 				}else{
 					string="I don't know that one. How would you like me to respond in the future?";
 					learn = true; //learn mode on
@@ -246,7 +258,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
 				
 			}
-			
+				textFile="hello:there,hi;hi,hello;" //format of data
 			
   				var User = document.getElementById("AIinput");
 				
@@ -258,7 +270,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					  write(User.value);
 					  if(learn == false)
 					  {
-					  textFile="hello:there,hi;hi,hello;" //format of data
+					  
 					  
 					 console.log("file:"+textFile);
 					
