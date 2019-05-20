@@ -134,7 +134,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function sort()
 			{
 				//sort the memory content into an array
-				var phrases= textFile.split(';');
+				var phrases= textFile.split('#');
 				console.log(phrases.length);
 				var array=[];
 				var numbers=0;
@@ -155,8 +155,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function writeTo(words, answers)
 			{
 				//write the textFile in the format
-				document.cookie = document.cookie + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + ";";
-				textFile = textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + ";";
+				document.cookie = document.cookie + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + "#";
+				textFile = textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + "#";
 				console.log(textFile);
 			}
 			
@@ -195,7 +195,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				//clear the string of needed characters
 				Userinput=Userinput.replace(/,/gi,"");
 				Userinput=Userinput.replace(/:/gi,"");
-				Userinput=Userinput.replace(/;/gi,"");
+				Userinput=Userinput.replace(/#/gi,"");
 				Userinput=Userinput.split(" ")
 				console.log("length"+Userinput.length);
 				for(var i=0;i<words.length;i++){
@@ -242,7 +242,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  xhttp.send();
 			}
 			
-			console.log("file:"+textFile+"cookie"+document.cookie); //output the file
+			console.log("file:"+textFile+"cookie:"+document.cookie); //output the file
 			function write(message)
 			{
 				//output in the console box
@@ -259,7 +259,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
 				
 			}
-				textFile="hello:there,hi;hi,hello;"+document.cookie //format of data
+				textFile="hello:there,hi#hi,hello;"+document.cookie //format of data
 			
   				var User = document.getElementById("AIinput");
 				
