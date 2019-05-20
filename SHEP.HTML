@@ -63,7 +63,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			<hr id="aidemo">
 		<h3>Demo</h3>
 			
-			Below shows a basic version of the AI. It does not have learning abilities. 
+			Below shows a basic browser version of the AI. 
 			
 		<div class="console"> 
 			<div class="AIbox" id="consoleC">
@@ -155,6 +155,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function writeTo(words, answers)
 			{
 				//write the textFile in the format
+				document.cookie = document.cookie + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + ";";
 				textFile = textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + ";";
 				console.log(textFile);
 			}
@@ -258,7 +259,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
 				
 			}
-				textFile="hello:there,hi;hi,hello;" //format of data
+				textFile="hello:there,hi;hi,hello;"+document.cookie //format of data
 			
   				var User = document.getElementById("AIinput");
 				
