@@ -88,6 +88,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
   </div>
 			
 		Select a file to open from: <input type="file" name="myFile"><br>
+		Download the memory file : <input type="button" name="saveFile" onClick="downloadFile()" value="Download"><br>
 		<br/><br/>
 		<hr>
 		
@@ -95,6 +96,22 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		
 		<script>
 			var cookiePermission=false;
+			var lines= 6;
+			function detectmob() { 
+			 if( navigator.userAgent.match(/Android/i)
+			 || navigator.userAgent.match(/webOS/i)
+			 || navigator.userAgent.match(/iPhone/i)
+			 || navigator.userAgent.match(/iPad/i)
+			 || navigator.userAgent.match(/iPod/i)
+			 || navigator.userAgent.match(/BlackBerry/i)
+			 || navigator.userAgent.match(/Windows Phone/i)
+			 ){
+				return true;
+			  }
+			 else {
+				return false;
+			  }
+			}
 			function cookieprompt(){ //get permission from the user
 				
 				if (window.confirm('SHEP uses cookies to store data, native to your device. By clicking okay, you agree for the AI to store data. Cancel to read out cookie policy')) 
@@ -103,6 +120,26 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}else{
 					window.location.href='cookie.html';
 				};
+				if(detectmob()){
+					//mobile phone screen
+					lines=3;
+					
+				}
+			}
+			function download(filename, text) { //download a file 
+			  var element = document.createElement('a');
+			  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			  element.setAttribute('download', filename);
+
+			  element.style.display = 'none';
+			  document.body.appendChild(element);
+
+			  element.click();
+
+			  document.body.removeChild(element);
+			}
+			function downloadFile(){ //download the file
+				download("data.txt",textFile);
 			}
 			function A(){
 				document.getElementById("AIinput").className = "codeinput";
@@ -276,7 +313,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				
 				var text = document.getElementById("AIoutput");
 				var lines = (text.innerHTML).split('>');
-				if (lines.length >= 6)
+				if (lines.length >= lines)
 				{
 					lines=lines.splice(1,lines.length);
 					text = lines.join('>');
