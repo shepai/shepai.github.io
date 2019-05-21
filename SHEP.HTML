@@ -96,7 +96,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		
 		<script>
 			var cookiePermission=false;
-			var lines= 6;
+			var lines= 6;var characterlength=35;
 			function detectmob() { 
 			 if( navigator.userAgent.match(/Android/i)
 			 || navigator.userAgent.match(/webOS/i)
@@ -122,7 +122,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				};
 				if(detectmob()){
 					//mobile phone screen
-					lines=3;
+					console.log("mobile");
+					lines=3;characterlength=20;
 					
 				}
 			}
@@ -312,8 +313,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				message=message.replace('>', '');
 				
 				var text = document.getElementById("AIoutput");
+				var number = (text.innerHTML).length; //get the character length
 				var lines = (text.innerHTML).split('>');
-				if (lines.length >= lines)
+				
+				if (lines.length >= lines ||number >= characterlength)
 				{
 					lines=lines.splice(1,lines.length);
 					text = lines.join('>');
