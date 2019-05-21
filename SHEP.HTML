@@ -336,7 +336,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				  if (event.keyCode === 13) {
 					  //enter key pressed
 					  
-					  write(User.value);
+					  write(User.valueto.LowerCase());
 					  if(learn == false)
 					  {
 					  	if(checker==true){ //do this once
@@ -352,7 +352,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					 console.log("file:"+textFile);
 					
 					//console.log(User.value);
-					previous=User.value;
+					previous=User.value.toLowerCase();
 					write("Robot message: "+getAI(User.value.toLowerCase()));
 					
 					
