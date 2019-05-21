@@ -87,7 +87,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     </ul>
   </div>
 			
-		
+		Select a file to open from: <input type="file" name="myFile"><br>
 		<br/><br/>
 		<hr>
 		
@@ -151,6 +151,29 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}
 				console.log(array);
 				return array;
+				
+			}
+			function reply(ID)
+			{
+				//find the correct reply for the given input
+				var phrases= textFile.split('#');
+				console.log(phrases.length);
+				var string = phrases[ID]; //get in string form
+				console.log("id to get:",ID," Which is:",phrases[ID]);
+				var start = false;var output="";
+				for(var i=0;i<string.length;i++){
+					//sort ouot what is wanted
+					if(start==true)
+					{
+						output+=string[i]; //gather the spoken bit
+					}
+					if(string[i]==","){
+						start=true; //find change over
+					}
+				}
+				return output.replace(/:/gi," ");//put in spaces
+				
+
 				
 			}
 			function writeTo(words, answers)
@@ -218,7 +241,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}
 				
 				if(counter == words[saveID].length && counter==Userinput.length){ //check if this is the found word
-					string="It is found!";
+					string=reply(saveID);
 				}else{
 					string="I don't know that one. How would you like me to respond in the future?";
 					learn = true; //learn mode on
