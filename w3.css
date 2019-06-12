@@ -197,7 +197,18 @@ input[type=checkbox].w3-check:disabled+.w3-validate,input[type=radio].w3-radio:d
 .w3-padding-12{padding-top:12px!important;padding-bottom:12px!important}
 .w3-padding-16{padding-top:16px!important;padding-bottom:16px!important}
 .w3-padding-24{padding-top:24px!important;padding-bottom:24px!important}
-.w3-padding-32{padding-top:32px!important;padding-bottom:32px!important}
+.w3-padding-32{
+	padding-top:32px!important;
+	padding-bottom:32px!important
+	width:80%;
+	
+	
+	margin-left:10%;
+	margin-right:10%;
+	
+	
+
+}
 .w3-padding-48{padding-top:48px!important;padding-bottom:48px!important}
 .w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
 .w3-padding-128{padding-top:128px!important;padding-bottom:128px!important}
