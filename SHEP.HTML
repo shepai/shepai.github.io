@@ -87,16 +87,19 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     </ul>
   </div>
 			
-		Select a file to open from: <input type="file" name="myFile"><br>
+		Select a file to open from: <input type="button" id="file-input" value="Upload" name="myFile" onClick="upload()"><br>
+		<br/>
 		Download the memory file : <input type="button" name="saveFile" onClick="downloadFile()" value="Download"><br>
-		<br/><br/>
+		<br/>
+		<p style="color:red;"id="errormessages"><p>
+		<br/>
 		<hr>
 		
 		
 		
 		<script>
 			var cookiePermission=false;
-			var lines= 6;var characterlength=35;
+			var lines= 6;var characterlength=70;
 			function detectmob() { 
 			 if( navigator.userAgent.match(/Android/i)
 			 || navigator.userAgent.match(/webOS/i)
@@ -131,13 +134,44 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  var element = document.createElement('a');
 			  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 			  element.setAttribute('download', filename);
-
+				
 			  element.style.display = 'none';
 			  document.body.appendChild(element);
 
 			  element.click();
 
 			  document.body.removeChild(element);
+			 
+			}
+			function upload()
+			{ //upload an existing file from the PC to the browser
+				console.log("upload file");
+				var input = document.createElement('input');
+				input.type = 'file';
+
+				input.onchange = e => { 
+
+				   // getting a hold of the file reference
+				   var file = e.target.files[0]; 
+					console.log(file.name);
+					if(includes(file.name,".asp")){//check it is the correct file type
+				   // setting up the reader
+				   var reader = new FileReader();
+				   reader.readAsText(file,'UTF-8');
+
+				   // here we tell the reader what to do when it's done reading...
+				   reader.onload = readerEvent => {
+					  var content = readerEvent.target.result; // this is the content!
+					  console.log("content:" + content );
+					   textFile=content;
+					   document.getElementById("errormessages").innerHTML="";
+				   }
+					}else{
+						document.getElementById("errormessages").innerHTML="Incorrect file type";
+					}
+				}
+
+				input.click();
 			}
 			function downloadFile(){ //download the file
 				download("data.txt",textFile);
