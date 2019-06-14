@@ -384,7 +384,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 							  //if in debug mode
 							  textFile="hello:there,hi#hi,hello#" ; //format of data
 						  }else{
-							  textFile=textFile+document.cookie.replace("↵", "") ; //format of data
+							  textFile=textFile+((document.cookie.replace("↵", "")).replace("; expires=Thu, 01 Jan 2037 00:00:01 GMT;", "")).replace("content=","") ; //format of data
 						  }	
 							checker=false;
 						}
