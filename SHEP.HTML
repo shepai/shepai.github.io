@@ -230,6 +230,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				return array;
 				
 			}
+			
 			function reply(ID)
 			{
 				//find the correct reply for the given input
@@ -256,7 +257,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function writeTo(words, answers)
 			{
 				//write the textFile in the format
-				document.cookie = "content="+textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + "#"+"; expires=Thu, 01 Jan 2060 00:00:01 GMT";
+				document.cookie = "content="+textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + "#"+"; expires=Thu, 01 Jan 2037 00:00:01 GMT";
 				textFile = textFile + words.replace(/ /gi,":") + "," + answers.replace(/ /gi,":") + "#";
 				console.log(textFile);
 			}
