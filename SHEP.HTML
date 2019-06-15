@@ -345,7 +345,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  xhttp.open("GET", file, true); //open the specific file
 			  xhttp.send();
 			}
-			document.cookie="";
+			
 			console.log("cookie: "+document.cookie+"ENDCOOKIE"); //output the file
 			function write(message)
 			{
@@ -390,6 +390,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 						}
 					  
 					 console.log("file:"+textFile);
+						  console.log(document.cookie);
 					
 					//console.log(User.value);
 					previous=User.value.toLowerCase();
