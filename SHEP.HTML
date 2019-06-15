@@ -345,8 +345,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  xhttp.open("GET", file, true); //open the specific file
 			  xhttp.send();
 			}
-			
-			console.log("file:"+textFile+"cookie:"+document.cookie); //output the file
+			document.cookie="";
+			console.log("cookie: "+document.cookie+"ENDCOOKIE"); //output the file
 			function write(message)
 			{
 				//output in the console box
