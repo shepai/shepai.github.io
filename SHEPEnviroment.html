@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<title>SHEP AI Testing enviroment</title>
+<style>
+	.AIbox{
+	background-color: black;
+	width:80%;
+	height: 200px;
+	color:white;
+	margin-left:auto;
+	margin-right:auto;
+	text-align:left;
+	position: relative;
+	
+	font-family: 'Courier New', Courier, monospace;
+	
+	
+}
+	.codeinput{
+	background-color: black;
+	color:white;
+	border-style: none;
+	outline: none;
+	width:80%;
+	
+}
+	.inputline{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+	.console{
+	position: relative;
+	margin-left:auto;
+	margin-right:auto;
+	
+	width:80%;
+	height: 200px;
+	position: relative;
+}
+		</style>
+</head>
+<body>
+	<hr id="aidemo">
+		<h3 style="text-align:center;">Testing Enviroment</h3>
+			
+	 <p style="text-align:center;">Below shows a basic browser version of the AI. </p>
+			
+		<div class="console"> 
+			<div class="AIbox" id="consoleC">
+				<p id="AIoutput">>Use the bottom of the console to type
+					
+					</p>
+				<br/>
+				<div  class="inputline">>>> <input type="text" id="AIinput" class="codeinput" name="fname"><br></div>
+				
+				  
+				
+		</div></div>
+</body>
+	<script id="utility">
+		function detectmob() { 
+			 if( navigator.userAgent.match(/Android/i)
+			 || navigator.userAgent.match(/webOS/i)
+			 || navigator.userAgent.match(/iPhone/i)
+			 || navigator.userAgent.match(/iPad/i)
+			 || navigator.userAgent.match(/iPod/i)
+			 || navigator.userAgent.match(/BlackBerry/i)
+			 || navigator.userAgent.match(/Windows Phone/i)
+			 ){
+				return true;
+			  }
+			 else {
+				return false;
+			  }
+			}
+		function A(){
+				document.getElementById("AIinput").className = "codeinput";
+				document.getElementById("consoleC").className = "AIbox";
+			}
+			function B(){
+				document.getElementById("AIinput").className = "codeinput1";
+				document.getElementById("consoleC").className = "AIbox1";
+			}
+			function C(){
+				document.getElementById("AIinput").className = "codeinput2";
+				document.getElementById("consoleC").className = "AIbox2";
+			}
+			function D(){
+				document.getElementById("AIinput").className = "codeinput3";
+				document.getElementById("consoleC").className = "AIbox3";
+			}
+			function E(){
+				document.getElementById("AIinput").className = "codeinput4";
+				document.getElementById("consoleC").className = "AIbox4";
+			}
+			function F(){
+				document.getElementById("AIinput").className = "codeinput5";
+				document.getElementById("consoleC").className = "AIbox5";
+			}
+		function includes(string,substring){
+				//returns if a substring is within a substring
+				var x=0;
+				var i=0;
+				var j=0;
+				var state=false;
+				//console.log(string.length);
+				for (i=0;i<string.length;i++){
+					
+					for(j=0;j<substring.length;j++){
+						//console.log(string[x+1]);
+						if (j < string.length){
+							//console.log(string[x+1]);
+							//console.log(string[j]);
+							if (string[x+i] == substring[j]){
+								x++;
+							}
+						}	
+					}
+					if(x == substring.length){
+						state=true;
+						break;
+					}
+					x=0
+				}
+				return state
+			}
+		function cookieprompt(){ //get permission from the user
+				
+				if (window.confirm('SHEP uses cookies to store data, native to your device. By clicking okay, you agree for the AI to store data. Cancel to read out cookie policy')) 
+				{
+				cookiePermission=true;
+				}else{
+					window.location.href='cookie.html';
+				};
+				if(detectmob()){
+					//mobile phone screen
+					console.log("mobile");
+					lines=3;characterlength=20;
+					
+				}
+			}
+			function download(filename, text) { //download a file 
+			  var element = document.createElement('a');
+			  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			  element.setAttribute('download', filename);
+				
+			  element.style.display = 'none';
+			  document.body.appendChild(element);
+
+			  element.click();
+
+			  document.body.removeChild(element);
+			 
+			}
+		function upload()
+			{ //upload an existing file from the PC to the browser
+				console.log("upload file");
+				var input = document.createElement('input');
+				input.type = 'file';
+
+				input.onchange = e => { 
+
+				   // getting a hold of the file reference
+				   var file = e.target.files[0]; 
+					console.log(file.name);
+					if(includes(file.name,".asp")){//check it is the correct file type
+				   // setting up the reader
+				   var reader = new FileReader();
+				   reader.readAsText(file,'UTF-8');
+
+				   // here we tell the reader what to do when it's done reading...
+				   reader.onload = readerEvent => {
+					  var content = readerEvent.target.result; // this is the content!
+					  console.log("content:" + content );
+					   textFile=content;
+					   document.getElementById("errormessages").innerHTML="";
+				   }
+					}else{
+						document.getElementById("errormessages").innerHTML="Incorrect file type";
+					}
+				}
+
+				input.click();
+			}
+		function downloadFile(){ //download the file
+				download("data.txt",textFile);
+			}
+		</script>
+	<script id="main">
+		var lines= 6;var characterlength=70;
+			
+		function write(message)
+			{
+				//output in the console box
+				message=message.replace('>', '');
+				
+				var text = document.getElementById("AIoutput");
+				var number = (text.innerHTML).length; //get the character length
+				var lines = (text.innerHTML).split('>');
+				
+				if (lines.length >= lines ||number >= characterlength)
+				{
+					lines=lines.splice(1,lines.length);
+					text = lines.join('>');
+					document.getElementById("AIoutput").innerHTML  = text;
+				}
+				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
+				
+			}
+			loadDoc("tree.xml"); //load the file needed
+			function loadDoc(file) { //read a file
+				//takes a while to fully load
+			
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				  textFile=this.responseText;
+				  if(textFile != null){
+					  //text is present
+					  console.log("file loaded");
+					  
+				  }
+				}
+			  };
+			  xhttp.open("GET", file, true); //open the specific file
+			  xhttp.send();
+			}
+				//
+  				var User = document.getElementById("AIinput");
+				var checker=true;
+				User.addEventListener("keyup", function(event) {
+					//listen for keys
+				  event.preventDefault();
+				  
+				  if (event.keyCode === 13) {
+					  //enter key pressed
+					  console.log("file:"+textFile);
+					  write(User.value);
+					  
+					  document.getElementById("AIinput").value = "";
+				  }
+				});
+	</script>
+</html>
