@@ -190,7 +190,7 @@
 		</script>
 	<script id="main">
 		var lines= 6;var characterlength=70;
-			
+		var textFile="";//global variable containing the file
 		function write(message)
 			{
 				//output in the console box
@@ -227,6 +227,29 @@
 			  xhttp.open("GET", file, true); //open the specific file
 			  xhttp.send();
 			}
+		function sort(phrase){
+			//remove out detail	
+			var array=textFile.split("<"+phrase+">");
+			var sorted=[];
+			for(var i=0;i<array.length;i++){
+				//remove all uneeded detail
+				var string=""
+				for(var j=0;j<array[i].length;j++){
+					//go through each position
+					if(array[i][j]=='<'){ //the word is finished is present 
+						//finished
+						break;
+					}else{
+						string+=array[i][j]; //add it to
+					}
+				}
+				sorted.push(string); //add to string
+			}
+			return sorted;
+		}
+		function getWord(word){
+			//get the node to, byt finding the node
+		}
 				//
   				var User = document.getElementById("AIinput");
 				var checker=true;
@@ -236,7 +259,7 @@
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
-					  console.log("file:"+textFile);
+					  console.log("file:"+sort("word"));
 					  write(User.value);
 					  
 					  document.getElementById("AIinput").value = "";
