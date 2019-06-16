@@ -248,12 +248,7 @@
 			return sorted;
 		}
 		function isNumeric(n){ //check for numeric values
-			var matches = val.match(/\d+/g);
-			if (matches != null) {
-				return true;
-			}else{
-				return false;	
-			}
+			return /^\d+$/.test(n);
 		}
 		function getPop(){
 			//get the popular words by finding the threshold
