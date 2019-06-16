@@ -249,6 +249,18 @@
 		}
 		function getWord(word){
 			//get the node to, byt finding the node
+			var words=sort("word");
+			var index=-1;
+			for(var i=0;i<words.length();i++){
+			//new array
+				if(word==words[i]){
+					//words which are found
+					index=i;
+				}
+			}
+			if(index>=0){
+				return sort("visited")[index];
+			}
 		}
 				//
   				var User = document.getElementById("AIinput");
@@ -259,7 +271,7 @@
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
-					  console.log("file:"+sort("word"));
+					  console.log("file:"+getWord(User.value));
 					  write(User.value);
 					  
 					  document.getElementById("AIinput").value = "";
