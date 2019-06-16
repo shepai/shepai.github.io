@@ -320,7 +320,7 @@
 					  var sentence=(User.value).split(" ");//split to sentences
 					  var sig=[];//significant words
 					  var threshold=getPop();
-					  console.log(threshold);
+					  console.log("threshold of significance: "+threshold);
 					  for(i=0;i<sentence.length;i++){ //loop through every word
 						  var vis=getVisited(sentence[i]);
 						  
