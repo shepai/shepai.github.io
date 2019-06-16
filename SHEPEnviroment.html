@@ -247,9 +247,9 @@
 			}
 			return sorted;
 		}
-		function isNumeric(num){ //check for numeric values
-		  return !isNaN(num)
-		}
+		function isNumeric(n){ //check for numeric values
+	  return !isNaN(parseFloat(n)) && isFinite(n);
+	}
 		function getPop(){
 			//get the popular words by finding the threshold
 			var list = sort("visited");
