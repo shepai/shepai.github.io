@@ -259,14 +259,14 @@
 			for(i=0;i<list.length;i++){
 				 //check each word
 				if((isNumeric(list[i]))!=NaN){ //a number
-					total+=list[i]; //add more
-					square+=Math.pow(list[i], 2);
+					total+=parseInt(list[i]); //add more
+					square+=Math.pow(parseInt(list[i]), 2);
 					n=n+1; //add one to n
 				}
 			}
 			var average=total/n;
 			var sd =Math.sqrt((square/n)-Math.pow(average,2))
-			return average+sd;
+			return (average+sd);
 		}
 		function getWord(word){
 			//get the node to, byt finding the node
@@ -323,6 +323,7 @@
 					  console.log(threshold);
 					  for(i=0;i<sentence.length;i++){ //loop through every word
 						  var vis=getVisited(sentence[i]);
+						  console.log(vis+"..."+threshold);
 						  if(vis !=false){
 							  if(vis >= threshold){ //word is deemed significant
 								  sig.push(sentence[i]);
