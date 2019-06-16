@@ -323,15 +323,15 @@
 					  console.log(threshold);
 					  for(i=0;i<sentence.length;i++){ //loop through every word
 						  var vis=getVisited(sentence[i]);
-						  console.log(vis+"..."+threshold);
+						  
 						  if(vis !=false){
 							  if(vis >= threshold){ //word is deemed significant
 								  sig.push(sentence[i]);
 							  }
 						  }
 					  }
+					  console.log("significant words: "+sig);
 					  write("significant words: "+sig);
-					  
 					  document.getElementById("AIinput").value = "";
 				  }
 				});
