@@ -346,7 +346,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			  xhttp.send();
 			}
 			
-			console.log("cookie: "+document.cookie+"ENDCOOKIE"); //output the file
+			console.log("cookie: "+((document.cookie.replace("↵", "")).replace("; expires=Thu, 01 Jan 2037 00:00:01 GMT;", "")).replace("content=","")+"ENDCOOKIE"); //output the file
 			function write(message)
 			{
 				//output in the console box
