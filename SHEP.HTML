@@ -91,7 +91,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 	  <li><a class="w3-hover-black" onClick="F()">6</a></li>
     </ul>
   </div>
-			
+		  <p id="explain">This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing 
+		  where it says: >>></p>
 		Select a file to open from: <input type="button" id="file-input" value="Upload" name="myFile" onClick="upload()"><br>
 		<br/>
 		Download the memory file : <input type="button" name="saveFile" onClick="downloadFile()" value="Download"><br>
@@ -102,7 +103,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		
 		
 		
-		<script>
+		<script id="utility">
 			var cookiePermission=false;
 			var lines= 6;var characterlength=70;
 			function detectmob() { 
@@ -184,28 +185,50 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function A(){
 				document.getElementById("AIinput").className = "codeinput";
 				document.getElementById("consoleC").className = "AIbox";
+				loadDoc("test.asp"); //load the file needed
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
+				type=0;
 			}
 			function B(){
-				document.getElementById("AIinput").className = "codeinput1";
-				document.getElementById("consoleC").className = "AIbox1";
-			}
-			function C(){
 				document.getElementById("AIinput").className = "codeinput2";
 				document.getElementById("consoleC").className = "AIbox2";
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
+				loadDoc("tree.xml"); //load the file needed
+				type=1;
+			}
+			function C(){
+				document.getElementById("AIinput").className = "codeinput1";
+				document.getElementById("consoleC").className = "AIbox1";
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").value = "";
+				type=2;
 			}
 			function D(){
 				document.getElementById("AIinput").className = "codeinput3";
 				document.getElementById("consoleC").className = "AIbox3";
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").value = "";
+				type=3;
 			}
 			function E(){
 				document.getElementById("AIinput").className = "codeinput4";
 				document.getElementById("consoleC").className = "AIbox4";
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").value = "";
+				type=4;
 			}
 			function F(){
 				document.getElementById("AIinput").className = "codeinput5";
 				document.getElementById("consoleC").className = "AIbox5";
+				document.getElementById("consoleC").value = "";
+				document.getElementById("explain").value = "";
+				type=5;
 			}
-			
+		  </script>
+			<script id="main">
+				var type=0; //set the type of code to run
 			var previous="";
 			//document.cookie ="";
 			var learn = false; //will the sysrem learn
@@ -230,7 +253,26 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				return array;
 				
 			}
-			
+			function sortdata(phrase){
+			//remove out detail	
+			var array=textFile.split("<"+phrase+">");
+			var sorted=[];
+			for(var i=0;i<array.length;i++){
+				//remove all uneeded detail
+				var string=""
+				for(var j=0;j<array[i].length;j++){
+					//go through each position
+					if(array[i][j]=='<'){ //the word is finished is present 
+						//finished
+						break;
+					}else{
+						string+=array[i][j]; //add it to
+					}
+				}
+				sorted.push(string); //add to string
+			}
+			return sorted;
+		}
 			function reply(ID)
 			{
 				//find the correct reply for the given input
@@ -289,6 +331,61 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				}
 				return state
 			}
+				function isNumeric(n){ //check for numeric values
+			return /^\d+$/.test(n);
+		}
+		function getPop(){
+			//get the popular words by finding the threshold
+			var list = sortdata("visited");
+			var total=0;
+			var n=0;
+			var square=0
+			for(i=0;i<list.length;i++){
+				 //check each word
+				if(isNumeric(list[i])){ //a number
+					total+=parseInt(list[i]); //add more
+					square+=Math.pow(parseInt(list[i]), 2);
+					n=n+1; //add one to n
+				}
+			}
+			var average=total/n;
+			var sd =Math.sqrt((square/n)-Math.pow(average,2))
+			return (average+sd);
+		}
+		function getWord(word){
+			//get the node to, byt finding the node
+			var words=sortdata("word");
+			var index=-1;
+			for(var i=0;i<words.length;i++){
+			//new array
+				if(word==words[i]){
+					//words which are found
+					index=i;
+				}
+			}
+			if(index>=0){
+				return sortdata("node_to")[index];
+			}else{
+				return false
+			}
+		}
+		function getVisited(word){
+			//get the number of visited to
+			var words=sortdata("word");
+			var index=-1;
+			for(var i=0;i<words.length;i++){
+			//new array
+				if(word==words[i]){
+					//words which are found
+					index=i;
+				}
+			}
+			if(index>=0){
+				return sortdata("visited")[index];
+			}else{
+				return false
+			}
+		}
 			function getAI(Userinput) {
 				//main algorithm
 				var string="";var counter=0;var found=false;var current=0;var saveID=0;
@@ -375,7 +472,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
-					  
+					  if(type == 0){ //the type 1 is selected
 					  write(User.value.toLowerCase());
 					  if(learn == false)
 					  {
@@ -404,7 +501,41 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 						  
 					  }
 					  document.getElementById("AIinput").value = "";
+					}else if(type == 1){
+					  var sentence=(User.value).split(" ");//split to sentences
+					  var sig=[];//significant words
+					  var threshold=getPop();
+					  console.log("threshold of significance: "+threshold);
+					  for(i=0;i<sentence.length;i++){ //loop through every word
+						  var vis=getVisited(sentence[i]);
+						  
+						  if(vis !=false){
+							  if(vis >= threshold){ //word is deemed significant
+								  sig.push(sentence[i]);
+							  }
+						  }
+					  }
+					  console.log("significant words: "+sig);
+					  write("User input: "+User.value);
+					  write("What you are trying to find out/say: "+sig);
+					  document.getElementById("AIinput").value = "";
+					  var other = "";
+					  for(i=0;i<sig.length;i++){
+						  var found=0
+						  for(j=0;j<sentence.length;j++){
+							  if(sig[i]==sentence[j]){
+								//found in array 
+								  found+=1
+							  }
+						}
+						  if(found==0){
+							  other+=sig[i]+",";//add the words which have no meaning
+						  }
+					  }
+					  write("What you are discussing: "+other);
 				  }
+				  }
+				  
 				});
 		 	
 			
