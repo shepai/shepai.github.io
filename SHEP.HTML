@@ -189,6 +189,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
 				type=0;
+				learn = false; //will the sysrem learn
 			}
 			function B(){
 				document.getElementById("AIinput").className = "codeinput2";
@@ -196,6 +197,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
+				learn = false; //will the sysrem learn
 				type=1;
 			}
 			function C(){
@@ -203,27 +205,31 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("consoleC").className = "AIbox1";
 				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").value = "";
+				learn = false; //will the sysrem learn
 				type=2;
 			}
 			function D(){
 				document.getElementById("AIinput").className = "codeinput3";
 				document.getElementById("consoleC").className = "AIbox3";
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").value = "";
+				learn = false; //will the sysrem learn
 				type=3;
 			}
 			function E(){
 				document.getElementById("AIinput").className = "codeinput4";
 				document.getElementById("consoleC").className = "AIbox4";
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").value = "";
+				learn = false; //will the sysrem learn
 				type=4;
 			}
 			function F(){
 				document.getElementById("AIinput").className = "codeinput5";
 				document.getElementById("consoleC").className = "AIbox5";
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIoutput").innerHTML = "";
 				document.getElementById("explain").value = "";
+				learn = false; //will the sysrem learn
 				type=5;
 			}
 		  </script>
