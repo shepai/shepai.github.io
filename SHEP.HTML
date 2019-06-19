@@ -186,14 +186,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIinput").className = "codeinput";
 				document.getElementById("consoleC").className = "AIbox";
 				loadDoc("test.asp"); //load the file needed
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIinput").innerHTML = "";
 				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
 				type=0;
 			}
 			function B(){
 				document.getElementById("AIinput").className = "codeinput2";
 				document.getElementById("consoleC").className = "AIbox2";
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIinput").innerHTML = "";
 				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
 				type=1;
@@ -201,7 +201,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function C(){
 				document.getElementById("AIinput").className = "codeinput1";
 				document.getElementById("consoleC").className = "AIbox1";
-				document.getElementById("consoleC").innerHTML = "";
+				document.getElementById("AIinput").innerHTML = "";
 				document.getElementById("explain").value = "";
 				type=2;
 			}
@@ -520,7 +520,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					  write("What you are trying to find out/say: "+sig);
 					  document.getElementById("AIinput").value = "";
 					  var other = "";
-					  for(i=0;j<sentence.length;i++){
+					  for(i=0;i<sentence.length;i++){
 						  var found=0
 						  for(j=0;j<sig.length;j++){
 							  console.log(sig[j],sentence[i]);
@@ -531,7 +531,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 							  }
 						}
 						  if(found==0){
-							  other+=sig[j]+",";//add the words which have no meaning
+							  other+=sentence[i]+",";//add the words which have no meaning
 						  }
 					  }
 					  write("What you are discussing: "+other);
