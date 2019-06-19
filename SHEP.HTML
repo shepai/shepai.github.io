@@ -520,12 +520,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					  write("What you are trying to find out/say: "+sig);
 					  document.getElementById("AIinput").value = "";
 					  var other = "";
-					  for(i=0;i<sig.length;i++){
+					  for(i=0;j<sentence.length;i++){
 						  var found=0
-						  for(j=0;j<sentence.length;j++){
-							  if(sig[i]==sentence[j]){
+						  for(j=0;j<sig.length;j++){
+							  console.log(sig[j],sentence[i]);
+							  if(sig[j]==sentence[i]){
 								//found in array 
-								  found+=1
+								  found+=1;
+								  
 							  }
 						}
 						  if(found==0){
