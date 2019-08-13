@@ -27,7 +27,7 @@ def update():
                      print("No update needed")
               else:
                      #update
-                     OUTPUT("updating...")
+                     print("updating...")
                      current = open(sys.path[0]+"main.py","w")
                      current.write(r)
                      current.close()
@@ -50,6 +50,7 @@ except:
     file = open("/etc/profile","r")
     r=file.read()
     file.close()
-
+    
     r+="\nsudo python3 "+sys.path[0]+"/"+"V 0.0.7"
     print(r)
+    os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI.py')
