@@ -48,7 +48,7 @@ def error_pixels():
 def update():
        try:
               file = open(sys.path[0]+"/"+"temp.txt","w")
-              for line in urlopen("https://shepai.github.io/code/AI algorithm.py"):
+              for line in urlopen("https://shepai.github.io/code/AI%20algorithm.py"):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
                      #print(s)
@@ -197,6 +197,7 @@ def add(data1,data2):
 #Set up main algorithm
 #############################################################################
 checkInfo()
+update()
 while True:
        x=INPUT("User input: ")
        x=x.lower()
