@@ -18,7 +18,7 @@ def download():
     
     r+="\nsudo python3 "+sys.path[0]+"/"+"V 0.0.7"
     print(r)
-    os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
+    
 
 def update():
        try:
@@ -58,3 +58,4 @@ try:
 except:
     print("download")
     download()
+    os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
