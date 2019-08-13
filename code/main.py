@@ -8,6 +8,7 @@ except:
        import http.client as httplib
 from urllib.request import urlopen
 from wifi import Cell, Scheme
+import time
 def wifi():
 #wifi connection function
        OUTPUT("Please select a Wi Fi network")
