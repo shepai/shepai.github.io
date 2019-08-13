@@ -9,6 +9,20 @@ except:
 from urllib.request import urlopen
 from wifi import Cell, Scheme
 import time
+from pixels import Pixels #found in folder
+pixels = Pixels()
+
+       
+def internet():
+       conn = httplib.HTTPConnection("www.google.com", timeout=5) #attempt connection
+       try:
+           conn.request("HEAD", "/")
+##           conn.close()
+           return True #show there is a connection
+       except:
+           conn.close()
+           error_pixels()
+           return False #show there is not a connection
 def wifi():
 #wifi connection function
        OUTPUT("Please select a Wi Fi network")
@@ -109,6 +123,24 @@ def update():
                      os.system("sudo reboot")    #restart with new
        except:
               print("Error finding update")
+def error_pixels():
+       #the pixels desplayed for an error
+       pixels.off()
+       pixels.wakeup()
+       time.sleep(0.2)
+def OUTPUT(string):#output method
+    #locate the arduino port
+    try:
+       #output using onboard TTS
+       print(string)
+       pixels.speak() #coulourful look
+       string = string.replace("'","") #prevent an apostriphe messing it up.
+       os.system("espeak '"+string+"' 2>/dev/null")
+       
+    except:
+           #no connection
+           print(string)
+           error_pixels()
 checkInfo()
 update()
 try:
