@@ -15,7 +15,6 @@ try:
 except:
        import http.client as httplib
 from urllib.request import urlopen
-from wifi import Cell, Scheme
 #clear up type errors
 from subprocess import Popen, STDOUT, PIPE
 from subprocess import *
@@ -72,65 +71,7 @@ def update():
                      os.system("sudo reboot")    #restart with new
        except:
               print("Error finding update")
-def wifi():
-#wifi connection function
-       OUTPUT("Please select a Wi Fi network")
-       batcmd="nmcli dev wifi"
-       result = subprocess.check_output(batcmd,shell = True)
-       result = result.decode('utf-8') # needed in python 3
-       if result == "":
-           OUTPUT("No networks found")
-       else:
-           print(result)
-           
-           ls = re.split("\n |  |\t ",result) #clear of waste
-           new = []
-           for i in range(len(ls)): #sort waste
-               if ls[i] != "" and ls[i] != " ":
-                   new.append(ls[i])    
-           new = new[8:] #sort more waste
-           ssids = []
-           x = 0
-           y = 1
-           while x < len(new)-1: #create list of things
-               ssids.append(new[x])
-               x += 7
-           for i in range(len(ssids)):
-                  print(str(y)+") "+ssids[i])
-                  y+=1
-           num = len(ssids)+1
-           while num > len(ssids)-1 or num < 0:
-                  try:
-                         num = int(input("Which number would you like: "))
-                  except:
-                         OUTPUT("Invalid input:")
-                         num = len(ssids)+10 #make sure the number is out of bounds
-                  num = num - 1 #equalize it with list numbers
-                  if num < 0:
-                      num = len(ssids) +1 #loop bigger than the array
-           
-           ID = ssids[num]
-           OUTPUT("Please enter the password: ")
-           passkey = input()
-           try:
-                print("Connecting... ")
-                handle = Popen('nmcli device wifi con '+ID+' password '+passkey, shell=True, stdout=PIPE, stderr=STDOUT, stdin=PIPE)
-                #sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-                time.sleep(5) # wait for the password prompt to occur (if there is one, i'm on Linux and sudo will always ask me for a password so i'm just assuming windows isn't retarded).
-                print ((handle.stdout.readline().strip()).decode('utf-8'))
-                
 
-           except:
-                  #print (handle.stdout.readline().strip())
-                  OUTPUT("Couldn't connect to the network... ")
-
-def checkInfo():
-       #check the users info and type any if not found.
-       time.sleep(4)
-       while internet() == False: #loop till a network is found
-              while internet() == False: #prevent wrong IDs
-                     wifi()
-                     time.sleep(0.5)
 def OUTPUT(string):
        #locate the arduino port
     try:
@@ -196,7 +137,7 @@ def add(data1,data2):
 #############################################################################
 #Set up main algorithm
 #############################################################################
-checkInfo()
+#checkInfo()
 update()
 while True:
        x=INPUT("User input: ")
