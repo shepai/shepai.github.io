@@ -22,7 +22,7 @@ except:
     print(r)
 def update():
        try:
-              file = open(system_pathway+"temp.txt","w")
+              file = open(sys.path[0]+"temp.txt","w")
               for line in urlopen("https://shepai.github.io/code/main.py"):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
@@ -30,10 +30,10 @@ def update():
                      file.write(s)
               
               file.close()
-              file = open(system_pathway+"temp.txt","r")
+              file = open(sys.path[0]+"temp.txt","r")
               r = file.read()
               file.close()
-              current = open(system_pathway+"main.py","r")
+              current = open(sys.path[0]+"main.py","r")
               r2 = current.read()
               current.close()
               if(r == r2):#same
@@ -41,7 +41,7 @@ def update():
               else:
                      #update
                      OUTPUT("updating...")
-                     current = open(system_pathway+"main.py","w")
+                     current = open(sys.path[0]+"main.py","w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
