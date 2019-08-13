@@ -2,6 +2,11 @@
 import requests, zipfile, io
 import sys
 import os
+try:
+       import httplib
+except:
+       import http.client as httplib
+from urllib.request import urlopen
 update()
 try:
     file=open(sys.path[0]+"/"+"V 0.0.7"+"/AI.py",'r')
