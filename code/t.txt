@@ -1,3 +1,0 @@
-how,what,where,why,when,
-who,hello,
-what,what's,hi,do,who,where,
