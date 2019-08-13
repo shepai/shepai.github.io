@@ -1,3 +1,0 @@
-feeling,name,creator,
-song,colour,england,british empire,
-hi,favourite colour,favourite color,favourite animal,like music,from,queen,vote ,
