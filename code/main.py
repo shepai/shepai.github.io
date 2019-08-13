@@ -51,7 +51,7 @@ def update():
 
 update()
 try:
-    file=open(sys.path[0]+"/"+"V\ 0.0.7"+"/AI.py",'r')
+    file=open(sys.path[0]+"/"+"V 0.0.7"+"/AI.py",'r')
     file.close()
     print("file found")
     os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
