@@ -54,8 +54,8 @@ try:
     file=open(sys.path[0]+"/"+"V 0.0.7"+"/AI.py",'r')
     file.close()
     print("file found")
-    os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
+    os.system('sudo python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
 except:
     print("download")
     download()
-    os.system('python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
+    os.system('sudo python3 '+sys.path[0]+'/'+'V\ 0.0.7'+'/AI\ algorithm.py')
