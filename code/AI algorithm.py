@@ -58,7 +58,7 @@ def update():
               file = open(sys.path[0]+"/"+"temp.txt","r")
               r = file.read()
               file.close()
-              current = open(sys.path[0]+"/"+"main.py","r")
+              current = open(sys.path[0]+"/"+"AI\ algorithm.py","r")
               r2 = current.read()
               current.close()
               if(r == r2):#same
@@ -66,7 +66,7 @@ def update():
               else:
                      #update
                      OUTPUT("updating...")
-                     current = open(sys.path[0]+"/"+"algorithm.py","w")
+                     current = open(sys.path[0]+"/"+"AI\ algorithm.py","w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
