@@ -40,7 +40,7 @@ try:
     file=open(sys.path[0]+"/"+"V0.0.7"+"/AI.py",'r')
     file.close()
     print("file found")
-    os.system('python3 '+sys.path[0]+'/'+'V0.0.7'+'/AI.py')
+    os.system('python3 '+sys.path[0]+'/'+'V0.0.7'+'/AI\ algorithm.py')
 except:
     print("download")
     r = requests.get("http://shepai.github.io/code/V0.0.7.zip")
