@@ -10,6 +10,12 @@ from urllib.request import urlopen
 from wifi import Cell, Scheme
 import time
 from pixels import Pixels #found in folder
+#clear up type errors
+from subprocess import Popen, STDOUT, PIPE
+from subprocess import *
+import subprocess
+import os
+import re
 pixels = Pixels()
 
        
