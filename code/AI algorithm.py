@@ -85,8 +85,7 @@ def OUTPUT(string):
            #no connection
            print(string)
            error_pixels()
-def INPUT(string):
-       #main input method
+def getVoice():#input method
        voiceReply =""
        print("here 1")
        try:
@@ -120,20 +119,57 @@ def INPUT(string):
                              voiceReply="" 
            else:
                       print("I'm sorry, I didn't get that")
-       
        except:
               voiceReply =""
                       
        return voiceReply #return voice
+
+def INPUT(string):
+    if string != "":
+           OUTPUT(string)#method of output
+    string = ""
+    try:
+           string = getVoice() #get voice input
+    except:
+           #no microphone or internet error
+           
+           error_pixels()
+           if not(internet()):
+                  OUTPUT("There is an error connecting to the internet")
+                  wifi()
+    if "robot" in string:
+           print("----------------------------------")
+           file=open(system_pathway+"action/input.txt",'w')
+           file.write(string)
+           file.close()
+           if "robot keyboard" in string:
+                     string = input("Please type: ")#type mode
+           else:
+                     string = (string.replace("robot ","",1))#getrid of call sign
+           pixels.think()   #show the user it is thinking
+           
+           if "robot" == string:
+                  string = ""
+           words = string.split()
+           title=""
+    else:
+           string=""
+
+    return string.lower()   #return voice  #return input
+
 def add(data1,data2):
        #add data
-       response=INPUT("How shall I respond?: ")
-       if response.lower() == "cancel" or response.lower() == "never mind":      
-              OUTPUT("Sure")
-       else:
-              SHEPAIBOT.addResponse(data1,data2,response)
-              Node=tree(system_pathway,"tree")
-              Node.search("path",response.replace(".","").replace(",","").replace("?","").replace(";",""))#add to the database to improve speaking
+       validate=True
+       while validate:
+              response=INPUT("How shall I respond?: ")
+              if response.lower() == "cancel" or response.lower() == "never mind":      
+                     OUTPUT("Sure")
+                     validate=False
+              else:
+                     SHEPAIBOT.addResponse(data1,data2,response)
+                     Node=tree(system_pathway,"tree")
+                     Node.search("path",response.replace(".","").replace(",","").replace("?","").replace(";",""))#add to the database to improve speaking
+                     validate=False
 #############################################################################
 #Set up main algorithm
 #############################################################################
@@ -143,6 +179,7 @@ while True:
        x=INPUT("User input: ")
        x=x.lower()
        if x != "": #make sure there is something to process with
+              #x=x.replace("robot ","",1)#replace the first one
               if ">" in x:
                       OUTPUT("Invalid character detected")
               else:
@@ -156,15 +193,17 @@ while True:
                      elif ">>" in get: #found relevent info
                             get = get.split(">>")
                             OUTPUT(get[1]) #output and check is correct
-                            OUTPUT("Did I answer correctly? ")
-                            
-                            x=INPUT("User input: ")
-                            if x== "yes":
-                                  SHEPAIBOT.addResponse(get[3],get[2],get[1])
-                                  Node=tree(system_pathway,"tree")
-                                  Node.search("path",get[1].replace(".","").replace(",","").replace("?","").replace(";",""))#add to the database to improve speaking
-                            else:
-                                  add(get[3],get[2])
+                            validate=True
+                            while validate:
+                                   OUTPUT("Did I answer correctly? ")
+                                   
+                                   x=INPUT("User input: ")
+                                   if x== "yes" or x=="you did":
+                                         SHEPAIBOT.addResponse(get[3],get[2],get[1])
+                                         Node=tree(system_pathway,"tree")
+                                         Node.search("path",get[1].replace(".","").replace(",","").replace("?","").replace(";",""))#add to the database to improve speaking
+                                   elif x=="no" or x=="you did not" or x=="you didn't":
+                                         add(get[3],get[2])
                                   
                                   
                      else: #actual saved info is found
