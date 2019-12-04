@@ -195,7 +195,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			function B(){
 				document.getElementById("AIinput").className = "codeinput2";
 				document.getElementById("consoleC").className = "AIbox2";
-				document.getElementById("AIoutput").innerHTML = ">";
+				document.getElementById("AIoutput").innerHTML = ">Type a sentence/question";
 				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
 				learn = false; //will the sysrem learn
@@ -479,6 +479,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
+					  User=User.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")
 					  if(type == 0){ //the type 1 is selected
 					  write(User.value.toLowerCase());
 					  if(learn == false)
