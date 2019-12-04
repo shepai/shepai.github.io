@@ -193,7 +193,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
 				document.getElementById("explaintitle").innerHTML ="Version 0.0.1 mock up";
 				type=0;
-				learn = false; //will the sysrem learn
+				learn = false; //will the system learn
 			}
 			function B(){
 				document.getElementById("AIinput").className = "codeinput2";
@@ -211,6 +211,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML = ">Still in development";
 				document.getElementById("explain").value = "";
 				document.getElementById("explaintitle").innerHTML ="";
+				loadDoc("link.txt"); //load the file needed
 				learn = false; //will the sysrem learn
 				type=2;
 			}
