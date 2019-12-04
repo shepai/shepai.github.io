@@ -66,7 +66,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			<hr id="aidemo">
 		<h3 style="text-align:center;">Demo</h3>
 			
-	 <p style="text-align:center;">Below shows a basic browser version of the AI. </p>
+	 <p style="text-align:center;">Below shows a basic browser version of the AI software versions. Below shows an explanation of each</p>
 			
 		<div class="console"> 
 			<div class="AIbox" id="consoleC">
@@ -92,6 +92,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 	  <li><a class="w3-hover-black" onClick="F()">6</a></li>
     </ul>
   </div>
+  <h3 id="explaintitle">Version 0.0.5 mock up</h>
 		  <p id="explain">This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing 
 		  where it says: >>></p>
 		Select a file to open from: <input type="button" id="file-input" value="Upload" name="myFile" onClick="upload()"><br>
@@ -100,6 +101,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/>
 		<p style="color:red;"id="errormessages"><p>
 		<br/>
+		
 		<hr>
 		
 		
@@ -189,6 +191,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				loadDoc("test.asp"); //load the file needed
 				document.getElementById("AIoutput").innerHTML = ">";
 				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
+				document.getElementById("explaintitle").innerHTML ="Version 0.0.1 mock up";
 				type=0;
 				learn = false; //will the sysrem learn
 			}
@@ -198,6 +201,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("AIoutput").innerHTML = ">Type a sentence/question";
 				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
+				document.getElementById("explaintitle").innerHTML ="Version 0.0.7 theory mock up";
 				learn = false; //will the sysrem learn
 				type=1;
 			}
@@ -206,6 +210,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("consoleC").className = "AIbox1";
 				document.getElementById("AIoutput").innerHTML = ">Still in development";
 				document.getElementById("explain").value = "";
+				document.getElementById("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=2;
 			}
@@ -214,6 +219,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("consoleC").className = "AIbox3";
 				document.getElementById("AIoutput").innerHTML = ">Still in development";
 				document.getElementById("explain").value = "";
+				document.getElementById("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=3;
 			}
@@ -222,6 +228,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("consoleC").className = "AIbox4";
 				document.getElementById("AIoutput").innerHTML = ">Still in development";
 				document.getElementById("explain").value = "";
+				document.getElementById("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=4;
 			}
@@ -230,6 +237,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				document.getElementById("consoleC").className = "AIbox5";
 				document.getElementById("AIoutput").innerHTML = ">Still in development";
 				document.getElementById("explain").value = "";
+				document.getElementById("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=5;
 			}
@@ -248,7 +256,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				var numbers=0;
 				for(var i=0;i<phrases.length;i++){
 					//sort each words and where they link to.
-				     var splitted = ((phrases[i].replace("↵", "").split(',')[0]).split(':')) //get splitted words
+				     var splitted = ((phrases[i].replace("↵", "").split(',')[0]).split(':')); //get splitted words
 					 
 					 numbers = (splitted.length);  //get the size of it
 					 console.log(numbers+":::"+splitted); //alert user the size
@@ -266,7 +274,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			var sorted=[];
 			for(var i=0;i<array.length;i++){
 				//remove all uneeded detail
-				var string=""
+				var string="";
 				for(var j=0;j<array[i].length;j++){
 					//go through each position
 					if(array[i][j]=='<'){ //the word is finished is present 
@@ -479,7 +487,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 				  
 				  if (event.keyCode === 13) {
 					  //enter key pressed
-					  User=User.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+					  User.value=User.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 					  if(type == 0){ //the type 1 is selected
 					  write(User.value.toLowerCase());
 					  if(learn == false)
