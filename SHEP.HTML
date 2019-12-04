@@ -246,6 +246,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 			<script id="main">
 				var type=0; //set the type of code to run
 			var previous="";
+			var addmode=false;
 			//document.cookie ="";
 			var learn = false; //will the sysrem learn
 			function sort()
@@ -557,16 +558,26 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 					  //cognitive example
 					  //data layout 'pk:item:linkpk(strength),linkpk(strength)'
 					  //check input
-					  
-						  //check
+						 //add
+						 if(addmode==true){
+								
+								//gather each item till quit
+								//add to string
+								//set nodes as increased
+						}
+						 if(User.value=="a"){
+							//enable add mode
+							addmode=true;
+						}else if(User.value=="q"){
+							//quit
+							addmode=false;
+						}else{
+						//check
 							//loop through nodes
 								//find node
 								//look at PK links
 								//return PK for output
-						  //add
-							//enable add mode
-								//gather each item till quit
-								//add to string
+						}
 							
 				}else{
 					  write("User message: "+User.value);
