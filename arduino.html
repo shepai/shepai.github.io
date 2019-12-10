@@ -53,7 +53,99 @@ Compared to SHEP pre V0.0.7, CLIVE is auto learning rather than being told exact
 	  </div>
   </div>
   <hr>
-  
+  div id="RobotTestField">
+
+		<div id="gameContent">
+			
+			<div id="robot">
+				<img src="assets/robotblob.png">
+			</div>
+		</div>
+		
+		<table id="gameMenu" style="width:100%">
+			<th><p onclick="left()">Left Turn</p>
+			</th><th>
+			<p onclick="forward()">Forward</p>
+			</th><th>
+			<p onclick="right()">Right Turn</p>
+			</th>
+			</table>
+		
+
+</div>
+<script>
+var posx=getPos(document.getElementById("robot"))[0];
+var posy=getPos(document.getElementById("robot"))[1];
+	function getPos(el) {
+		// yay readability
+		for (var lx=0, ly=0;
+			 el != null;
+			 lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+		return [lx,ly];
+	}
+	function PosRobotAt(x_pos,y_pos)
+	{
+		var d = document.getElementById('robot');
+		var position=getPos(document.getElementById('gameContent'));
+		d.style.position = "absolute";
+		d.style.left = (position[0]+x_pos)+'px';
+		d.style.top = (position[1]+y_pos)+'px';
+	}
+//posRobotAt(200,280);
+	function forward()
+	{
+	console.log("forward");
+		var elem = document.getElementById("robot"); 
+		
+		posx=posx+4;
+		
+		elem.style.top = posx + "px"; 
+		
+	}
+	function right()
+	{
+	console.log("forward");
+		var elem = document.getElementById("robot"); 
+		
+		posy=posy+4;
+		
+		elem.style.left = posy + "px"; 
+		
+	}
+	function left()
+	{
+	console.log("forward");
+		var elem = document.getElementById("robot"); 
+		
+		posy=posy-4;
+		
+		elem.style.left = posy + "px"; 
+		
+	}
+	function myMove() {
+	  var elem = document.getElementById("robot");   
+	  var pos = 0;
+	  var id = setInterval(frame, 5);
+	  function frame() {
+		if (pos == 350) {
+		  clearInterval(id);
+		} else {
+		  pos++; 
+		  elem.style.top = pos + "px"; 
+		  elem.style.left = pos + "px"; 
+		}
+	  }
+	}
+
+</script>
+
+<div class="w3-padding-32">
+<h3>CLIVE Simulation</h3>
+<h5>This simulation allows you to use pre-learned abilities in CLIVE
+and present CLIVE with scenarios so the Robot can learn what to do.</h5>
+</div>
+
+
   <!-- Footer -->
   <footer class="w3-row-padding w3-padding-32">
     <div class="w3-third">
