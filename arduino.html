@@ -53,6 +53,7 @@ Compared to SHEP pre V0.0.7, CLIVE is auto learning rather than being told exact
 	  </div>
   </div>
   <hr>
+  
   <div id="RobotTestField">
 
 		<div id="gameContent">
@@ -73,15 +74,13 @@ Compared to SHEP pre V0.0.7, CLIVE is auto learning rather than being told exact
 		
 
 </div>
+<br><br>
 <script>
 var posx=getPos(document.getElementById("robot"))[0];
 var posy=getPos(document.getElementById("robot"))[1];
 	function getPos(el) {
 		// yay readability
-		for (var lx=0, ly=0;
-			 el != null;
-			 lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-		return [lx,ly];
+		return [el.offsetLeft,el.offsetTop];
 	}
 	function PosRobotAt(x_pos,y_pos)
 	{
