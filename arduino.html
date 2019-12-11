@@ -53,7 +53,7 @@ Compared to SHEP pre V0.0.7, CLIVE is auto learning rather than being told exact
 	  </div>
   </div>
   <hr>
-  
+  <hr id="aidemo">
   <div id="RobotTestField">
 
 		<div id="gameContent">
@@ -70,6 +70,8 @@ Compared to SHEP pre V0.0.7, CLIVE is auto learning rather than being told exact
 			</th><th>
 			<p onclick="right()">Right Turn</p>
 			</th>
+			<tr>
+			<th></th><th onclick="backward()">Backwards</th><th></th>
 			</table>
 		
 
@@ -101,9 +103,19 @@ var posy=getPos(document.getElementById("robot"))[1];
 		elem.style.top = posx + "px"; 
 		
 	}
+	function backward()
+	{
+	console.log("backward");
+		var elem = document.getElementById("robot"); 
+		
+		posx=posx-4;
+		
+		elem.style.top = posx + "px"; 
+		
+	}
 	function right()
 	{
-	console.log("forward");
+	console.log("right");
 		var elem = document.getElementById("robot"); 
 		
 		posy=posy+4;
@@ -113,7 +125,7 @@ var posy=getPos(document.getElementById("robot"))[1];
 	}
 	function left()
 	{
-	console.log("forward");
+	console.log("left");
 		var elem = document.getElementById("robot"); 
 		
 		posy=posy-4;
