@@ -53,7 +53,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		  <br />
 		  <font color="blue"><a href="downloads.HTML">Download the library</a></font> to get started! The file "SHEP.py" will need to be in the same folder as your code. 
 		  For the SHEP library to run, you will need to use any Python 3 and have certain libraries installed.
-		  <img src="assets/fileSHEP.png">
+		  <br />
 		<h5><b>Using SHEP</b></h5>
 		  You can include the SHEP library using the following line:
 		  <br />
@@ -74,91 +74,28 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		</div>
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
 		<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI
-<br/>
-			myBot = AI(<font color="green">"Jeff"</font>, <font color="green">"user"</font>,<font color="green">"knowledge.xml"</font>) <font color="red">#an AI called 'Jeff' and owned by 'user'</font>
-
+<br/>		<fonr color="red">#This code represents input arrays from objects a camera system sees</font>
+			myBot = AI(<font color="green">""</font>, 3) <font color="red">#an AI called 'Jeff' and owned by 'user'</font>
+			inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"dog"</font>]
+			myBot.setPath("test/")
+			myBot.main(inputs)
+			inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"cat"</font>]
+			myBot.main(inputs)
+			inputs=[<font color="green">"cat"</font>,<font color="green">"milk"</font>,<font color="green">"dog"</font>]
+			myBot.main(inputs)
+			inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"mat"</font>]
+			myBot.main(inputs)
+			inputs=[<font color="green">"cat"</font>,<font color="green">"milk"</font>,<font color="green">"popping candy"</font>]
+			myBot.main(inputs)
 <br/>
 
 User = <font color="purple">input</font>(<font color="green">"Your message "</font>)
 <br/>
-r = myBot.search(User)<br/>
-<font color="purple">print</font>(r)<br/>
-<font color="red">#add phrases to make word</font><br/>
-myBot.addWord(<font color="green">"how"</font>,<font color="green">"t"</font>)<br/>
-myBot.addWord(<font color="green">"feeling"</font>,<font color="green">"s"</font>)<br/>
-myBot.addWord(<font color="green">"you"</font>,<font color="green">"c"</font>)<br/>
-<br/>
-<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"how"</font>,<font color="green">"feeling"</font>,<font color="green">"you"</font>)) <font color="red">#check data</font><br/>
-<font color="purple">print</font>("Robot message: "+myBot.find(<font color="green">"no word"</font>,<font color="green">"no word"</font>,<font color="green">"no word"</font>)) <font color="red">#check data</font><br/>
-<font color="red">#put the 1 as a 0 to enable automatic learning</font><br/>
-<br/>
-myBot.edit(<font color="green">"what is your name"</font>)<br/>
-<br/>
+
 		</div>
 		This shows ways to use the functions. This is the AI in action.
-			<div class="codeBox">
-<pre>
-___Version___=<font class="codetext">"0.0.7"</font> 
-___Author___ =<font class="codetext">"Dexter Shepherd"</font>
-<font class="loop">from</font>  SHEP <font class="loop">import</font>  AI
-<font class="loop">import</font>  time
-add_mode = <font class="loop">True</font>  <font class="comments">#defines whether the AI should ADD or not</font>
-<font class="codetext">while</font>  exit == <font class="loop">False</font> :
-    User = <font class="io">input</font>(<font class="codetext">"Your message "</font>)
-    User = User.lower()
-    r = <font class="codetext">""</font>
-    <font class="loop">if</font>  User == <font class="codetext">"edit"</font>: <font class="comments">#edit a sentence</font>
-        sentence = <font class="io">input</font>(<font class="codetext">"Say the sentence that I shall edit "</font>)
-        to_add = input(<font class="codetext">"What shall I replace it with? "</font>)
-        replace = add(to_add)
-        myBot.edit(sentence,replace)
-    <font class="loop">elif</font>  User == <font class="codetext">"add action"</font>:
-        myBot.listUSB()
-    <font class="loop">else</font> :
-        
-        r = myBot.search(User)
-        <font class="loop">if</font>  add_mode == <font class="loop">True</font> :
-            
-            <font class="loop">if</font>  r == <font class="codetext">"/00/00/00"</font>: <font class="comments">#no action is found</font>
-                print(<font class="codetext">"Learning... a moment please"</font>)
-                <font class="comments">#word_to_add = myBot.findWiki(myBot.subject,myBot.command) <font class="comments">#check wiki</font></font>
-                word_to_add = myBot.research(User)
-                <font class="loop">if</font>  word_to_add != <font class="codetext">""</font>: <font class="comments">#if something is found</font>
-                        r = myBot.learn(User,myBot.listOfVocab,<font class="text">"!L!"</font>+word_to_add)
-                        
-                <font class="loop">if</font>  word_to_add == <font class="codetext">""</font>:
-                    <font class="comments">#the wiki is not going to be added</font>
-                    to_add = <font class="io">input</font>(<font class="codetext">"Nothing in my data, What shall I add?"</font>)
-                    
-                    r = to_add
-                    <font class="loop">if</font>  r != <font class="codetext">"cancel"</font>:
-                        
-                        <font class="loop">if</font>  to_add != <font class="codetext">">action"</font> and to_add != <font class="codetext">"action"</font> and to_add != <font class="codetext">"an action"</font>:
-                            
-                            r = myBot.learn(User,myBot.listOfVocab,to_add)
-                
-        
-    <font class="io">print</font>(<font class="codetext">"Robot message: "</font>+r)
-
-
-				</pre>
-		</div>
-				The files "jeff.xml" and "Droid.xml" both go as following: 
-				<br/>
-				Jeff
-				<br/>
-					<img src="assets/Jeff.png">
-    
-
-				
-				<br/>Droid
-				<div>
-					<img src="assets/Droid.png">
-				</div>
-	  </div>
-	  </p>
+			
   </div>
-  <hr>
   
   <!-- Footer -->
   <footer class="w3-row-padding w3-padding-32">
