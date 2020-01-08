@@ -46,58 +46,29 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     <div class="w3-padding-32">
       <h4><b>Python library</b></h4>
       
-      <p>The Python library uses the newest V0.0.5 code. It works with a text interface, but can be modified for the user's preferences in the file.
+      <p>The Python library uses the newest version of the AI software. It works with a text interface, but can be modified for the user's preferences. The AI can be used for 
+	  many of your projects to give it better automatic intelligence. Chose your own inputs in your code to send data and let SHEP's algorithm sort it.
 	  <br />
-		  The AI can be used by the user in Python. This means your projects can be intelligent learning systems. SHEP is created as an object
+		  The AI can be used by the user in Python. The current version is still in progress. SHEP is created as an object, and used in certain ways.
+		  <br />
 		  <font color="blue"><a href="downloads.HTML">Download the library</a></font> to get started! The file "SHEP.py" will need to be in the same folder as your code. 
 		  For the SHEP library to run, you will need to use any Python 3 and have certain libraries installed.
-		<h5><b>Libraries</b></h5>
-		  <ul>
-			  <li>lxml</li>
-			  <li>urllib</li>
-			  <li>bs4</li>
-		</ul>
+		  <img src="assets/fileSHEP.png">
 		<h5><b>Using SHEP</b></h5>
 		  You can include the SHEP library using the following line:
 		  <br />
 		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI</div>
 		<br/>
-		The library has several functions the user can use.
+		<h4>The library has several functions the user can use.</h4>
 		<div class="textBox">
 		<br />
-		<i>class</i> = <b>AI</b>(<i>AI_name</i>,<i>user_owner</i>,<i>datafile</i>) -- This declares the AI with it's name and the name of the user. The datafile must be a string and an xml file
+		<i>class</i> = <b>AI</b>(<i>system pathway</i>,<i>NoOfInputs</i>) -- This declares the AI with it's pathway to it's files, and the number of inputs
 		<br /><br/>
-		<i>string</i> = <i>class</i>.<b>search</b>(<i>string</i>) -- will look for the keywords in the AI then if they are present, check for an output. If nothing is present, it will return whats missing.
+		<i>string_list</i> = <i>class</i>.<b>main</b>(<i>string_list_of_inputs</i>) -- This finds the relevant items of data
 	    <br /><br/>
-		<i>class</i>.<b>addword</b>(<i>string_to_add</i>,<i>string_of_word</i>) -- this adds the string_to_add to the vocabulary file. The type of word is found automatically in the find_term()
+		<i>class</i>.<b>setPath</b>(<i>pathwayString</i>) -- Change/set the pathway during the program
 	  	<br/><br/>
-		<i>string</i> = <i>class</i>.<b>find</b>(list_of_keywords) -- This code will search the data for the words entered.
-		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>find_term</b>(list_of_keywords) -- This code will search the data for the words entered.
-		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>edit</b>(<i>"sentence"</i>,<i>"repleacement output"</i>) -- Edit a currently saved sentence. Will return /00/00/00 if the sentence is not currently saved. Will ask for replacement if setence is found and will save.
-		<br/><br/>
-		<i>list</i> = <i>class</i>.<b>wordAdder</b>(<i>"sentence"</i>,) -- This breaks up a sentence and returns a 2D array containing vocab
-		<br/><br/>
-		<i>class</i>.<b>update</b>() -- updates the code to the latest version
-		<br/><br/>
-		<i>class</i>.<b>PutIn</b>(<i>string</i>) -- This function provides a simple input, and returns what you type. This can be edited to accept different inputs.
-		<br/><br/>
-		<i>class</i>.<b>out</b>(<i>string</i>) -- Output as a string, but can be changed.
-		<br/><br/>
-		<i>class</i>.<b>setFile</b>(<i>string</i>) -- Change the datafile to a different one
-		<br/><br/>
-		<i>class</i>.<b>setpath</b>(<i>string</i>) -- Change the pathway to the files. The user may want to access a certain folder of data
-		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>learn</b>(<i>list_of_keywords</i>,<i>"word to add"</i>) -- Asks for an input and saves it. Returns the saved value message
-		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>addAction</b>(<i>"file name"</i>) -- Asks for a input and returns whether or not it has saved
-		<br/><br/>
-		<i>string</i> = <i>class</i>.<b>research</b>(<i></i>) -- Check internet for information and returns either the link or nothing
-		<br/><br/>
-		<i>class</i>.<b>listOfVocab</b> -- This variable is a list of all the keywords in the sentence. 
-		<br/><br/>
-		<i>class</i>.<b>listUSB</b>(<i></i>) -- check all USB ports and copy over files into the action folder. Take note certain modules will need to be installed. This only works with Linux
+		<i>stringList</i> = <i>class</i>.<b>find</b>(<i>list_of_nodes</i>) -- This code will search the data for possible outputs
 		<br/><br/>
 		<br/><br/><br/>
 		</div>
