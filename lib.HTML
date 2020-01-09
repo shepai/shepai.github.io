@@ -62,14 +62,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<h4>The library has several functions the user can use.</h4>
 		<div class="textBox">
 		<br />
-		<i>class</i> = <b>AI</b>(<i>system pathway</i>,<i>NoOfInputs</i>) -- This declares the AI with it's pathway to it's files, and the number of inputs
+		<i>class</i> = <b>AI</b>(<i>system pathway</i>, <i>NoOfInputs</i>) -- This declares the AI with it's pathway to it's files, and the number of inputs
 		<br /><br/>
 		<i>string_list</i> = <i>class</i>.<b>main</b>(<i>string_list_of_inputs</i>) -- This finds the relevant items of data
 	    <br /><br/>
 		<i>class</i>.<b>setPath</b>(<i>pathwayString</i>) -- Change/set the pathway during the program
 	  	<br/><br/>
-		<i>stringList</i> = <i>class</i>.<b>find</b>(<i>list_of_nodes</i>) -- This code will search the data for possible outputs
+		<i>stringList</i> = <i>class</i>.<b>find</b>(<i>string_list_of_inputs</i>) -- This code will search the data for possible outputs
 		<br/><br/>
+		<i>class</i>.<b>negFeedback</b>(<i>string_output_given_from_find</i>, <i>list_of_nodes</i>) -- This code will search the data for possible outputs
 		<br/><br/><br/>
 		</div>
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
@@ -104,6 +105,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		The code, as you can see, finds the information that is relavant, and secures its data 
 		the more it interacts. It finds that the cat is linked with milk as those are common occurances. 
 		</p>
+		<br />
+		Within the zip folder holding the library, is a test demo code which shows the way the AI learns, and how it can be corrected using negative feedback
   </div>
   
   <!-- Footer -->
