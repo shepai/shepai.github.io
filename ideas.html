@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<title>SHEP AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico" />
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+.w3-sidenav a {padding:20px}
+</style>
+<body>
+
+<!-- Sidenav (hidden by default) -->
+<nav class="w3-sidenav w3-card-2 w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:20%;min-width:300px" id="mySidenav">
+  <a href="javascript:void(0)" onclick="w3_close()"
+  class="w3-closenav">Close Menu</a>
+  <a href="index.html" onclick="w3.close()">Home</a>
+  <a href="#about" onclick="w3_close()">About</a>
+  
+</nav>
+
+<!-- Top menu -->
+<div class="w3-top">
+  <div class="w3-black w3-xlarge w3-padding-xlarge" style="max-width:40000px;margin:auto">
+    <div class="w3-opennav w3-left w3-hover-text-grey" onclick="w3_open()">☰</div>
+    <div class="w3-right">By Dexter Shepherd</div>
+    <div class="w3-center">SHEP AI</div>
+  </div>
+</div>
+
+  <!-- Pagination -->
+  <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+  <hr id="about">
+
+  <!-- About Section -->
+  <div class="w3-container w3-padding-32 w3-center">  
+    <h3>How you could help?</h3><br>
+    <img src="assets/1.jpg" alt="NO_PIC" class="w3-image" style="display:block;margin:auto" width="40%">
+    <div class="w3-padding-32">
+      
+      <p>Contribute to the project, help create system we currently have not got! Or perhaps improve the current algortithm. Please get in <a href="contact.HTML">contact</a> with us 
+	  with ideas and projects you have and have worked on. </p>
+	  <h4><b>Ideas</b></h4>
+	  <p>Ideas as current for the system. Image recognition and natrual audio recognition remain to be high priority projects</p>
+	  <style>
+		table {
+		  font-family: arial, sans-serif;
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+
+		td, th {
+		  border: 1px solid #dddddd;
+		  text-align: left;
+		  padding: 8px;
+		}
+
+		tr:nth-child(even) {
+		  background-color: #dddddd;
+		}
+	  </style>
+	  <p><table class="w3-padding-32">
+		<th>Project</th>
+		<th>Requirements</th>
+		<tr>
+		<th>Image system</th>
+		<th>To be able to make out objects and remember them by assigning to a symbol/code. We have been using the PixiCam and barcodes on objects to help with this. The information 
+		around each of the objects should record the object code and what is it doing? Moving up, away, down, left, right, towards? The system will need to return the image code and a short recognizable description. If this 
+		can be done with a normal camera/image sensor wired to the Arduino, it would cut costs and be better.</th>
+		<tr>
+		<th>Audio system</th>
+		<th>Using a microphone to read raw sound, for example "43,42,45,43,65,43". The data will need to be split up into what is said. "quiet-talking-quiet". Data will need to be organized to quickly be found in simularity with data stored in memory 
+		from other previous inputs. It must use symbols/codes to represent what is said, and returning that.</th>
+		<tr>
+		<th>SHEP network</th>
+		<th>SHEP can read device requests, and help cache information to speed up the network. The Python library will help</th>
+		<tr>
+		<th>SHEP manufacturing arm</th>
+		<th>Speed up manufacturing by creating a robotic Biped Arm which learns what to do. The servos ill need to be strong enough to 
+		actually work in a system, and take in inputs to know what parts to look for and how to use it.</th>
+		<tr>
+		<th>Robot chassis</th>
+		<th>Chassis are always great to have with SHEP. They need to have basic "instincts" programmed in to walk and move. They need ultrasonic range finder mount points, and 
+		PixiCam mount points. 3D printable is what we mostly work with as it is exchangable over the internet.</th>
+	  </table></p>
+	  </div>
+  </div>
+  <hr>
+  
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32">
+    <div class="w3-third">
+      <h3></h3>
+      <p></p>
+      <p></p>
+    </div>
+  
+   
+
+    <div class="w3-third w3-serif">
+      <h3></h3>
+      <p>
+        
+      </p>
+    </div>
+  </footer>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidenav
+function w3_open() {
+    document.getElementById("mySidenav").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidenav").style.display = "none";
+}
+</script>
+
+</body>
+</html>
