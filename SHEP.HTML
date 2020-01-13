@@ -50,16 +50,17 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		
 		<br/>
 		<h3>The current system</h3>
-		<p>The system currently works out what sort of word each word is within the sentence. After Beta trials of V0.1.1, we found that allowing the user to add
-			command words and trigger words both confused, and wasted the time of the user. SHEP would need to pick out parts of sentences, and see what mattered.
-			Code was written to take lots of sentences, convert each word to it's word type (verbs, adverbs, nouns ect...) and calculate where they appear.
-			We used this data to write SHEP's vocabulary functions.
-			<br/><br/>
-			Next a subroutine which researched the internet for answers was developed. Last time, the Wikipedia page fell short of what we needed in terms of information.
-			The latest version researches using a browser, it finds key information and saves a link. The link is opened every time, so information is kept up to date.
-			<br/><br/>
-			We continue to work on hardware, making the voice recognition accurate and faster. We want to make it easier to add actions, and indeed get SHEP researching
-			how to write python code and saving it, from stack overflow. This means SHEP could write functions to control hardware, and give the user instructions on what to set up.
+		<p>
+		Working on both the Arduino and Raspberry Pi, SHEP is a take on cognition in computer systems. SHEP uses a neural style network to rank 
+		information and its connections to one another. SHEP can then learn how to respond to data by seeing what frequently followed data, and what is missing from the expected response.
+		<br /><br />
+		The main storage requires a database, which can be on multiple layers. If a database gets too big it will take a long time to read, and possibly even be difficult to edit due to its size being larger than the RAM space to load into. 
+		What SHEP does is make files for each input. This input being read from depends on whether or not it is connected to what is going on.
+		<br /><br />
+XML files are easy ways of organizing information. Each input is entered in as a node and given an association connection with a strength number. As information changes, for example inputs which are irrelevant to that process, it decreases the node strength and remove the node connection at 0. 
+There are several types of connections between nodes, mainly a semantic and direct association. Semantics are set by finding inputs which mean the same thing or related information. 
+<br />
+		</p>
 		<br/><br/>	
 	  </div>
 	 </div>
