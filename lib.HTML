@@ -57,7 +57,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<h5><b>Using SHEP</b></h5>
 		  You can include the SHEP library using the following line:
 		  <br />
-		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI</div>
+		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> *</div>
 		<br/>
 		<h4>The library has several functions the user can use.</h4>
 		<div class="textBox">
@@ -72,7 +72,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
 		<br/><br/>
 		<i>class</i>.<b>negFeedback</b>(<i>string_output_given_from_find</i>, <i>list_of_nodes</i>) -- This code will search the data for possible outputs
 		<br/><br/><br/>
-		</div>
+		<i>class</i> = <b>Language</b>(<i>system pathway</i>) -- This declares the language processing area of SHEP
+		<br /><br/>
+		<i>stringList</i> = <i>class</i>.<b>main</b>(<i>string</i>) -- This code will search the data to understand what you are saying and return [type of sentence,data about]
+		<br/><br/>
+		<i>class</i>.<b>info</b>(<i>string</i>, <i>list_of_nodes</i>) -- This code will search the data and output information about it
+		<br/><br/><br/>
+	
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
 		<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI
 <br/>		<font color="red">#This code represents input arrays from objects a camera system sees</font>
