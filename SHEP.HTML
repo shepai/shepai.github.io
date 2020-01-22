@@ -250,6 +250,7 @@ There are several types of connections between nodes, mainly a semantic and dire
 			var addmode=false;
 			//document.cookie ="";
 			var learn = false; //will the sysrem learn
+			var inputArray=[];
 			function sort()
 			{
 				//sort the memory content into an array
@@ -562,7 +563,7 @@ There are several types of connections between nodes, mainly a semantic and dire
 					  //check input
 						 //add
 						 if(addmode==true){
-								
+								inputArray.push(User.value);
 								//gather each item till quit
 								//add to string
 								//set nodes as increased
@@ -570,17 +571,14 @@ There are several types of connections between nodes, mainly a semantic and dire
 						 if(User.value=="a"){
 							//enable add mode
 							write("Add mode on");
+							
 							addmode=true;
 						}else if(User.value=="q"){
 							//quit
 							write("Add mode off");
+							write("Data entered: "+inputArray);
+							inputArray=[];
 							addmode=false;
-						}else{
-						//check
-							//loop through nodes
-								//find node
-								//look at PK links
-								//return PK for output
 						}
 						
 						
