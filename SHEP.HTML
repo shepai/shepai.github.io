@@ -562,12 +562,7 @@ There are several types of connections between nodes, mainly a semantic and dire
 					  //data layout 'pk:item:linkpk(strength),linkpk(strength)'
 					  //check input
 						 //add
-						 if(addmode==true){
-								inputArray.push(User.value);
-								//gather each item till quit
-								//add to string
-								//set nodes as increased
-						}
+						 
 						 if(User.value=="a"){
 							//enable add mode
 							write("Add mode on");
@@ -577,8 +572,14 @@ There are several types of connections between nodes, mainly a semantic and dire
 							//quit
 							write("Add mode off");
 							write("Data entered: "+inputArray);
+							//do stuff with data
 							inputArray=[];
 							addmode=false;
+						}else if(addmode==true){
+								inputArray.push(User.value);
+								//gather each item till quit
+								//add to string
+								//set nodes as increased
 						}
 						
 						
