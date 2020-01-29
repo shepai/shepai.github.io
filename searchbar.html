@@ -6,34 +6,27 @@
 		<input id="searchtype" type="text" name="fname"><br>
 		<button onclick="search()">search</button>
 		
-		<script type="text/javascript"> 
-    var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+		<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
 
-    function showFolderFileList(folderspec) {    
-        var s = "";
-        var f = fso.GetFolder(folderspec);
+<script>
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
 
-        // recurse subfolders
-        var subfolders = new Enumerator(f.SubFolders);
-        for(; !subfolders.atEnd(); subfolders.moveNext()) {
-            s += ShowFolderFileList((subfolders.item()).path);
-        }  
-
-        // display all file path names.
-        var fc = new Enumerator(f.files);
-        for (; !fc.atEnd(); fc.moveNext()) {
-            s += fc.item() + "<br>";
-        }
-        return s; 
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
     }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  }
 
-    function listFiles() {
-        document.getElementById('files').innerHTML = showFolderFileList('C:');
-    }
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
 </script>
 
-<input type='button' onclick='listFiles()' value='List Files' />
-<div id="files" />
 </body>
 </html>
 <script>
