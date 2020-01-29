@@ -36,6 +36,7 @@
 		for(i=0;i<fileList.length;i++)
 		{
 			values=(readHTMLFile(fileList[i]+".HTML"));
+			console.log("---");
 			values=values.toLowerCase();
 			if(values.includes(text.toLowerCase()))
 			{
