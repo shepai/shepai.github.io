@@ -30,14 +30,18 @@
 	}
 	function search()
 	{
+		var files="";
 		var text=document.getElementById("searchtype").value;
 		console.log(text);
 		for(i=0;i<fileList.length;i++)
 		{
-			console.log(readHTMLFile(fileList[i]+".HTML"));
-		
+			values=(readHTMLFile(fileList[i]+".HTML"));
+			if(values.include(text))
+			{
+				files+=fileList[i]+".HTML"+",";
+			}
 		}
-		
+		console.log(files);
 		
 	}
 </script>
