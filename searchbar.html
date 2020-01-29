@@ -6,37 +6,38 @@
 		<input id="searchtype" type="text" name="fname"><br>
 		<button onclick="search()">search</button>
 		
-		<input type="file" id="files" name="files[]" multiple />
-<output id="list"></output>
-
-<script>
-  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-    }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-  }
-
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
-</script>
-
+		
 </body>
 </html>
 <script>
+	var fileList=["arduino","contact","cookie","development","downloads","education","future","hardware","ideas","index","instructions","legal","lib","manual","products","robots","SHEP","troubleshooting","versions"];
+	function readHTMLFile(file)
+	{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+	}
 	function search()
 	{
 		var text=document.getElementById("searchtype").value;
 		console.log(text);
-		var fs = require('fs');
-		var files = fs.readdirSync('/'); //get list of files in directory
-		console.log(files);
+		for(i=0;i<fileList.length;i++)
+		{
+			console.log(readHTMLFile(fileList[i]+".HTML"));
+		
+		}
+		
 		
 	}
 </script>
