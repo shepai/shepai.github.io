@@ -15,8 +15,7 @@
 	{
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-	
+    while(rawFile.responseText==null || rawFile.responseText=="")
     {
         if(rawFile.readyState === 4)
         {
