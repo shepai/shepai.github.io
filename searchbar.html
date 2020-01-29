@@ -15,7 +15,7 @@
 	{
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", file, false);
-    while(rawFile.responseText==null || rawFile.responseText=="")
+    rawFile.onreadystatechange = function ()
     {
         if(rawFile.readyState === 4)
         {
@@ -36,8 +36,8 @@
 		for(i=0;i<fileList.length;i++)
 		{
 			values=(readHTMLFile(fileList[i]+".HTML"));
-			console.log("---");
 			values=values.toLowerCase();
+			cosole.log("---");
 			if(values.includes(text.toLowerCase()))
 			{
 				files+=fileList[i]+".HTML"+",";
