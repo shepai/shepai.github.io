@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<title>SHEP AI</title>
+<body>
+		<input id="searchtype" type="text" name="fname"><br>
+		<button onclick="search()">search</button>
+</body>
+</html>
+<script>
+	function search()
+	{
+		var text=document.getElementById("searchtype").value;
+		console.log(text);
+		var fs = require('fs');
+		var files = fs.readdirSync('/'); //get list of files in directory
+		console.log(files);
+		
+	}
+</script>
