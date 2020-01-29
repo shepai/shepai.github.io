@@ -36,7 +36,8 @@
 		for(i=0;i<fileList.length;i++)
 		{
 			values=(readHTMLFile(fileList[i]+".HTML"));
-			if(values.include(text))
+			values=values.toLowerCase()
+			if(values.includes(text.toLowerCase()))
 			{
 				files+=fileList[i]+".HTML"+",";
 			}
