@@ -7,7 +7,7 @@ from SHEP import *
 import time
 import os
 system_pathway=os.path.realpath("") #get pathway
-system_pathway+="/AI/AI/"
+system_pathway+=""
 print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
@@ -38,6 +38,7 @@ try: #raspberry pi libraries
     uh.brightness(0.5)
 except:
     print("Booting in PC mode")
+    
 #auto update files
 
 def update(fileN):
