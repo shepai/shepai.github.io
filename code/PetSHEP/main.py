@@ -186,7 +186,7 @@ def blink():
             uh.set_pixel(j, i, 0, 0, 0)
             uh.set_pixel(j, 3-i, 0, 0, 0)
         uh.show()
-        time.sleep(0.2)
+        time.sleep(0.1)
     displayEye()
 myBot=AI(system_pathway+"test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
@@ -198,9 +198,8 @@ threshold=50
 displayEye()
 start = time.time()
 while exit:
-    if time.time()-start>=3:
-        #blink every 3 seconds of this loop
-        #this means will be over 6 seconds
+    if time.time()-start>=6:
+        #blink every 6 seconds of this loop
         blink()
         start=time.time()#reset timer
     inputs=[]
