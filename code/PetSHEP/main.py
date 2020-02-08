@@ -40,12 +40,12 @@ except:
     print("Booting in PC mode")
 #auto update files
 
-def update(file):
+def update(fileN):
     try:
               global system_pathway
               from urllib.request import urlopen
               file = open(system_pathway+"temp.txt","w")
-              for line in urlopen("https://shepai.github.io/code/PetSHEP/"+file):
+              for line in urlopen("https://shepai.github.io/code/PetSHEP/"+fileN):
                      #decode the file and write it to the Pi
                      s = line.decode('utf-8')
                      #print(s)
@@ -54,7 +54,7 @@ def update(file):
               file = open(system_pathway+"temp.txt","r")
               r = file.read()
               file.close()
-              current = open(system_pathway+file,"r")
+              current = open(system_pathway+fileN,"r")
               r2 = current.read()
               current.close()
               if(r == r2):#same
@@ -62,7 +62,7 @@ def update(file):
               else:
                      #update
                      print("updating...")
-                     current = open(system_pathway+file,"w")
+                     current = open(system_pathway+fileN,"w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
