@@ -7,6 +7,7 @@ from SHEP import *
 import time
 import os
 system_pathway=os.path.realpath("") #get pathway
+system_pathway+="/AI/AI/"
 print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
@@ -38,8 +39,7 @@ try: #raspberry pi libraries
 except:
     print("Booting in PC mode")
 #auto update files
-update("main.py")
-update("SHEP.py")
+
 def update(file):
     try:
               global system_pathway
@@ -54,7 +54,7 @@ def update(file):
               file = open(system_pathway+"temp.txt","r")
               r = file.read()
               file.close()
-              current = open(system_pathway+"main.py","r")
+              current = open(system_pathway+file,"r")
               r2 = current.read()
               current.close()
               if(r == r2):#same
@@ -62,12 +62,14 @@ def update(file):
               else:
                      #update
                      print("updating...")
-                     current = open(system_pathway+"main.py","w")
+                     current = open(system_pathway+file,"w")
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
     except:
               print("Error finding update")
+update("main.py")
+update("SHEP.py")
 class queueBasic: #this queue shifts the array instead of pops
     def __init__(q,size):
         q.size=size
