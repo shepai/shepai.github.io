@@ -181,9 +181,10 @@ def displayEye():
 def blink():
     print("BLINK")
     print("EYE")
-    for i in range(4):
+    for i in range(2):
         for j in range(8):
             uh.set_pixel(j, i, 0, 0, 0)
+            uh.set_pixel(3-j, i, 0, 0, 0)
         uh.show()
         time.sleep(0.2)
     displayEye()
