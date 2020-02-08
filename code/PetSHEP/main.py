@@ -217,6 +217,6 @@ while exit:
     myBot.setNum(len(inputs))
     Past=inputs
     print(inputs)
-    output=myBot.findValues(inputs)
+    #output=myBot.findValues(inputs)
     #exit=False
     print(output)
