@@ -204,7 +204,15 @@ def blink():
     print("EYE")
     try:
         #try matrix
-        for i in range(2):
+        matrix[2,2]=1
+        matrix[3,2]=1
+        matrix[2,3]=1
+        matrix[3,3]=1
+        matrix[12,2]=1
+        matrix[12,3]=1
+        matrix[13,2]=1
+        matrix[13,3]=1
+        for i in range(3):
             for j in range(16):
                 matrix[j,i]=0
                 matrix[j,7-i]=0
