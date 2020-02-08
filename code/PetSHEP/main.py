@@ -5,11 +5,6 @@
 
 from SHEP import *
 import time
-import os
-system_pathway=os.path.realpath("") #get pathway
-if "/AI/AI/" not in system_pathway:
-    system_pathway+="/AI/AI/"
-print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
     import board
@@ -39,39 +34,6 @@ try: #raspberry pi libraries
     uh.brightness(0.5)
 except:
     print("Booting in PC mode")
-    
-#auto update files
-
-def update(fileN):
-    try:
-              global system_pathway
-              from urllib.request import urlopen
-              file = open(system_pathway+"temp.txt","w")
-              for line in urlopen("https://shepai.github.io/code/PetSHEP/"+fileN):
-                     #decode the file and write it to the Pi
-                     s = line.decode('utf-8')
-                     #print(s)
-                     file.write(s)
-              file.close()
-              file = open(system_pathway+"temp.txt","r")
-              r = file.read()
-              file.close()
-              current = open(system_pathway+fileN,"r")
-              r2 = current.read()
-              current.close()
-              if(r == r2):#same
-                     print("No update needed")
-              else:
-                     #update
-                     print("updating...")
-                     current = open(system_pathway+fileN,"w")
-                     current.write(r)
-                     current.close()
-                     os.system("sudo reboot")    #restart with new
-    except:
-              print("Error finding update")
-update("main.py")
-update("SHEP.py")
 class queueBasic: #this queue shifts the array instead of pops
     def __init__(q,size):
         q.size=size
@@ -160,8 +122,8 @@ def displayEye():
     uh.set_pixel(2, 1, 66, 135, 245)
     uh.set_pixel(3, 1, 66, 135, 245)
     uh.set_pixel(4, 1, 66, 135, 245)
-    uh.set_pixel(5, 1, 66, 135, 245)
-    uh.set_pixel(6, 1, 240, 240, 240)
+    uh.set_pixel(5, 1, 240, 240, 240)
+    uh.set_pixel(6, 1, 66, 135, 245)
     uh.set_pixel(7, 1, 66, 135, 245)
     #third layer
     uh.set_pixel(0, 2, 66, 135, 245)
@@ -181,14 +143,12 @@ def displayEye():
 def blink():
     print("BLINK")
     print("EYE")
-    for i in range(2):
+    for i in range(4):
         for j in range(8):
             uh.set_pixel(j, i, 0, 0, 0)
-            uh.set_pixel(j, 3-i, 0, 0, 0)
-        uh.show()
-        time.sleep(0.1)
+        time.sleep(0.2)
     displayEye()
-myBot=AI(system_pathway+"test/",5) #create AI
+myBot=AI("test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
 exit=True
 output=""
@@ -198,8 +158,9 @@ threshold=50
 displayEye()
 start = time.time()
 while exit:
-    if time.time()-start>=6:
-        #blink every 6 seconds of this loop
+    if time.time()-start>=3:
+        #blink every 3 seconds of this loop
+        #this means will be over 6 seconds
         blink()
         start=time.time()#reset timer
     inputs=[]
@@ -219,6 +180,6 @@ while exit:
     myBot.setNum(len(inputs))
     Past=inputs
     print(inputs)
-    #output=myBot.findValues(inputs)
+    output=myBot.findValues(inputs)
     #exit=False
     print(output)
