@@ -158,8 +158,8 @@ def displayEye():
     uh.set_pixel(2, 1, 66, 135, 245)
     uh.set_pixel(3, 1, 66, 135, 245)
     uh.set_pixel(4, 1, 66, 135, 245)
-    uh.set_pixel(5, 1, 240, 240, 240)
-    uh.set_pixel(6, 1, 66, 135, 245)
+    uh.set_pixel(5, 1, 66, 135, 245)
+    uh.set_pixel(6, 1, 240, 240, 240)
     uh.set_pixel(7, 1, 66, 135, 245)
     #third layer
     uh.set_pixel(0, 2, 66, 135, 245)
@@ -182,6 +182,7 @@ def blink():
     for i in range(4):
         for j in range(8):
             uh.set_pixel(j, i, 0, 0, 0)
+        uh.show()
         time.sleep(0.2)
     displayEye()
 myBot=AI(system_pathway+"test/",5) #create AI
