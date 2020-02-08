@@ -66,7 +66,7 @@ def update(file):
                      current.write(r)
                      current.close()
                      os.system("sudo reboot")    #restart with new
-       except:
+    except:
               print("Error finding update")
 class queueBasic: #this queue shifts the array instead of pops
     def __init__(q,size):
