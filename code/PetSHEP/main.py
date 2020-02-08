@@ -5,6 +5,9 @@
 
 from SHEP import *
 import time
+import os
+system_pathway=os.path.realpath("") #get pathway
+print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
     import board
@@ -34,6 +37,37 @@ try: #raspberry pi libraries
     uh.brightness(0.5)
 except:
     print("Booting in PC mode")
+#auto update files
+update("main.py")
+update("SHEP.py")
+def update(file):
+    try:
+              global system_pathway
+              from urllib.request import urlopen
+              file = open(system_pathway+"temp.txt","w")
+              for line in urlopen("https://shepai.github.io/code/PetSHEP/"+file):
+                     #decode the file and write it to the Pi
+                     s = line.decode('utf-8')
+                     #print(s)
+                     file.write(s)
+              file.close()
+              file = open(system_pathway+"temp.txt","r")
+              r = file.read()
+              file.close()
+              current = open(system_pathway+"main.py","r")
+              r2 = current.read()
+              current.close()
+              if(r == r2):#same
+                     print("No update needed")
+              else:
+                     #update
+                     print("updating...")
+                     current = open(system_pathway+"main.py","w")
+                     current.write(r)
+                     current.close()
+                     os.system("sudo reboot")    #restart with new
+       except:
+              print("Error finding update")
 class queueBasic: #this queue shifts the array instead of pops
     def __init__(q,size):
         q.size=size
@@ -148,7 +182,7 @@ def blink():
             uh.set_pixel(j, i, 0, 0, 0)
         time.sleep(0.2)
     displayEye()
-myBot=AI("test/",5) #create AI
+myBot=AI(system_pathway+"test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
 exit=True
 output=""
