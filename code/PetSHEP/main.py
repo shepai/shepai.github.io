@@ -216,14 +216,14 @@ def blink():
             for j in range(16):
                 matrix[j,i]=0
                 matrix[j,7-i]=0
-            time.sleep(0.17)
+            time.sleep(0.1)
     except:
         for i in range(3):
             for j in range(8):
                 uh.set_pixel(j, i, 0, 0, 0)
                 uh.set_pixel(j, 3-i, 0, 0, 0)
             uh.show()
-            time.sleep(0.1)
+            time.sleep(0.17)
     displayEye()
 myBot=AI(system_pathway+"test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
