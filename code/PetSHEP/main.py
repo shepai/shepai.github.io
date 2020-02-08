@@ -155,11 +155,11 @@ def displayEye():
         e=[]
         e.append("0011110000111100")
         e.append("0111111001111110")
-        e.append("1100111001110011")
+        e.append("1100111111110011")
         e.append("1100111111110011")
         e.append("1111111111111111")
         e.append("1111111111111111")
-        e.append("0111111111111110")
+        e.append("0111111001111110")
         e.append("0011110000111100")
         for i in range(len(e)):
             for j in range(len(e[i])):
@@ -215,7 +215,7 @@ def blink():
                 uh.set_pixel(j, i, 0, 0, 0)
                 uh.set_pixel(j, 3-i, 0, 0, 0)
             uh.show()
-            time.sleep(0.17)
+            time.sleep(0.1)
     displayEye()
 myBot=AI(system_pathway+"test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
