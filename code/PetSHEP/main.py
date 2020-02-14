@@ -37,7 +37,7 @@ try: #raspberry pi libraries
         print("No matrix device on i2c")
     #UNICRON HAT
     uh.set_layout(uh.PHAT)
-    uh.brightness(0.5)
+    uh.brightness(0.3)
 except:
     print("Booting in PC mode")
     
@@ -170,34 +170,19 @@ def displayEye():
     except:
         #if matrix not found use HAT
         #first layer
+        file=open(system_pathway+"eye.txt",'r')
+        r=file.read() #read the eye file
+        file.close()
         uh.clear()
-        uh.set_pixel(1, 0, 66, 135, 245)
-        uh.set_pixel(2, 0, 66, 135, 245)
-        uh.set_pixel(5, 0, 66, 135, 245)
-        uh.set_pixel(6, 0, 66, 135, 245)
-        #second layer
-        uh.set_pixel(0, 1, 66, 135, 245)
-        uh.set_pixel(1, 1, 240, 240, 240)
-        uh.set_pixel(2, 1, 66, 135, 245)
-        uh.set_pixel(3, 1, 66, 135, 245)
-        uh.set_pixel(4, 1, 66, 135, 245)
-        uh.set_pixel(5, 1, 66, 135, 245)
-        uh.set_pixel(6, 1, 240, 240, 240)
-        uh.set_pixel(7, 1, 66, 135, 245)
-        #third layer
-        uh.set_pixel(0, 2, 66, 135, 245)
-        uh.set_pixel(1, 2, 66, 135, 245)
-        uh.set_pixel(2, 2, 66, 135, 245)
-        uh.set_pixel(3, 2, 66, 135, 245)
-        uh.set_pixel(4, 2, 66, 135, 245)
-        uh.set_pixel(5, 2, 66, 135, 245)
-        uh.set_pixel(6, 2, 66, 135, 245)
-        uh.set_pixel(7, 2, 66, 135, 245)
-        #fourth layer
-        uh.set_pixel(1, 3, 66, 135, 245)
-        uh.set_pixel(2, 3, 66, 135, 245)
-        uh.set_pixel(5, 3, 66, 135, 245)
-        uh.set_pixel(6, 3, 66, 135, 245)
+        r=r.split("\n")
+        for i in range(len(r)):
+            for j in range(len(r[i])): #loop through list
+                if r[i][j] == "1":
+                    uh.set_pixel(j, i, 66, 135, 245)
+                    
+                elif r[i][j]=="2":
+                    uh.set_pixel(j, i, 240, 240, 240)
+                    
         uh.show()
 def blink():
     print("BLINK")
@@ -218,12 +203,21 @@ def blink():
                 matrix[j,7-i]=0
             time.sleep(0.1)
     except:
-        for i in range(3):
-            for j in range(8):
-                uh.set_pixel(j, i, 0, 0, 0)
-                uh.set_pixel(j, 3-i, 0, 0, 0)
-            uh.show()
-            time.sleep(0.17)
+        file=open(system_pathway+"eyeblink.txt",'r')
+        r=file.read() #read the eye file
+        file.close()
+        uh.clear()
+        r=r.split("\n")
+        for i in range(len(r)):
+            for j in range(len(r[i])): #loop through list
+                if r[i][j] == "1":
+                    uh.set_pixel(j, i, 66, 135, 245)
+                    
+                elif r[i][j]=="2":
+                    uh.set_pixel(j, i, 240, 240, 240)
+                    
+        uh.show()
+        time.sleep(0.17)
     displayEye()
 myBot=AI(system_pathway+"test/",5) #create AI
 soundValue=sound(lowValue) #load in sound tools
