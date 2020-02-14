@@ -169,6 +169,23 @@ class AI:
                     for k in range(len(arr)): #convert to sentence structure
                         stringvalues+=arr[k]+" "
                     arr=clive.lang.analyzeLanguage(stringvalues[:-1]) #gather words in format
+                    #validate each phrase
+                    corrections=1
+                    while corrections>0:
+                        corrections=0
+                        toSplit=""
+                        tempArr=[]
+                        for j in range(len(arr)):
+                            if len(arr[j])>=255:
+                                 #cannot have this
+                                 corrections+=1
+                                 toSplit=arr[j]
+                                 toSplit=toSplit.split()
+                                 for k in range(len(toSplit)):
+                                    tempArr.append(toSplit[k])
+                            else:
+                                tempArr.append(arr[j])
+                        arr=tempArr
                     for j in range(len(arr)): #add each of the sound words to the array
                         if arr[j] !="":
                             newInputs.append(arr[j])
