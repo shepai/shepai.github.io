@@ -5,10 +5,8 @@
 
 from SHEP import *
 import time
-import os
-system_pathway=os.path.realpath("") #get pathway
-
-
+import sys
+system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
