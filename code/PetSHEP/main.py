@@ -9,7 +9,7 @@ import os
 system_pathway=os.path.realpath("") #get pathway
 system_pathway=system_pathway.replace("\\","/")
 if "/AI/AI/" not in system_pathway:
-    system_pathway+="/"#+"AI/AI/"
+    system_pathway+="/"+"AI/AI/"
 print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
