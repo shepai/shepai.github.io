@@ -9,7 +9,7 @@ import os
 system_pathway=os.path.realpath("") #get pathway
 system_pathway=system_pathway.replace("\\","/")
 if "/AI/AI/" not in system_pathway:
-    system_pathway+="/"#+"AI/AI/"
+    system_pathway+="/"+"AI/AI/"
 print(system_pathway)
 try: #raspberry pi libraries
     import unicornhat as uh
@@ -46,7 +46,6 @@ except:
 
 def update(fileN):
     try:
-              makethisfail=3/0
               global system_pathway
               from urllib.request import urlopen
               file = open(system_pathway+"temp.txt","w")
@@ -227,12 +226,12 @@ output=""
 Past=[]
 threshold=50
 #exit=False #here for debugging stuff
-#displayEye()
+displayEye()
 start = time.time()
 while exit:
     if time.time()-start>=5:
         #blink every 6 seconds of this loop
-        #blink()
+        blink()
         start=time.time()#reset timer
     inputs=[]
     types=[]
@@ -254,6 +253,6 @@ while exit:
     types.append("volume")
     Past=inputs
     print(inputs)
-    output=myBot.findValues(inputs,types)
+    #output=myBot.findValues(inputs,types)
     #exit=False
     print("Robot:",output)
