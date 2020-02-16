@@ -656,8 +656,8 @@ div.desc {
 	
 }
 /* Style buttons */
-.btn {
-  background-color: Red;
+.btn1 {
+  background-color: red;
   border: none;
   color: white;
   padding: 12px 30px;
@@ -666,6 +666,6 @@ div.desc {
 }
 
 /* Darker background on mouse-over */
-.btn:hover {
+.btn1:hover {
   background-color: red;
 }
