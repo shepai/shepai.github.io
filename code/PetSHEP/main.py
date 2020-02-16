@@ -59,9 +59,13 @@ def update(fileN):
               file = open(system_pathway+"temp.txt","r")
               r = file.read()
               file.close()
-              current = open(system_pathway+fileN,"r")
-              r2 = current.read()
-              current.close()
+              r2=""
+              try:
+                  current = open(system_pathway+fileN,"r")
+                  r2 = current.read()
+                  current.close()
+              except:
+                  print("no file found")
               if(r == r2):#same
                      print("No update needed")
               else:
