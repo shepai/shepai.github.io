@@ -160,7 +160,7 @@ def readAcc():
     xpos = xpos/131.0
     ypos = ypos/131.0
     zpos = zpos/131.0
-    return [xpos,ypos,zpos]
+    return [round(xpos, 2),round(ypos, 2), round(zpos, 2)]
 def displayEye():
     print("EYE")
     try:
