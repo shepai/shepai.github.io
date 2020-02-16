@@ -146,6 +146,7 @@ def getVolume(stream): #tested and works
     return largest
 def readAcc():
     #Read Gyroscope raw value
+    global gyro1
     GYRO_XOUT_H  = 0x43
     GYRO_YOUT_H  = 0x45
     GYRO_ZOUT_H  = 0x47
