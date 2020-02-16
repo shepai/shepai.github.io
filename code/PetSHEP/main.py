@@ -15,7 +15,7 @@ try: #raspberry pi libraries
     import board
     import busio
     from adafruit_ht16k33 import matrix
-    import acc
+    from acc import acc
     #ADAFRUIT I2C MATRIX
     # Create the I2C interface.
     gyro1=acc() #define acceleromemter
