@@ -4,17 +4,21 @@
 #Libraries: https://learn.adafruit.com/matrix-7-segment-led-backpack-with-the-raspberry-pi/using-the-adafruit-library
 
 from SHEP import *
+
 import time
 import sys
 system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
+
 try: #raspberry pi libraries
     import unicornhat as uh
     import board
     import busio
     from adafruit_ht16k33 import matrix
+    import acc
     #ADAFRUIT I2C MATRIX
     # Create the I2C interface.
+    gyro1=acc() #define acceleromemter
     try:
         i2c = busio.I2C(board.SCL, board.SDA)
         # creates a 8x8 matrix:
@@ -71,6 +75,7 @@ def update(fileN):
               print("Error finding update")
 update("main.py")
 update("SHEP.py")
+update("acc.py")
 class queueBasic: #this queue shifts the array instead of pops
     def __init__(q,size):
         q.size=size
@@ -140,10 +145,16 @@ def getVolume(stream): #tested and works
             largest=int(stream[i])
     return largest
 def readAcc():
-    #quick and easy read
-    xpos=23
-    ypos=12
-    zpos=13
+    #Read Gyroscope raw value
+    GYRO_XOUT_H  = 0x43
+    GYRO_YOUT_H  = 0x45
+    GYRO_ZOUT_H  = 0x47
+    xpos = gyro1.read_raw_data(GYRO_XOUT_H)
+    ypos = gyro1.read_raw_data(GYRO_YOUT_H)
+    zpos = gyro1.read_raw_data(GYRO_ZOUT_H)
+    xpos = xpos/131.0
+    ypos = ypos/131.0
+    zpos = zpos/131.0
     return [xpos,ypos,zpos]
 def displayEye():
     print("EYE")
