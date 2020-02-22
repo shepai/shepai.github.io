@@ -11,7 +11,7 @@ system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
 
 try: #raspberry pi libraries
-    import unicornhat as uh
+    import unicornhathd as uh
     import board
     import busio
     from adafruit_ht16k33 import matrix
