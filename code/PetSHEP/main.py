@@ -38,8 +38,9 @@ try: #raspberry pi libraries
     except:
         print("No matrix device on i2c")
         #UNICRON HAT
-        uh.set_layout(uh.PHAT)
-        uh.brightness(0.3)
+        uh.rotation(0)
+        width, height = uh.get_shape()
+        uh.brightness(0.6)
 except:
     print("Booting in PC mode")
     
@@ -161,6 +162,18 @@ def readAcc():
     ypos = ypos/131.0
     zpos = zpos/131.0
     return [round(xpos, 2),round(ypos, 2), round(zpos, 2)]
+def readUH(text): #take in a text bmp file and turn the colours into pixels on the unicorn hat
+    lines=text.split("\n")
+    for i in range(len(lines)):
+            arr=lines[i]
+            for j in range(len(arr)):
+                if arr[j] == "R":
+                    unicornhathd.set_pixel(i,j,255,0,0)
+                elif arr[j] == "W":
+                   unicornhathd.set_pixel(i,j,255, 255, 255)
+                else:
+                    unicornhathd.set_pixel(i,j,0,0,0)
+    uh.show()
 def displayEye():
     print("EYE")
     try:
@@ -184,20 +197,12 @@ def displayEye():
     except:
         #if matrix not found use HAT
         #first layer
-        file=open(system_pathway+"eye.txt",'r')
+        file=open(system_pathway+"eye16x16.txt",'r')
         r=file.read() #read the eye file
         file.close()
         uh.clear()
-        r=r.split("\n")
-        for i in range(len(r)):
-            for j in range(len(r[i])): #loop through list
-                if r[i][j] == "1":
-                    uh.set_pixel(j, i, 66, 135, 245)
-                    
-                elif r[i][j]=="2":
-                    uh.set_pixel(j, i, 240, 240, 240)
-                    
-        uh.show()
+        readUH(r)
+        
 def blink():
     print("BLINK")
     print("EYE")
@@ -221,17 +226,13 @@ def blink():
         r=file.read() #read the eye file
         file.close()
         uh.clear()
-        r=r.split("\n")
-        for i in range(len(r)):
-            for j in range(len(r[i])): #loop through list
-                if r[i][j] == "1":
-                    uh.set_pixel(j, i, 66, 135, 245)
-                    
-                elif r[i][j]=="2":
-                    uh.set_pixel(j, i, 240, 240, 240)
-                    
-        uh.show()
+        readUH(r)
         time.sleep(0.17)
+        file=open(system_pathway+"eyeblink2.txt",'r')
+        r=file.read() #read the eye file
+        file.close()
+        uh.clear()
+        readUH(r)
     displayEye()
 myBot=AI(system_pathway+"dataStorage/",threshold=lowValue) #create AI
 exit=True
