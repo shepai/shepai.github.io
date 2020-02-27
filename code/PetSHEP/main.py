@@ -172,7 +172,7 @@ def readUH(text): #take in a text bmp file and turn the colours into pixels on t
                 elif arr[j] == "W":
                     uh.set_pixel(i,j,255, 255, 255)
                 else:
-                    u.set_pixel(i,j,0,0,0)
+                    uh.set_pixel(i,j,0,0,0)
     uh.show()
 def displayEye():
     print("EYE")
@@ -228,11 +228,7 @@ def blink():
         uh.clear()
         readUH(r)
         time.sleep(0.17)
-        file=open(system_pathway+"eyeblink2.txt",'r')
-        r=file.read() #read the eye file
-        file.close()
-        uh.clear()
-        readUH(r)
+        
     displayEye()
 myBot=AI(system_pathway+"dataStorage/",threshold=lowValue) #create AI
 exit=True
