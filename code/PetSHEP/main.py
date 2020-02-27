@@ -168,11 +168,11 @@ def readUH(text): #take in a text bmp file and turn the colours into pixels on t
             arr=lines[i]
             for j in range(len(arr)):
                 if arr[j] == "R":
-                    unicornhathd.set_pixel(i,j,255,0,0)
+                    uh.set_pixel(i,j,255,0,0)
                 elif arr[j] == "W":
-                   unicornhathd.set_pixel(i,j,255, 255, 255)
+                    uh.set_pixel(i,j,255, 255, 255)
                 else:
-                    unicornhathd.set_pixel(i,j,0,0,0)
+                    u.set_pixel(i,j,0,0,0)
     uh.show()
 def displayEye():
     print("EYE")
