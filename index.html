@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
 </head>
-<body class="backgroundC">
+<body class="backgroundC" onload="cookieprompt()">
 <div class="topnav">
 <p class="title" align="center">The SHEP AI project</p>
 <a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
@@ -27,6 +27,7 @@
 </div>
 		<!-- the eye shaped menu -->
 	<table align="center" class="greyBox">
+	
 	<th class="textInfo2 rightText"><h3>Arduino Clive the robot</h3>
 	<p class="textInfo">The AI started off in Arduino, and moved into python. As ideas of parallel architecture for cognition was explored, Arduino made it's re-entry to the project.
 	</p>
@@ -45,12 +46,14 @@
 		</th>
 	</table>
 	<table align="center">
-		<th class="textInfo2 rightText"><h3>Python library</h3>
-		<p class="textInfo">Get the SHEP AI python library, and look at our tutorials on how to use the library for your own projects.
-		</p></th>
-		<th id="ic1"><a href="library.html"><div class="iconPage">
-			<img onmouseover="select('ic1')" class="imageCircle2" src="assets/python.png">
-		</div></a></th>
+		<!--<tr class="sizeBox" style="background-image:url('backgrounds/blue2.jpg');"> -->
+			<th class="textInfo2 rightText"><h3>Python library</h3>
+			<p class="textInfo">Get the SHEP AI python library, and look at our tutorials on how to use the library for your own projects.
+			</p></th>
+			<th id="ic1"><a href="library.html"><div class="iconPage">
+				<img onmouseover="select('ic1')" class="imageCircle2" src="assets/python.png">
+			</a></th>
+		
 		<th id="ic2"><div align="center" class="iconPage">
 			<img onmouseover="select('ic2')"class="imageCircle" src="assets/eye.png">
 		</div></th>
@@ -82,8 +85,10 @@
 	</div>
 	<!-- the main content -->
 	<div class="main">
+	<div >
 		<h2 id="about" class="headerText">The project</h2>
 		<hr class="break">
+		
 		<h3 class="contentText">SHEP is an Artificial intelligence development project, started 2015. The aim is to make an open source platform which can apply Artificial intelligence to businesses, developers, public services and people with no technical understanding.
 <br><br>
 SHEP has been in development for many years. The project started off a keyboard input Arduino board, using an SD card and text file to store data. SHEP moved on to be voice controlled on the Arduino, using a series of boards communicating with eachother as a network. Later on, SHEP became a python program on the Raspberry Pi. Different inputs were used with this program from audio to network cables.
@@ -94,6 +99,7 @@ The latest release (hopefully to be released by the end of the year) will add in
 <br><br>
 SHEP has been in development for 5 years now, from a small arduino board to a series of networks. SHEP is still experimental and is being adapted constantly. We ask that any distribution of SHEP's software leave credit to the original developers.
 </h3>
+</div>
 	<hr id="aidemo">
 		<h3 style="text-align:center;">Demo</h3>
 			
