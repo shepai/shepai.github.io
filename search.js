@@ -95,19 +95,9 @@ function detectmob() {
 			function downloadFile(){ //download the file
 				download("data.txt",textFile);
 			}
-			function A(){
-				document.getElementById("AIinput").className = "codeinput";
-				document.getElementById("consoleC").className = "AIbox";
-				loadDoc("test.asp"); //load the file needed
-				document.getElementById("AIoutput").innerHTML = ">";
-				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
-				document.getElementById("explaintitle").innerHTML ="Version 0.0.1 mock up";
-				type=0;
-				learn = false; //will the system learn
-			}
+			
 			function B(){
-				document.getElementById("AIinput").className = "codeinput2";
-				document.getElementById("consoleC").className = "AIbox2";
+				
 				document.getElementById("AIoutput").innerHTML = ">Type a sentence/question";
 				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
@@ -115,43 +105,7 @@ function detectmob() {
 				learn = false; //will the sysrem learn
 				type=1;
 			}
-			function C(){
-				document.getElementById("AIinput").className = "codeinput1";
-				document.getElementById("consoleC").className = "AIbox1";
-				document.getElementById("AIoutput").innerHTML = ">'a' to add items, 'q' to quit adding, and type items to search up relation";
-				document.getElementById("explain").value = "This allows you to type in items which could be inputted into a system through its many sensors. The items can be entered in multiple times with different other items. This helps sort what is linked and what is not. The system will learn this and output what are the most linked items when you type in an item name.";
-				document.getElementById("explaintitle").innerHTML ="CLIVE basic principle";
-				loadDoc("link.txt"); //load the file needed
-				learn = false; //will the sysrem learn
-				type=2;
-			}
-			function D(){
-				document.getElementById("AIinput").className = "codeinput3";
-				document.getElementById("consoleC").className = "AIbox3";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
-				learn = false; //will the sysrem learn
-				type=3;
-			}
-			function E(){
-				document.getElementById("AIinput").className = "codeinput4";
-				document.getElementById("consoleC").className = "AIbox4";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
-				learn = false; //will the sysrem learn
-				type=4;
-			}
-			function F(){
-				document.getElementById("AIinput").className = "codeinput5";
-				document.getElementById("consoleC").className = "AIbox5";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
-				learn = false; //will the sysrem learn
-				type=5;
-			}
+			
 //the main code for the AI
 				var type=1; //set the type of code to run
 			var previous="";
@@ -390,10 +344,13 @@ function detectmob() {
 				
 			}
 				
-				//
+				//wait for html
+				window.addEventListener('load', function () {
+					B();
   				var User = document.getElementById("AIinput");
 				var checker=true;
-				if (User) {
+				
+  
 				User.addEventListener("keyup", function(event) {
 					//listen for keys
 				  event.preventDefault();
@@ -500,4 +457,4 @@ function detectmob() {
 				  }
 				  
 				});
-				}
+				});
