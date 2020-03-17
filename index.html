@@ -150,25 +150,11 @@ CLIVE, the cognitive learning intelligent virtual enviroment is the latest proto
 
 <script>
 	var current='ic2'; //the start item
-	var names=["ic1","ic2","ic3"]; //each item in the menu
+	
 	function select(name)
 	{
-		if(name!=current)
-		{
-			console.log(name);
-			var newMain=document.getElementByID(name);
-			//decide which way to go
-			/*
-			for(int i=0;i<names.length;i++) //loop through
-			{
-				if(i<names.length) {
-					var temp = document.getElementByID(names[i+1]);
-					temp=temp.className=imageCircle2;
-					document.getElementByID(names[i]).InnerHTML=temp;
-				}
-			}*/
-			current=name; //set the current
-		}
+		
+		
 	}
 </script>
 </html>
