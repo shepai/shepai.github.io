@@ -4,15 +4,15 @@ function search()
 {
 		//search bar
 		if(found){
-			document.getElementById("searchbar").style.visibility = "hidden";
-			document.getElementById("searchbar").style.display="none";
-			console.log(document.getElementById("searchbar").value);
-			var url="https://www.google.com/search?q=shep+ai+%22"+document.getElementById("searchbar").value+"%22";
+			document.getElementByID("searchbar").style.visibility = "hIDden";
+			document.getElementByID("searchbar").style.display="none";
+			console.log(document.getElementByID("searchbar").value);
+			var url="https://www.google.com/search?q=shep+ai+%22"+document.getElementByID("searchbar").value+"%22";
 			window.open(url);
 			found=false;
 		}else {
-			document.getElementById("searchbar").style.visibility = "visible";
-			document.getElementById("searchbar").style.display="inline";
+			document.getElementByID("searchbar").style.visibility = "visible";
+			document.getElementByID("searchbar").style.display="inline";
 			found=true;
 		}
 }
@@ -20,7 +20,7 @@ function search()
 var cookiePermission=false;
 var lines= 6;var characterlength=90;
 function detectmob() { 
-			 if( navigator.userAgent.match(/Android/i)
+			 if( navigator.userAgent.match(/AndroID/i)
 			 || navigator.userAgent.match(/webOS/i)
 			 || navigator.userAgent.match(/iPhone/i)
 			 || navigator.userAgent.match(/iPad/i)
@@ -83,10 +83,10 @@ function detectmob() {
 					  var content = readerEvent.target.result; // this is the content!
 					  console.log("content:" + content );
 					   textFile=content;
-					   document.getElementById("errormessages").innerHTML="";
+					   document.getElementByID("errormessages").innerHTML="";
 				   }
 					}else{
-						document.getElementById("errormessages").innerHTML="Incorrect file type";
+						document.getElementByID("errormessages").innerHTML="Incorrect file type";
 					}
 				}
 
@@ -96,59 +96,59 @@ function detectmob() {
 				download("data.txt",textFile);
 			}
 			function A(){
-				document.getElementById("AIinput").className = "codeinput";
-				document.getElementById("consoleC").className = "AIbox";
+				document.getElementByID("AIinput").className = "codeinput";
+				document.getElementByID("consoleC").className = "AIbox";
 				loadDoc("test.asp"); //load the file needed
-				document.getElementById("AIoutput").innerHTML = ">";
-				document.getElementById("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
-				document.getElementById("explaintitle").innerHTML ="Version 0.0.1 mock up";
+				document.getElementByID("AIoutput").innerHTML = ">";
+				document.getElementByID("explain").innerHTML = "This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing where it says: >>>";
+				document.getElementByID("explaintitle").innerHTML ="Version 0.0.1 mock up";
 				type=0;
 				learn = false; //will the system learn
 			}
 			function B(){
-				document.getElementById("AIinput").className = "codeinput2";
-				document.getElementById("consoleC").className = "AIbox2";
-				document.getElementById("AIoutput").innerHTML = ">Type a sentence/question";
-				document.getElementById("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
+				document.getElementByID("AIinput").className = "codeinput2";
+				document.getElementByID("consoleC").className = "AIbox2";
+				document.getElementByID("AIoutput").innerHTML = ">Type a sentence/question";
+				document.getElementByID("explain").innerHTML = "This references your words with the database, analyzes frequency and word distribution to work yout what ou are saying.";
 				loadDoc("tree.xml"); //load the file needed
-				document.getElementById("explaintitle").innerHTML ="Version 0.0.7 theory mock up";
+				document.getElementByID("explaintitle").innerHTML ="Version 0.0.7 theory mock up";
 				learn = false; //will the sysrem learn
 				type=1;
 			}
 			function C(){
-				document.getElementById("AIinput").className = "codeinput1";
-				document.getElementById("consoleC").className = "AIbox1";
-				document.getElementById("AIoutput").innerHTML = ">'a' to add items, 'q' to quit adding, and type items to search up relation";
-				document.getElementById("explain").value = "This allows you to type in items which could be inputted into a system through its many sensors. The items can be entered in multiple times with different other items. This helps sort what is linked and what is not. The system will learn this and output what are the most linked items when you type in an item name.";
-				document.getElementById("explaintitle").innerHTML ="CLIVE basic principle";
+				document.getElementByID("AIinput").className = "codeinput1";
+				document.getElementByID("consoleC").className = "AIbox1";
+				document.getElementByID("AIoutput").innerHTML = ">'a' to add items, 'q' to quit adding, and type items to search up relation";
+				document.getElementByID("explain").value = "This allows you to type in items which could be inputted into a system through its many sensors. The items can be entered in multiple times with different other items. This helps sort what is linked and what is not. The system will learn this and output what are the most linked items when you type in an item name.";
+				document.getElementByID("explaintitle").innerHTML ="CLIVE basic principle";
 				loadDoc("link.txt"); //load the file needed
 				learn = false; //will the sysrem learn
 				type=2;
 			}
 			function D(){
-				document.getElementById("AIinput").className = "codeinput3";
-				document.getElementById("consoleC").className = "AIbox3";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
+				document.getElementByID("AIinput").className = "codeinput3";
+				document.getElementByID("consoleC").className = "AIbox3";
+				document.getElementByID("AIoutput").innerHTML = ">Still in development";
+				document.getElementByID("explain").value = "";
+				document.getElementByID("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=3;
 			}
 			function E(){
-				document.getElementById("AIinput").className = "codeinput4";
-				document.getElementById("consoleC").className = "AIbox4";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
+				document.getElementByID("AIinput").className = "codeinput4";
+				document.getElementByID("consoleC").className = "AIbox4";
+				document.getElementByID("AIoutput").innerHTML = ">Still in development";
+				document.getElementByID("explain").value = "";
+				document.getElementByID("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=4;
 			}
 			function F(){
-				document.getElementById("AIinput").className = "codeinput5";
-				document.getElementById("consoleC").className = "AIbox5";
-				document.getElementById("AIoutput").innerHTML = ">Still in development";
-				document.getElementById("explain").value = "";
-				document.getElementById("explaintitle").innerHTML ="";
+				document.getElementByID("AIinput").className = "codeinput5";
+				document.getElementByID("consoleC").className = "AIbox5";
+				document.getElementByID("AIoutput").innerHTML = ">Still in development";
+				document.getElementByID("explain").value = "";
+				document.getElementByID("explaintitle").innerHTML ="";
 				learn = false; //will the sysrem learn
 				type=5;
 			}
@@ -206,7 +206,7 @@ function detectmob() {
 				var phrases= textFile.split('#');
 				console.log(phrases.length);
 				var string = phrases[ID]; //get in string form
-				console.log("id to get:",ID," Which is:",phrases[ID]);
+				console.log("ID to get:",ID," Which is:",phrases[ID]);
 				var start = false;var output="";
 				for(var i=0;i<string.length;i++){
 					//sort ouot what is wanted
@@ -335,7 +335,7 @@ function detectmob() {
 					if(counter <current && Userinput.length==words[i].length){
 						//find most likely sentence
 						counter = current;
-						console.log("id"+saveID);
+						console.log("ID"+saveID);
 						saveID=i;
 					}
 					console.log("ID:",saveID," Words:",words[i][0],"::",Userinput[0],"Counter:",counter);
@@ -376,7 +376,7 @@ function detectmob() {
 				//output in the console box
 				message=message.replace('>', '');
 				
-				var text = document.getElementById("AIoutput");
+				var text = document.getElementByID("AIoutput");
 				var number = (text.innerHTML).length; //get the character length
 				var lines = (text.innerHTML).split('>');
 				
@@ -384,15 +384,16 @@ function detectmob() {
 				{
 					lines=lines.splice(1,lines.length);
 					text = lines.join('>');
-					document.getElementById("AIoutput").innerHTML  = text;
+					document.getElementByID("AIoutput").innerHTML  = text;
 				}
-				document.getElementById("AIoutput").innerHTML  = document.getElementById("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
+				document.getElementByID("AIoutput").innerHTML  = document.getElementByID("AIoutput").innerHTML+ ('<br/>')+('>')+(message);
 				
 			}
 				
 				//
-  				var User = document.getElementById("AIinput");
+  				var User = document.getElementByID("AIinput");
 				var checker=true;
+				if (User) {
 				User.addEventListener("keyup", function(event) {
 					//listen for keys
 				  event.preventDefault();
@@ -428,7 +429,7 @@ function detectmob() {
 						  learn=false; //make learn mode be off
 						  
 					  }
-					  document.getElementById("AIinput").value = "";
+					  document.getElementByID("AIinput").value = "";
 					}else if(type == 1){
 					  var sentence=(User.value).split(" ");//split to sentences
 					  var sig=[];//significant words
@@ -446,7 +447,7 @@ function detectmob() {
 					  console.log("significant words: "+sig);
 					  write("User input: "+User.value);
 					  write("What you are trying to find out/say: "+sig);
-					  document.getElementById("AIinput").value = "";
+					  document.getElementByID("AIinput").value = "";
 					  var other = "";
 					  for(i=0;i<sentence.length;i++){
 						  var found=0
@@ -491,11 +492,12 @@ function detectmob() {
 						}
 						
 						
-							document.getElementById("AIinput").value = "";
+							document.getElementByID("AIinput").value = "";
 				}else{
 					  write("User message: "+User.value);
-					  document.getElementById("AIinput").value = "";
+					  document.getElementByID("AIinput").value = "";
 				  }
 				  }
 				  
 				});
+				}
