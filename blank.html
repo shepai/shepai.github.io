@@ -36,17 +36,19 @@
 	function n(file)
 	{
 		var rawFile = new XMLHttpRequest();
+		var allText="";
 		rawFile.open("GET", file, false);
 		rawFile.onreadystatechange = function ()
 		{
-			while((rawFile.readyState != 4))
+			while(allText=="")
 			{
-				if(rawFile.status == 200 || rawFile.status == 0)
+				if((rawFile.readyState != 4)&& rawFile.status == 200 || rawFile.status == 0)
 				{
-					var allText = rawFile.responseText;
+					allText = rawFile.responseText;
 					
 				}
 			}
+			console.log("done!");
 			return(allText);
 		}
 		rawFile.send(null);
