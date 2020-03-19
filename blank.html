@@ -20,9 +20,9 @@
 <a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
-<script src="search.js">
+<!--<script src="search.js">
     
-</script>
+</script>-->
 
 </div>
 	<!-- the main content -->
@@ -41,12 +41,13 @@
 		{
 			while((rawFile.readyState != 4))
 			{
-				if(rawFile.status === 200 || rawFile.status == 0)
+				if(rawFile.status == 200 || rawFile.status == 0)
 				{
 					var allText = rawFile.responseText;
-					return(allText);
+					
 				}
 			}
+			return(allText);
 		}
 		rawFile.send(null);
 		return "";
