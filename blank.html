@@ -39,7 +39,7 @@
 		rawFile.open("GET", file, false);
 		rawFile.onreadystatechange = function ()
 		{
-			if(rawFile.readyState === 4)
+			while((rawFile.readyState != 4))
 			{
 				if(rawFile.status === 200 || rawFile.status == 0)
 				{
@@ -49,6 +49,7 @@
 			}
 		}
 		rawFile.send(null);
+		return "";
 	}
 </script>
 </html>
