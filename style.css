@@ -123,10 +123,90 @@ table {
 .textInfo2 {
 	word-wrap: break-word;
 	width:300px;
-	height:220px;
+	height:280px;
+}
+.sizeBox {
+	width:300px;
+	height:90px;
+	
+	z-index: -1;
+	background-repeat:none;
+	color:white;
 }
 .leftText {
 	text-align: left;
+}
+.messageActivate {
+	margin: auto;
+	width:70%;
+	
+	height:auto;
+	display:block;
+	
+}
+.shepMessage {
+	border-radius: 25px;
+	background-color:#f7a725;
+	border: 10px solid #f7a725;
+	width:200px;
+	
+	outline-color:white;
+	outline-style: solid;
+	outline-width: 0.5px;
+	height:auto;
+	display:block;
+}
+.FAQButton {
+	border-radius: 25px;
+	background-color:#f7f7f7;
+	border: 3px solid #f7f7f7;
+}
+.msgBrk{
+	border-radius: 25px;
+	border: 10px;
+	width:200px;
+	height:42px;
+	display:block;
+}
+.messageBox {
+	border-radius: 25px;
+	background-color:white;
+	border: 3px solid white;
+	width:300px;
+	height:auto;
+	
+}
+.userMessage {
+	border-radius: 25px;
+	background-color:#f7f7f7;
+	border: 10px solid #f7f7f7;
+	width:200px;
+	float: right;
+	outline-color:white;
+	outline-style: solid;
+	outline-width: 0.5px;
+	height:auto;
+	display:block;
+}
+.sendMessage {
+	border-radius: 15px;
+	width:70%;
+	height:50px;
+	background-color:#0f0f0f;
+	bottom:0;
+	margin: auto;
+	display:block;
+}
+.bottomWidget {
+	align:bottom;
+	float:right;
+	width:300px;
+	height:40px;
+	background-color:#f7f7f7;
+	outline-color:black;
+	outline-style: solid;
+	outline-width: 0.5px;
+	position: absolute; bottom: 0px; right:0;
 }
 .greyBox {
 	background-image: url("backgrounds/background.png");
