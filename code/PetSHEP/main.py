@@ -265,6 +265,7 @@ while exit:
     types=[]
     accelerometer=readAcc()
     audio=readAudio() #future volume will need to be synthasized
+    print(audio)
     volume=getVolume(audio)
     if volume >= threshold:
         myBot.negFeedback(output,Past)
