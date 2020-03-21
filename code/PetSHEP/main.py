@@ -11,6 +11,7 @@ system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
 MIC=audio(system_pathway)
 lowValue=MIC.getThreshold()
+lowValue=0 #for testing
 print("setting threshold to",lowValue)
 try: #raspberry pi libraries
     import unicornhathd as uh
