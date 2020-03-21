@@ -80,10 +80,10 @@ def update(fileN):
                      os.system("sudo reboot")    #restart with new
     except:
               print("Error finding update")
-#update("main.py")
-#update("SHEP.py")
-#update("acc.py")
-#update("soundLib.py")
+update("main.py")
+update("SHEP.py")
+update("acc.py")
+update("soundLib.py")
 def readMicrophone():
     #return a simple value from the microphone
     readnum=MIC.getSample(3) #5 second samples
