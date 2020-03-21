@@ -93,9 +93,6 @@ def readAudio():
     #read the audio from the microphone
     #procedure takes a while
     #stream="23,34,2,34,2,23,33,42,43,2,32,42"
-    global lowValue
-    timeCount=0
-    
     silent=0
     stream=""
     while True: #listen for a while to decide whether there is volume
@@ -109,9 +106,8 @@ def readAudio():
             break
         if silent==2 and stream!="": #break late if not empty
             break
-    
-    return stream
     recordLED(False)
+    return stream
 def getVolume(stream1):
     top=0
     stream1=stream1.split(",")
@@ -168,6 +164,7 @@ def recordLED(TYPE):
             #if matrix not found use HAT
             #first layer
             uh.set_pixel(15,15,0, 255, 0)
+            uh.show()
     else:
         try:
             #try do adafruit i2c matrix
