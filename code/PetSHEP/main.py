@@ -4,12 +4,14 @@
 #Libraries: https://learn.adafruit.com/matrix-7-segment-led-backpack-with-the-raspberry-pi/using-the-adafruit-library
 
 from SHEP import *
-
+from soundLib import audio
 import time
 import sys
 system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
-
+MIC=audio(system_pathway)
+lowValue=MIC.getThreshold()
+print("setting threshold to",lowValue)
 try: #raspberry pi libraries
     import unicornhathd as uh
     import board
@@ -78,77 +80,46 @@ def update(fileN):
                      os.system("sudo reboot")    #restart with new
     except:
               print("Error finding update")
-update("main.py")
-update("SHEP.py")
-update("acc.py")
-class queueBasic: #this queue shifts the array instead of pops
-    def __init__(q,size):
-        q.size=size
-        q.pos=0
-        q.filled=0
-        q.array=[]
-        for i in range(size): #create array of size
-            q.array.append(0)
-    def add(q,item):
-        if q.filled!=q.size: #increased filled marker
-            q.filled+=1
-        if q.pos == q.size:
-            q.pos=0
-        q.array[q.pos]=item #set item
-        q.pos+=1
-    def getItem(q,index):
-        return q.array[index]
-lowValue=2 #get the threshold of the outside volume
+#update("main.py")
+#update("SHEP.py")
+#update("acc.py")
+#update("soundLib.py")
 def readMicrophone():
     #return a simple value from the microphone
-    readnum=2
-    from random import randint
-    readnum=randint(2,3)
-    if readnum==3:
-        readnum=randint(3,49)
+    readnum=MIC.getSample(3) #5 second samples
     return readnum
 def readAudio():
+    recordLED(True)
     #read the audio from the microphone
     #procedure takes a while
     #stream="23,34,2,34,2,23,33,42,43,2,32,42"
     global lowValue
-    maxTime=3 #listen for 3 seconds before deciding whether there is volume
     timeCount=0
-    startAdding=False
-    start = time.time()
+    
+    silent=0
     stream=""
-    while time.time()-start < maxTime: #listen for a while to decide whether there is volume
-        value=readMicrophone()
-        if startAdding==True:
-            stream+=str(readMicrophone)+","
-    #once gathered for a while it needs to keep gathering till the majority of values are low
-    #use a queue to push through values. If all values are low then finish subroutine
-    stop=False
-    Q=queueBasic(5)
-    while stop==False:
-        readByte=readMicrophone()
-        Q.add(readByte)
-        count=0
-        for i in range(Q.filled):
-            if Q.getItem(i)<=lowValue:
-                count+=1
-        if count==Q.size: #no speaking
-            stop=True #finish
+    while True: #listen for a while to decide whether there is volume
+        values=readMicrophone()
+        if MIC.ready(values):
+            for i in range(len(values)):
+                stream+=str(values[i])+","
         else:
-            stream+=str(readByte)+","
-    stream=stream[:-1]
-    if getVolume(stream) < lowValue:
-        stream=""
+            silent+=1
+        if silent==3 and stream=="": #reak early if empty
+            break
+        if silent==2 and stream!="": #break late if not empty
+            break
     
     return stream
-def getVolume(stream): #tested and works
-    #get the volume given
-    stream=stream.split(",")
-    largest=0
-    for i in range(len(stream)):
-        if int(stream[i])>largest:
-            largest=int(stream[i])
-    return largest
+    recordLED(False)
+def getVolume(stream1):
+    top=0
+    stream1=stream1.split(",")
+    for i in range(len(stream1)):
+        if stream1[i]!="":
+            if int(stream1[i])>top:
+                top=int(stream1[i])
+    return top
 def readAcc():
     #Read Gyroscope raw value
     global gyro1
@@ -174,6 +145,52 @@ def readUH(text): #take in a text bmp file and turn the colours into pixels on t
                 else:
                     uh.set_pixel(i,j,0,0,0)
     uh.show()
+def recordLED(TYPE):
+    if TYPE:
+         try:
+            #try do adafruit i2c matrix
+            e=[]
+            e.append("0011110000111100")
+            e.append("0111111001111110")
+            e.append("1100111111110011")
+            e.append("1100111111110011")
+            e.append("1111111111111111")
+            e.append("1111111111111111")
+            e.append("0111111001111110")
+            e.append("0011110000111101")
+            for i in range(len(e)):
+                for j in range(len(e[i])):
+                    if e[i][j]=='1':
+                        matrix[j, i] = 1
+                    else:
+                        matrix[j, i] = 0
+         except:
+            #if matrix not found use HAT
+            #first layer
+            uh.set_pixel(15,15,0, 255, 0)
+    else:
+        try:
+            #try do adafruit i2c matrix
+            e=[]
+            e.append("0011110000111100")
+            e.append("0111111001111110")
+            e.append("1100111111110011")
+            e.append("1100111111110011")
+            e.append("1111111111111111")
+            e.append("1111111111111111")
+            e.append("0111111001111110")
+            e.append("0011110000111100")
+            for i in range(len(e)):
+                for j in range(len(e[i])):
+                    if e[i][j]=='1':
+                        matrix[j, i] = 1
+                    else:
+                        matrix[j, i] = 0
+        except:
+            #if matrix not found use HAT
+            #first layer
+            uh.displayEye()
+    
 def displayEye():
     print("EYE")
     try:
@@ -230,6 +247,7 @@ def blink():
         time.sleep(0.17)
         
     displayEye()
+
 myBot=AI(system_pathway+"dataStorage/",threshold=lowValue) #create AI
 exit=True
 output=""
@@ -266,3 +284,4 @@ while exit:
     #output=myBot.findValues(inputs,types)
     #exit=False
     print("Robot:",output)
+
