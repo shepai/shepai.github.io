@@ -186,7 +186,7 @@ def recordLED(TYPE):
         except:
             #if matrix not found use HAT
             #first layer
-            uh.displayEye()
+            displayEye()
     
 def displayEye():
     print("EYE")
