@@ -425,7 +425,10 @@ table {
 	  font-size: 17px;
 	  border: none;
 }
-
+.searchIco {
+	
+	font-size: 10px;
+}
 @media 
 only screen and (max-width: 760px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
@@ -434,6 +437,19 @@ only screen and (max-width: 760px),
         display: none !important;
 		font-size: 0px;
 		font-size: 10px;
+	}
+	.topnavlogo {
+		width:25;
+		height:25px;
+	}
+	.topnav a {
+ 
+	  padding: 10px 10px;
+	  font-size: 10px;
+	}
+	.searchIco {
+		font-size: 2px;
+	  
 	}
 	.textInfo2 {
 		font-size: 10px;
