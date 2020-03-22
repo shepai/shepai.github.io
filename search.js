@@ -22,7 +22,8 @@ function search()
 			document.getElementById("searchbar").style.display="none";
 			console.log(document.getElementById("searchbar").value);
 			var url="https://www.google.com/search?q=shep+ai+%22"+document.getElementById("searchbar").value+"%22";
-			window.open(url);
+			if(document.getElementById("searchbar").value!=""){
+			window.open(url);}
 			found=false;
 		}else {
 			document.getElementById("searchbar").style.visibility = "visible";
