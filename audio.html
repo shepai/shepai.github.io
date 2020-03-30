@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="index.html">Home</a>
+<a class="topnavleft" href="index.html#about">About</a>
+<a class="topnavleft" href="downloads.html">Downloads</a>
+<a class="topnavleft" href="contact.html">Contact</a><br>
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<!--<script src="search.js">
+    
+</script>-->
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+		<br>
+		<div align="center" class="iconPage">
+			<img class="imageCircle" src="assets/SHEPpython2.png">
+		</div>
+		<h2 id="about" class="headerText">Python Audio library</h2>
+		<hr class="break">
+		<h3 class="contentText">The Audio library combines current audio libraries for use in AI projects. It provides methods to record audio while there is sound, 
+		return audio streams of the tone, record and play audio and more. We are still working on natrual audio recognition and learning.  
+		Please download and use in your own robotics projects! Some features use the Google speech recognition engine to return recognized text.
+		<div align="center"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></div>
+		<br>
+		<!-- Auto width -->
+		<form method="get" action="downloads/LibrarySHEP.zip">
+		<button href="" class="btn1"><i class="fa fa-download"></i> Download</button>
+		</form>
+		</h3>
+		</div>
+		<div style="background-image:url('backgrounds/green.jpg');color:white;" >
+			<div class="main">
+				<h2 class="headerText">Requirements</h2>
+				<h3 class="contentText">
+				<ul>
+				<li>Sound device</li>
+				<li>Sound file</li>
+				<li>Speech recogition</li>
+				<li>wave</li>
+				<li>wavio</li>
+				<li>numpy</li>
+				</ul> </h3>
+				Using pip you can install all the dependency libraries.
+				Built using Python 3
+				Uses wav files only.
+				
+</div></div>
+		<div class="main">
+		<h5><b>Using The Library</b></h5>
+		  You can include the Audio library using the following line:
+		  <br />
+		  <div class="codeBox"><font color="orange">from</font> soundLib <font color="orange">import</font> audio</div>
+		<br/>
+		<h4>The library has several functions the user can use.</h4>
+		<div class="textBox">
+		<br />
+		<i>class</i> = <b>audio</b>(<i>system pathway</i>) -- This declares the audio interface with the pathway to where to save and fid files
+		<br /><br/>
+		<i>recording</i> = <i>class</i>.<b>recordAudio</b>(<i>int_time_of_recording</i>) -- 
+	    <br /><br/>
+		<i>class</i>.<b>save</b>(<i>filename</i>,<i>recording</i>) -- Play
+	  	<br/><br/>
+		<i>class</i>.<b>play</b>(<i>filename</i>) -- play soundfile specified
+	  	<br/><br/>
+		<i>stringText</i> = <i>class</i>.<b>getText</b>(<i>filenameOfAudioWav</i>) -- return the text of spoken wors in a sound file
+		<br/><br/>
+		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) -- record a sample of audio levels
+		<br/><br/>
+		<i>class</i>.<b>displayLevels</b>(<i>sample</i>) -- print the size of the audio stream items
+	  	<br/><br/>
+		<i>intThreshold</i> = <i>class</i>.<b>getThreshold</b>() -- return the of the audio
+	  	<br/><br/>
+		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) -- 
+		<br/><br/>
+		<i>class</i>.<b>recordWhileActive</b>(<i>filename</i>) --record a wave file specified until user stops talking
+		
+		<br/><br/><br/>
+		<div class="codeBox"><font color="orange">from</font> soundLib <font color="orange">import</font> *
+<br/>	
+			<br/>myMic = audio(<font color="green">"pathToFile/"</font>) <font color="red">#Create a mircophone object</font>
+			
+			<br/>myMic.recordWhileActive(<font color="green">"test.wav"</font>)
+			<br/>stringText=myMic.getText(<font color="green">"test.wav"</font>)
+			<br/><font color="purple">print</font>(stringText)
+			<br><br>
+<br/>
+</div>
+		</div>
+		
+		
+	</div>
+</body>
+<script>
+	
+	
+</script>
+
+</html>
+
