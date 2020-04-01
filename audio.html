@@ -39,7 +39,7 @@
 		<div align="center"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></div>
 		<br>
 		<!-- Auto width -->
-		<form method="get" action="downloads/LibrarySHEP.zip">
+		<form method="get" action="downloads/audio.py">
 		<button href="" class="btn1"><i class="fa fa-download"></i> Download</button>
 		</form>
 		</h3>
@@ -70,25 +70,25 @@
 		<h4>The library has several functions the user can use.</h4>
 		<div class="textBox">
 		<br />
-		<i>class</i> = <b>audio</b>(<i>system pathway</i>) -- This declares the audio interface with the pathway to where to save and fid files
+		<i>class</i> = <b>audio</b>(<i>system pathway</i>) <font color="blue">-- This declares the audio interface with the pathway to where to save and fid files</font>
 		<br /><br/>
-		<i>recording</i> = <i>class</i>.<b>recordAudio</b>(<i>int_time_of_recording</i>) -- 
+		<i>recording</i> = <i>class</i>.<b>recordAudio</b>(<i>int_time_of_recording</i>)<font color="blue"> -- record audio for set time</font>
 	    <br /><br/>
-		<i>class</i>.<b>save</b>(<i>filename</i>,<i>recording</i>) -- Play
+		<i>class</i>.<b>save</b>(<i>filename</i>,<i>recording</i>) <font color="blue">-- save the recording to the file specified</font>
 	  	<br/><br/>
-		<i>class</i>.<b>play</b>(<i>filename</i>) -- play soundfile specified
+		<i>class</i>.<b>play</b>(<i>filename</i>) <font color="blue">-- play sound file specified </font>
 	  	<br/><br/>
-		<i>stringText</i> = <i>class</i>.<b>getText</b>(<i>filenameOfAudioWav</i>) -- return the text of spoken wors in a sound file
+		<i>stringText</i> = <i>class</i>.<b>getText</b>(<i>filenameOfAudioWav</i>) <font color="blue">-- return the text of spoken wors in a sound file</font>
 		<br/><br/>
-		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) -- record a sample of audio levels
+		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) <font color="blue">-- record a sample of audio levels</font>
 		<br/><br/>
-		<i>class</i>.<b>displayLevels</b>(<i>sample</i>) -- print the size of the audio stream items
+		<i>class</i>.<b>displayLevels</b>(<i>sample</i>) <font color="blue">-- print the size of the audio stream items</font>
 	  	<br/><br/>
-		<i>intThreshold</i> = <i>class</i>.<b>getThreshold</b>() -- return the of the audio
+		<i>intThreshold</i> = <i>class</i>.<b>getThreshold</b>()<font color="blue"> -- return the of the audio</font>
 	  	<br/><br/>
-		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) -- 
+		<i>sample</i> = <i>class</i>.<b>getSample</b>(<i>intSeconds</i>) <font color="blue">-- Get an array of sound levels for seconds specified</font>
 		<br/><br/>
-		<i>class</i>.<b>recordWhileActive</b>(<i>filename</i>) --record a wave file specified until user stops talking
+		<i>class</i>.<b>recordWhileActive</b>(<i>filename</i>)<font color="blue"> --record a wave file specified until user stops talking</font>
 		
 		<br/><br/><br/>
 		<div class="codeBox"><font color="orange">from</font> soundLib <font color="orange">import</font> *

@@ -35,42 +35,45 @@
 		<h2 id="about" class="headerText">Python SHEP library</h2>
 		<hr class="break">
 		<h3 class="contentText">
-		The Python library uses the newest version of the AI software. It works with a text interface, but can be modified for the user's preferences. 
-		 <br /> <br />The AI can be used for 
-	  many of your projects to give it better automatic intelligence. Chose your own inputs in your code to send data and let SHEP's algorithm sort it.
-	  <br />
-		  The AI can be used by the user in Python. The current version is still in progress. SHEP is created as an object, and used in certain ways.
-		  <br /> <br />
+		SHEP uses a neural network graph to store information. The library provides the ability to sort out data entered by the user. The data is sorted by 
+		what it is entered with, and what data follows it. Using weighted values, the strength of connections is defined, which can increase when found together, 
+		and decrease when not. The more inputs, the clearer correlations in data becomes.
+		<br><br>
+		SHEP is designed to take in input data. If your robot project has an array of different sensors, the values can be entered into SHEP and tasks learned. 
+		Everytime A robot hears me clap my hands I might want it to play a sound back. SHEP will work out that everytime I clap I make a noise after, which means SHEP 
+		would return the value of what I want it to say everytime I clap.
+		<br><br>
 		  <font color="blue"><a href="downloads.html">Download the library</a></font> to get started! The file "SHEP.py" will need to be in the same folder as your code. 
-		  <br /><br />For the SHEP library to run, you will need to use any Python 3 and have certain libraries installed.
+		  <br /><br />For the SHEP library to run, you will need to use any Python 3.
 		  <br /><br />
 		  <div align="center"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></div>
 
 <!-- Auto width -->
-<form method="get" action="downloads/LibrarySHEP.zip">
+<form method="get" action="downloads/SHEP.py">
 <button href="" class="btn1"><i class="fa fa-download"></i> Download</button>
 </form>
 <br/><br/>
 		<h5><b>Using SHEP</b></h5>
 		  You can include the SHEP library using the following line:
 		  <br />
-		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> *</div>
+		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI</div>
 		<br/>
 		<h4>The library has several functions the user can use.</h4>
 		<div class="textBox">
 		<br />
-		<i>class</i> = <b>AI</b>(<i>system pathway</i>, <b>audioThreshold=</b><i>2</i>) -- This declares the AI with it's pathway to it's files, and the number of inputs
+		<i>class</i> = <b>AI</b>(<i>system pathway</i>) <font color="blue">-- This declares the AI with it's pathway to it's files</font>
 		<br /><br/>
-		<i>string_list</i> = <i>class</i>.<b>main</b>(<i>string_list_of_inputs</i>,stringtypes) -- This finds the relevant items of data and stringtypes is optional
+		<i>string_list</i> = <i>class</i>.<b>process</b>(<i>string_list_of_inputs</i>) <font color="blue">-- This finds the relevant items of data which match inputs </font>
 	    <br /><br/>
-		<i>class</i>.<b>setPath</b>(<i>pathwayString</i>) -- Change/set the pathway during the program
+		<i>string_list</i> = <i>class</i>.<b>enterData</b>(<i>string_list_of_inputs</i>,<i>type</i>) <font color="blue">-- This finds the relevant items of data, the type is the connection type as a string (SNT and DNT) </font>
+		<br /><br/>
+		<i>string_list</i> = <i>class</i>.<b>getConnected</b>(<i>string_list_of_inputs</i>,<i>type</i>) <font color="blue">-- Find data which is strongly connected to parameters </font>
+	    <br /><br/>
+		<i>class</i>.<b>link</b>(<i>string_of_items</i>,<i>items_to_link_to</i>) <font color="blue">-- Change/set the pathway during the program</font>
 	  	<br/><br/>
-		<i>stringList</i> = <i>class</i>.<b>findValue</b>(<i>string_list_of_inputs</i>,stringtypes) -- This code will search the data for possible outputs
-		<br/><br/>
-		<i>class</i>.<b>negFeedback</b>(<i>string_output_given_from_find</i>, <i>list_of_nodes</i>) -- This code will search the data for possible outputs
+		<i>class</i>.<b>negFeedback</b>(<i>string_list_of_inputs</i>, <i>string_list_to_lower</i>) <font color="blue">-- This code will search the data for possible outputs </font>
 		<br/><br/><br/>
-		stringtypes is an array the size of string_list_of_inputs which specify what each element of string_list_of_inputs do 
-		<br/><br/>
+		
 		string_list_of_inputs=["12,32,43,12","dog.jpg","sensorVal=23"]
 		<br/>
 		stringtypes=["sound","sight",""]
@@ -79,34 +82,43 @@
 		Here is an example of searching the AI with user input, manual adding words to the data, asking the AI using a string and editing current words:
 		<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> AI
 <br/>		<font color="red">#This code represents input arrays from objects a camera system sees</font>
-			<br/>myBot = AI(<font color="green">""</font>) <font color="red">#an AI called 'Jeff' and owned by 'user'</font>
-			<br/>inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"dog"</font>]
-			<br/>myBot.setPath(<font color="green">"test/"</font>)
-			<br/>myBot.main(inputs)
-			<br/>inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"cat"</font>]
-			<br/>myBot.main(inputs)
-			<br/>inputs=[<font color="green">"cat"</font>,<font color="green">"milk"</font>,<font color="green">"dog"</font>]
-			<br/>myBot.main(inputs)
-			<br/>inputs=[<font color="green">"Blue"</font>,<font color="green">"Blue cup"</font>,<font color="green">"mat"</font>]
-			<br/>myBot.main(inputs)
-			<br/>inputs=[<font color="green">"cat"</font>,<font color="green">"milk"</font>,<font color="green">"popping candy"</font>]
-			<br/>myBot.main(inputs)
-<br/>
-</div>
+<br/>		bot=AI(<font color="green">"test/testFiles/newGraph/"</font>)<font color="red">#Where I want the data stored</font>
+<br/>		print(bot.process([<font color="green">"cat"</font>,<font color="green">"hand"</font>,<font color="green">"apple"</font>]))
+<br/>		print(bot.process([<font color="green">"pat cat"</font>,<font color="green">"orange"</font>,<font color="green">"dog"</font>]))
+<br/>		print(bot.process([<font color="green">"cat"</font>,<font color="green">hand"</font>,<font color="green">"soup"</font>]))
+<br/>		print(bot.process([<font color="green">"pat cat"</font>,<font color="green">"bannana"</font>,<font color="green">"apple"</font>]))
+<br/>		print(bot.process([<font color="green">"cat"</font>,<font color="green">"rake"</font>,<font color="green">"hand"</font>]))
+<br/>		print(bot.process([<font color="green">"pat cat"</font>,<font color="green">"pear"</font>,<font color="green">"snake"</font>]))
+</div></div>
 <br/><br/><br/>
-
+	The code will at first show blank outputs as the correlations are not yet learned to be significant
 		<div class="codeBox" ><font color="blue">
 			======== RESTART: \Users\SHEP\AI\SHEPcode.py ========
-			<br/>['Blue cup', 'dog', 'Blue']
-			<br/>['Blue cup', 'Blue']
-			<br/>['cat', 'dog']
-			<br/>['Blue cup', 'Blue']
-			<br/>['milk', 'cat']
+			<br/>[]
+			<br/>[]
+			<br/>[]
+			<br/>[]
+			<br/>[]
+			<br/>[]
+			<br/>>>>
+		</font></div>
+		<br>
+		After a few times...
+		<br>
+		<div class="codeBox" ><font color="blue">
+			======== RESTART: \Users\SHEP\AI\SHEPcode.py ========
+			<br/>['pat cat']
+			<br/>['cat']
+			<br/>['pat cat','hand']
+			<br/>['cat']
+			<br/>['pat cat','hand']
+			<br/>['cat']
 			<br/>>>>
 		</font></div>
 		<p>
-		The code, as you can see, finds the information that is relavant, and secures its data 
-		the more it interacts. It finds that the cat is linked with milk as those are common occurances. 
+		The Code asociates the cat and hand together and sees that it always leads 
+		to the patting of the cat. The patting of the cat leads to cat and eventually hand as well. 
+		If this is somthing which the AI learns at different times we will not see this loop of a connection. 
 		</p>
 		<br />
 		Within the zip folder holding the library, is a test demo code which shows the way the AI learns, and how it can be corrected using negative feedback
