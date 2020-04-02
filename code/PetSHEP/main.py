@@ -215,7 +215,7 @@ def blink():
         
     displayEye()
 
-myBot=AI(system_pathway+"dataStorage/",threshold=lowValue) #create AI
+myBot=AI(system_pathway+"dataStorage/test/") #create AI
 exit=True
 output=""
 Past=[]
