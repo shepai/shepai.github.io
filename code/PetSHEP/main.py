@@ -10,9 +10,9 @@ import sys
 system_pathway=sys.argv[0].replace("main.py","") #get path
 print(system_pathway)
 MIC=audio(system_pathway)
-lowValue=MIC.getThreshold()
-lowValue=0 #for testing
-print("setting threshold to",lowValue)
+threshold=MIC.getThreshold()
+
+print("setting threshold to",threshold)
 try: #raspberry pi libraries
     import unicornhathd as uh
     import board
@@ -81,42 +81,11 @@ def update(fileN):
                      os.system("sudo reboot")    #restart with new
     except:
               print("Error finding update")
-update("main.py")
-update("SHEP.py")
 update("acc.py")
 update("soundLib.py")
-def readMicrophone():
-    #return a simple value from the microphone
-    readnum=MIC.getSample(3) #5 second samples
-    return readnum
-def readAudio():
-    recordLED(True)
-    #read the audio from the microphone
-    #procedure takes a while
-    #stream="23,34,2,34,2,23,33,42,43,2,32,42"
-    silent=0
-    stream=""
-    while True: #listen for a while to decide whether there is volume
-        values=readMicrophone()
-        if MIC.ready(values):
-            for i in range(len(values)):
-                stream+=str(values[i])+","
-        else:
-            silent+=1
-        if silent==3 and stream=="": #reak early if empty
-            break
-        if silent==2 and stream!="": #break late if not empty
-            break
-    recordLED(False)
-    return stream
-def getVolume(stream1):
-    top=0
-    stream1=stream1.split(",")
-    for i in range(len(stream1)):
-        if stream1[i]!="":
-            if int(stream1[i])>top:
-                top=int(stream1[i])
-    return top
+update("SHEP.py")
+update("main.py")
+
 def readAcc():
     #Read Gyroscope raw value
     global gyro1
@@ -250,7 +219,6 @@ myBot=AI(system_pathway+"dataStorage/",threshold=lowValue) #create AI
 exit=True
 output=""
 Past=[]
-threshold=50
 #exit=False #here for debugging stuff
 displayEye()
 start = time.time()
@@ -260,27 +228,26 @@ while exit:
         blink()
         start=time.time()#reset timer
     inputs=[]
-    types=[]
-    accelerometer=readAcc()
-    audio=readAudio() #future volume will need to be synthasized
-    print(audio)
-    volume=getVolume(audio)
+    MIC.recordWhileActive()
+    audio=MIC.getText("sounds.wav") #future volume will need to be synthasized
+    if audio!="": #if something is returned
+        inputs=audio.split()
+        inputs.append(audio)
+    inputs.append("xpos="+str(accelerometer[0]))
+    inputs.append("ypos="+str(accelerometer[1]))
+    inputs.append("zpos="+str(accelerometer[2]))
+    volume=0
     if volume >= threshold:
         myBot.negFeedback(output,Past)
-    #add all data to the array
-    inputs.append("xpos="+str(accelerometer[0]))
-    types.append("accelerometer")
-    inputs.append("ypos="+str(accelerometer[1]))
-    types.append("accelerometer")
-    inputs.append("zpos="+str(accelerometer[2]))
-    types.append("accelerometer")
-    inputs.append(audio)
-    types.append("sound")
+
     inputs.append("volume="+str(volume))
-    types.append("volume")
     Past=inputs
     print(inputs)
-    #output=myBot.findValues(inputs,types)
-    #exit=False
-    print("Robot:",output)
+    if len(inputs)>1: #only enter if there are inputs to link
+        output=myBot.process(inputs)
+        #exit=False
+        print("Robot:",output)
+
+
+
 

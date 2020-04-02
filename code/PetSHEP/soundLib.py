@@ -2,14 +2,28 @@
 import wavio
 import sounddevice as sd
 import soundfile as sf
-import speech_recognition
+import speech_recognition as sr
 import numpy as np
 import time
+import wave
+import os
+#import matplotlib.pyplot as plt
+import sys
+from concurrent.futures import ThreadPoolExecutor
 
 class audio():
     def __init__(mic,path):
         mic.fs=44100
         mic.path=path
+        if not(os.path.isdir(path)):  #make a pathway
+            paths=path.split("/")
+            file_exists=""
+            for i in range(len(paths)): #loop through creating the folders specified
+                try:
+                    os.mkdir(file_exists+paths[i])
+                    file_exists+=paths[i]+"/"
+                except:
+                    file_exists+=paths[i]+"/"
         mic.threshold=0
     def recordAudio(mic,time):
         recording=sd.rec(int(time*mic.fs),samplerate=mic.fs,channels=1)
@@ -22,7 +36,17 @@ class audio():
         data,fs = sf.read(mic.path+filename,dtype='float32')
         sd.play(data,fs)
         status=sd.wait()
-
+    def getText(mic,filename): #use google speech recongition to convert
+        r = sr.Recognizer()
+        hellow=sr.AudioFile(mic.path+filename)
+        with hellow as source:
+            audio = r.record(source)
+        try:
+            s = r.recognize_google(audio)
+            return(s)
+        except:
+            print("error reading")
+        return ""
     def getSample(mic,seconds):
         num=[]
         
@@ -51,18 +75,88 @@ class audio():
             if sample[i] <= mic.threshold:
                 count+=1
         return (count<=(len(sample)*0.75)) #if 75% of microphone low return true
-"""   
-m=audio("",5)
-#a=m.getAudio()
-#m.save("audio.wav",a)
-#m.play("audio.wav")
-for i in range(10):
-    sample=(m.getSample(5))
-    m.displayLevels(sample)
+    def getVolume(mic,arr):
+        largest=0
+        for i in range(len(arr)):
+            if arr[i] > largest:
+                largest=arr[i]
+        return largest
+    def merge(mic,files,outfile):
+        infiles=files[0:2]
+        data=[]
+        for infile in infiles:
+            w = wave.open(mic.path+infile, 'rb')
+            data.append( [w.getparams(), w.readframes(w.getnframes())] )
+            w.close()
+        
+        output = wave.open(mic.path+outfile, 'wb')
+        output.setparams(data[0][0])
+        output.writeframes(data[0][1])
+        output.writeframes(data[1][1])
+        output.close()
+        files.remove(infiles[0])
+        files.remove(infiles[1])
+        if len(files)>0: #recursivly merge all files
+            newAr=[outfile]+files #create new array with all to add
+            mic.merge(newAr,outfile)
+    def recordWhileActive(mic):
+        executor = ThreadPoolExecutor(max_workers=2)
+        sound=True
+        sounds=[]
+        print("begin")
+        while sound: #loop while sound is present
+            a=None
+            a = executor.submit(mic.recordAudio,3) #run record concurrently 
+            b = executor.submit(mic.getSample,3) #run sound checker concurrently
+            b=b.result()
+            a=a.result()
+            b=mic.getVolume(b)
+            print(b)
+            if b<=mic.threshold: #no more audio
+                sound=False
+            sounds.append(a)
+        print("end")
+        infiles=[]
+        for i in range(len(sounds)):
+            mic.save(str(i)+".wav",sounds[i])
+            infiles.append(str(i)+".wav")
+        if len(infiles)>1:
+            mic.merge(infiles,"sounds.wav")
+        else:
+            #save file as sounds.wav
+            w = wave.open(mic.path+"0.wav", 'rb')
+            data=( [w.getparams(), w.readframes(w.getnframes())] )
+            w.close()
+            output = wave.open(mic.path+"sounds.wav", 'wb')
+            output.setparams(data[0])
+            output.writeframes(data[1])
+            output.close()
+    def readFrequencies(mic,filename):
+        spf = wave.open(filename, "r")
 
-def print_sound(indata, outdata, frames, time, status):
-    volume_norm = np.linalg.norm(indata)*10
-    print ("|" * int(volume_norm),int(volume_norm))
+        # Extract Raw Audio from Wav File
+        signal = spf.readframes(-1)
+        signal = np.fromstring(signal, "Int16")
+        arr=[]
+        return signal
+    def plotFile(mic,filename):
+        spf = wave.open(filename, "r")
 
-with sd.Stream(callback=print_sound):
-    sd.sleep(10000)"""
+        # Extract Raw Audio from Wav File
+        
+        signal = spf.readframes(-1)
+        signal = np.fromstring(signal, "Int16")
+        
+        if spf.getnchannels() == 2:
+            print("Just mono files")
+            sys.exit(0)
+
+        plt.figure(1)
+        plt.title("Signal Wave...")
+        plt.plot(signal)
+        plt.show()
+
+
+
+        
+
