@@ -106,7 +106,7 @@ class audio():
         while sound: #loop while sound is present
             a=None
             a = mic.recordAudio(3) #run record concurrently 
-            b = mic.getSample(0.25) #run sound checker concurrent
+            b = mic.getSample(1) #run sound checker concurrent
             b=mic.getVolume(b)
             print(b)
             if b<=mic.threshold: #no more audio
