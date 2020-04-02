@@ -228,7 +228,9 @@ while exit:
         blink()
         start=time.time()#reset timer
     inputs=[]
+    recordLED(True)
     MIC.recordWhileActive()
+    recordLED(False)
     audio=MIC.getText("sounds.wav") #future volume will need to be synthasized
     if audio!="": #if something is returned
         inputs=audio.split()

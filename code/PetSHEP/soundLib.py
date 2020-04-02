@@ -9,7 +9,7 @@ import wave
 import os
 #import matplotlib.pyplot as plt
 import sys
-from concurrent.futures import ThreadPoolExecutor
+#from concurrent.futures import ThreadPoolExecutor
 
 class audio():
     def __init__(mic,path):
@@ -106,10 +106,8 @@ class audio():
         print("begin")
         while sound: #loop while sound is present
             a=None
-            a = executor.submit(mic.recordAudio,3) #run record concurrently 
-            b = executor.submit(mic.getSample,3) #run sound checker concurrently
-            b=b.result()
-            a=a.result()
+            a = mic.recordAudio(3) #run record concurrently 
+            b = mic.getSample(0.25) #run sound checker concurrent
             b=mic.getVolume(b)
             print(b)
             if b<=mic.threshold: #no more audio
