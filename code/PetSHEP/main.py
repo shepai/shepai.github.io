@@ -235,6 +235,7 @@ while exit:
     if audio!="": #if something is returned
         inputs=audio.split()
         inputs.append(audio)
+    accelerometer=readAcc()
     inputs.append("xpos="+str(accelerometer[0]))
     inputs.append("ypos="+str(accelerometer[1]))
     inputs.append("zpos="+str(accelerometer[2]))
