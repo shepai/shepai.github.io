@@ -211,11 +211,3 @@ class AI:
                         ai.DataStructure.add(vert1,[edge1]) #add the newbot=AI("test/testFiles/newGraph/")
                 except:
                     NOTHING_FOUND=0
-
-bot=AI("test/testFiles/newGraph/")
-
-x=bot.process(["a","b"])
-bot.process(["d","c"])
-print(x)
-#bot.negFeedback(['a','b'],x)
-

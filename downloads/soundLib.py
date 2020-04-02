@@ -128,14 +128,7 @@ class audio():
         signal = spf.readframes(-1)
         signal = np.fromstring(signal, "Int16")
         arr=[]
-        for i in range(len(signal)):
-            if signal[i]>500 or signal[i]<-500:
-                arr.append(signal[i])
-        plt.figure(1)
-        plt.title("Signal Wave...")
-        plt.plot(arr)
-        plt.plot(signal)
-        plt.show()
+        return signal
     def plotFile(mic,filename):
         spf = wave.open(filename, "r")
 
@@ -153,17 +146,6 @@ class audio():
         plt.plot(signal)
         plt.show()
 
-from datastructures import Tree
-
-m=audio("")
-rec=m.recordAudio(5)
-m.save("new.wav",rec)
-spf = wave.open("new.wav", "r")
-# Extract Raw Audio from Wav File
-signal = spf.readframes(-1)
-signal = np.fromstring(signal, "Int16")
-for i in range(len(signal)):
-    
 
 
         
