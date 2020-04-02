@@ -100,7 +100,6 @@ class audio():
             newAr=[outfile]+files #create new array with all to add
             mic.merge(newAr,outfile)
     def recordWhileActive(mic):
-        executor = ThreadPoolExecutor(max_workers=2)
         sound=True
         sounds=[]
         print("begin")
