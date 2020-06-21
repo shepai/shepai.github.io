@@ -62,6 +62,16 @@ class Graph:
             print(i)
             for j in self.data[i]:
                 print(j.vertices,j.strength)
+    def delete(self,vertex):
+        try:
+            cons=self.getConnected(vertex)
+            for i in cons: #remove each connection to if undirected
+                current=self.data[i]
+                while vertex in current: #delete where it appears
+                    del current[current.index(vertex)]
+            return self.data.pop(vertex, None) #finally remove
+        except: #nothing in the data
+            return None
     def getConnected(self,vertex):
         #return all directly connected to the given vertex
         data=[]
@@ -130,7 +140,7 @@ class Graph:
             for i in connections:
                 if i.strength>average:
                     nodes.append(i.vertices[1])
-            return nodesr
+            return nodes
 def LoadMemory(filepath):
         #read json file
         try: #checkk file exits
@@ -171,6 +181,7 @@ from spellchecker import SpellChecker
 import threading
 import sqlite3
 from difflib import SequenceMatcher
+import sys
 
 class SpellEngine:
     def __init__(self):
@@ -199,8 +210,8 @@ class Language:
         string="C:"
         for i in tagged:
             if "W" in i[1] or "VB" == i[1] or "CD" in i[1] or "IN" in i[1]:
-                string+=i[1]+" " #change to i[1] to get tokens instead
-            elif "NN" in i[1] or "RB" in i[1] or "JJ" in i[1] or "VBP" in i[1]:
+                string+=i[0]+" " #change to i[1] to get tokens instead
+            elif "NN" in i[1] or "RB" in i[1] or "JJ" in i[1] or "VBP" in i[1] or "PR" in i[1]:
                 nodes.append(string[:-1]) #add chunks of wordsor
                 string="C:"
                 nodes.append(i[0])
@@ -215,6 +226,9 @@ class Language:
                 del nodes[i]
                 i-=1
             i+=1
+        if len(nodes)==0 and len(sentence.split())<4:
+            #small phrase
+            nodes=sentence.split() #add small phrases anyway
         return nodes
 class dataBase:
     def __init__(self,name):
@@ -391,7 +405,9 @@ class adminBot:
             self.bot.Questions.addDirected(Edge(answer,i)) #add to graph
         SaveMemory(self.bot.systemPathway+"questions.json",self.bot.Questions.data) #save to file
         self.database.delete(question) #remove from database
-uniBot=Bot("SUSSEXBOT","") #set up once in the memory
+    def delete(self,item):
+        
+uniBot=Bot("SUSSEXBOT",sys.path[0]+"/") #set up once in the memory
 client=botClient(uniBot) #set up multiple in memory
 admin=adminBot(uniBot,uniBot.database) #set up admin
 while True:
