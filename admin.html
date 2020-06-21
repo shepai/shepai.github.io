@@ -206,6 +206,8 @@
 		if(letIn){
 			var q=document.getElementById("inputQ1").value;
 			var a=document.getElementById("inputQ2").value;
+			document.getElementById("inputQ1").value="";
+			document.getElementById("inputQ2").value="";
 			q=q.replace("---","");
 			q=q.replace(":","");
 			q=q.toLowerCase();//convert to lower case
