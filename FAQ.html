@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,10 @@
 <a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
-<script src="search.js">
+<script src="jquery.js">
+	</script>
+
+	<script src="search.js">
     
 </script>
 </div>
@@ -43,11 +47,65 @@
 		<br><br>
 		<div align="center" class="sendMessage">
 		<br>
-			<input  type="text" id="messageFAQ" class="messageBox" name="fname"><button onclick="enterMessage()" class="FAQButton">send</button>
+			<input  type="text" id="messageFAQ" class="messageBox" name="fname"><button onClick="enterMessage()" class="FAQButton" value="send">send</button>
 		</div>
 	</div>
 </body>
 
+<script type="text/javascript">
+	var con=new WebSocket("ws://80.5.202.205:50007") //ws://echo.websocket.org
+	con.onopen=function(){con.send("Hi there");};
+	con.onerror=function(error){console.log("error"+error);};
+	con.onmessage=function(e){
+		console.log("message:"+e.data);
+		var output=e.data;
+		var add2='<br id="'+num+'"><div id="'+num+'" class="shepMessage">'+output+'</div><div id="'+num+'" class="msgBrk"></div>';
+		num=num+1;
+		document.getElementById("mainContent").innerHTML+=add2;
+		};
+	var startNum=0;
+	var num=0;
+	function enterMessage()
+	{
+		console.log("test");
+		var text=document.getElementById("messageFAQ").value;
+		var add='<br id="'+num+'"><div id="'+num+'" class="userMessage">'+text+'</div><div id="'+num+'" class="msgBrk"></div>';
+		num=num+1;
+		text=text.toLowerCase();
+		con.send(text);
+		
+		document.getElementById("mainContent").innerHTML+=add;
+		document.getElementById("messageFAQ").value="";
+		removeTop();
+	}
+	function removeTop()
+	{
+		if(num+startNum > 10)
+		{
+			document.getElementById(startNum.toString()).remove();
+			document.getElementById((startNum+1).toString()).remove();
+			document.getElementById(startNum.toString()).remove();
+			document.getElementById((startNum+1).toString()).remove();
+			document.getElementById(startNum.toString()).remove();
+			document.getElementById((startNum+1).toString()).remove();
+			startNum+=2;
+		}
+	}
+function toPython(usrdata){
+	console.log("uploading"+usrdata);
+    $.ajax({
+        url: "http://80.5.202.205:50007",
+        type: "POST",
+        data: { information : "From SHEP client" , userdata : usrdata },
+        dataType: "json",
+        success: function(data) {
+				console.log("connected");
+            console.log(data);
+        }});
+//$("#someButton").bind('click', toPython(something));
+	}
 
+
+</script>
 </html>
 
