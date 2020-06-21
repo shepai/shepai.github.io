@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="index.html">Home</a>
+<a class="topnavleft" href="index.html#about">About</a>
+<a class="topnavleft" href="downloads.html">Downloads</a>
+<a class="topnavleft" href="contact.html">Contact</a>
+<br>
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="jquery.js">
+	</script>
+
+	<script src="search.js">
+    
+</script>
+</div>
+	<!-- the main content -->
+	<br>
+	<div class="main">
+		<div align="center" class="iconPage">
+			<img class="imageCircle" src="assets/eye.png">
+		</div>
+		<h1 class="headerText">SHEP Admin mode</h1>
+		<hr class="break">
+		
+		<h3 class="contentText">This application is for the developers of SHEP to make changes to the SHEP bot running.</h3>
+		<div id="mainContent" class="messageActivate">
+			
+		</div>
+		<div id="signIn" align="center">
+		<h5>Sign in name</h5>
+			<input type="text" id="uname" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			<br>
+			<h5>Password</h5>
+			<input type="text" id="paswo" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			<br>
+			<h5>Decrypt</h5>
+			<input type="text" id="decryptKey" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			<br><br>
+			<button onclick="signIn()" class="" >Sign in</button> 
+		</div>
+		<div style="display: none;" id="View">
+		<!--This area remains hidden until the user -->
+			<h3>To add</h3>
+		</div>
+		
+		<br><br>
+		<div align="center" class="sendMessage">
+		<br>
+			<button onClick="viewAll()" class="" >View all</button> 
+			<button onClick="addQ()" class="" >Add own</button>
+			
+			</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+	var loadedQs=[]; //store the questions
+	var startNumA=0;
+	var numA=0;
+	
+	var con=new WebSocket("ws://80.5.202.205:50008") //ws://echo.websocket.org
+	var letIn=false;
+	/**/
+	con.onopen=function(){con.send("Connect");};
+	con.onerror=function(error){console.log("error"+error);};
+	con.onmessage=function(e){
+		console.log("message:"+e.data);
+		var output=e.data;
+		if(output=="signInRequestGranted"){
+			letIn=true;
+			var x=document.getElementById("signIn");
+			x.style.display="none"; //do not show once signed in
+		}else if(output=="ERROR"){
+			//encountered an error
+			alert("there was a problem doing what you just did");
+		}else{
+			loadedQs=message.split(":::"); //seperate data with colons
+			//show in div
+			for(var i=0;i<loadedQs.length;i++){
+				var add='<br id="'+numA+'"><div id="'+numA+'" class="userMessage">'+loadedQs[i]+'</div><div id="'+numA+'" class="msgBrk"></div>';
+				numA=numA+1;
+				document.getElementById("View").innerHTML+=add;
+			}
+			removeTopA(); //remove the top item/s when too big
+		}
+	};
+
+	function viewAll(){
+	//view the data
+		console.log("view");
+		if(letIn==true){
+			//do
+			var x=document.getElementById("View");
+			x.style.display="block";
+			con.send("VIEWDATA");
+		}else{alert("Sign in to do this");}
+	}
+	function addQ(){
+		console.log("add");
+		if(letIn){
+			//do
+			//validate string
+			//add to server
+		}else{alert("Sign in to do this");}
+	}
+	function Delete(){
+		console.log("delete");
+		if(letIn){
+			//do
+		}else{alert("Sign in to do this");}
+	}
+	function signIn(){
+		//submit sign in
+		var usname=document.getElementById("uname").value;
+		var psw_d=document.getElementById("paswo").value;
+		con.send("signInRequest:"+usname+"--"+psw_d);
+	}
+	
+	function removeTopA()
+	{
+		if(numA+startNumA > 10)
+		{
+			document.getElementById(startNumA.toString()).remove();
+			document.getElementById((startNumA+1).toString()).remove();
+			document.getElementById(startNumA.toString()).remove();
+			document.getElementById((startNumA+1).toString()).remove();
+			document.getElementById(startNumA.toString()).remove();
+			document.getElementById((startNumA+1).toString()).remove();
+			startNumA+=2;
+		}
+	}
+
+</script>
+</html>
+
