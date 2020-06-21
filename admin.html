@@ -39,9 +39,26 @@
 		<h1 class="headerText">SHEP Admin mode</h1>
 		<hr class="break">
 		
-		<h3 class="contentText">This application is for the developers of SHEP to make changes to the SHEP bot running.</h3>
+		<h3 class="contentText">This application is for the developers of SHEP to make changes to the SHEP bot running. Left click on 
+		a question to add a response and right click to delete</h3>
 		<div id="mainContent" class="messageActivate">
 			
+		</div>
+		<div align="center" id="alertAdd" style="display: none;">
+		<h4>Add</h4>
+			<h5>Question</h5>
+			<input class="messageBox" type="text" id="inputQ1" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<h5>Answer</h5>
+			<input class="messageBox" type="text" id="inputQ2" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<br><br>
+			<button onclick="saveQuestionAnswer()" class="" >Submit</button> 
+		</div>
+		<div align="center" id="alertDelete" style="display: none;">
+		<h4>Delete</h4>
+			<h5>Question</h5>
+			<input class="messageBox" type="text" id="inputD1" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<br><br>
+			<button onclick="delQuestionAnswer()" class="" >Submit</button> 
 		</div>
 		<div id="signIn" align="center">
 		<h5>Sign in name</h5>
@@ -64,8 +81,8 @@
 		<div align="center" class="sendMessage">
 		<br>
 			<button onClick="viewAll()" class="" >View all</button> 
-			<button onClick="addQ()" class="" >Add own</button>
-			
+			<button onClick="addOwn()" class="" >Add own</button>
+			<button onClick="deleteOwn()" class="" >Delete</button>
 			</div>
 	</div>
 </body>
@@ -75,8 +92,8 @@
 	var startNumA=0;
 	var numA=0;
 	
-	var con=new WebSocket("ws://80.5.202.205:50008") //ws://echo.websocket.org
-	var letIn=false;
+	var con=new WebSocket("ws://80.5.202.205:8080") //ws://echo.websocket.org
+	var letIn=false; //start false
 	/**/
 	con.onopen=function(){con.send("Connect");};
 	con.onerror=function(error){console.log("error"+error);};
@@ -91,12 +108,15 @@
 			//encountered an error
 			alert("there was a problem doing what you just did");
 		}else{
-			loadedQs=message.split(":::"); //seperate data with colons
+			loadedQs=output.split(":::"); //seperate data with colons
 			//show in div
+			document.getElementById("View").innerHTML="";
 			for(var i=0;i<loadedQs.length;i++){
-				var add='<br id="'+numA+'"><div id="'+numA+'" class="userMessage">'+loadedQs[i]+'</div><div id="'+numA+'" class="msgBrk"></div>';
+				if (loadedQs[0]!=""){
+				var add='<br id="'+numA+'"><button oncontextmenu="Delete('+"'"+numA+"'"+')" onClick="addQ('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
 				numA=numA+1;
 				document.getElementById("View").innerHTML+=add;
+				}
 			}
 			removeTopA(); //remove the top item/s when too big
 		}
@@ -109,30 +129,117 @@
 			//do
 			var x=document.getElementById("View");
 			x.style.display="block";
+			x=document.getElementById("alertAdd");
+			x.style.display="none";
+			x=document.getElementById("alertDelete");
+			x.style.display="none";
 			con.send("VIEWDATA");
 		}else{alert("Sign in to do this");}
 	}
-	function addQ(){
+	function addQ(idNum){
 		console.log("add");
+		
 		if(letIn){
 			//do
 			//validate string
 			//add to server
+			document.getElementById(idNum).remove(); //remove from page once added
+			var question=document.getElementById(idNum).textContent; //get main
+			console.log(question);
+			var text = prompt("Please enter Your response", "");
+			text=text.replace("---","");
+			text=text.replace(":::","");
+			text=text.replace("signInRequest:","");
+			text=text.replace("DELETE","delete");
+			  if (text == null || text == "") {
+				alert("cancelled");
+			  } else {
+				con.send("ADD"+question+"---"+text);
+				
+				document.getElementById(idNum).remove();
+				document.getElementById(idNum).remove();
+			  }
+			  
 		}else{alert("Sign in to do this");}
 	}
-	function Delete(){
-		console.log("delete");
+	function Delete(idNum){
+		console.log("delete"); //used to delete responses which will not be added
 		if(letIn){
 			//do
+			document.getElementById(idNum).remove();
+			var question=document.getElementById(idNum).textContent; //get main
+			con.send("DELETE"+question);
+			document.getElementById(idNum).remove();
+			document.getElementById(idNum).remove();
 		}else{alert("Sign in to do this");}
 	}
+
 	function signIn(){
 		//submit sign in
 		var usname=document.getElementById("uname").value;
 		var psw_d=document.getElementById("paswo").value;
 		con.send("signInRequest:"+usname+"--"+psw_d);
+		
 	}
-	
+	function addOwn(){
+		if(letIn){
+			var x=document.getElementById("alertAdd");
+			x.style.display="block";
+			x=document.getElementById("View");
+			x.style.display="none";
+			x=document.getElementById("alertDelete");
+			x.style.display="none";
+		}else{alert("Sign in to do this");}
+	}
+	function deleteOwn(){
+		if(letIn){
+			var x=document.getElementById("alertAdd");
+			x.style.display="none";
+			x=document.getElementById("View");
+			x.style.display="none";
+			x=document.getElementById("alertDelete");
+			x.style.display="block";
+		}else{alert("Sign in to do this");}
+	}
+	function saveQuestionAnswer() {
+		//save the question and answer
+		if(letIn){
+			var q=document.getElementById("inputQ1").value;
+			var a=document.getElementById("inputQ2").value;
+			q=q.replace("---","");
+			q=q.replace(":","");
+			q=q.toLowerCase();//convert to lower case
+			q=q.replace("?","");
+			q=q.replace(".","");
+			q=q.replace(",","");
+			q=q.replace("DELETE","delete");
+			a=a.replace("---","");
+			a=a.replace(":::","");
+			a=a.replace("DELETE","delete");
+			if(q!="" && a!=""){
+				con.send("ADD"+q+"---"+a);
+			}else{
+				alert("You cannot add that");
+			}
+		}else{alert("Sign in to do this");}
+	}
+	function delQuestionAnswer() {
+		//delete a current question
+		if(letIn){
+			var a=document.getElementById("inputD1").value;
+			a=a.replace("---","");
+			a=a.replace(":::","");
+			a=a.replace("DELETE","delete");
+			a=a.toLowerCase();
+			if(a!=""){
+				con.send("DELQUE"+a);
+			}else{
+				alert("You cannot delete that");
+			}
+		}else{
+			alert("Sign in to do this");
+		}
+	}
 	function removeTopA()
 	{
 		if(numA+startNumA > 10)
