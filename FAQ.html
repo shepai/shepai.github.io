@@ -54,7 +54,7 @@
 
 <script type="text/javascript">
 	var con=new WebSocket("ws://80.5.202.205:50007") //ws://echo.websocket.org
-	con.onopen=function(){con.send("Hi there");};
+	con.onopen=function(){con.send("hi");};
 	con.onerror=function(error){console.log("error"+error);};
 	con.onmessage=function(e){
 		console.log("message:"+e.data);
@@ -90,6 +90,14 @@
 			document.getElementById((startNum+1).toString()).remove();
 			startNum+=2;
 		}
+	}
+	function posFeedback(sentence)
+	{
+		//return positive feedback to the system
+	}
+	function negFeedback(sentence)
+	{
+		//return negative feedback
 	}
 function toPython(usrdata){
 	console.log("uploading"+usrdata);
