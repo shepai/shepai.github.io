@@ -41,6 +41,16 @@
 		
 		<h3 class="contentText">SHEP has auto responses to FAQs, if SHEP is unable to help you you will be redirected to the contact page where you can 
 		ask question which will be added to the data.</h3>
+		<div id="myModal" class="modal">
+
+			  <!-- Modal content -->
+			  <div align="center" class="modal-content">
+				<span class="close">&times;</span>
+				<p>Did this answer your question?</p>
+				<img onClick="posFeedback()" style="cursor:pointer;" width="60" height="60" src="assets/application/happy.jpg"><img onClick="negFeedback()" style="cursor:pointer;" width="60" height="60" src="assets/application/sad.jpg" >
+			  </div>
+
+			</div>
 		<div id="mainContent" class="messageActivate">
 			
 		</div>
@@ -54,12 +64,21 @@
 
 <script type="text/javascript">
 	var con=new WebSocket("ws://80.5.202.205:50007") //ws://echo.websocket.org
+	var lastMessage="";
+	var subs="";
 	con.onopen=function(){con.send("hi");};
 	con.onerror=function(error){console.log("error"+error);};
 	con.onmessage=function(e){
 		console.log("message:"+e.data);
-		var output=e.data;
-		var add2='<br id="'+num+'"><div id="'+num+'" class="shepMessage">'+output+'</div><div id="'+num+'" class="msgBrk"></div>';
+		e.data.split("---");
+		var output=e.data[0];
+		subs=e.data[1];
+		var add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output+'</div><div id="'+num+'" class="msgBrk"></div>';
+		if(output.includes("This is something similar I found which may answer your question")){
+			
+			add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output+'<a onClick="feedback('+num+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
+		}
+		
 		num=num+1;
 		document.getElementById("mainContent").innerHTML+=add2;
 		};
@@ -69,11 +88,15 @@
 	{
 		console.log("test");
 		var text=document.getElementById("messageFAQ").value;
-		var add='<br id="'+num+'"><div id="'+num+'" class="userMessage">'+text+'</div><div id="'+num+'" class="msgBrk"></div>';
+		var add='<br id="'+num+"bR"+'"><div id="'+num+'" class="userMessage">'+text+'</div><div id="'+num+'" class="msgBrk"></div>';
 		num=num+1;
 		text=text.toLowerCase();
-		con.send(text);
-		
+		//VALIDATE
+		text=text.replace("---","");
+		text=text.replace("FEEDBACKN","");
+		text=text.replace("FEEDBACKP","");
+		con.send(text+"---"+subs);
+		lastMessage=text;
 		document.getElementById("mainContent").innerHTML+=add;
 		document.getElementById("messageFAQ").value="";
 		removeTop();
@@ -82,8 +105,8 @@
 	{
 		if(num+startNum > 10)
 		{
-			document.getElementById(startNum.toString()).remove();
-			document.getElementById((startNum+1).toString()).remove();
+			document.getElementById(startNum.toString()+"bR").remove();
+			document.getElementById((startNum+1).toString()+"bR").remove();
 			document.getElementById(startNum.toString()).remove();
 			document.getElementById((startNum+1).toString()).remove();
 			document.getElementById(startNum.toString()).remove();
@@ -91,13 +114,28 @@
 			startNum+=2;
 		}
 	}
-	function posFeedback(sentence)
+	function feedback(id)
+	{
+		//open up feedback dialogue
+		modal.style.display = "block";
+		console.log(document.getElementById(id-1).innerHTML);
+		var LM=document.getElementById(id-1).innerHTML;
+		console.log(LM);
+		lastMessage=LM;
+		
+	}
+	function posFeedback()
 	{
 		//return positive feedback to the system
+		 modal.style.display = "none";
+		 //add to system
 	}
-	function negFeedback(sentence)
+	function negFeedback()
 	{
 		//return negative feedback
+		console.log("negative");
+		con.send("FEEDBACKN"+lastMessage);
+		 modal.style.display = "none";
 	}
 function toPython(usrdata){
 	console.log("uploading"+usrdata);
@@ -114,6 +152,28 @@ function toPython(usrdata){
 	}
 
 
+</script>
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 </script>
 </html>
 
