@@ -51,6 +51,7 @@
 			  </div>
 
 			</div>
+			
 		<div id="mainContent" class="messageActivate">
 			
 		</div>
@@ -70,9 +71,10 @@
 	con.onerror=function(error){console.log("error"+error);};
 	con.onmessage=function(e){
 		console.log("message:"+e.data);
-		e.data.split("---");
-		var output=e.data[0];
-		subs=e.data[1];
+		var vals=e.data.split("---");
+		var output=vals[0];
+		subs=vals[1];
+		console.log(vals)
 		var add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output+'</div><div id="'+num+'" class="msgBrk"></div>';
 		if(output.includes("This is something similar I found which may answer your question")){
 			
