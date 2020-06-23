@@ -60,6 +60,7 @@
 		<br>
 			<input  type="text" id="messageFAQ" class="messageBox" name="fname"><button onClick="enterMessage()" class="FAQButton" value="send">send</button>
 		</div>
+		<a onClick="#"><p style="cursor: pointer;"><u> Report False information </u></p></a>
 	</div>
 </body>
 
@@ -97,11 +98,15 @@
 		text=text.replace("---","");
 		text=text.replace("FEEDBACKN","");
 		text=text.replace("FEEDBACKP","");
-		con.send(text+"---"+subs);
-		lastMessage=text;
-		document.getElementById("mainContent").innerHTML+=add;
-		document.getElementById("messageFAQ").value="";
-		removeTop();
+		if(text.length<500){
+			con.send(text+"---"+subs);
+			lastMessage=text;
+			document.getElementById("mainContent").innerHTML+=add;
+			document.getElementById("messageFAQ").value="";
+			removeTop();
+		}else{
+			alert("Please decrease the size of your message");
+		}
 	}
 	function removeTop()
 	{
@@ -114,6 +119,24 @@
 			document.getElementById(startNum.toString()).remove();
 			document.getElementById((startNum+1).toString()).remove();
 			startNum+=2;
+		}
+	}
+	function report()
+	{
+		var text = prompt("Please enter the question you would like fixed:", "");
+		text=text.replace("---","");
+		text=text.replace("FEEDBACKN","");
+		text=text.replace("FEEDBACKP","");
+		text=text.toLowerCase();
+		if(text.length<500)
+		{
+			if(text!=null && text!="")
+			{
+				//submit report to the system
+				con.send("REPORT"+text);
+			}else{
+				alert("Invalid input");
+			}
 		}
 	}
 	function feedback(id)

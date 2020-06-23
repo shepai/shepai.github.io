@@ -94,7 +94,7 @@
 	var loadedQs=[]; //store the questions
 	var startNumA=0;
 	var numA=0;
-	
+	var typeOfDisplay="";
 	var con=new WebSocket("ws://80.5.202.205:8080") //ws://echo.websocket.org
 	var letIn=false; //start false
 	/**/
@@ -116,7 +116,12 @@
 			document.getElementById("View").innerHTML="";
 			for(var i=0;i<loadedQs.length;i++){
 				if (loadedQs[0]!=""){
-				var add='<br id="'+numA+'"><button oncontextmenu="Delete('+"'"+numA+"'"+')" onClick="addQ('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
+				var add;
+				if(typeOfDisplay="V"){
+					 add='<br id="'+numA+'"><button oncontextmenu="Delete('+"'"+numA+"'"+')" onClick="addQ('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
+				}else{
+					add='<br id="'+numA+'"><button oncontextmenu="Delete('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
+				}
 				numA=numA+1;
 				document.getElementById("View").innerHTML+=add;
 				}
@@ -130,6 +135,7 @@
 		console.log("view");
 		if(letIn==true){
 			//do
+			typeOfDisplay="V";
 			document.getElementById("View").innerHTML="";
 			var x=document.getElementById("View");
 			x.style.display="block";
@@ -145,6 +151,7 @@
 		console.log("view");
 		if(letIn==true){
 			//do
+			typeOfDisplay="FB";
 			document.getElementById("View").innerHTML="";
 			var x=document.getElementById("View");
 			x.style.display="block";
@@ -170,6 +177,7 @@
 			text=text.replace(":::","");
 			text=text.replace("signInRequest:","");
 			text=text.replace("DELETE","delete");
+			if(text.length<500){
 			  if (text == null || text == "") {
 				alert("cancelled");
 			  } else {
@@ -178,6 +186,9 @@
 				document.getElementById(idNum).remove();
 				document.getElementById(idNum).remove();
 			  }
+			}else{
+				alert("Please decrease your message size");
+			}
 			  
 		}else{alert("Sign in to do this");}
 	}
@@ -225,8 +236,6 @@
 		if(letIn){
 			var q=document.getElementById("inputQ1").value;
 			var a=document.getElementById("inputQ2").value;
-			document.getElementById("inputQ1").value="";
-			document.getElementById("inputQ2").value="";
 			q=q.replace("---","");
 			q=q.replace(":","");
 			q=q.toLowerCase();//convert to lower case
@@ -237,10 +246,16 @@
 			a=a.replace("---","");
 			a=a.replace(":::","");
 			a=a.replace("DELETE","delete");
-			if(q!="" && a!=""){
-				con.send("ADD"+q+"---"+a);
+			if(a.length+q.length<530){
+				if(q!="" && a!=""){
+					con.send("ADD"+q+"---"+a);
+					document.getElementById("inputQ1").value="";
+					document.getElementById("inputQ2").value="";
+				}else{
+					alert("You cannot add that");
+				}
 			}else{
-				alert("You cannot add that");
+				alert("Please decrease your message size");
 			}
 		}else{alert("Sign in to do this");}
 	}
@@ -248,15 +263,19 @@
 		//delete a current question
 		if(letIn){
 			var a=document.getElementById("inputD1").value;
-			document.getElementById("inputD1").value="";
 			a=a.replace("---","");
 			a=a.replace(":::","");
 			a=a.replace("DELETE","delete");
 			a=a.toLowerCase();
-			if(a!=""){
-				con.send("DELQUE"+a);
+			if(a.length<500){
+				if(a!=""){
+					con.send("DELQUE"+a);
+					document.getElementById("inputD1").value="";
+				}else{
+					alert("You cannot delete that");
+				}
 			}else{
-				alert("You cannot delete that");
+				alert("Please decrease your message size");
 			}
 		}else{
 			alert("Sign in to do this");
