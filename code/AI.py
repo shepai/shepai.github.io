@@ -205,6 +205,13 @@ class SpellEngine:
             i+=1
         return sentence
 class Language:
+    def __init__(self):
+        self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why won’t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why don’t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
+                    "does the car break down often","can you drive me home","where did you find me"
+                    "can it fly from here to target","could you find it for me"]
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
@@ -233,6 +240,12 @@ class Language:
             #small phrase
             nodes=sentence.split() #add small phrases anyway
         return nodes
+    def getType(self,sentence):
+        for Ran_Question in self.Sample_Questions:
+            Question_Matcher = SequenceMatcher(None, Ran_Question, sentence).ratio()
+            if Question_Matcher > 0.5:
+                        return "question"
+        return "statement"
 class dataBase:
     def __init__(self,name):
         self.name=name
@@ -276,7 +289,6 @@ class Bot:
     def __init__(self,ID,systemPathway):
         self.ID=ID #set an ID for the bot
         self.lang=Language() #Language analyzer
-        self.SentenceGraph=LoadMemory(systemPathway+"sentence.json") #sentence analyser
         self.Questions=LoadMemory(systemPathway+"questions.json") #questions analyser
         self.Statements=LoadMemory(systemPathway+"statements.json") #statements analyser
         self.systemPathway=systemPathway
@@ -292,13 +304,12 @@ class Bot:
         return SequenceMatcher(None, a, b).ratio()
     def Enter(self,sentence,previous):
         #main query function which takes in a sentence and returns likely response
-        type=self.getType(sentence)
+        type=self.lang.getType(sentence)
         nodes=self.lang.splitMeaning(sentence)
         subjects=[]
         for i in nodes: #gather the subjects
                 if "C:" not in i:
                     subjects.append(i)
-        type="question"
         response=""
         if type=="question":
             #query question data base
@@ -330,7 +341,7 @@ class Bot:
             if largest<0.80: #if the data is not significant
                 #process simular
                 if largest>0.5:
-                    response="This is something simular I found which may answer your question '"+value+"'"
+                    response="This is something similar I found which may answer your question '"+value+"'"
                 else:
                     if subjects==[]: #vague sentence
                         print("no subjects")
@@ -347,48 +358,29 @@ class Bot:
             x=0
             response="Thank you for your feedback"
         return [response,subjects]
-    def getType(self,sentence):
-        #get the type of sentence using ANN graph
-        x=sentence
-        types=[]
-        c=0
-        for i in x.split():
-            types.append(self.SentenceGraph.strongest(i+"-P"+str(c+1)))
-            c+=1
-        count=[0,0,0]
-        for i in types: #count the frequency
-            if i==["QUE"]:
-                count[0]+=1
-            elif i==["STA"]:
-                count[1]+=1
-            else:
-                count[2]+=1
-        if count[0]>count[1] and count[0]>count[2]:
-            return "question"
-        elif count[1]>count[0] and count[1]>count[2]:
-            return "statement"
-        else:
-            return "other"
+    
 class botClient:
     #built to use less memory and provide an interface with the main bot
     #responsible for interacting
     def __init__(self,bot):
         self.bot=bot
         self.SC=SpellEngine() #deploy the spell check engine
-        self.pastSubjects=[] #store the subjects used previously
-        
-    def Enter(self,userInput):
+    def Enter(self,userInput,subjects):
         if userInput!="":
             sentences=self.SC.getCorrected(userInput)
             responses=""
-            self.pastSubjects=sentences
             for i in sentences:
-                returned=self.bot.Enter(i,self.pastSubjects)
+                returned=self.bot.Enter(i,subjects)
                 responses+=returned[0]+"."
-                self.pastSubjects=returned[1]
+                subjects=returned[1]
+            responses=responses.replace("..",".")
+            responses=responses.replace(". .",".")
             if responses.replace(".","")=="":
                 responses="Sorry, I am not sure on that yet. Maybe ask again another time and you will get your answer"
-            return responses
+            string=""
+            for i in subjects:
+                string+=i+","
+            return [responses,string[:-1]]
         return ""
     def feedback(self,type,sentence):
         if type=="negative":
@@ -430,8 +422,12 @@ async def clientReply(websocket, path):
             if "FEEDBACKN" in message: #negative feedback add sentence to confused
                 client.feedback("negative",message.replace("FEEDBACKN",""))
             else:
-                x=client.Enter(message)
-                await websocket.send(x)
+                message=message.split("---")
+                arr=[]
+                for i in message[1].split(","):
+                    arr.append(i)
+                x=client.Enter(message[0],arr)
+                await websocket.send(x[0]+"---"+x[1])
     except websockets.exceptions.ConnectionClosedError:
         print("User disconnected")
 async def adminReply(websocket, path):
