@@ -67,8 +67,9 @@
 			<h5>Password</h5>
 			<input type="text" id="paswo" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
 			<br>
-			<h5>Decrypt</h5>
+			<!--<h5>Decrypt</h5>
 			<input type="text" id="decryptKey" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			-->
 			<br><br>
 			<button onclick="signIn()" class="" >Sign in</button> 
 		</div>
@@ -80,9 +81,11 @@
 		<br><br>
 		<div align="center" class="sendMessage">
 		<br>
-			<button onClick="viewAll()" class="" >View all</button> 
+			<button onClick="viewAll()" class="" >View to add</button> 
+			<button onClick="viewFeedback()" class="" >View Feedback</button>
 			<button onClick="addOwn()" class="" >Add own</button>
 			<button onClick="deleteOwn()" class="" >Delete</button>
+			
 			</div>
 	</div>
 </body>
@@ -127,6 +130,7 @@
 		console.log("view");
 		if(letIn==true){
 			//do
+			document.getElementById("View").innerHTML="";
 			var x=document.getElementById("View");
 			x.style.display="block";
 			x=document.getElementById("alertAdd");
@@ -134,6 +138,21 @@
 			x=document.getElementById("alertDelete");
 			x.style.display="none";
 			con.send("VIEWDATA");
+		}else{alert("Sign in to do this");}
+	}
+	function viewFeedback(){
+		//get feedback from user via statistical analyses
+		console.log("view");
+		if(letIn==true){
+			//do
+			document.getElementById("View").innerHTML="";
+			var x=document.getElementById("View");
+			x.style.display="block";
+			x=document.getElementById("alertAdd");
+			x.style.display="none";
+			x=document.getElementById("alertDelete");
+			x.style.display="none";
+			con.send("VIEWFEEDBACK");
 		}else{alert("Sign in to do this");}
 	}
 	function addQ(idNum){
