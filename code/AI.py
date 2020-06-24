@@ -207,12 +207,12 @@ class SpellEngine:
 class Language:
     def __init__(self):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonâ€™t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donâ€™t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃ¢â‚¬â„¢t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃ¢â‚¬â„¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
                     "can it fly from here to target","could you find it for me","hi","hello"
-                    "can i join","can i eat candy"]
+                    "can i join","can i eat candy","hi there"]
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
@@ -260,30 +260,30 @@ class dataBase:
             self.conn = sqlite3.connect(name)
             self.cur=self.conn.cursor()
             if found==False: #if not yet created
-                self.cur.execute("CREATE TABLE Confused(id INT, question STRING, priority INT)") #store input row
+                self.cur.execute("CREATE TABLE Data(id INT, question STRING, priority INT)") #store input row
                 self.conn.commit()
         except (RuntimeError, TypeError, NameError) as e:
             raise e("Cannot connect to the database!")
         self.getPK()
     def getPK(self):
-        self.cur.execute("SELECT * FROM Confused")
+        self.cur.execute("SELECT * FROM Data")
         rows = self.cur.fetchall()
         self.PK=len(rows)+1
     def enterData(self,question):
-        self.cur.execute("SELECT ID,priority FROM Confused WHERE question=?",(question,))
+        self.cur.execute("SELECT ID,priority FROM Data WHERE question=?",(question,))
         rows = self.cur.fetchall()
         p=0
         if len(rows)!=0:
             self.delete(question)
             p=rows[0][1]+1
-        self.cur.execute('insert into Confused values (?,?,?)',[self.PK,question,p])
+        self.cur.execute('insert into Data values (?,?,?)',[self.PK,question,p])
         self.conn.commit()
         self.PK+=1
     def delete(self,question):
-        self.cur.execute("DELETE FROM Confused WHERE question=?",(question,))
+        self.cur.execute("DELETE FROM Data WHERE question=?",(question,))
         self.conn.commit()
     def readData(self):
-        self.cur.execute("SELECT * FROM Confused")
+        self.cur.execute("SELECT * FROM Data")
         rows = self.cur.fetchall()
         return rows
 class Bot:
@@ -293,7 +293,7 @@ class Bot:
         self.Questions=LoadMemory(systemPathway+"questions.json") #questions analyser
         self.Statements=LoadMemory(systemPathway+"statements.json") #statements analyser
         self.systemPathway=systemPathway
-        self.database=dataBase(systemPathway+"test.db")
+        self.database=dataBase(systemPathway+"Confused.db")
         self.AutomaticSave() #run save method in background
     def AutomaticSave(self):
           #save the data at intervals
@@ -341,7 +341,7 @@ class Bot:
             print(largest)
             if largest<0.80: #if the data is not significant
                 #process simular
-                if largest>0.5:
+                if largest>=0.5:
                     response="This is something similar I found which may answer your question '"+value+"'"
                 else:
                     if subjects==[]: #vague sentence
@@ -386,6 +386,9 @@ class botClient:
     def feedback(self,type,sentence):
         if type=="negative":
             self.bot.database.enterData(sentence)
+    def report(self,question):
+        #report the data to the admin
+        ReportData.enterData(question)
 class adminBot:
     #built to use less memory and provide an interface with the main bot
     #responsible for teaching and managing
@@ -395,6 +398,14 @@ class adminBot:
     def getToAdd(self):
         return self.database.readData()
     def add(self,question,answer):
+        if self.bot.Questions.getConnected(answer) !=[]: #cannot have same answer twice
+            count=0
+            while True: #loop testing out names
+                if self.bot.Questions.getConnected(answer+"["+str(count)+"]") ==[]:
+                    answer=answer+"["+str(count)+"]"
+                    break
+                count+=1
+            print("changing name to",answer)
         v1=self.bot.lang.splitMeaning(question) #get nodes
         for i in v1:
             self.bot.Questions.addDirected(Edge(i,answer)) #add to graph
@@ -406,11 +417,43 @@ class adminBot:
         self.database.delete(question) #remove from database
     def deleteQ(self,question):
         a=self.bot.Enter(question,[])
-        return self.bot.Questions.delete(a[0])
+        r=self.bot.Questions.delete(a[0])
+        if r!=None:
+            f=r.copy()
+            while f!=None:
+                a=self.bot.Enter(question,[])
+                f=self.bot.Questions.delete(a[0])
+                print("delete",f)
+        return r #return first instance of deletion
     def getFeedback(self):
         #get the bot graph to return the most said phrases
-        return ""
+        cons=self.bot.Statements.getConnected("C-feedback")
+        #organize into most frequent
+        temp=[]
+        for i in range(len(cons[:-1])):
+            currentStrength=cons[i].strength
+            next=cons[i+1].strength
+            num=i
+            while next<currentStrength and num>0:
+                print(cons)
+                temp=cons[num]
+                cons[num]=cons[num+1]
+                cons[num+1]=temp
+                num-=1
+                currentStrength=cons[num].strength
+        feedback=""
+        for i in cons:
+            feedback+=i.vertices[1]+":::"
+            if len(feedback)>500: #too many to send
+                break
+        return feedback
+    def readReport(self):
+        return ReportData.readData()
+    def addConfused(self,sentence):
+        #add confused data
+        self.bot.database.enterData(sentence)
 uniBot=Bot("SUSSEXBOT","/var/www/html/") #set up once in the memory
+ReportData=dataBase("/var/www/html/"+"report.db") #set up global database for reports
 client=botClient(uniBot) #set up client in memory
 admin=adminBot(uniBot,uniBot.database) #set up admin
 Admins=[]
@@ -425,6 +468,9 @@ async def clientReply(websocket, path):
             #will need to split down
             if "FEEDBACKN" in message: #negative feedback add sentence to confused
                 client.feedback("negative",message.replace("FEEDBACKN",""))
+            elif "REPORT" in message:
+                print("report")
+                client.report(message.replace("REPORT",""))
             else:
                 message=message.split("---")
                 arr=[]
@@ -461,11 +507,23 @@ async def adminReply(websocket, path):
                 #return the feedback statements
                 data=admin.getFeedback()
                 await websocket.send(data)
+            elif "RADD" in message and websocket in Admins:
+                #add for reporting
+                a=message.replace("RADD","")
+                a=a.split("---")
+                ReportData.delete(a[0]) #delete from database
+                admin.deleteQ(a[0]) #delete from memory
+                admin.add(a[0],a[1]) #add to the bot
+            elif "QADD" in message and websocket in Admins:
+                #add a question back using undo method
+                admin.addConfused(message.replace("QADD","")
             elif "ADD" in message and websocket in Admins:
                 print("add",message.replace("ADD",""))
                 a=message.replace("ADD","")
                 a=a.split("---")
                 admin.add(a[0],a[1]) #add to the bot
+            elif "DELETER" in message and websocket in Admins:
+                ReportData.delete(message.replace("DELETER",""))
             elif "DELETE" in message and websocket in Admins:
                 print("delete",message.replace("DELETE",""))
                 admin.delete(message.replace("DELETE",""))
@@ -474,6 +532,12 @@ async def adminReply(websocket, path):
                 val=admin.deleteQ(message.replace("DELQUE",""))
                 if val==None:
                     await websocket.send("ERROR")
+            elif "REPORT" in message and websocket in Admins:
+                string=""
+                d=admin.readReport()
+                for i in d:
+                    string+=i[1]+":::"
+                await websocket.send(string[:-3]) #send list of to add
     except websockets.exceptions.ConnectionClosedError:
             print("remove admin", websocket)
             del Admins[Admins.index(websocket)]
