@@ -207,11 +207,12 @@ class SpellEngine:
 class Language:
     def __init__(self):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why won’t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why don’t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonâ€™t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donâ€™t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
-                    "can it fly from here to target","could you find it for me"]
+                    "can it fly from here to target","could you find it for me","hi","hello"
+                    "can i join","can i eat candy"]
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
@@ -406,6 +407,9 @@ class adminBot:
     def deleteQ(self,question):
         a=self.bot.Enter(question,[])
         return self.bot.Questions.delete(a[0])
+    def getFeedback(self):
+        #get the bot graph to return the most said phrases
+        return ""
 uniBot=Bot("SUSSEXBOT","/var/www/html/") #set up once in the memory
 client=botClient(uniBot) #set up client in memory
 admin=adminBot(uniBot,uniBot.database) #set up admin
@@ -453,6 +457,10 @@ async def adminReply(websocket, path):
                 for i in d:
                     string+=i[1]+":::"
                 await websocket.send(string[:-3]) #send list of to add
+            elif message=="VIEWFEEDBACK" and websocket in Admins:
+                #return the feedback statements
+                data=admin.getFeedback()
+                await websocket.send(data)
             elif "ADD" in message and websocket in Admins:
                 print("add",message.replace("ADD",""))
                 a=message.replace("ADD","")
