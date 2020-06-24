@@ -76,6 +76,8 @@
 		<div style="display: none;" id="View">
 		<!--This area remains hidden until the user -->
 			<h3>To add</h3>
+			
+			
 		</div>
 		
 		<br><br>
@@ -88,10 +90,40 @@
 			<button onClick="viewReport()" class="" >View reports</button>
 			</div>
 	</div>
+	
 </body>
 
 <script type="text/javascript">
+	class Stack {
+		constructor()
+		{
+			this.size=10;
+			this.items=[];
+		}
+		push(element)
+		{
+			if(this.items.length<=this.size){
+				this.items.push(element);
+			}else{
+				this.items.shift();
+				this.items.push(element);
+			}
+		}
+		pop(element)
+		{
+			if(this.items.length==0){
+				return "overflow";
+			}else{
+				return this.items.pop();
+			}
+		}
+		isEmpty()
+		{
+			if(this.items.length==0){return true;}else{return false;}
+		}
+	}
 	var loadedQs=[]; //store the questions
+	var stack= new Stack();
 	var startNumA=0;
 	var numA=0;
 	var typeOfDisplay="";
@@ -113,7 +145,7 @@
 		}else{
 			loadedQs=output.split(":::"); //seperate data with colons
 			//show in div
-			document.getElementById("View").innerHTML="";
+			document.getElementById("View").innerHTML='<a onClick="undo()"><p style="cursor: pointer;"><u> Undo Deletion </u></p></a>';
 			for(var i=0;i<loadedQs.length;i++){
 				if (loadedQs[0]!=""){
 				var add;
@@ -242,7 +274,16 @@
 			con.send("DELETE"+question);
 			document.getElementById(idNum).remove();
 			document.getElementById(idNum).remove();
+			stack.push(question);
 		}else{alert("Sign in to do this");}
+	}
+	function undo(){
+		//undo button
+		if(!(stack.isEmpty())){
+			var item=stack.pop();
+			con.send("QADD"+item);
+			viewFeedback();
+		}
 	}
 	function DeleteR(idNum){
 		console.log("delete reported"); //used to delete responses which will not be added
@@ -345,7 +386,7 @@
 			startNumA+=2;
 		}
 	}
-
+	
 </script>
 </html>
 
