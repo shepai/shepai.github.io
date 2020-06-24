@@ -191,7 +191,7 @@ table {
 }
 .sendMessage {
 	border-radius: 15px;
-	width:70%;
+	width:80%;
 	height:50px;
 	background-color:#0f0f0f;
 	bottom:0;
@@ -533,5 +533,14 @@ only screen and (max-width: 760px),
 		width:150px;
 		height:auto;
 		
+	}
+	.sendMessage {
+		border-radius: 15px;
+		width:70%;
+		height:70px;
+		background-color:#0f0f0f;
+		bottom:0;
+		margin: auto;
+		display:block;
 	}
 }
