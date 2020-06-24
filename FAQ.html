@@ -75,7 +75,8 @@
 		var vals=e.data.split("---");
 		var output=vals[0];
 		subs=vals[1];
-		console.log(vals)
+		var string=""; 
+		output=output.replace(/([\[(])(.+?)([\])])/g, "");
 		var add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output+'</div><div id="'+num+'" class="msgBrk"></div>';
 		if(output.includes("This is something similar I found which may answer your question")){
 			
@@ -98,6 +99,9 @@
 		text=text.replace("---","");
 		text=text.replace("FEEDBACKN","");
 		text=text.replace("FEEDBACKP","");
+		text=text.replace(":::","");
+		text=text.replace("[","(");
+		text=text.replace("]",")");
 		if(text.length<500){
 			con.send(text+"---"+subs);
 			lastMessage=text;
@@ -127,6 +131,7 @@
 		text=text.replace("---","");
 		text=text.replace("FEEDBACKN","");
 		text=text.replace("FEEDBACKP","");
+		text=text.replace(":::","");
 		text=text.toLowerCase();
 		if(text.length<500)
 		{
