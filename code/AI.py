@@ -214,7 +214,7 @@ class Language:
                     "can it fly from here to target","could you find it for me","hi","hello"
                     "can i join","can i eat candy","hi there","where can i get help","where is the best place"
                     "i was wondering if you could help me","could you tell me where i can find this","thank you"
-                    "thanks"]
+                    "thanks","what mental health support is there","where can I find the treasure"]
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
@@ -385,6 +385,22 @@ class botClient:
                 string+=i+","
             return [responses,string[:-1]]
         return ""
+    def add(self,question,answer):
+        if self.bot.Questions.getConnected(answer) !=[]: #cannot have same answer twice
+            count=0
+            while True: #loop testing out names
+                if self.bot.Questions.getConnected(answer+"["+str(count)+"]") ==[]:
+                    answer=answer+"["+str(count)+"]"
+                    break
+                count+=1
+            print("changing name to",answer)
+        v1=self.bot.lang.splitMeaning(question) #get nodes
+        for i in v1:
+            self.bot.Questions.addDirected(Edge(i,answer)) #add to graph
+        for i in v1:
+            self.bot.Questions.addDirected(Edge(answer,i)) #add to graph
+        SaveMemory(self.bot.systemPathway+"questions.json",self.bot.Questions.data) #save to file
+        self.database.delete(question) #remove from database
     def feedback(self,type,sentence):
         if type=="negative":
             self.bot.database.enterData(sentence)
@@ -470,6 +486,9 @@ async def clientReply(websocket, path):
             #will need to split down
             if "FEEDBACKN" in message: #negative feedback add sentence to confused
                 client.feedback("negative",message.replace("FEEDBACKN",""))
+            elif "FEEDBACKP" in message:
+                a=message.replace("FEEDBACKP","").split("---")
+                client.add(a[0],a[1])
             elif "REPORT" in message:
                 print("report")
                 client.report(message.replace("REPORT",""))
