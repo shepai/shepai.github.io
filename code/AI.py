@@ -207,8 +207,8 @@ class SpellEngine:
 class Language:
     def __init__(self):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
                     "can it fly from here to target","could you find it for me","hi","hello"
@@ -334,7 +334,7 @@ class Bot:
                     val=i.vertices[1]
                     tmp.append(val)
                 if len([x for x in tmp if x in subjects])==len(subjects): #if both subjects present
-                    similarity=self.similar(tmp,nodes)+0.08 #increase chance by 8%
+                    similarity=self.similar(tmp,nodes)
                 else:
                     similarity=self.similar(tmp,nodes)-0.2 #lower chance if subjects irrelevant
                 if similarity>largest: #get most simular
@@ -369,7 +369,6 @@ class botClient:
         self.bot=bot
         self.SC=SpellEngine() #deploy the spell check engine
     def Enter(self,userInput,subjects):
-        userInput=userInput.replace("$","£") #remove sentence remover
         if userInput!="":
             sentences=self.SC.getCorrected(userInput)
             responses=""
@@ -401,7 +400,7 @@ class botClient:
         for i in v1:
             self.bot.Questions.addDirected(Edge(answer,i)) #add to graph
         SaveMemory(self.bot.systemPathway+"questions.json",self.bot.Questions.data) #save to file
-        self.database.delete(question) #remove from database
+        
     def feedback(self,type,sentence):
         if type=="negative":
             self.bot.database.enterData(sentence)
@@ -524,6 +523,8 @@ async def adminReply(websocket, path):
                 d=admin.getToAdd()
                 for i in d:
                     string+=i[1]+":::"
+                    if len(string)>500: #prevent websocket error
+                        break
                 await websocket.send(string[:-3]) #send list of to add
             elif message=="VIEWFEEDBACK" and websocket in Admins:
                 #return the feedback statements
