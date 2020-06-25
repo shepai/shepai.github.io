@@ -334,7 +334,7 @@ class Bot:
                     val=i.vertices[1]
                     tmp.append(val)
                 if len([x for x in tmp if x in subjects])==len(subjects): #if both subjects present
-                    similarity=self.similar(tmp,nodes)
+                    similarity=self.similar(tmp,nodes)+0.08 #increase chance by 8%
                 else:
                     similarity=self.similar(tmp,nodes)-0.2 #lower chance if subjects irrelevant
                 if similarity>largest: #get most simular
@@ -369,16 +369,17 @@ class botClient:
         self.bot=bot
         self.SC=SpellEngine() #deploy the spell check engine
     def Enter(self,userInput,subjects):
+        userInput=userInput.replace("$","£") #remove sentence remover
         if userInput!="":
             sentences=self.SC.getCorrected(userInput)
             responses=""
             for i in sentences:
                 returned=self.bot.Enter(i,subjects)
-                responses+=returned[0]+"."
+                responses+=returned[0]+"$"
                 subjects=returned[1]
             responses=responses.replace("..",".")
             responses=responses.replace(". .",".")
-            if responses.replace(".","")=="":
+            if responses.replace("$","")=="":
                 responses="Sorry, I am not sure on that yet. Maybe ask again another time and you will get your answer"
             string=""
             for i in subjects:
