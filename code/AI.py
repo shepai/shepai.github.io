@@ -207,12 +207,14 @@ class SpellEngine:
 class Language:
     def __init__(self):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃ¢â‚¬â„¢t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃ¢â‚¬â„¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
                     "can it fly from here to target","could you find it for me","hi","hello"
-                    "can i join","can i eat candy","hi there"]
+                    "can i join","can i eat candy","hi there","where can i get help","where is the best place"
+                    "i was wondering if you could help me","could you tell me where i can find this","thank you"
+                    "thanks"]
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
@@ -516,7 +518,7 @@ async def adminReply(websocket, path):
                 admin.add(a[0],a[1]) #add to the bot
             elif "QADD" in message and websocket in Admins:
                 #add a question back using undo method
-                admin.addConfused(message.replace("QADD","")
+                admin.addConfused(message.replace("QADD",""))
             elif "ADD" in message and websocket in Admins:
                 print("add",message.replace("ADD",""))
                 a=message.replace("ADD","")
