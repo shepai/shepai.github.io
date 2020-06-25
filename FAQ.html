@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,8 +84,9 @@
 		if(output[i]!=""){
 			add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'</div><div id="'+num+'" class="msgBrk"></div>';
 			if(output[i].includes("This is something similar I found which may answer your question")){
-				
-				add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'<a onClick="feedback('+tempID+','+output[i]+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
+				var temp=output[i].replace("This is something similar I found which may answer your question");
+				temp=temp.replace("'","");
+				add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'<a onClick="feedback('+tempID+','+"'"+temp+"'"+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
 			}
 			
 			num=num+1;
