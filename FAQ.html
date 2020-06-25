@@ -80,11 +80,11 @@
 		var tempID=num-1;
 		output=output.replace(/([\[(])(.+?)([\])])/g, "");
 		var add2;
-		output=output.split("."); //splitn to sentences
+		output=output.split("$"); //splitn to sentences
 		for(i=0;i<output.length;i++){
 		if(output[i]!=""){
 			add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'</div><div id="'+num+'" class="msgBrk"></div>';
-			if(output.includes("This is something similar I found which may answer your question")){
+			if(output[i].includes("This is something similar I found which may answer your question")){
 				
 				add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'<a onClick="feedback('+tempID+','+output[i]+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
 			}
