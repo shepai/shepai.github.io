@@ -76,17 +76,24 @@
 		var output=vals[0];
 		subs=vals[1];
 		var string=""; 
-		var tempID=num-1;
 		output=output.replace(/([\[(])(.+?)([\])])/g, "");
 		var add2;
 		output=output.split("$"); //splitn to sentences
+		if(num>0){
+		var tempID=document.getElementById(num-1).innerHTML;
+			tempID=tempID.replace("?",".");
+			tempID=tempID.replace("!",".");
+			tempID=tempID.replace(/'/g,'\'');
+			tempID=tempID.split(".");
+		}
 		for(i=0;i<output.length;i++){
+		
 		if(output[i]!=""){
 			add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'</div><div id="'+num+'" class="msgBrk"></div>';
 			if(output[i].includes("This is something similar I found which may answer your question")){
-				var temp=output[i].replace("This is something similar I found which may answer your question");
-				temp=temp.replace("'","");
-				add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'<a onClick="feedback('+tempID+','+"'"+temp+"'"+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
+				var temp=output[i].replace("This is something similar I found which may answer your question ","");
+				temp=temp.replace(/'/g,"");
+				add2='<br id="'+num+"bR"+'"><div id="'+num+'" class="shepMessage">'+output[i]+'<a onClick="feedback('+"'"+tempID[i]+"'"+','+"'"+temp+"'"+')"><p style="cursor: pointer;"><u> Did this answer your question? </u></p></a>'+'</div><div id="'+num+'" class="msgBrk"></div>'
 			}
 			
 			num=num+1;
@@ -155,12 +162,7 @@
 	{
 		//open up feedback dialogue
 		modal.style.display = "block";
-		console.log(document.getElementById(id).innerHTML);
-		var LM=document.getElementById(id).innerHTML;
-		console.log(LM);
-		lastMessage=LM;
-		var temp=document.getElementById(id).innerHTML;
-		temp=temp.split(".");
+		lastMessage=id;
 		lastAnswer=answer;
 		
 	}
