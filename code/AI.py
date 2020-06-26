@@ -207,8 +207,8 @@ class SpellEngine:
 class Language:
     def __init__(self):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
                     "can it fly from here to target","could you find it for me","hi","hello"
@@ -221,6 +221,7 @@ class Language:
         tagged = nltk.pos_tag(tokens) #get tags
         nodes=[]
         string="C:"
+        sentences=[]
         for i in tagged:
             if "W" in i[1] or "VB" == i[1] or "CD" in i[1] or "IN" in i[1]:
                 string+=i[0]+" " #change to i[1] to get tokens instead
@@ -228,21 +229,26 @@ class Language:
                 nodes.append(string[:-1]) #add chunks of wordsor
                 string="C:"
                 nodes.append(i[0])
+            elif "CC" == i[1]:
+                sentences.append(nodes)
+                nodes=[]
             else:
                 nodes.append(string[:-1]) #add chunks of words
                 string="C:"
         if string!="":
             nodes.append(string[:-1])
+            sentences.append(nodes)
         i=0
-        while i<(len(nodes)): #remove empty spaces
-            if nodes[i] == "" or nodes[i]=="C":
-                del nodes[i]
-                i-=1
-            i+=1
-        if len(nodes)==0 and len(sentence.split())<4:
-            #small phrase
-            nodes=sentence.split() #add small phrases anyway
-        return nodes
+        for nodes in sentences:
+            while i<(len(nodes)): #remove empty spaces
+                if nodes[i] == "" or nodes[i]=="C":
+                    del nodes[i]
+                    i-=1
+                i+=1
+            if len(nodes)==0 and len(sentence.split())<4:
+                #small phrase
+                nodes=sentence.split() #add small phrases anyway
+        return sentence
     def getType(self,sentence):
         for Ran_Question in self.Sample_Questions:
             Question_Matcher = SequenceMatcher(None, Ran_Question, sentence).ratio()
@@ -301,6 +307,7 @@ class dataBase:
         for i in rows:
             vals=i[1].split()
             if SequenceMatcher(None, vals, data).ratio()>0.9:
+                print("found",vals,data)
                 return i[0]
         return None
 class Bot:
@@ -314,23 +321,18 @@ class Bot:
         self.AutomaticSave() #run save method in background
     def AutomaticSave(self):
           #save the data at intervals
-          threading.Timer(60, self.AutomaticSave).start() #in seconds
+          threading.Timer(60*60, self.AutomaticSave).start() #in seconds
           #SaveMemory(self.systemPathway+"sentence.json", self.Statements.data)
-          processThread = threading.Thread(target=SaveMemory, args=(self.systemPathway+"statements.json", self.Statements.data));
+          processThread = threading.Thread(target=SaveMemory, args=(self.systemPathway+"questions.json", self.Questions.data));
           processThread.start();
     def similar(self,a, b):
         return SequenceMatcher(None, a, b).ratio()
-    def Enter(self,sentence,previous):
-        #main query function which takes in a sentence and returns likely response
-        type=self.lang.getType(sentence)
-        nodes=self.lang.splitMeaning(sentence)
-        subjects=[]
-        for i in nodes: #gather the subjects
-                if "C:" not in i:
-                    subjects.append(i)
-        response=""
-        if type=="question":
-            #query question data base
+    def checkQuestion(self,nodes,subjects,previous,extraInfo):
+            print("*****************") #for debuggin purposes
+            print("nodes:",nodes)
+            print("subjects:",subjects)
+            print("previous:",previous)
+            print("extraInfo:",extraInfo)
             past=[]
             for i in nodes: #gather the subject responses
                 vals=self.Questions.getConnected(i)
@@ -348,10 +350,19 @@ class Bot:
                 for i in vals:
                     val=i.vertices[1]
                     tmp.append(val)
+                AL=self.similar(tmp,nodes)
+                if len(extraInfo)>0: #there are nodes to guide information
+                        increases=[]
+                        for i in extraInfo:
+                            testValue=self.similar(tmp,nodes+i)
+                            if testValue>AL:
+                                nodes.append(i) #add to sub sentence
+                                AL=testValue
+                                print("increase chance of",nodes,"with",i)
                 if len([x for x in tmp if x in subjects])==len(subjects): #if both subjects present
-                    similarity=self.similar(tmp,nodes)
+                    similarity=AL+0.08
                 else:
-                    similarity=self.similar(tmp,nodes)-0.2 #lower chance if subjects irrelevant
+                    similarity=AL-0.2 #lower chance if subjects irrelevant
                 if similarity>largest: #get most simular
                     largest=similarity
                     value=j
@@ -363,20 +374,54 @@ class Bot:
                 else:
                     if subjects==[]: #vague sentence
                         print("no subjects")
-                    self.database.enterData(sentence)
+                    #there is nothing
             else:
                 response=value
+            return response
+    def Enter(self,sentence,previous):
+        #main query function which takes in a sentence and returns likely response
+        type=self.lang.getType(sentence)
+        sentences=self.lang.splitMeaning(sentence)
+        subjects=[]
+        for nodes in sentence:
+            s=[]
+            for i in nodes: #gather the subjects
+                    if "C:" not in i:
+                        s.append(i)
+            subjects.append(s)
+            response=""
+        if type=="question":
+            #query question data base
+            oneList=[]
+            subs=[]
+            for i in range(len(sentences)): #convert to one sentence
+                oneList+=sentences[i]
+                subs+=subjects[i]
+            response=self.checkQuestion(oneList,subs,previous,[]) #if sentence is
+            if response=="" or "This is something similar" in response:
+                for nodePos in range(len(sentence)): #loop through sub sentences
+                    otherInfo=OneList.copy()
+                    for i in OneList: #build up extra information
+                        if i in sentences[nodePos]:
+                            del otherInfo[otherInfo.index(i)]
+                    get=self.checkQuestion(sentences[nodePos],subjects[nodePos],previous,otherInfo)
+                    if get!="":
+                        response+=get+" " #if sentence is
+            if response.replace(" ","")=="":
+                self.database.enterData(sentence)
         elif type=="statement":
             #add to statements for analyses of statements
-            id=self.Statement.containsLanguage(nodes)
-            if id!=None:
+            for nodes in sentences:
                 string=""
                 for i in nodes: #convert to string
                     string+=i+" "
-                self.Statement.enterData(string[:-1])
-            else:
-                self.Statement.increaseByID(id)
-            response="Thank you for your feedback"
+                    
+                id=self.Statements.containsLanguage(string[:-1])
+                if id==None:
+                    self.Statements.enterData(string[:-1])
+                else:
+                    self.Statements.increaseByID(id)
+                response="Thank you for your feedback"
         return [response,subjects]
     
 class botClient:
@@ -461,27 +506,7 @@ class adminBot:
                 print("delete",f)
         return r #return first instance of deletion
     def getFeedback(self):
-        #get the bot graph to return the most said phrases
-        cons=self.bot.Statements.getConnected("C-feedback")
-        #organize into most frequent
-        temp=[]
-        for i in range(len(cons[:-1])):
-            currentStrength=cons[i].strength
-            next=cons[i+1].strength
-            num=i
-            while next<currentStrength and num>0:
-                print(cons)
-                temp=cons[num]
-                cons[num]=cons[num+1]
-                cons[num+1]=temp
-                num-=1
-                currentStrength=cons[num].strength
-        feedback=""
-        for i in cons:
-            feedback+=i.vertices[1]+":::"
-            if len(feedback)>500: #too many to send
-                break
-        return feedback
+        return self.bot.Statements.readData()
     def readReport(self):
         return ReportData.readData()
     def addConfused(self,sentence):
@@ -545,8 +570,13 @@ async def adminReply(websocket, path):
                 await websocket.send(string[:-3]) #send list of to add
             elif message=="VIEWFEEDBACK" and websocket in Admins:
                 #return the feedback statements
-                data=admin.getFeedback()
-                await websocket.send(data)
+                string=""
+                d=admin.getFeedback()
+                for i in d:
+                    string+=i[1]+":::"
+                    if len(string)>500: #prevent websocket error
+                        break
+                await websocket.send(string[:-3]) #send list of to add
             elif "RADD" in message and websocket in Admins:
                 #add for reporting
                 a=message.replace("RADD","")
