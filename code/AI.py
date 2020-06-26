@@ -284,16 +284,31 @@ class dataBase:
     def delete(self,question):
         self.cur.execute("DELETE FROM Data WHERE question=?",(question,))
         self.conn.commit()
+    def increaseByID(self,ID):
+        self.cur.execute("SELECT ID,priority FROM Data WHERE id=?",(ID,))
+        rows = self.cur.fetchall()
+        self.delete(rows[0][1])
+        self.cur.execute('insert into Data values (?,?,?)',[ID,rows[0][1],rows[0][2]+1])
     def readData(self):
         self.cur.execute("SELECT * FROM Data")
         rows = self.cur.fetchall()
         return rows
+    def containsLanguage(self,data):
+        #find if the general saying is within the data:
+        self.cur.execute("SELECT * FROM Data")
+        rows = self.cur.fetchall()
+        data=data.split()
+        for i in rows:
+            vals=i[1].split()
+            if SequenceMatcher(None, vals, data).ratio()>0.9:
+                return i[0]
+        return None
 class Bot:
     def __init__(self,ID,systemPathway):
         self.ID=ID #set an ID for the bot
         self.lang=Language() #Language analyzer
         self.Questions=LoadMemory(systemPathway+"questions.json") #questions analyser
-        self.Statements=LoadMemory(systemPathway+"statements.json") #statements analyser
+        self.Statements=dataBase(systemPathway+"Statements.db") #statements analyser
         self.systemPathway=systemPathway
         self.database=dataBase(systemPathway+"Confused.db")
         self.AutomaticSave() #run save method in background
@@ -353,12 +368,14 @@ class Bot:
                 response=value
         elif type=="statement":
             #add to statements for analyses of statements
-            subjects.append("C-feedback")
-            for i in subjects:
-                for j in subjects:
-                    if i!=j:
-                        self.Statements.addDirected(Edge(i,j)) #add to graph
-            x=0
+            id=self.Statement.containsLanguage(nodes)
+            if id!=None:
+                string=""
+                for i in nodes: #convert to string
+                    string+=i+" "
+                self.Statement.enterData(string[:-1])
+            else:
+                self.Statement.increaseByID(id)
             response="Thank you for your feedback"
         return [response,subjects]
     
