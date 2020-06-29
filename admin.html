@@ -197,6 +197,8 @@
 	}
 	function viewFeedback(){
 		//get feedback from user via statistical analyses
+		stack= new Stack();
+		stack= new Stack();
 		console.log("view");
 		if(letIn==true){
 			//do
@@ -287,10 +289,12 @@
 			
 			var item=stack.pop();
 			if(typeOfDisplay=="V"){
-				con.send("QADD"+item);}
+				con.send("QADD"+item);
+				viewAll();}
 			else{
-				con.send("FADD"+item);}
-			viewAll();
+				con.send("FADD"+item);
+				viewFeedback();}
+			
 		}
 	}
 	function DeleteR(idNum){
