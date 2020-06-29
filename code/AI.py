@@ -537,6 +537,8 @@ class adminBot:
             self.bot.Questions.addDirected(Edge(answer,i)) #add to graph
         SaveMemory(self.bot.systemPathway+"questions.json",self.bot.Questions.data) #save to file
         self.database.delete(question) #remove from database
+    def addStatement(self,sentence):
+        self.bot.database.enterData(sentence)
     def delete(self,question):
         self.database.delete(question) #remove from database
     def deleteQ(self,question):
@@ -631,6 +633,9 @@ async def adminReply(websocket, path):
             elif "QADD" in message and websocket in Admins:
                 #add a question back using undo method
                 admin.addConfused(message.replace("QADD",""))
+            elif "FADD" in message and websocket in Admins:
+                #Feedback add
+                admin.addStatement(message.replace("FADD",""))
             elif "ADD" in message and websocket in Admins:
                 print("add",message.replace("ADD",""))
                 a=message.replace("ADD","")
