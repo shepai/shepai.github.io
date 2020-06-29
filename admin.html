@@ -155,7 +155,7 @@
 				}else if(typeOfDisplay=="R"){
 					add='<br id="'+numA+'"><button oncontextmenu="DeleteR('+"'"+numA+"'"+')" onClick="addR('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
 				}else{
-					add='<br id="'+numA+'"><button id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
+					add='<br id="'+numA+'"><button oncontextmenu="DeleteF('+"'"+numA+"'"+')" id="'+numA+'" class="userMessage">'+loadedQs[i]+'</button><div id="'+numA+'" class="msgBrk"></div>';
 				}
 				numA=numA+1;
 				document.getElementById("View").innerHTML+=add;
@@ -182,6 +182,8 @@
 		console.log("view");
 		if(letIn==true){
 			//do
+			startNumA=0;
+			numA=0;
 			typeOfDisplay="V";
 			document.getElementById("View").innerHTML="";
 			var x=document.getElementById("View");
@@ -198,6 +200,8 @@
 		console.log("view");
 		if(letIn==true){
 			//do
+			startNumA=0;
+			numA=0;
 			typeOfDisplay="FB";
 			document.getElementById("View").innerHTML="";
 			var x=document.getElementById("View");
@@ -280,9 +284,10 @@
 	function undo(){
 		//undo button
 		if(!(stack.isEmpty())){
+			typeOfDisplay="V";
 			var item=stack.pop();
 			con.send("QADD"+item);
-			viewFeedback();
+			viewAll();
 		}
 	}
 	function DeleteR(idNum){
@@ -294,6 +299,18 @@
 			con.send("DELETER"+question);
 			document.getElementById(idNum).remove();
 			document.getElementById(idNum).remove();
+		}else{alert("Sign in to do this");}
+	}
+	function DeleteF(idNum){
+		console.log("delete reported"); //used to delete feedback which will not be added
+		if(letIn){
+			//do
+			document.getElementById(idNum).remove();
+			var question=document.getElementById(idNum).textContent; //get main
+			con.send("DELETEF"+question);
+			document.getElementById(idNum).remove();
+			document.getElementById(idNum).remove();
+			stack.push(question);
 		}else{alert("Sign in to do this");}
 	}
 	function signIn(){
@@ -373,6 +390,7 @@
 			alert("Sign in to do this");
 		}
 	}
+	
 	function removeTopA()
 	{
 		if(numA+startNumA > 10)
