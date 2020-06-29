@@ -284,9 +284,12 @@
 	function undo(){
 		//undo button
 		if(!(stack.isEmpty())){
-			typeOfDisplay="V";
+			
 			var item=stack.pop();
-			con.send("QADD"+item);
+			if(typeOfDisplay=="V"){
+				con.send("QADD"+item);}
+			else{
+				con.send("FADD"+item);}
 			viewAll();
 		}
 	}
