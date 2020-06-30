@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="index.html">Home</a>
+<a class="topnavleft" href="index.html#about">About</a>
+<a class="topnavleft" href="downloads.html">Downloads</a>
+<a class="topnavleft" href="contact.html">Contact</a>
+<br>
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="search.js">
+    
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+	<br>
+		<div align="center" class="iconPage">
+			<img class="imageCircle" src="assets/SHEPpython2.png">
+		</div>
+		<h2 id="about" class="headerText">Python SHEP library</h2>
+		<hr class="break">
+		<h3 class="contentText">
+		SHEP uses a neural network graph to store information. The library provides the ability to sort out data entered by the user. The current 
+		SHEP version is made as a chatbot interface allowing a client side and admin side. The next version in development will add self learning.
+		For now it is up to the developer how they wish to use the code.
+		<br><br>
+		SHEP has an in-built language analyser which will break down sentences into either questions or statements. Questions will be checked to whether 
+		they have some form of answer, and statements will be entered as feedback into a database. The developer can use this information to teach the 
+		AI about information. It is really down to the developer. Statements can be added as questions using the admin bot class.
+		<br><br></h3>
+		  <font color="blue"><a href="downloads.html">Download the library</a></font> to get started! The file "AI.py" will need to be in the same folder as your code. 
+		  <br /><br />For the SHEP library to run, you will need to use any Python 3.
+		  <br /><br />
+		  <div align="center"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></div>
+			<h2 id="about" class="headerText">Main bot</h2>
+			<h3 class="contentText">The code will set up a main bot which will load in the data and create all needed files for it to function. </h3>
+			<h2 id="about" class="headerText">Admin bot</h2>
+			<h3 class="contentText">The admin bot is the class used to interact with the data and teach the main bot. This could be 
+			through making an admin account to oversee your program, or making this admin bot manage the self learning aspects.</h3>
+			<h2 id="about" class="headerText">Client bot</h2>
+			<h3 class="contentText">This is the class used by the user. It is a simple enter in and get out. The client has the ability to 
+			provide "negative feedback" to the bot, in order to teach it when it goes wrong. This can be set up in a way of your chosing. Perhaps 
+			a sound sensor, and when it detects shouting it sets to negative feedback.</h3>
+			<h2 id="about" class="headerText">Future versions</h2>
+			<h3 class="contentText">Future versions will have more inbuilt self learning features, and adaptive behaviour rather than pre-programmed 
+			aspects such as the language analyser. This is all still in development.</h3>
+<!-- Auto width -->
+<form method="get" action="downloads/SHEP.py">
+<button href="" class="btn1"><i class="fa fa-download"></i> Download</button>
+</form>
+<br/><br/>
+		<h5><b>Using SHEP</b></h5>
+		  You can include the SHEP library using the following line:
+		  <br />
+		  <div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> *</div>
+		<br/>
+		<h4>Declarations</h4>
+		<div class="textBox">
+		<br />
+		<i>bot</i> = <b>Bot</b>(<i>name</i>,<i>system pathway</i>) <font color="blue">-- This declares the AI with it's pathway to it's files</font>
+		<br /><br/>
+		<i>ReportData</i>=<b>dataBase</b>(<i>pathway</i>,<i>filename</i>) <font color="blue">-- This is the database which will store reported data in, it must be global</font>
+		<br /><br/>
+		<i>Adminclass</i>=<b>adminBot</b>(<i>bot</i>) <font color="blue">-- This is the admin bot being declared</font>
+		<br /><br/>
+		<i>clientclass</i>=<b>botClient</b>(<i>bot</i>) <font color="blue">-- This is the client bot being declared</font>
+		<br/><br/><br/>
+		<h4>Admin usage</h4>
+		<i>Adminclass</i>.getToAdd() <font color="blue">-- Return a list of all the confused data items. The questions which have no response</font>
+		<br /><br/>
+		<i>Adminclass</i>.add(<i>question</i>,<i>answer</i>) <font color="blue">-- This adds the phrase to the answer. Both entered as strings</font>
+		<br /><br/>
+		<i>Adminclass</i>.addStatement(<i>statementStrng</i>) <font color="blue">-- This adds a statement to the statement database. "This bot is cool"</font>
+		<br /><br/>
+		<i>Adminclass</i>.deletes(<i>question</i>) <font color="blue">-- This deletes an item from the confused data log. The questions which have not been learned</font>
+		<br /><br/>
+		<i>Adminclass</i>.deleteQ(<i>question</i>) <font color="blue">-- This deletes a question from the main question --> answer data</font>
+		<br /><br/>
+		<i>Adminclass</i>.getFeedback() <font color="blue">-- Return a list of statements said broken down into meaning. "Toielt->smells"</font>
+		<br /><br/>
+		<i>Adminclass</i>.readReport() <font color="blue">-- Read all the data from the report database (only works if report declared globally before)</font>
+		<br /><br/>
+		<i>Adminclass</i>.addConfused(<i>sentence</i>) <font color="blue">-- Add a sentence to the confused data file to be checked</font>
+		<br /><br/>
+		<h4>Client usage</h4>
+		<i>clientclass</i>.Enter(<i>userInput</i>,<i>previous_subject_array</i>) <font color="blue">--Enter your sentence, and the subjects of the last (or an empty array to not be complicated). Get an answer back</font>
+		<br /><br/>
+		<i>clientclass</i>.add(<i>question</i>,<i>answer</i>) <font color="blue">--add question to answer in data</font>
+		<br /><br/>
+		<i>clientclass</i>.feedback(<i>type</i>,<i>sentence</i>) <font color="blue">--Give "negative" as type to enter a question for checking</font>
+		<br /><br/>
+		<i>clientclass</i>.report(<i>question</i>) <font color="blue">-- Report a question to be viewed by admin and checked</font>
+		<br/><br/><br/>
+		
+		<div class="codeBox"><font color="orange">from</font> SHEP <font color="orange">import</font> *
+<br/>		<font color="red">#This code represents input arrays from objects a camera system sees</font>
+</div>
+<br/><br/><br/>
+	 </div>
+		
+		</div>
+</body>
+<script>
+	
+</script>
+</html>
+
