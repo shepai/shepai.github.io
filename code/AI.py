@@ -205,10 +205,10 @@ class SpellEngine:
             i+=1
         return sentence
 class Language:
-    def __init__(self):
+    def __init__(self,path):
         self.Sample_Questions = ["what is the weather like","where are we today","why did you do that","where is the dog","when are we going to leave","why do you hate me","what is the Answer to question 8",
-                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢t you help me",
-                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
+                    "what is a dinosour","what do i do in an hour","why do we have to leave at 6.00", "When is the apointment","where did you go","why did you do that","how did he win","why wonÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬ ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢t you help me",
+                    "when did he find you","how do you get it","who does all the shipping","where do you buy stuff","why donÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬ ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢t you just find it in the target","why don't you buy stuff at target","where did you say it was",
                     "when did he grab the phone","what happened at seven am","did you take my phone","do you like me","do you know what happened yesterday","did it break when it dropped","does it hurt everyday",
                     "does the car break down often","can you drive me home","where did you find me"
                     "can it fly from here to target","could you find it for me","hi","hello"
@@ -216,47 +216,55 @@ class Language:
                     "i was wondering if you could help me","could you tell me where i can find this","thank you"
                     "thanks","what mental health support is there","where can I find the treasure","what time does the theatre open and when does it close"
                     "how do i get in cheaper and how much"]
+        try:
+            file=open(path+"sentenceDemos.txt","r")
+            r=file.read()
+            file.close()
+            self.Sample_Questions=r.split(":::")
+            self.Sample_Questions=self.Sample_Questions[:-1]
+        except: #create file
+            file=open(path+"sentenceDemos.txt","w")
+            for i in self.Sample_Questions:
+                file.write(i+":::")
+            file.close()
+    def splitQuestion(self,sentence):
+        tokens = nltk.word_tokenize(sentence) #tokenize sentence
+        tagged = nltk.pos_tag(tokens) #get tags
+        q=[]
+        for i in tagged:
+            if "W" == i[1][0] or "VBP" in i[1]:
+                q.append(i[0])
+        return q
+    def splitSubjects(self,sentence):
+        tokens = nltk.word_tokenize(sentence) #tokenize sentence
+        tagged = nltk.pos_tag(tokens) #get tags
+        s=[]
+        for i in tagged:
+            if "NN" in i[1] or "IN" in i[1] or "JJ" in i[1] or "VBG" in i[1]:
+                s.append(i[0])
+        return s
+    def splitDirected(self,sentence):
+        tokens = nltk.word_tokenize(sentence) #tokenize sentence
+        tagged = nltk.pos_tag(tokens) #get tags
+        s=[]
+        for i in tagged:
+            if "P" in i[1][:-1]:
+                s.append(i[0])
+        return s
     def splitMeaning(self,sentence):
         #split the sentence into the meaning phrases and return to become nodes
         tokens = nltk.word_tokenize(sentence) #tokenize sentence
         tagged = nltk.pos_tag(tokens) #get tags
-        nodes=[]
-        string="C:"
+        nodes=""
         sentences=[]
         for i in tagged:
-            if "W" in i[1] or "VB" == i[1] or "CD" in i[1] or "IN" in i[1]:
-                string+=i[0]+" " #change to i[1] to get tokens instead
-            elif "NN" in i[1] or "RB" in i[1] or "JJ" in i[1] or "VBP" in i[1] or "PR" in i[1]:
-                if string!="C:":
-                    nodes.append(string[:-1]) #add chunks of wordsor
-                string="C:"
-                nodes.append(i[0])
-            elif "CC" == i[1]:
-                if string!="C:":
-                    nodes.append(string)
-                sentences.append(nodes)
-                nodes=[]
-                string="C:"
+            if "CC" in i[1]:
+                sentences.append(nodes[:-1])
+                nodes=""
             else:
-                if string!="C:":
-                    nodes.append(string[:-1]) #add chunks of words
-                string="C:"
-        if string!="C:":
-            nodes.append(string[:-1])
+                nodes+=i[0]+" "
+        if nodes!="":
             sentences.append(nodes)
-        i=0
-        if sentences==[]: #if only 1D sentence
-            sentences.append(nodes)
-        for nodes in sentences:
-            while i<(len(nodes)): #remove empty spaces
-                if nodes[i] == "" or nodes[i]=="C":
-                    del nodes[i]
-                    i-=1
-                i+=1
-            if len(nodes)==0 and len(sentence.split())<4:
-                #small phrase
-                nodes=sentence.split() #add small phrases anyway
-        print(sentences)
         return sentences
     def getType(self,sentence):
         for Ran_Question in self.Sample_Questions:
@@ -300,10 +308,13 @@ class dataBase:
         self.cur.execute("DELETE FROM Data WHERE question=?",(question,))
         self.conn.commit()
     def increaseByID(self,ID):
-        self.cur.execute("SELECT ID,priority FROM Data WHERE id=?",(ID,))
+        self.cur.execute("SELECT ID,question,priority FROM Data WHERE id=?",(ID,))
         rows = self.cur.fetchall()
-        self.delete(rows[0][1])
-        self.cur.execute('insert into Data values (?,?,?)',[ID,rows[0][1],rows[0][2]+1])
+        try:
+            self.delete(rows[0][1])
+            self.cur.execute('insert into Data values (?,?,?)',[ID,rows[0][1],rows[0][2]+1])
+        except IndexError: #if error
+            self.cur.execute("DELETE FROM Data WHERE ID=?",(rows[0][0],))
     def readData(self):
         self.cur.execute("SELECT * FROM Data")
         rows = self.cur.fetchall()
@@ -322,7 +333,7 @@ class dataBase:
 class Bot:
     def __init__(self,ID,systemPathway):
         self.ID=ID #set an ID for the bot
-        self.lang=Language() #Language analyzer
+        self.lang=Language(systemPathway) #Language analyzer
         self.Questions=LoadMemory(systemPathway+"questions.json") #questions analyser
         self.Statements=dataBase(systemPathway+"Statements.db") #statements analyser
         self.systemPathway=systemPathway
@@ -343,13 +354,8 @@ class Bot:
         else:
                     similarity=AL-0.2 #lower chance if subjects irrelevant
         return similarity
-    def checkQuestion(self,nodes,subjects,previous,extraInfo):
-            print("*****************") #for debuggin purposes
-            print("nodes:",nodes)
-            print("subjects:",subjects)
-            print("previous:",previous)
-            print("extraInfo:",extraInfo)
-            response=""
+    def checkQuestion(self,nodes):
+            #get the links to each question
             past=[]
             for i in nodes: #gather the subject responses
                 vals=self.Questions.getConnected(i)
@@ -361,108 +367,80 @@ class Bot:
                 past+=tmp
             largest=0
             value=""
+            questionLinks=[]
             for j in past: #find which answers best fit
                 vals=self.Questions.getConnected(j)
                 tmp=[]
                 for i in vals:
                     val=i.vertices[1]
                     tmp.append(val)
-                AL=self.similar(tmp,nodes)
-                if len(extraInfo)>0: #there are nodes to guide information
-                        endResult=[]
-                        
-                        large=0
-                        tempVal=AL
-                        lis=[]
-                        if len(extraInfo)<=6:
-                            lis=list(permutations(extraInfo,len(extraInfo)))
-                        else:
-                            lis=list(permutations(extraInfo,6)) #limit size
-                        for i in lis:
-                            build=tmp.copy()
-                            increases=[]
-                            for k in i: #try out different possibilities
-                                testValue=self.similar(tmp,increases+[k])
-                                if testValue>tempVal:
-                                    increases.append(k) #add to sub sentence
-                                    tempVal=testValue
-                            if tempVal>large:
-                                large=tempVal
-                                endResult=increases.copy()
-                            AL=large
-                            build+=endResult
-                            similarity=self.assignSim(build,subjects,AL)
-                            if similarity>largest: #get most simular
-                                largest=similarity
-                                value=j
-                                print("best case",largest,endResult,"for",j)
-                else:
-                    similarity=self.assignSim(tmp,subjects,AL)
-                    if similarity>largest: #get most simular
-                        largest=similarity
-                        value=j
-            print(largest)
-            if largest<0.80: #if the data is not significant
-                #process simular
-                if largest>=0.5:
-                    response="This is something similar I found which may answer your question '"+value+"'"
-                else:
-                    if subjects==[]: #vague sentence
-                        print("no subjects")
-                    #there is nothing
-            else:
-                response=value
-            return response
+                questionLinks.append([j,tmp])
+            return questionLinks
     def Enter(self,sentence,previous):
         #main query function which takes in a sentence and returns likely response
-        type=self.lang.getType(sentence)
-        sentences=self.lang.splitMeaning(sentence)
-        subjects=[]
-        lineOfSubjects=[]
-        for nodes in sentences:
-            s=[]
-            print(nodes)
-            for i in nodes: #gather the subjects
-                print(i)
-                if "C:" not in i:
-                    s.append(i)
-                    lineOfSubjects+=[i]
-            subjects.append(s)
+        Subsentences=self.lang.splitMeaning(sentence)
+        GlobalSubjects=self.lang.splitSubjects(sentence)
+        lineOfSubjects=""
         response=""
-        if type=="question":
-            #query question data base
-            oneList=[]
-            subs=[]
-            for i in range(len(sentences)): #convert to one sentence
-                oneList+=sentences[i]
-            response=self.checkQuestion(oneList,lineOfSubjects,previous,[]) #if sentence is
-            if response=="" or "This is something similar" in response:
-                response=""
-                for nodePos in range(len(sentences)): #loop through sub sentences
-                    otherInfo=oneList.copy()
-                    for i in oneList: #build up extra information
-                        if i in sentences[nodePos]:
-                            del otherInfo[otherInfo.index(i)]
-                    get=self.checkQuestion(sentences[nodePos],subjects[nodePos],previous,otherInfo)
-                    print(get)
-                    if get!="" and "This is something similar" not in get:
-                        response+=get+" " #if sentence is
-            if response.replace(" ","")=="":
-                self.database.enterData(sentence)
-        elif type=="statement":
-            #add to statements for analyses of statements
-            for nodes in sentences:
+        Subsentences=[sentence]+Subsentences #try as whole then proceed to split
+        for i in Subsentences:
+            type=self.lang.getType(i)
+            directedTo=self.lang.splitDirected(i)
+            subjects=self.lang.splitSubjects(sentence)
+            meaning=self.lang.splitQuestion(sentence)
+            if type=="question":
+                print(directedTo,subjects,meaning)
+                nodes = directedTo+subjects+meaning
+                links=self.checkQuestion(nodes)
+                largestChance=0
+                answer=""
+                foundNodes=[]
+                for z in links:
+                    ###purge old formats####
+                    n=[]
+                    for j in z[1]:
+                        n+=j.replace("C:","").split()
+                    probability=self.similar(n,nodes)
+                    if probability>largestChance:
+                        largestChance=probability
+                        foundNodes=z[1]
+                        answer=z[0]
+                count=0
+                for subject in subjects: #count if all subjects present
+                    if subject in foundNodes:
+                        count+=1
+                if count==len(subjects): #all subjects present
+                    probability+=0.08
+                else: #not all subjects are present
+                    probability-=0.08
+                if largestChance >=0.8: #found
+                    if Subsentences.index(i)>0:
+                        responses+=answer+". "
+                    else:
+                        response=answer
+                elif largestChance >=0.5: #might have found
+                    if Subsentences.index(i)==0:
+                        response="This is something similar I found which may answer your question '"+answer+"'"
+                else: #not in data
+                    if subjects==[]: #vague sentence
+                        print("no subjects")
+                    
+            elif type=="statement": #potentially scrap
+                #add to statements for analyses of statements
+                nodes = directedTo+subjects
                 string=""
                 for i in nodes: #convert to string
-                    string+=i+" "
-                    
+                        string+=i+" "
+                        
                 id=self.Statements.containsLanguage(string[:-1])
                 if id==None:
-                    self.Statements.enterData(string[:-1])
+                        self.Statements.enterData(string[:-1])
                 else:
-                    self.Statements.increaseByID(id)
+                        self.Statements.increaseByID(id)
                 response="Thank you for your feedback"
-        return [response,lineOfSubjects]
+            if response=="":
+                self.database.enterData(sentence)
+            return [response,lineOfSubjects]
     
 class botClient:
     #built to use less memory and provide an interface with the main bot
@@ -497,6 +475,10 @@ class botClient:
                 count+=1
             print("changing name to",answer)
         v1=self.bot.lang.splitMeaning(question) #get nodes
+        tmp=[]
+        for i in v1:
+            tmp+=i
+        v1=tmp
         for i in v1:
             self.bot.Questions.addDirected(Edge(i,answer)) #add to graph
         for i in v1:
@@ -518,6 +500,13 @@ class adminBot:
     def getToAdd(self):
         return self.database.readData()
     def add(self,question,answer):
+        question=question.replace(":::","")
+        if self.bot.lang.getType(question)!="question":
+            print("updating questions")
+            file=open(self.bot.systemPathway+"sentenceDemos.txt","a")
+            file.write(question+":::")
+            file.close()
+            self.bot.lang.Sample_Questions.append(question)
         if self.bot.Questions.getConnected(answer) !=[]: #cannot have same answer twice
             count=0
             while True: #loop testing out names
@@ -538,7 +527,7 @@ class adminBot:
         SaveMemory(self.bot.systemPathway+"questions.json",self.bot.Questions.data) #save to file
         self.database.delete(question) #remove from database
     def addStatement(self,sentence):
-        self.bot.database.enterData(sentence)
+        self.bot.Enter(sentence,[])
     def delete(self,question):
         self.database.delete(question) #remove from database
     def deleteQ(self,question):
