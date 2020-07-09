@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Uni Chatbot</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<p class="title" align="center">University Chatbot Project</p>
+<a class="topnavleft" href="FAQ.html">ChatBot</a>
+<a class="topnavleft" href="admin.html">Sign in</a>
+<a class="topnavleft" href="legal.html">Information & Legal</a>
+
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<script src="jquery.js">
+	</script>
+
+	<script src="search.js">
+    
+</script>
+</div>
+	<!-- the main content -->
+	<br>
+	<div class="main">
+		<div align="center" class="iconPage">
+			
+		</div>
+		<h1 class="headerText">Ask Us Questions</h1>
+		<hr class="break">
+		
+		<h3 class="contentText">This application is a university chatbot which uses natural language analyses to give you 
+		the best response to your questions. It is designed to help students with their every day to day life. 
+		<br><br>
+		Not all the responses has been added, but staff will be there to answer general student questions. If you cannot get an 
+		answer one day, check again soon and it should be there. 
+		<br><br>
+		Please give feedback on the responses to help the AI learn whether the responses it is finding are correct. </h3>
+		<h2 class="headerText">Once you've completed, please <a href="https://www.surveymonkey.co.uk/r/GXFKWS2">fill out our survey<a></h2>
+		
+		<a onClick="report()"><p style="cursor: pointer;"><u> Report False information </u></p></a>
+		<div id="myModal" class="modal">
+
+			  <!-- Modal content -->
+			  <div align="center" class="modal-content">
+				<span class="close">&times;</span>
+				<p>Did this answer your question?</p>
+				<img onClick="posFeedback()" style="cursor:pointer;" width="60" height="60" src="assets/application/happy.jpg"><img onClick="negFeedback()" style="cursor:pointer;" width="60" height="60" src="assets/application/sad.jpg" >
+			  </div>
+
+			</div>
+			
+		<div id="mainContent" class="messageActivate">
+			
+		</div>
+		</div>
+		<br><br><br><br>
+		<div align="center" class="sendMessage">
+		<br>
+			<input  type="text" id="messageFAQ" class="messageBox" name="fname"><button onClick="enterMessage()" class="FAQButton" value="send">send</button>
+		</div>
+		
+	
+</body>
+
+<script src="chat.js">
+
+</script>
+	<script>
+		// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+		</script>
+</html>
+
