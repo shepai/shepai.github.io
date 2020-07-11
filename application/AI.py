@@ -397,6 +397,10 @@ class Bot:
             directedTo=self.lang.splitDirected(i)
             subjects=self.lang.splitSubjects(i)
             meaning=self.lang.splitQuestion(i)
+            if len(directedTo+subjects+meaning)<=3 and subjects: #if small iconic sentence
+                directedTo=[]
+                meaning=[]
+                subjects=i.split()
             if type=="question":
                 nodes = meaning+directedTo+subjects
                 links=self.checkQuestion(nodes)
