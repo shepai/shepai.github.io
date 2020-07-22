@@ -240,34 +240,47 @@ class CB:
                     l=i[1]
                 if i[1]<l+0.15 and i[1]>l-0.15: #within bound
                         potentials2.append(i[0])
-            if l<0.35 and len(self.currentLog.convo)>2: #if the probability is low then no longer save information to it
+            if l<0.30 and len(self.currentLog.convo)>2: #if the probability is low then no longer save information to it
                     return ""
+            if l>0.9: #if the conversation is really relevant
+                print("*")
+                return v
             print("~")
             return choice(potentials2) #return one of largest
         return ""
     def getRandom(self,type):
             #get a random phrase
             f=[]
+            dates=[]
             for (dirpath, dirnames, filenames) in os.walk(self.path+type):
                     f=filenames
+                    for i in f:
+                        val=os.path.getctime(self.path+type+i)
+                        dates.append(val)
                     break
+            tmp=[]
+            for i in range(20): #get top 20
+                item=max(dates)
+                ind=dates.index(item)
+                tmp.append(f[ind])
+                del f[ind]
+                del dates[ind]
+            f=tmp.copy()
             data=[]
-            val="&*&&*"
-            while len(data)<=1:
-                            r=randrange(len(f)) #get out ofbounds
-                            if r==len(f): #avoid out of bounds error
-                                    r=r-1
-                            i=f[r]
-                            data=self.CDB.openDataBase(type+i.replace(".txt",""))
+            val=self.convo[-1]
             count=0
-            while val not in self.currentLog.convo and count<len(data): #try not repeat itself
-                    if len(data)>1:
-                            data=data[1:]
-                    r=randrange(len(data)) #get out ofbounds
-                    if r==len(data): #avoid out of bounds error
-                            r=r-1
-                    val= data[r]
-                    count+=1     
+            while val in self.convo: #try not repeat itself
+                while len(data)<=1:
+                                r=randrange(len(f)) #get out ofbounds
+                                if r==len(f): #avoid out of bounds error
+                                        r=r-1
+                                i=f[r]
+                                data=self.CDB.openDataBase(type+i.replace(".txt",""))
+                                val=data[len(data)-1] #last position
+                                
+                count+=1
+                if count==10: #prevent probability loop
+                    break
             return val
     def getShort(self,message):
             #get all short responses
@@ -281,6 +294,7 @@ class CB:
                                     os.remove(self.path+"confused/"+i)
                                     return data[1]
                     break
+            print("no short")
             return ""
     def setGetKey(self,message):
             dt,s,m=self.LC.splitLanguage(message)
@@ -315,14 +329,6 @@ class CB:
             self.currentLog.sendToConfused()
             uniqueName=str(datetime.datetime.now()).replace(" ","-").replace(".","-").replace(":","-") #works for one person
             self.currentLog=Log(self.path,uniqueName+".txt",self.LangC) #start again
-            val=self.getShort(message) #check if it can learn from short unknown phrases
-            key=self.setGetKey(val)
-            self.DBP.addDirected(Edge(key,str(self.currentLog))) #create link between data
-            if val!="":
-                    #if there is one
-                    self.currentLog.add(val)
-                    print("*")
-                    return val
             r=self.getRandom("confused/") #WILL RETURN RANDOM
             self.currentLog.add(r)
             print("&")
