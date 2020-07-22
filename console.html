@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+		body{
+			background-color:black;
+			color:white;
+			zoom: 125%;
+		}
+		input{
+			font-size:10px;
+			background-color:black;
+			color:white;
+			width:90%;
+			border: 0px solid;
+			outline: 0;
+		}
+		p{ 
+			font-size:10px;
+		}
+		@media only screen and (max-width: 600px) {
+		  body{
+			zoom: 170%;
+		  }
+		}
+		
+</style>
+<body>
+	<p>
+	<pre>
+        `.--::::::--.`        
+     `-://////////////:-`     
+   .:////////////////////:.   
+  -/////shhy/:--:://///////-  
+ ://///hMMMMm`    `.:///////: 
+.//////sdNNmo        -///////.
+://////-`..`          ///////-
+://////-              ///////-
+.///////.            -///////.
+ :///////-.`      `.:///////: 
+  -////////:::--:://///////-  
+   .:////////////////////:.   
+     .-///////////////:-`     
+        `.--::::::--.`               
+	</pre></p>
+	<p>For more information go to <a href="https://www.shepai.github.io" style="color:white;">SHEP AI</a></p>
+	<br>
+	
+	<div>
+		<p id="output">Shep Message >></p>
+		<br>
+		 <span class="textbox"> 
+         <p>User Message >></p>
+			<input type="text" id="input" name="fname" value="" autocomplete="off" placeholder="please type your message here">
+		</span>
+		<br>
+	</div>
+	
+</body>
+<script>
+	var con=new WebSocket("ws://80.5.202.205:50101") //ws://echo.websocket.org
+	con.onopen=function(){con.send("hi"+"---"+"");};
+	con.onerror=function(error){console.log("error"+error);};
+	con.onmessage=function(e){
+		document.getElementById("output").innerHTML=e.data;
+		document.getElementById("input").value="";
+	}
+	input.addEventListener("keyup", function(event) {
+	  // Number 13 is the "Enter" key on the keyboard
+	  if (event.keyCode === 13) {
+		con.send(document.getElementById("input").value);
+	  }
+	});
+</script>
+</html>
