@@ -265,6 +265,9 @@ class CB:
                         dates.append(val)
                     break
             tmp=[]
+            num=20
+            if len(f)<20:
+                num=len(f)
             for i in range(20): #get top 20
                 item=max(dates)
                 ind=dates.index(item)
@@ -280,8 +283,8 @@ class CB:
                                 r=randrange(len(f)) #get out ofbounds
                                 if r==len(f): #avoid out of bounds error
                                         r=r-1
-                                del f[r] #remove from choices
                                 i=f[r]
+                                del f[r] #remove from choices
                                 data=self.CDB.openDataBase(type+i.replace(".txt",""))
                                 val=data[len(data)-1] #last position
                                 
