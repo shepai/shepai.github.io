@@ -246,7 +246,13 @@ class CB:
                 print("*")
                 return v
             print("~")
-            return choice(potentials2) #return one of largest
+            c=0
+            val=choice(potentials2) #return one of largest
+            while c<len(potentials2)-1 and val in self.convo: #get one which has not been used
+                del potentials2[potentials2.index(val)] #remove
+                val=choice(potentials2) #return one of largest
+                c+=1
+            return val
         return ""
     def getRandom(self,type):
             #get a random phrase
@@ -266,21 +272,20 @@ class CB:
                 del f[ind]
                 del dates[ind]
             f=tmp.copy()
-            data=[]
+            data=[".."]
             val=self.convo[-1]
             count=0
-            while val in self.convo: #try not repeat itself
+            while val in self.convo and count<len(f): #try not repeat itself
                 while len(data)<=1:
                                 r=randrange(len(f)) #get out ofbounds
                                 if r==len(f): #avoid out of bounds error
                                         r=r-1
+                                del f[r] #remove from choices
                                 i=f[r]
                                 data=self.CDB.openDataBase(type+i.replace(".txt",""))
                                 val=data[len(data)-1] #last position
                                 
                 count+=1
-                if count==10: #prevent probability loop
-                    break
             return val
     def getShort(self,message):
             #get all short responses
