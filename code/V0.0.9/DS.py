@@ -73,7 +73,7 @@ class fileStructure:
             if value==0: #called upon in different way
                 for subdir, dirs, files in os.walk(self.filepath):
                     return dirs
-            f=open(self.filepath+"index.txt")
+            f=open(self.filepath+"index.txt", encoding = "ISO-8859-1")
             for line in f:
                 line=line.replace("\n","")
                 vals=line.split(",")
@@ -83,7 +83,7 @@ class fileStructure:
         def __setitem__(self,value,setTo): #set value
             num=-1
             count=0
-            f=open(self.filepath+"index.txt")
+            f=open(self.filepath+"index.txt", encoding = "ISO-8859-1")
             for line in f:
                 count+=1
                 line=line.replace("\n","")

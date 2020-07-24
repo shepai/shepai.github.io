@@ -16,7 +16,18 @@ def recordLED(TYPE):
         uh.show()
     else:
         displayEye()
-
+def readUH(text): #take in a text bmp file and turn the colours into pixels on the unicorn hat
+    lines=text.split("\n")
+    for i in range(len(lines)):
+            arr=lines[i]
+            for j in range(len(arr)):
+                if arr[j] == "R":
+                    uh.set_pixel(i,j,255,0,0)
+                elif arr[j] == "W":
+                    uh.set_pixel(i,j,255, 255, 255)
+                else:
+                    uh.set_pixel(i,j,0,0,0)
+    uh.show()
 def INPUT():
     # Record Audio
     try:
