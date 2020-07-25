@@ -2,7 +2,7 @@ from AI import CB
 import sys
 import speech_recognition as sr
 import time
-
+system_pathway=sys.path[0].replace("\\","/")+"/"
 try: #raspberry pi libraries
     import unicornhathd as uh
     uh.rotation(0)
@@ -12,6 +12,7 @@ except:
     print("Booting in PC mode")
 def recordLED(TYPE):
     if TYPE:
+        displayEye()
         uh.set_pixel(15,15,0, 255, 0)
         uh.show()
     else:
@@ -83,6 +84,10 @@ def blink():
 
 SHEP=CB(sys.path[0].replace("\\","/")+"/data/")
 start = time.time()
+try:
+    displayEye()
+except:
+    print("eye on")
 while True:
     if time.time()-start>=5:
         #blink every 6 seconds of this loop
