@@ -28,24 +28,41 @@ def readUH(text): #take in a text bmp file and turn the colours into pixels on t
                 else:
                     uh.set_pixel(i,j,0,0,0)
     uh.show()
-def INPUT():
-    # Record Audio
-    try:
-        recordLED(True)
-    except:
-        print(">")
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Say something!")
-        audio = r.listen(source)
-    try:
-        return r.recognize_google(audio)
-    except:
-        return ""
-    try:
-        recordLED(False)
-    except:
-        print("-")
+def INPUT():#input method
+       try:
+            recordLED(True)
+       except:
+            print(">")
+       voiceReply =""
+       try:
+           rec = sr.Recognizer()
+           rec.dynamic_energy_threshold = False #set ackground noise to silence
+           t0 = 0 #set the timer
+           with sr.Microphone() as source:
+                  rec.adjust_for_ambient_noise(source) #adjust audio
+                  print ("Speak Now")
+                  t0 = time.time() #start a timer to prevent the search going on too long
+                  audio = rec.listen(source,timeout=5)                   # listen for the first phrase and extract it into audio data
+           t1 = time.time() #take a second reading of the time
+           total = t1-t0 #work out how long it took
+           timer = 0
+           if total < 15: #it will take too long to convert otherwise
+                      try:
+                             voiceReply = (rec.recognize_google(audio,language = "en-GB"))
+                             print("you said "+str(voiceReply))
+                             if "could not understand" in voiceReply.lower(): #prevent annoying output
+                                    voiceReply = ""
+                      except:
+                             voiceReply="" 
+           else:
+                      print("I'm sorry, I didn't get that")
+       except:
+              voiceReply =""
+       try:
+            recordLED(False)
+       except:
+            print("-")
+       return voiceReply #return voice
 def OUTPUT(string):
     print(string)
 def displayEye():
