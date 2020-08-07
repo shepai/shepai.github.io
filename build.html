@@ -28,8 +28,138 @@
 </div>
 	<!-- the main content -->
 	<div class="main">
-		<h1 class="headerText">Build SHEP</h1>
+		<h1 class="headerText">Build SHEP (Pictures coming soon)</h1>
 		<hr class="break">
+		<p>
+			In this tutorial we will make our own portable SHEP AI. You can modify the code to work best for your own robotic system.
+			
+			This tutorial will go over the hardware needed, the setting up of libraries and configuring of the Raspberry Pi to make 
+			SHEP portable. It is up to you how you want it to look and what interface you use.
+			
+			</p><h2 class="headerText">Picking parts</h2><p>
+			Firstly we will want to pick our hardware. How do we want the AI to look and interact? I have personally used the Pimoroni 
+			Unicorn HAT 16x16. I have used th I2S Adafruit Microphone which uses pin 18 on the Pi's GPIO. You will need to consider what pins are being used. 
+			If you decided to use the Unicorn HAT 8x8 which also used pin 18, you may want to consider using a USB microphone. 
+			<br>
+			I will be using the Raspberry Pi 3 model A+, as it has a USB where I can insert a WiFi dongel, and it has an Audio jack which saves me 
+			needing to purchase an audio HAT or module. I will get a PCB prototyping hat to attach the microphone. 
+			<img style="margin-left: auto;
+  margin-right: auto;" src="">
+			
+			</p><h2 class="headerText">Wiring it up</h2><p>
+			The HAT for the Pi fits nicely on, but our I2S requires wiring. Firstly we will older on the I2S microphone onto the PCB. 
+			Solder it near one of the sides so your voice will reach it. The Pins connect up as follows:
+			
+			<ul>
+				<li>3V to 3.3V</li>
+				<li>GND to GND</li>
+				<li>BCLK to BCM 18</li>
+				<li>DOUT to BCM20</li>
+				<li>LRCL to BDM19</li>
+			</ul>
+			<a href="https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test">Here is a more in depth tutorial for the I2S Mic</a>
+			On top of the Pi you will place the PCB, then on top of that place the Unicorn HAT.
+			I attached a switch to a 4xAA battery pack so that SHEP could be mobile. 
+			
+			</p><h2 class="headerText">Installing software</h2><p>
+			Once you have picked your hardware you will need to install the libraries. For me that will be the Unicorn Hat 16x16 library. 
+			I will boot up my pi, connect it to the internet and open up the terminal (CTRL ALT T).
+			<br>
+			<div class="codeBox">sudo pip3 install unicornhathd
+			</div>
+			Then we will will need to configure the rest of our hardware. If you are using your own microphone method the you will need to install 
+			that your way. For us we will be using the I2S microphone. 
+			<div class="codeBox">cd ~
+			<br>wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/i2smic.sh
+			<br>chmod +x i2smic.sh
+			<br>sudo ./i2smic.sh
+			</div>
+			After this you will follow the prompts. We are using the Pi 3 so will select model option 2. We will then 
+			select Y for auto boot as we will want it to load in every time we turn the AI on. After this simply reboot.
+			<div class="codeBox">sudo reboot
+			</div>
+			We will then want to make sure that the code is using the audio jack for output (unless you have your own means). 
+			This can be done through sudo raspi-config > advanced options > audio >audio jack. 
+			This should configure all the audio options that you need. 
+			<br>
+			Next we will actually install SHEP. 
+			<div class="codeBox">sudo wget https://shepai.github.io/code/run.zip
+			</div>
+			Extract the file which you have downloaded into a folder path of your choosing. Remember the exact pathway as you will be 
+			using it later.
+			<br>
+			You will need to download all the libraries and software needed:
+			<div class="codeBox">sudo pip3 install wavio
+			<br>sudo pip3 install sounddevice
+			<br>sudo pip3 install soundfile
+			<br>sudo pip3 install wave
+			<br>sudo apt-get install python3-pyaudio
+			<br>sudo pip3 install speechrecognition
+			<br>sudo pip3 install nltk
+			<br>sudo apt-get install espeak
+			<br>sudo python3
+			<br>>>>import nltk
+			<br>nltk.download()
+			</div>
+			Follow the prompts on the nltk and click download. This may take a while.
+			What we are doing here is installing all the data needed for SHEP to understand language.
+			<br>
+			NOTE:
+			<br>If you have errors later on with espeak then you will need to install nltk like so:
+			<div class="codeBox">python3
+			<br>>>>import nltk
+			<br>nltk.download()
+			</div>
+			<br>
+			</p><h2 class="headerText">Configuring the Pi</h2><p>
+			
+			We will want out Python script to load every time we turn the Pi on. 
+			This will be done using the following:
+			<div class="codeBox">sudo nano /etc/profile
+			</div>
+			At the bottom of this file we will add 
+			<div class="codeBox">sudo python3 /pathway_to_folder/HyperCube.py &
+			</div>
+			The pathway will be wherever you saved it. If you are having trouble with espeak then you may need to do the following:
+			<div class="codeBox">sudo adduser pi root
+			
+			</div>
+			Then in /etc/profile add the same code but without sudo.
+			<div class="codeBox">python3 /pathway_to_folder/HyperCube.py &
+			</div>
+			This will then boot your python code automatically. Before we reboot we have one more thing to add.
+			We will not need to use the GUI so can go to:
+			<div class="codeBox">sudo raspi-config
+			</div>
+			and change the boot option to boot to console autologin.
+			<img style="margin-left: auto;
+  margin-right: auto;"
+  width="80%" src="assets/boot.png">
+			
+			</p><h2 class="headerText">Altering the code for your own hardware</h2><p>
+			Being you set your microphone up as the default Raspberry Pi Mic, the audio should
+			work fine. If you have used other means for audio output rather than the inbuild audio jack 
+			then once again, make sure it is the default.
+			<br>
+			I have added in a green dot into the corner of the eye to signify when the audio is listening. 
+			This makes it easier to interact with. Something you may want to consider doing in your own interface. 
+			<br><br>
+			To alter the eye code for your own blink algorithm you will need to edit 3 different functions.
+			<br>recordLED(type)
+			<br>displayEye()
+			<br>blink()<br>
+			These are the ones which need editing. The recordLED turns an LED on or off 
+			depending if the system is recording. The other two are the ones which read in a text file and display the colours on the map.
+			You can set this in any way you wish, and import new libraries for your own interface. 
+			<br><br>
+			Below shows a tutorial on youtube of how to set up the voice recognition AI. You can follow this if you wish to start the code from 
+			scratch and add your own sensors and outputs. 
+			<br>
+			
+			<br><br>
+			
+			<iframe width="60%"  src="https://www.youtube.com/embed/VQEwNdCSctU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		</p>
 	</div>
 </body>
 <script>
