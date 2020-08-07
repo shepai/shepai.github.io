@@ -3,6 +3,7 @@
 	font-family: Arial, Helvetica, sans-serif;
 	background-image: url('backgrounds/hyper.png');
 	background-size: 12%;
+	width:100%;
 }
 .imageCircle {
 	position: relative;
