@@ -1,0 +1,52 @@
+SHEP Systems AI software 2020
+Distribution of the source code or binary files is not permitted without the permission of SHEP Systems.
+Libraries involved come under a range from the Apache lisence version 2.0 and MIT license which 
+promotes the use of these librarie in a fashion seen fit. 
+If permission of use is given by this software credit to the project developers 
+is expected. SHEP Systems will not be held accountable for the misuse of this software and criminal damage
+is liable to the the user and not SHEP Systems.
+
+The organization which uses this software must abide bu these terms:
+	*If used in Academia or public sector, the AI should not convey political 
+	opinions as to not descriminate against it's own users.
+	*The system must not provide illegal information, hate speeches 
+	or encourage harm to an individual, or others. 
+	*The AI should be used for the purposes it is intended, which is
+	to be a friendly information system to help people learn/ 
+The trained data is the responsibility of the client and what they allow to be used. 
+If the trained data causes offense or indeed criminal damage it those who use the 
+software in their system and train the data are liable.
+
+A consumer using the software agrees to te following conditions:
+	*To use the softare lawfully and respectfully
+	*That the data they enter will be processed by the organization hosting 
+	the software and future responses will e based off of their questions.
+	*The data they share must not be confidential information. If they do it is
+	for them to take the blame if that information gets out.
+
+Copyright (c) 2013-2019 Aymeric Augustin and contributors.
+All rights reserved.
+Websocket Library used within SHEP systems has the following requirements:
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * Neither the name of websockets nor the names of its contributors may
+      be used to endorse or promote products derived from this software without
+      specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
