@@ -1,0 +1,24 @@
+html/javascript chat bot FAQ
+
+pop up messages in the corner
+"hi there what can i help you with?"
+
+have some pre-programmed responses
+what is the time
+answers to basic questions
+
+answer questions about the project and company
+
+
+if unknown response:
+	send link to contact page
+
+
+
+
+technical:
+reads from sorted data structure
+breaks up sentence
+searches structure for subjects
+waits for files to be open
+opens the subjects if found and finds the words which the input uses to interact (basically V0.0.5)
