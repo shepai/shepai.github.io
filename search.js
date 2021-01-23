@@ -362,7 +362,7 @@ function detectmob() {
 				//wait for html
 				window.addEventListener('load', function () {
 					B();
-					n("data.txt");
+					//n("data.txt");
   				var User = document.getElementById("AIinput");
 				var checker=true;
 				
