@@ -46,7 +46,7 @@
 		To implement this, I used 4 AAA batteries to provide enough current to each of the micro servos. Of course, this will depend on your servos and the amount. A good way to think about it is the maximum draw of your servos multiplied by the number of servos. This is for a worst-case scenario that all servos are drawing from the battery. With the MG996R servos the maximum is 900ma and having a spider biped of 8 servos will require a battery of minimum 7200ma (8*900). We aren’t using anything near that with 4 micro servos. 
 <br><br>
 The biped used the feather M0 from Adafruit, 8-channel servo controller from Adafruit and an ultrasound sensor. All screwed into each other and a small bit of glue. 
-All libraries were found in the Adafruit library bundle, and are seen in the code.
+All libraries were found in the <a href="https://learn.adafruit.com/welcome-to-circuitpython/circuitpython-libraries">Adafruit library bundle</a>, and are seen in the code.
 <br><br>
 I used a genetic algorithm outlined in the development page which looped through a series of motor position changes such as [[0,0,0,10],[0,-10,0,0]]. This list would move servo 4 by 10 degrees in the first step and move servo 2 by -10 degrees. This is how I encoded the genotype. I gave it a maximum number of steps it can take as 10 to make it find an efficient way.
 <br><br>
