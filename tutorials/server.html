@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>SHEP AI</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
@@ -23,7 +23,7 @@
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
 <script src="search.js">
-    
+
 </script>
 
 </div>
@@ -33,8 +33,8 @@
 		<h5>Posted 26/August/2020</h5>
 		<h2 class="headerText">Overview</h2>
 	<p>In this tutorial we will be setting up an AI server where you will be able to communicate with
-	your AI via a network. This could be used for a <a href="library.html">chatbot</a> or the <a href="AIlib.html">self-learning AI chatbot</a>. 
-	For simplicity we will be using the self-learning AI, however the networking principles are the same. 
+	your AI via a network. This could be used for a <a href="library.html">chatbot</a> or the <a href="AIlib.html">self-learning AI chatbot</a>.
+	For simplicity we will be using the self-learning AI, however the networking principles are the same.
 	</p>
 	<h2 class="headerText">Preparing the hardware</h2>
 <p>You will need two devices connected on the same network. This can be either wired or wireless. </p>
@@ -59,7 +59,7 @@ websockets.serve(client, port=5000)) #listen for clients
 
 </pre>
 </div>
-This code will simply run and look for client requests. When the client connects an object is created in the memory. We could create a dictionary to hold user client objects and the AI which is connected. 
+This code will simply run and look for client requests. When the client connects an object is created in the memory. We could create a dictionary to hold user client objects and the AI which is connected.
 This can be done like the following:
 <div width="80%" class="codeBox">
 <pre>
@@ -88,7 +88,7 @@ websockets.serve(client, port=5000)) #listen for clients
 </div>
 
 <h2 class="headerText">Setting up a client</h2>
-This can be done in many ways, you could use python, or you could also use html and JavaScript. In this tutorial we will use JavaScript. You will want to design a webpage which has an input box, and an output label. This is the simplest form  of the user interface, but you can edit it with CSS to make it perfect for your application. 
+This can be done in many ways, you could use python, or you could also use html and JavaScript. In this tutorial we will use JavaScript. You will want to design a webpage which has an input box, and an output label. This is the simplest form  of the user interface, but you can edit it with CSS to make it perfect for your application.
 I have written the code for you using the WebSocket library for JavaScript.
 <div width="80%" class="codeBox">
 <pre>
@@ -111,9 +111,8 @@ If you want to make it so you can access it outside your home network, you will 
 	</div>
 </body>
 <script>
-	
-	
+
+
 </script>
 
 </html>
-

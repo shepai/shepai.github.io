@@ -3,7 +3,7 @@
 <html>
 <head>
 	<title>SHEP AI</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
@@ -25,7 +25,7 @@
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
 <script src="search.js">
-    
+
 </script>
 
 </div>
@@ -35,29 +35,29 @@
 		<h5>Posted 10/March/2021</h5>
 		<h2 class="headerText">Overview</h2>
 		<h3 class="contentText">
-		In this tutorial we will explore genetic algorithms in robotics and how to make a robot learn to walk. 
-		There are several hardware choices you can make with this, as the aim is for the robot to learn. 
-		I have used the Bob the Biped chassis as it is simple and cheap. 
-		
-		
+		In this tutorial we will explore genetic algorithms in robotics and how to make a robot learn to walk.
+		There are several hardware choices you can make with this, as the aim is for the robot to learn.
+		I have used the Bob the Biped chassis as it is simple and cheap.
+
+
 		</h3>
 		<h2 class="headerText">Implementation</h2>
 		<h3 class="contentText">
-		To implement this, I used 4 AAA batteries to provide enough current to each of the micro servos. Of course, this will depend on your servos and the amount. A good way to think about it is the maximum draw of your servos multiplied by the number of servos. This is for a worst-case scenario that all servos are drawing from the battery. With the MG996R servos the maximum is 900ma and having a spider biped of 8 servos will require a battery of minimum 7200ma (8*900). We aren’t using anything near that with 4 micro servos. 
+		To implement this, I used 4 AAA batteries to provide enough current to each of the micro servos. Of course, this will depend on your servos and the amount. A good way to think about it is the maximum draw of your servos multiplied by the number of servos. This is for a worst-case scenario that all servos are drawing from the battery. With the MG996R servos the maximum is 900ma and having a spider biped of 8 servos will require a battery of minimum 7200ma (8*900). We aren’t using anything near that with 4 micro servos.
 <br><br>
-The biped used the feather M0 from Adafruit, 8-channel servo controller from Adafruit and an ultrasound sensor. All screwed into each other and a small bit of glue. 
+The biped used the feather M0 from Adafruit, 8-channel servo controller from Adafruit and an ultrasound sensor. All screwed into each other and a small bit of glue.
 All libraries were found in the <a href="https://learn.adafruit.com/welcome-to-circuitpython/circuitpython-libraries">Adafruit library bundle</a>, and are seen in the code.
 <br><br>
 I used a genetic algorithm outlined in the development page which looped through a series of motor position changes such as [[0,0,0,10],[0,-10,0,0]]. This list would move servo 4 by 10 degrees in the first step and move servo 2 by -10 degrees. This is how I encoded the genotype. I gave it a maximum number of steps it can take as 10 to make it find an efficient way.
 <br><br>
 At each generation it would make several changes; I set it to one in the end after finding that le to the least amount of errors and most optimized solution within 50 generations.  These changes are random, we call mutations. It will randomly mutate a servo to be 0, -10, or 10.
 <br><br>
-If you use the code, you can define your start positions as the robot standing up, this gives it a place to start from at each generation. You can change the sizes of these arrays by editing the following variables: 
+If you use the code, you can define your start positions as the robot standing up, this gives it a place to start from at each generation. You can change the sizes of these arrays by editing the following variables:
 <br><br>
 num_of_servos=4<br>
 num_of_steps=10
 <br><br>
-Make sure to edit your start array to have the number of positions (and angles) you wish it to turn to (see line 12 of the code). 
+Make sure to edit your start array to have the number of positions (and angles) you wish it to turn to (see line 12 of the code).
 num_of_steps relates to how many steps it has in each generation to walk. The feather has low memory in comparison to controllers such as the Raspberry Pi, so may be limited in size.
 <br><br>
 You can find out more about the algorithm <a href="GeneticAlgorithms.html">here</a>.
@@ -68,13 +68,12 @@ You can find out more about the algorithm <a href="GeneticAlgorithms.html">here<
 		<h3 class="contentText">
 			<a href="downloads/robot_walking_code.py"> Download alternative code </a>
 		</h3>
-		
+
 	</div>
 </body>
 <script>
-	
-	
+
+
 </script>
 
 </html>
-
