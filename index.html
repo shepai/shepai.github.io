@@ -33,25 +33,25 @@
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#"  class="topnavright"><i  onclick="search()" class="searchIco icon fa fa-search"></i></a>
 <script src="search.js">
-    
+
 </script>
 
 </div>
 		<!-- the eye shaped menu -->
 	<table align="center" class="greyBox">
-	
+
 	<th class="textInfo2 rightText"><h3>Build SHEP</h3>
-	<p class="textInfo">A guide on how to build your own SHEP AI using the Raspberry Pi or just Python. Implement it in your own 
+	<p class="textInfo">A guide on how to build your own SHEP AI using the Raspberry Pi or just Python. Implement it in your own
 	robotics project and play around with it. Give your robot learning skills and intelligence.
 	</p>
 	</th>
-		<th id="ic4"><a href="build.html"><div class="iconPage">
+		<th id="ic4"><a href="tutorials/build.html"><div class="iconPage">
 			<img onmouseover="select('ic4')" class="imageCircle2" src="assets/smallEYE.jpg">
 		</div></a></th>
 		<th id="ic5"><a href="development.html"><div align="center" class="iconPage">
 			<img onmouseover="select('ic5')"class="imageCircle2" src="assets/design.jpg">
 		</div></a></th>
-		
+
 		<th class="textInfo2 leftText">
 		<h3>Development</h3>
 		<p class="textInfo">The history of the project, where it started and how it has evolved over time.
@@ -66,7 +66,7 @@
 			<th id="ic1"><a href="libraries.html"><div class="iconPage">
 				<img onmouseover="select('ic1')" class="imageCircle2" src="assets/python.png">
 			</a></th>
-		
+
 		<th id="ic2"><div align="center" class="iconPage">
 			<img onmouseover="select('ic2')"class="imageCircle" src="assets/eye.png">
 		</div></th>
@@ -90,7 +90,7 @@
 		</div></a></th>
 		<th class="textInfo2 leftText">
 		<h3>SHEP Chatbot</h3>
-		<p class="textInfo">The SHEP Chatbot project was a dulled down version of SHEP to keep control over learning and make it easy 
+		<p class="textInfo">The SHEP Chatbot project was a dulled down version of SHEP to keep control over learning and make it easy
 		to set up your own 24/7 staff member to answer questions and log unknown questions to be answered by the admin for the future.
 		</p></th>
 	</table>
@@ -98,13 +98,13 @@
 		<h3 align="center" class="contentText">Press icons to find out more...</h3>
 	</div>
 	<!-- the main content -->
-	
+
 	<!--<tr class="sizeBox" style="background-image:url('backgrounds/blue2.jpg');"> -->
 	<div style="background-image:url('backgrounds/red.jpg');color:white;" >
 	<div class="main">
 		<h2 id="about" class="headerText">The Project</h2>
 		<hr class="break">
-		
+
 		<h3 class="contentText">SHEP is an Artificial intelligence development project, started 2015. The aim is to make an open source platform which can apply Artificial intelligence to businesses, developers, public services and people with no technical understanding.
 <br><br>
 SHEP has been in development for many years. The project started off a keyboard input Arduino board, using an SD card and text file to store data. SHEP moved on to be voice controlled on the Arduino, using a series of boards communicating with eachother as a network. Later on, SHEP became a python program on the Raspberry Pi. Different inputs were used with this program from audio to network cables.
@@ -119,33 +119,33 @@ SHEP has been in development for 5 years now, from a small arduino board to a se
 <div class="main">
 	<hr id="aidemo">
 		<h2 id="about" class="headerText">Demo</h2>
-			
+
 	 <p class="contentText" style="text-align:center;">Below shows a basic browser version of the AI verbal reasoning software</p>
-			
-		<div class="console"> 
+
+		<div class="console">
 			<div class="AIbox" id="consoleC">
 				<p id="AIoutput">>Use the bottom of the console to type
-					
+
 					</p>
 				<br/>
 				<div  class="inputline">>>> <input type="text" id="AIinput" class="codeinput" name="fname"><br></div>
-				
-				  
-				
+
+
+
 		</div></div>
-		<p class="contentText">Type your sentence and press enter. SHEP will break down what you are saying 
+		<p class="contentText">Type your sentence and press enter. SHEP will break down what you are saying
 		based on its current collected data.</p>
 		<h3 id="explaintitle">Verbal understanding mock up</h3>
-		  <p id="explain">This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing 
+		  <p id="explain">This is the basic version of the AI. It checks your words matches what it knows in the data. Click button 2 to see the next stage, and have a go by typing
 		  where it says: >>></p>
   <hr>
   </div>
-  
+
   <div style="background-image:url('backgrounds/blue2.jpg');color:white;" >
 	<div class="main">
 		<h2 class="headerText">SHEP Chatbot</h2>
 		<h3 class="contentText">
-		The SHEP chatbot is a system made to make natural language processing and intelligent user interaction 
+		The SHEP chatbot is a system made to make natural language processing and intelligent user interaction
 		easy. <a href="chatbotSHEP.html">Find out more...</a>
 		</h3>
 		<div align="center"><img class="miniImage" src="assets/eye.png">
@@ -153,33 +153,32 @@ SHEP has been in development for 5 years now, from a small arduino board to a se
 		<br>
 </div></div></div>
 <br>
-	
+
 
 	</div>
 	<footer>
 	<h3>News feed</h3>
     <table width="90%" align="center">
-      
+
 	  <th width="40%">
       <ul class="w3-ul w3-hoverable">
         <a class="twitter-timeline" data-height="900" href="https://twitter.com/ai_shep?ref_src=twsrc%5Etfw">Tweets by ai_shep</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-		
+
       </ul>
     </th>
-	
-    
+
+
     </table>
   </footer>
 </body>
 
 <script>
 	var current='ic2'; //the start item
-	
+
 	function select(name)
 	{
-		
-		
+
+
 	}
 </script>
 </html>
-
