@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="index.html">Home</a>
+<a class="topnavleft" href="index.html#about">About</a>
+<a class="topnavleft" href="downloads.html">Downloads</a>
+<a class="topnavleft" href="contact.html">Contact</a><br>
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="search.js">
+    
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+	
+		<h1 class="headerText">Simple artificial neural network</h1>
+		<h5>Posted 08/August/2020</h5>
+		<h2 class="headerText">Overview</h2>
+		<p>
+		Artificial neural networks are extremely powerful parts of computer science. They are used to develop all sorts of intelligent systems. The issue is they are very complex to get your head round and there is a lot of maths involved… too much maths. Wouldn’t it be cool if you could have an artificial neural network which could sort complex information? 
+<br><br>In this tutorial you will be introduced to our simple abstract neural network code and learn to implement this with your own system. We will be training the network to recognize sentences and the type of sentence it is (question or statement).
+
+		</p>
+		<h2 class="headerText">Concept</h2>
+		Instead of complex maths, we have taken it down to a very abstract level. Let’s think about a neuron, we have a cell body, axons and dendrites. Neurons communicate via action potentials triggering the release of neurotransmitters/ signals. Neural pathways will strengthen if used a lot. For example the first time you ride a bike you will struggle as the coordination is not yet connected, but the more you do it the stronger the pathways become… this then makes you better at riding bikes.
+<br><br>This network works in the same way. Data is trained in with the known answer, for example:
+<br>"what is your name" = question 
+<br>"what is the capital of England" = question
+<br>"get out my way" = statement
+<br>"get me some tea" = statement
+<br><br>There is not a lot of data here that we are training on, so the system will not be accurate with other questions and statements such as "how are you". What it will do is learn that "what is" being at the front of a sentence makes a question, and "get" at the beginning makes a statement. Each word must be trained in with the position of it in a sentence (encoding the information). The network then changes the strengths of each connection based on how much it happens. 
+<br>
+		<h2 class="headerText">Downloading</h2>
+		<p>
+		Firstly, we will <a href="downloads/ann.zip">download</a> the python ANN code from our website. This is done by going to downloads and pressing the Python ANN link. This will download the package. Alternatively, if you are using Linux you can type:
+		<br>
+		<div width="80%" class="codeBox">sudo wget https://shepai.github.io/downloads/ann.zip
+			</div>
+			<br>
+			<img style="display: block;margin-left: auto;
+  margin-right: auto;"
+  width="80%" src="assets/downloadANN.png">
+		
+</p>
+		<h2 class="headerText">Training</h2>
+		
+		Next, we will train the data to recognise what we want it to. Within the package we have provided some training data for you to use.
+		<br>
+		<img width="40%" style="display: block;margin-left: auto;
+  margin-right: auto;" src="assets/anntrain.png">
+		<br>
+		Within these files are sentences separated by newline characters. We will be using these to train the neural network. 
+Firstly, we will create the object in python. In the same file as the file "Artificial_neural_network.py" create your own file. In this we will type:
+<br>
+<div width="80%" class="codeBox">
+		<font color="orange">from</font> Artificial_neural_network <font color="orange">import</font> CellBody
+		<br>cell = CellBody(<font color="green">"phrases/"</font>) <font color="red">#name of folder you want to save it in</font>
+		
+			</div>
+			We will then want to open each of the files and create lists of the data we wish to train the system on. This data will have to be encoded as well. 
+			
+			<br>
+		<div width="80%" class="codeBox">
+			file=open(<font color="green">"trainData/que.txt"</font>,<font color="green">"r"</font>)
+			<br>ques=file.read()
+			<br>file.close()
+			<br>file=open(<font color="green">"trainData/imperative.txt"</font>,<font color="green">"r"</font>)
+			<br>imp=file.read()
+			<br>file.close()
+			<br>file=open(<font color="green">"trainData/declarative.txt"</font>,<font color="green">"r"</font>)
+			<br>dec=file.read()
+			<br>file.close()
+			<br>ques=ques.lower()
+			<br>imp=imp.lower()
+			<br>dec=dec.lower()
+			<br>ques=ques.replace(<font color="green">"."</font>,<font color="green">""</font>).replace(<font color="green">","</font>,<font color="green">""</font>).replace(<font color="green">":"</font>,<font color="green">""</font>)
+			<br>ques=ques.replace(<font color="green">"?"</font>,<font color="green">""</font>).replace(<font color="green">"/"</font>,<font color="green">""</font>).replace(<font color="green">"-"</font>,<font color="green">""</font>)
+			<br>imp=imp.replace(<font color="green">"."</font>,<font color="green">""</font>).replace(<font color="green">","</font>,<font color="green">""</font>).replace(<font color="green">":"</font>,<font color="green">""</font>)
+			imp=imp.replace(<font color="green">"?"</font>,<font color="green">""</font>).replace(<font color="green">"/"</font>,<font color="green">""</font>).replace(<font color="green">"-"</font>,<font color="green">""</font>)
+			
+			<br>dec=dec.replace(<font color="green">"."</font>,<font color="green">""</font>).replace(<font color="green">","</font>,<font color="green">""</font>).replace(<font color="green">":"</font>,<font color="green">""</font>)
+			dec=dec.replace(<font color="green">"?"</font>,<font color="green">""</font>).replace(<font color="green">"/"</font>,<font color="green">""</font>).replace(<font color="green">"-"</font>,<font color="green">""</font>)
+			
+			<br>ques=ques.split(<font color="green">"\n"</font>)
+			<br>imp=imp.split(<font color="green">"\n"</font>)
+			<br>dec=dec.split(<font color="green">"\n"</font>)
+		</div>
+		Once we have organized the data we can train the network on it. Below shows a snippet of the code i used to train the system.
+		<br>
+		<div width="50%" class="codeBox">	
+		<pre>
+for i in ques[0:500]:
+	layer1=[i]
+	layer2=[]
+	pos=0
+	for j in i.split():
+		layer2.append(j+"-P-"+str(pos))
+		pos+=1
+	cell.trainData(layer1,layer2,"Question")
+
+for i in imp:
+	layer1=[i+".txt"]
+	layer2=[]
+	pos=0
+	for j in i.split():
+		layer2.append(j+"-P-"+str(pos))
+		pos+=1
+	cell.trainData(layer1,layer2,"Imperative")
+for i in dec:
+	layer1=[i+".txt"]
+	layer2=[]
+	pos=0
+	for j in i.split():
+		layer2.append(j+"-P-"+str(pos))
+		pos+=1
+	cell.trainData(layer1,layer2,"Declarative")
+		</pre>
+			</div>
+			This will train all the information that we need in. Of course, this does not mean that it can now recognise any sentence as our data may not have everything needed, or it may make mistakes. All neural networks have an inaccuracy degree to them. As do humans. How many people learn maths then get 100% in their exams? Not many. 
+<br><br>The training may take a bit of time depending how much data you are training in. 
+
+		<h2 class="headerText">Testing</h2>
+		To test out our network we will use the following code. It loops through and predicts what type of sentence you have entered:
+		<br>
+		<div width="50%" class="codeBox">	
+		<pre>
+while True:
+    sentence=input(">")
+    layer1=[sentence+".txt"]
+    layer2=[]
+    pos=0
+    for j in sentence.split():
+        layer2.append(j+"-P-"+str(pos))
+        pos+=1
+    print(cell.interact(layer1,layer2))
+		</pre>
+		</div>
+		Your output after running should be as follows:
+		<br>
+		<img width="20%" style="display: block;margin-left: auto;
+  margin-right: auto;" src="assets/annguess.PNG">
+		<br>
+		This is not always acurate. You could go further and use the negative feedback options in the ANN library. 
+		
+		<br>
+		<p>
+		Check out our video tutorial on how to do this project, and take it further.  
+		</p>
+		<iframe width="60%" src="https://www.youtube.com/embed/GHaxAHWqAlA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	</div>
+	
+</body>
+<script>
+	
+	
+</script>
+
+</html>
+

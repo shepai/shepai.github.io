@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="index.html">Home</a>
+<a class="topnavleft" href="index.html#about">About</a>
+<a class="topnavleft" href="downloads.html">Downloads</a>
+<a class="topnavleft" href="contact.html">Contact</a><br>
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="search.js">
+    
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+		<h1 class="headerText">Setting up a voice recognition Raspberry Pi AI</h1>
+		<h5>Posted 10/August/2020</h5>
+		<h2 class="headerText">Overview</h2>
+<p>In this tutorial we will be setting up a Raspberry Pi with a microphone and speaker to make your very own chatbot AI. We will be installing the needed drivers and software and talking about how you can take it further. 
+<br>You will need a Raspberry Pi, a means of internet connection, and the respeaker 2-mic hat.
+</p>
+<h2 class="headerText">Installation</h2>
+<p>
+Firstly, we will need to install the software which provides us with audio tools.
+<div width="80%" class="codeBox">
+sudo apt install pulseaudio
+<br>sudo reboot
+</div>
+<br>After rebooting we can start installing our hardware card for sound. I am using the 2 mic respeaker for its inbuilt high-performance microphones designed for AI projects. It also offers speaker interfaces and an audio jack for the microphone. 
+	<div width="80%" class="codeBox">
+	sudo apt-get update
+	<br>sudo apt-get upgrade
+	<br>git clone https://github.com/respeaker/seeed-voicecard.git
+	<br>cd seeed-voicecard
+	<br>sudo ./install.sh  --compat-kernel
+	<br>reboot
+	</div>
+<br>If you experience errors installing just perform the action again. A way to avoid errors is to have a strong internet connection. My dongle struggled as my internet connection was not the best, therefore I used ethernet which worked a lot better for the install. 
+<br>If using the newest raspberry Pi OS distribution this may downgrade some of your drivers to work with. This didn’t change anything for me when it downgraded my drivers – but its something to bare in mind if you already have specific hardware running on your Pi.
+<br>Once this is installed you should be able to see your card using arecord -l and aplay -l. If you cannot see your card, then the code has not installed, and you will need to do it again. 
+<br>We will then want to install some libraries. 
+<div width="80%" class="codeBox">
+Sudo pip3 install pyaudio
+<br>Sudo pip3 install speechRecognition
+<br>Sudo apt-get install flac
+</div>
+<br>Then we can try out what we have done so far using the following code:
+<div width="80%" class="codeBox">
+m=Microphone()
+<br>r=Recognizer()
+<br>with m as source:
+<br>	a=r.listen(source)
+<br>print(r.recognize_google(a))
+</div>
+<br>If you are finding this to be slow then you can adjust the listening parameters. I find I get a lot of error messages about jack server when I call in the microphone. This hasn’t affected the ability for the code to recognize audio so I tend to ignore it.
+<br>If you are struggling to get audio to listen and recognize, add the following lines in underneath the with m as source. This will adjust the audio threshold to not wait around listening to background noise. The print will tell you when to talk.
+<br><br>
+<div width="80%" class="codeBox">
+r.adjust_for_ambient_noise(source)
+<br>print(“>”)
+</div>
+<br><br>
+<br>We will install espeak to give our AI audio output. This is done through 
+<br>Sudo apt-get install espeak
+<br>Finally, we will install the nltk library and the data for it to use. This gives a database for our AI to recognize information to.
+<div width="80%" class="codeBox">
+sudo pip3 install nltk
+<br>sudo python3
+<br>>>>import nltk
+<br>>>>nltk.download()
+</div>
+<br>Make sure to download all
+<br>These are all the libraries installed, now we will install the AI code. 
+<br>You can do this manually at shepai.github.io/AIlib.html, or you can type into your terminal the following lines. Both require unzipping in a file path of your choosing. 
+<div width="80%" class="codeBox">
+wget https://shepai.github.io/downloads/V0.0.9.zip
+</div>
+<br>
+<h2 class="headerText">Writing code</h2>
+Once we have installed all the libraries and drivers, we can then write our simple input output code. 
+<div width="80%" class="codeBox">
+<pre>
+from AI import CB
+import speech_recognition as sr
+import os
+import sys
+systemPath=sys.path[0]+"/" 
+m=sr.Microphone()
+r=sr.Recognizer()
+def INPUT(): #input method
+    with r as source: #gather audio
+        r.adjust_for_ambient_noise(source)
+        print(">")
+        audio=r.listen(source)
+    try:
+        return r.recognize_google(audio)
+    except:
+        return ""
+def OUTPUT(string): #output to user
+    print(String)
+    os.system('espeak "'+string+'" 2>/dev/null')
+
+bot=CB(systemPath+"testCB/")
+while True:
+    UI=INPUT()
+    if UI!="":
+        print(UI)
+        OUTPUT(bot.chat(UI))
+</pre>
+</div>
+This code will chat with the bot we have created using the hardware. 
+
+
+</p>
+
+	</div>
+</body>
+<script>
+	
+	
+</script>
+
+</html>
+
