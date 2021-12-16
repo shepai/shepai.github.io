@@ -1,0 +1,79 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chatbot</title>
+	<link rel="stylesheet" type="text/css" href="Botstyle.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<a align="left" href="index.html" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<p class="title" align="center">Chatbot version 2 (Beta)</p>
+<a class="topnavleft" href="main.html">ChatBot</a>
+<a class="topnavleft" href="admin.html">Sign in</a>
+<script src="jquery.js">
+	</script>
+	<script src="signup.js">
+		</script>
+</div>
+	<!-- the main content -->
+	<br><br><br><br>
+	<div align="center" class="main">
+
+		<h1>Sign up</h1>
+      <h5>Institution name</h5>
+       <input class="messageBox" type="text" id="name" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+       <h5>Password</h5>
+       <input class="messageBox" type="text" id="pass" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+       <br><br>
+        <button onclick="submit()" class="" >Submit</button>
+	</div>
+	</body>
+
+	</html>
+</html>
+
+<script>
+function action()
+{
+	var user = document.getElementById("mySelect").value;
+	if (user=="Default")
+	{
+		setCookie("username", "", 300);
+		console.log("action","");
+	}else{
+		setCookie("username", user, 300);
+		console.log("action",user);
+	}
+}
+function setCookie(cname, cvalue, exdays) {
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	let expires = "expires="+ d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+console.log(document.cookie);
+//find whether the user has singned in before
+
+
+
+</script>

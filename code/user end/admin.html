@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chatbot</title>
+	<link rel="stylesheet" type="text/css" href="Botstyle.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<a href="index.html" align="left" class="topnavlogo"><img src="assets/eyeT.png" width="50px" height="50px"></a>
+<p class="title" align="center">Chatbot version 2 (Beta)</p>
+<a class="topnavleft" href="main.html">ChatBot</a>
+<a class="topnavleft" href="admin.html">Sign in</a>
+<script src="jquery.js">
+	</script>
+
+</div>
+	<!-- the main content -->
+	<br><br><br><br>
+	<div class="main">
+		<div align="center" class="iconPage">
+
+		</div>
+		<h1 class="headerText">Sign in</h1>
+		<hr class="break">
+
+		<h3 class="contentText">This application is for the administration staff to add responses to questions,
+		change incorrect information, and delete responses. When viewing, left click to add a response, right click to delete.</h3>
+		<div id="mainContent" class="messageActivate">
+
+
+
+		<div align="center" id="alertAdd" style="display: none;">
+		<h4>Add</h4>
+			<h5>Question</h5>
+			<input class="messageBox" type="text" id="inputQ1" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<h5>Answer</h5>
+			<input class="messageBox" type="text" id="inputQ2" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<br><br>
+			<button onclick="saveQuestionAnswer()" class="" >Submit</button>
+		</div>
+		<div align="center" id="alertDelete" style="display: none;">
+		<h4>Delete</h4>
+			<h5>Question</h5>
+			<input class="messageBox" type="text" id="inputD1" style="outline-color:black;outline-width=1px;outline-style: dotted;" />
+			<br><br>
+			<button onclick="delQuestionAnswer()" class="" >Submit</button>
+		</div>
+		<div id="signIn" align="center">
+		<h5>Organisation name</h5>
+			<input type="text" id="uname" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			<br>
+			<h5>Password</h5>
+			<input type="text" id="paswo" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			<br>
+			<!--<h5>Decrypt</h5>
+			<input type="text" id="decryptKey" class="messageBox" style="outline-color:black;outline-width=1px;outline-style: dotted;" name="fname">
+			-->
+
+			<button onclick="signIn()" class="" >Sign in</button>
+			<br><br>
+		</div>
+</div>
+		<div style="display: none;" id="View">
+		<!--This area remains hidden until the user -->
+			<h3>To add</h3>
+
+
+		</div>
+		<div id="addForm" class="modal">
+
+		  <!-- Modal content -->
+		  <div class="modal-content">
+			<span class="close">&times;</span>
+			<p style="display:none" id="idHold"></p>
+			<h3 id="showQ"></h3>
+			<p>Item to add</p>
+			<input id="Information">
+
+			<p>When to delete it (optional)</p>
+			<input type="date" id="deleteBy" name="trip-start"
+       value="none"
+       min="2018-01-01" >
+			<button class="FAQButton" id="btnSubmit" onClick="submitVals()">Submit</button>
+		  </div>
+
+		</div>
+
+		<br><br><br><br><br><br>
+		</div>
+
+		<div align="center" class="sendMessage">
+
+			<button class="FAQButton" onClick="viewAll()">View to add</button>
+
+			<button class="FAQButton" onClick="addOwn()">Add own</button>
+			<button class="FAQButton" onClick="deleteOwn()">Delete</button>
+			<button class="FAQButton" onClick="viewReport()" >View reports</button>
+
+
+			</div>
+
+
+</body>
+
+<script src="admin.js">
+
+</script>
+<script>
+	// Get the modal
+	var modal = document.getElementById("addForm");
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+	  modal.style.display = "none";
+	  document.getElementById('Information').value="";
+	  document.getElementById('deleteBy').value="none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+		modal.style.display = "none";
+		document.getElementById('Information').value="";
+		document.getElementById('deleteBy').value="none";
+	  }
+	}
+		</script>
+</html>

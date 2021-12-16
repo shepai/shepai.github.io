@@ -1,0 +1,347 @@
+*{
+	margin: 0;
+}
+
+.backgroundC {
+	background-color:#141111;
+	font-family: Arial, Helvetica, sans-serif;
+
+	/* overflow-y: hidden; Hide vertical scrollbar */
+  overflow-x: hidden;
+}
+
+.text {
+	color:white;
+	text-decoration:none;
+}
+
+.bottomWid{
+	overflow: visible;
+}
+.link {
+
+  text-decoration: underline;
+}
+.button {
+	background-color:#8c0114;
+	color: white;
+	width:800px;
+	height: 100px;
+	border: 0px solid;
+	margin:0 auto;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.watermark {
+	position:fixed;
+	float:right;
+	color:grey;
+
+}
+
+.miniImage {
+	width:200px;
+	height:200px;
+	border-radius: 50%;
+}
+
+.boxL {
+	width:100%;
+	background: linear-gradient(to right, white 25%, transparent 30%);
+	border: 0;
+	border-style:hidden;
+}
+
+.boxR {
+	width:80%;
+	background: linear-gradient(to left, white 20%, transparent 30%);
+	border: 0;
+	border-style:hidden;
+}
+
+.contactIcon {
+	font-size:36px!important;
+	color:black;
+}
+.iconPage {
+	text-align:centre;
+	align-content: center;
+}
+table {
+	border-left: none;
+    border-right: none;
+}
+.contentText {
+	font-family:Georgia, serif;
+	font-weight: normal;
+}
+
+.icon {
+	font-size:36px!important;
+}
+.icon:hover {
+	font-size:36px!important;
+}
+.topnavlogo {
+	float: left;
+	width:50px;
+	height:50px;
+}
+.textInfo {
+	word-wrap: break-word;
+
+}
+.textInfo2 {
+	word-wrap: break-word;
+	width:300px;
+	height:280px;
+}
+.sizeBox {
+	width:300px;
+	height:90px;
+
+	z-index: -1;
+	background-repeat:none;
+	color:white;
+}
+.leftText {
+	text-align: left;
+}
+.messageActivate {
+	margin: auto;
+	width:70%;
+  height: auto
+	display:block;
+}
+.shepMessage {
+	border-radius: 25px;
+	background-color:#f7a725;
+	border: 10px solid #f7a725;
+	outline: none;
+	width:200px;
+	font-style: normal;
+	font-family: Arial, Helvetica, sans-serif;
+
+	height:auto;
+	display:block;
+	clear:both;
+}
+.FAQButton {
+	border-radius: 25px;
+	background-color:#f7f7f7;
+	border: 3px solid #f7f7f7;
+}
+.msgBrk{
+	border-radius: 25px;
+	border: 10px;
+	width:200px;
+	height:50px;
+	display:block;
+
+}
+.messageBox {
+	border-radius: 25px;
+	background-color:white;
+	border: 3px solid white;
+	width:300px;
+	height:auto;
+
+}
+.userMessage {
+	border-radius: 25px;
+	background-color:#180cc7;
+	border: 10px solid #180cc7;
+	width:200px;
+	float: right;
+	outline-color:white;
+	color:white;
+	outline: none;
+	outline-width: 0.5px;
+	height:auto;
+	display:block;
+	clear:both;
+
+}
+.sendMessage {
+	/*position:fixed*/
+
+	width:100%;
+	height:50px;
+	background-color:#8c0114;
+	padding: 10px 0;
+	display:block;
+	position:fixed;
+	bottom:0px;
+
+}
+.bottomWidget {
+
+
+	width:300px;
+	height:100px;
+	background-color:#ff726e;
+	outline-color:black;
+	outline-style: solid;
+	outline-width: 0.5px;
+	right:0;
+}
+.greyBox {
+	background-image: url("backgrounds/background.png");
+	max-height:30px;
+}
+.rightText {
+	text-align: right;
+}
+.topnavleft {
+	float: left;
+
+}
+.headerText {
+	text-align:center;
+}
+.coolTable tr:nth-child(even) {background-color: #f2f2f2;margin: 0;
+    padding: 0;
+    border: 0;
+	}
+
+.topnav a {
+
+  color: white;
+  text-align: center;
+  padding: 16px 20px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+
+}
+.break {
+	width:90%;
+	border-width:0px;
+	border-top: 2px solid black;
+}
+.topnav {
+  overflow: hidden;
+  background-color: #8c0114;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  width:100%;
+	position:fixed;
+	height:80px;
+}
+
+.main {
+  display: table;
+  width:65%;
+	height: 10px;
+	color: white;
+  margin-right: auto;
+  margin-left: auto;
+
+	overflow-y:scroll;
+	overflow: auto;
+
+}
+.title {
+	font-family: Rockwell,Courier Bold,Courier,Georgia,Times,Times New Roman,serif;
+}
+
+.buttonF {
+	background-color:#1c1b1b;
+	color:white;
+	width:110px;
+	height:50px;
+	border-color: #1c1b1b;
+}
+
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+	.main {
+		width:85%;
+	}
+
+	.textInfo {
+		visibility: hidden;
+        display: none !important;
+		font-size: 0px;
+		font-size: 10px;
+	}
+	.topnavlogo {
+		width:25;
+		height:25px;
+	}
+	.button {
+		width:80%;
+		height:100px;
+	}
+
+	.topnav a {
+
+	  padding: 5px 10px;
+	  font-size: 10px;
+	}
+	.searchIco {
+		font-size: 2px;
+
+	}
+	.textInfo2 {
+		font-size: 7px;
+		height:15px;
+	}
+	.topnav {
+		height:60px;
+	}
+	.messageBox {
+		border-radius: 25px;
+		background-color:white;
+		border: 3px solid white;
+		width:150px;
+		height:auto;
+
+	}
+	.sendMessage {
+		height:70px;
+
+	}
+}
