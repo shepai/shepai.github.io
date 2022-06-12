@@ -72,6 +72,81 @@
   <br>
 
 </h3>
+
+<h4>Simulation</h4>
+I set up the simulated environment illustrated in the below figure using Python by generating a 2D map
+from Perlin noise. Perlin noise is a type of gradient noise commonly used to procedurally generate
+terrain [21] where the value of the space between two points changes smoothly. A grid of n dimensions
+is created and each position is assigned a random vector, where the dot product is calculated between
+the gradient vector and the offset vector. This allows interpolation between each dot product to
+generate noise within the grid.
+<img style="display: block;margin-left: auto;
+  margin-right: auto;"
+  width="80%" src="https://shepai.github.io/assets/diss/CUTOUT2.png">
+
+  In such simulations, we can find how far a point is from the start position and the terrain steepness
+(gradient) at any point. The energy consumed (E) by a robot in a given trial is calculated from the
+number of steps taken (S) and the accumulated terrain value of each place (P). Each position on the
+map has a value that represents how high or low the ground is. Very low values would be submerged
+underwater and high values be at the top of the mountains. The difference between movement is the
+step S up, down, or across from the current height. This is called the terrain value. More energy is
+used going uphill than downhill, so these state transitions are valuable for calculating fitness. The
+Manhattan distance is used as a measure of how far the agent has travelled. This was picked in place of the Euclidean distance as the 2D terrain guarantees a worst case scenario [22]. Euclidean distance
+finds the shortest path, which may not be the best path.
+<br>
+The agent was written as its own class, where on initialisation the network structure could be
+determined. Weights and biases are generated when an array of Gaussian noise is entered through the
+set genes method as a parameter. Using a forward function, the network uses PyTorch and generates
+output that is converted to a vector choice using the argmax function. There are eight directions
+that the agent can take, therefore the network is expected to generate the probabilities of a success of
+each vector. The success for this method is seen in the figure where the agent has navigated through the terrain. The vector of
+movement allowed the agent to traverse across the environment.
+
+
+<h4>Physical robot</h4>
+The initial Wheg design would get caught while reversing as the claws were only grabbing one way
+and the robot also struggled to turn left and right on the spot. The addition of a tilting mechanisms
+for left and right turns was added to solve this. In some circumstances, when the robot would try
+to climb, it would need an element of height to get over obstacles. This was achieved by adding a
+stabiliser servo with a wheel caster on the bottom. When deployed, the wheel caster allowed the robot
+to carry on moving without getting caught. The heavy battery was placed at the back of the robot as
+it was discovered that the front needed to be lighter than the back to have improved climbing abilities.
+<br>
+
+The robot made use of an off the shelf kinect sensor. This is better calibrated than
+a homemade stereo vision sensor, although the kinext sensor is much larger and mounting it on the robot would
+require a more powerful battery and a larger chassis. Therefore, this camera will only be used as a
+proof of concept for using depth navigation in a real world environment.
+<div>
+For vision-based navigation, the robot made use of a depth camera. The Xbox Kinect was used to
+gather depth imaging of the environment. This was reduced in scale to 5 by 5 pixels to highlight key
+features about the terrain. Using this image, the trained agent within the simulation was deployed to
+use a convolutional neural network. This was because the Conv2D network architecture had the best
+accuracy within the given trials.
+<br>
+As there are multiple directions that can be
+valid within these examples, using numeric based validation methods was not possible without mass
+labelling the data. This would still be down to human judgement. Instead, human judgement over
+the examples will be the evaluation method of how well the model performed in the real world. The
+network was trained to predict a vector of movement out of eight possible moves, but as this was not
+controlling the robot, so the vector is simply displayed as the chosen direction of travel that should be
+taken.
+<br>
+Evolving this navigation model directly on the robot could lead to better results. This is because
+the model will learn how its own hardware and control deals with different sized obstacles, and which
+obstacles the chassis could overcome with back-bending. This method was not used because enforcing
+reward posed too many challenges. Knowing when the robot has collided, got stuck and used energy
+requires a number of sensors. Additionally, it would have taken a large amount of time to perform just
+one trial. Simulation mostly converged on peak fitness at generation 400 to 800. Additionally, if the
+simulated model performs well it will have shown the model to be robust enough to cross the reality
+gap between simulation and physical implementation.
+<br>
+The reduction of the image to a 5 x 5 pixels input for the model was applied to both depth images.
+One generated by the Kinect and one generated by the OpenCV disparity function from two USB
+webcams. Based on my previous results, both used the area interpolation resizing method.
+
+
+
 <h4>Results</h4>
 <h3 class="contentText">
   Evaluation of how the simulated trained model reacts to the real world robot vision is denoted
@@ -82,7 +157,8 @@
 <img style="display: block;margin-left: auto;
   margin-right: auto;"
   width="80%" src="https://shepai.github.io/assets/diss/save (2).png">
-
+  This terrain in the Figure above is deemed too hazardous by the model, where the vector tells the agent
+  to turn sharply left. This is considered a success case.
 	</h3>
 </div>
 </body>
