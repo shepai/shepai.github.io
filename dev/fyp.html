@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">The SHEP AI Project</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+
+<a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a>
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+	<div align="center" class="iconPage">
+			<img class="imageCircle" src="https://shepai.github.io/assets/dis/CUTOUT.png">
+		</div>
+	<h1 class="headerText">Bio-Inspired Navigation for Varied Terrain</h1>
+		<hr class="break">
+	<h3 class="contentText">
+    This project investigates the use of evolutionary approaches to enable robotic agents to learn their
+  own physical limitations in a visual navigation task. Within nature, biological agents understand their
+  own limitations when it comes to crossing complex terrain. By attempting to cross terrain that an
+  agent is not built for they risk injury or even death. A robot needs to understand its own limitation
+  if it is to be able to explore complex terrain but not get damaged. One applications of this would be
+  planetary exploration where robot damage would ruin a cost expensive mission. The project was split
+  into three parts: Navigation; vision; and the development of the physical robot.
+  Navigation strategies were developed in a two-dimensional simulation world with procedurally
+  generated terrain. Simulation takes less time to trial than physical experiments, therefore a proof of
+  concept could be developed within the time constraints of this project. Environmental hazards were
+  introduced, such as water, and experimentation into hyper-parameters and algorithm choice allowed
+  convergence on high fitness models. Agents learned to follow contours in order to minimize energy
+  consumption and avoid hazardous environments.
+  <br>
+  Two depth sensors were trialled for visual base navigation. One was using two cameras and the
+  OpenCV disparity function; the other an off-the-shelf approach with the Xbox Kinect. Stereo imaging
+  was picked as it best highlighted the environmental attributes that would be relevant for solving the
+  problem of hazardous terrain representation. The Kinect sensor was the best at finding depth. Further
+  processing took place to squeeze the depth images into a compressed representation that could be used
+  in the simulated trained agent model.
+  <br>
+  The physical robot made use of the visual depth information and neural networks trained in simu-
+  lation trials which were able to cross the bridge between simulation and the real world (known as the
+  ‘reality gap’). It could predict hazardous terrain for avoidance in an outdoor environment.
+  The chassis was inspired by how cockroaches cross obstacles, it used Whegs and a bendable back
+  to improve movement over rocky and outdoor environments. Whegs are a hybrid between wheels and
+  legs where the cyclic efficiency of the wheel is used, but claw features are added to improve climb like
+  a leg. The back bending control was learned by the system using a population of hillclimbers evolving
+  the weights and biases of a neural model.
+  This project successfully demonstrated that an agent can understand its hazardous environment,
+  and learn to overcome obstacles.
+  <br>
+
+</h3>
+<h4>Results</h4>
+<h3 class="contentText">
+
+<img style="display: block;margin-left: auto;
+  margin-right: auto;"
+  width="80%" src="https://shepai.github.io/assets/BobBipedGraph.PNG">
+
+	</h3>
+</div>
+</body>
+<script>
+
+
+</script>
+
+</html>
