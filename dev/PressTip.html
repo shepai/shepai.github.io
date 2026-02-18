@@ -31,6 +31,7 @@
 	<div class="main">
         <h1 class="headerText">PressTip construction</h1>
             Much of this work is published in <a href="https://doi.org/10.3390/s25164971">this paper</a> and my PhD thesis. 
+            <br>
         This section outlines the development of the PressTip sensor, an electrical multi-modal sensor that works at a much lower resolution than an optical tactile sensor. We discuss various prototypes and the final result which comes in the form of two designs. A tip that matches the size of the optical sensor, and a larger robotic foot. We finally look at initial processing of this sensor and discuss some of the hardware limitations. We initially experimented with force-sensitive resistors embedded in a silicone body to create low-resolution skin sensors with soft compliance. Our first prototype used pre-made force sensors infused in a silicone block. Therefore allowing us to read different pressures across a surface area.
         The flat surfaces of the sensors had to be bent to fit into the silicone, which lead to inconsistent readings. Furthermore, the silicone would not fuse to the pressure sensor strips, which meant some were not physically constrained enough. 
         We attempted to update the design in a larger surface area of contact body, with only sensors fused within high contact areas. This was the sides of the feet. 
@@ -54,6 +55,19 @@ The force sensors were constructed using a conductive material (velostat) which 
     <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/presstip.jpeg">
     <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/presstip (copy).jpeg">
 </div>
+<br>
+Along with the rounded PressTip, we constructed a larger foot sensor. We designed and printed a PCB with 14 tactile pads. The tactile pads were approximately 15mm X 15mm split by a thin gap vertically through the middle.   One side of the pad is connected to the positive supply of the board. 
+The sensor we present in this paper is on a hard base to cover the foot of a simple bipedal robot. 
+<br>
+Limitations of this sensor is the size and I2C buses involved. Each presstip has two ADS7830I working on different I2C buses. These buses can have their channels changed using two binary address inputs to the ADS7830I, thus 4 on one device. This adds a constraint on how many physical pads we could have across a sensor. To go to a higher resolution (more pads) we would need to deploy more sensors on one board. Assuming that the sensors can all fit on the board, this means we can only have a total of 32 pads. 
+
+But is this higher resolution required? Can we use lower resolutions and still be able to infer information about the robots state. 
+Even for the larger tactile foot that uses a digital selection method for analogue reading (CD4067), we are limited to a number of pins. it still requires four digital pins to select the analogue channel. This is not a significant issue if you are using an Arduino Mega with 54 digital pins and 15 analogue pins, however it still increases the amount of wires going to feet, causing more complexity 
+<br>
+<div align="center"align="center">
+    <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/schematicFoot.png">
+   </div>
+
 </body>
 <script>
 
