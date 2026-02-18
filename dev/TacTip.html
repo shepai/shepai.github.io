@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">Dexter Shepherd</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+        <h1 class="headerText">TacTip construction</h1>
+        The TacTip is a variant of optical tactile sensing. A camera faces a deformable body with markers. Based on the movement of these markers, texture, edges, or object properties can be classified. As a popular sensor in the field, we decided to construct one for further testing. 
+        <br><br>
+
+            The TacTip parts were 3D printed and consisted of a camera mount, main body, tip, and LED ring. 
+            The camera mount was edited in CAD software to mount our webcam (Arducam USB wide-angle lens), 
+            and the main body attached to the mount via a series of screws.
+
+            
+            <br><br>
+            Different cameras were trialled, including autofocus, fisheye, wide-angle, and a standard webcam. 
+            The standard webcam was a 720p Logitech webcam with a 55&deg; field of view.
+
+            
+            <br><br>
+            The fisheye was an Arducam 2.4-megapixel camera with a fixed focus of 
+            10&deg; (D) &times; 86&deg; (H) &times; 47&deg; (V). 
+            Finally, we used an autofocus lens with the Arducam camera. We found that the autofocus was not reliable as it could change visuals while refocusing, leading to incoherent data. The Fisheye Arducam gave a high resolution image all the time. On the cheaper end we were unable to get images in focus. 
+            <br><br>
+            The files were printed using PLA filament on an industrial high-resolution printer (Stratasys Objet 30 Prime). Between the tip and the main body; there is a PCB of small LEDs (3.15V 1608 (0603) SMD) that provide light (45-180mcd each). The camera detects reflection of the LED light from the white painted tips on the surface of the skin. The PCB made use of 6 surface-mount LEDS and 6 120ohm surface-mount (0603) capacitors.
+            The LED PCB was mounted in the rim of the main body, where the LEDs face the skin, to illuminate the pointers for the camera. The wires are pressed into a printed groove that leads to a hole allowing for power connection. The camera was mounted onto a custom 3D printed part that connected to a USB wide-angle lens webcam. The power of the LED ring was connected to the power of the USB camera for wiring efficiency.  
+Soft-bodied skins are produced through silicone within a 3D-printed plastic mould. This mould was measured to fit the silicone inside a thin layer, with small holes in to create the tips that would later be painted white. The moulds were printed in high resolution to capture the 1mm diameter of the optical markers. The outcome would have a 42mm diameter exterior and 38mm diameter interior, where the skin has a 2mm thickness. 
+Experimentation on thickness of the skins, and its effect on sensitivity was not the focus of this thesis, but remains fairly unexplored but has gone down to 1mm thickness. If the silicone is too thin there is an increased chance that it will break in the mould, therefore to ensure maximum durability we always used 2mm. 
+Silicone was made and dyed black to prevent light interference or any more glare than the background levels. After being poured into the mould and left for twenty-four hours, a solid yet flexible TacTip was produced. The mould required a lubricant spray over the plastic layers to prevent the tips from getting pulled off while being removed from the mould. To paint the optical markers we used a thin layer of plastic sheet with acrylic paint. The sensor skin was turned inside out (so the marker positions were on the exterior) and gently dabbed over the paint.  
+
+<img class="imageCircle2" width="100px" height="100px" src="https://shepai.github.io/assets/development/newDesign.png">
+
+<h2 class="headerText"> Alternative designs</h2>
+We made some alternative designs of TacTip to expand upon the optical marker detection methods. The main principle of the TacTip sensor is the displacement of the optical markers. We devised a design that uses a flat silicone rectangle with a series of optical markers on the surface. With a camera facing this mesh, we could get tactile feedback over a surface area of 100x150mm. Each dot was 2mm in diameter, which is larger than the optical markers on the TacTip. 
+Silicone was poured into the mould, then once set each dot was painted white (as we did with the original TacTip). Using a layer of clear silicone we made the flesh part of the skin, where a box of the same dimensions as the skin acts as the mould. Our skin is placed in the bottom of the box, with optical markers facing up. The clear silicone is poured onto the skin. We do this to protect the optical markers from having too much pressure making the paint wear down, and to provide a sponge-like texture for the skin to resist force. 
+
+After making the silicone skin, a box was constructed to hold the camera, and above it a transparent plate between the skin, focal length and camera. Around the sides, it was taped with black to eliminate light interference through glare. The optical markers of the skin were painted white and the skin was placed in the box (without a gel layer).  
+Combining the properties of the artificial skin and TacTip, we developed a full tactile foot that sensed both the bottom and side contact. Having a larger surface area of haptics on a leg would open up exploration into more complex styles of locomotion. 
+<img class="imageCircle2" width="100px" height="100px" src="https://shepai.github.io/assets/development/presstip.jpg"></a>
+We constructed the TacLeg from a 3D-printed mould. Initially, the skin would come out in reverse and need to be turned inside-out. We did this because when the mould is peeled off sometimes the marker points are destroyed. The inside-out method helps prevent this. 
+    </div>
+</body>
+<script>
+
+
+</script>
+
+</html>
