@@ -29,6 +29,82 @@
 </div>
 	<!-- the main content -->
 	<div class="main">
+        <h1 class="headerText">Biped Orientation and Edge Detection</h1>
+        Much of this work is published in <a href="https://doi.org/10.1109/AIRC61399.2024.10671677">this paper</a> and my PhD thesis. This is a brief extract from parts of the chapter, for full details check out the thesis. 
+        <br>
+        Navigating and adapting to diverse environments is a critical challenge for robots, especially when it comes to maintaining stability and adjusting behaviours based on real-time information. We used an MPU6050 as it is cheap and simple to integrate into an embedded system. While the MPU6050 accelerometer can detect tilt in a robot, its capabilities are limited in capturing nuanced attributes of the environment. In contrast, tactile feet sensors establish direct contact with the ground, offering a rich source of real-time data about the surface and potential variations in terrain, including slope. This information is useful for ensuring stability in complex environments and enabling the robot to respond effectively to different surroundings. By precisely determining the distribution of weight on each foot, tactile sensors can play a crucial role in optimising the robot's balance and facilitating adjustments in motor responses.
+        The methods outline two experiments, edge detection and orientation of the robot detection. In the first subsection we look at the data gathering process for both of the tasks, using the PressTip foot sensor.
+        <h2 class="headerText">Methods</h2>
+        <h3 class="headerText">Data gathering</h3>
+        The orientation data gathering process used an MPU6050 (gyroscope and acceleration sensor) attached to the top of the robot chassis. The robot chassis had foot sensors on both the feet and motors that would rotate the pose angle. Our aim was to detect the orientation of the robot based entirely on data from the feet. Although a standard gyroscope can be used for this task, we wanted to demonstrate the versatility and sensitivity of PressTip sensors. 
+        A data set was gathered while the robot tilted on one foot, left and right, between 30 and 130 degrees in the outer direction of the leg, while recording the data from the MPU6050 at that time. Only one foot would turn at a time, which is what would cause the tilt in that direction. All tactile sensor readings were recorded and placed in a comma separated values (csv) file. The robot itself used a Raspberry Pi Pico microcontroller costing approximately £4 and requiring a low amount of energy. 
+        Tactile feet sensors provide far richer environmental information than an MPU6050 alone. Through direct contact with the ground, they offer real-time information about the surface and potential variations in terrain, as well as the distribution of weight on each foot. As we shall see, this information can also be used to accurately predict pose angles. 
+        The orientation was gathered across multiple textures. Varnished wood, smooth concrete, rough concrete and carpet.
+        <br><br>
+        Edge data was gathered by repeatedly placing the sensor over a flat hard surface, where there would always be an edge underneath the sensor. We labelled each of these classes using a straightforward binary code. The output is the classification of the model representing which class is most likely. 
+        We gathered pressure on both a soft material (cushion) and a hard material (wood). The soft material has less defined edges than the wood; the classification model is required to generalise to either material. Other textural properties were seen as irrelevant for this task as if you put the sensor on a slippery or coarse surface, this does not effect the edge reading. 
+        <br><br>
+        Before starting the experiments, we gathered the average of each tactile pad (without contact) over a calibration period of 100 iterations, then subtracted this from the sensor values in the future. This method was only applied to the edge detection model to zero out the inherent noise. We used mean scaling to scale the data for the classification models. 
+
+For orientation, the dataset was segmented into temporal windows of size T frames. Within each window, all sensor readings from that time interval were concatenated and formed a single vector for the model. Each frame represented a single iteration of sensor readings. 
+
+        <h3 class="headerText">Training models</h3>
+        To classify the data gathered we need machine learning models. Tailoring models to accommodate the diversity in gathered data is imperative, recognising that a one-size-fits-all approach falls short  and there are a wide variety of models out there from deep networks with millions of parameters to perceptrons. Specifically, in handling time series data, such as tilt detection, a nuanced strategy is crucial so choosing a model is key. Drawing inspiration from the efficiency exhibited by insects in executing comparable tasks with very low resolution, our objective is to design models that perform well at classifying various tactile tasks, but could also ideally transferred onto the microcontroller devices. This meant deep learning was not an option and smaller neural networks or regression models were preferred. This not only aligns with the resource constraints often faced in robotic systems but also facilitates seamless transferability onto small, low power microcontroller devices. This emphasis on compactness is pivotal for enabling real-time detection capabilities on robots, contributing to their agility and responsiveness in dynamic environments.
+        <br><br>
+        For the orientation data our initial approach involved the application of regression models to map the tactile information onto the tilt data gathered from the accelerometer. The dataset was split to an 80% train size and 20% test size. Using regression we trained a model to take in each of the fourteen sensors on each foot and map it to tilt acceleration values. We chose Ridge regression for its simple implementation. We also used a random forest regression model to compare a model known for being better with noise.  
+        Each regression model took in an input of N X T where T is the temporal window and N is the number of sensors (28). This was trained to an output of size three representing the x, y and z accelerations. The ridge regression model used default parameters of alpha at 1. The Random forest regression model used 50 estimators with a squared error criterion metric. 
+        Exploring neural models for comparison, in an attempt to improve the performance further, we employed an artificial neural network (ANN). After some preliminary investigation of various architectures and ANN types, we settled on a ANN with an input layer of size N X T in the same format as the regression model input. This is followed by a single layer of size 500  and 50 (based on hyper-parameter searching). Each layer had ReLU activation other than the output layer. Our output layer was size three which represented the acceleration in the x, y and z axis accelerations. Our ANN used a learning rate of 0.01, mean squared error loss metric, stochastic gradient descent optimizer for training, and a standard logistic function transfer function at each node. The model was trained for 2000 epochs on each trial.
+        We used the same parameters for an Long-short-term-memory (LSTM) network. This model had two layers and a hidden size of 500 on both layers. ANNs are simpler than LSTMs thus more memory efficient to implement on a Microcontroller device. Though LSTMs are meant for temporal data, making it a better choice for this task. We investigate both to see if we can still yield competitive performance on a simpler neural architecture.  
+        We performed a series of experiments to determine the best T values for the models, by training with values over the range 1-50. The regression model would receive the same loss each time so only one trial was conducted for each T size, hence we randomized the starting state and conducted experiments over five trials. The ANN would start from randomly generated weights, we conducted five trials on each T size and averaged the loss. 
+
+        <br><br>
+        For the Edge data, we employed a ridge classification model with alpha as 1 for the classification of tactile data. In addition to the Ridge model, we also used a Random Forest classifier which is better at handling noisy data. The Random forest model used 25 estimators chose arbitrarily. In this case, the pressures across a tactile foot sensor is made up of class representations, making classification a natural choice. The input consisted of a 14-dimensional pressure map for each foot, while the output comprised a binary encoding of the most likely edge classification. The primary objective was to discern the direction of the edge with respect to the foot. Rather than using complex deep learning models that require lots of memory and space, we focused on models that are memory efficient and simple to implement, so that we could deploy them on a small microcontroller device such as a Raspberry Pi Pico. 
+
+        <h2 class="headerText">Results</h2>
+        To determine the accuracy of the PressTip sensor we tested out our edge classification models to see whether the sensor could determine the relationship between sensor reading and edge direction. The sensor itself demonstrated good sensitivity given its size, discerning the abstract shapes of obstacles it encountered during its movement.
+Secondly we investigate the orientation detection which is a continuos-temporal scale, making it a harder task than the classification. We were able to determine the orientation of the robot with very low difference between predictions and truth values. We further investigate, using the orientation dataset, the minimal time window a model needs before it loses accuracy and further how the models perform on unseen textures. 
+<h3 class="headerText">Orientation Detection</h3>
+The robot would tilt left and right over its feet, providing a temporal reading of 32 channels. To convert the image data to a vector that could be used in non temporal models such as Ridge regression, Random forest regression, and an ANN, the sensor inputs were concatenated over a window of size $T$ that helped improve performance (partly by smoothing effects of noise). To begin with we chose 60 as our number of frames. We mapped the values of the tactile sensors to the output of the accelerometer, which measures acceleration in a particular direction, which is proportional to tilt.
+<br><br>
+<table style="border-collapse: collapse; margin: 0 auto;">
+    <caption style="caption-side: bottom; padding-top: 8px;">
+      Results of the models using mean squared error of all axis as a metric for performance.
+      Each value rounded to two decimal places.
+    </caption>
+    <thead>
+      <tr>
+        <th style="border: 1px solid black; padding: 6px;">Model</th>
+        <th style="border: 1px solid black; padding: 6px;">Train MSE</th>
+        <th style="border: 1px solid black; padding: 6px;">Test MSE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid black; padding: 6px;">Random Forest Classifier</td>
+        <td style="border: 1px solid black; padding: 6px;">0.26</td>
+        <td style="border: 1px solid black; padding: 6px;">0.15</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid black; padding: 6px;">Ridge Regression Model</td>
+        <td style="border: 1px solid black; padding: 6px;">0.43</td>
+        <td style="border: 1px solid black; padding: 6px;">0.47</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid black; padding: 6px;">ANN</td>
+        <td style="border: 1px solid black; padding: 6px;">0.02</td>
+        <td style="border: 1px solid black; padding: 6px;">0.02</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid black; padding: 6px;">LSTM</td>
+        <td style="border: 1px solid black; padding: 6px;">0.01</td>
+        <td style="border: 1px solid black; padding: 6px;">0.01</td>
+      </tr>
+    </tbody>
+  </table>
+  
+<h3 class="headerText">Edge Detection</h3>
+The ridge regression model average accuracy on the unseen data set was 66.59% and training set 66.9% across the 8 classes. The random forest classifier model achieved a training accuracy of 100% and an accuracy of 98.8% on unseen test data. Random forest models are better at handling noise, which is more prevalent in our dataset. 
+
 
 	</div>
 </body>
