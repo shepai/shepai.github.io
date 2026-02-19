@@ -32,6 +32,61 @@
 </div>
 	<!-- the main content -->
 	<div class="main">
+		<h1 class="headerText">Texture classification</h1>
+		Much of this work is published in <a href="https://doi.org/10.3390/s25164971">this paper</a> and my PhD thesis.
+		<h2 class="headerText">Rig Construction</h2>
+		A 3 degrees of freedom rig (x-axis, y-axis, z-axis), of dimensions 300mm by 300mm by 150mm, was constructed to move a sensor around a 3D environment. This rig was used to gather texture data by stroking the sensor along 1.5mm straight lines in 100 different directions along evenly spaced radii of a semicircle centred on the original touching point. The sensor moved across fixed-down samples from the texture set. Recordings were gathered at various contact forces, using touching point forces of 0.0785 – 0.0824N, 1.9031 – 1.9228N, 3.0039 – 3.0235N and 4.336 – 4.367N. The dataset consists of 3000 items gathered over 15 textures. Each dataset item contains multiple sensor readings concatenated over the time that the sensor is in contact with the surface (approximately 10 seconds).
+		<br>
+        <div align="center"align="center">
+            <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/rig.png">
+        </div>
+        <br>
+		Moving the sensor across varying vectors shows the sensor's ability to classify the different textures with linear stroking movements, this is the most common way of gathering textural datasets. We also investigated how the sensor-classifier pairs performed on sensations they were not trained on. To do this, we collected a non-linear movement dataset by moving the sensor in circular movements of increasing radii (1cm, 1.75cm, 2.5cm) while increasing the contact force by approximately 17 grams on each iteration. We refer to this as the non-linear dataset. 
+
+<br><br>
+<div align="center"><a href="https://github.com/shepai/Rig-controller" target="_blank" style="text-decoration: none;">
+    <button style="
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background-color: #24292e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    ">
+      <!-- GitHub SVG Logo -->
+      <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+        0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+        -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+        2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+        0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+        2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+        2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+        1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+        1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+        8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+  
+      See Repo
+    </button>
+  </a></div>
+		<h2 class="headerText">Dataset</h2>
+Perhaps understandably, most papers on tactile sensing for texture classification have used textured materials that are easily accessible, and to date no standard texture set has been created. Past texture sets are often of different sizes which hampers comparability because, as shown in section, some texture classifiers perform well when distinguishing between small numbers of textures but degrade sharply as the number of classes increase. As established current datasets tend to use items that appear in the labs of the researchers. Often these include some form of carpet, hard materials and fabrics. Our texture dataset was designed to try and include commonalities between previous sets and to represent a range of material properties that a walking robot may come into contact with, such as indoors or flat outdoors surfaces. These included soft/hard bodies, coarse/smooth surfaces and surfaces with raised aspects. 
+<br>
+<div align="center"align="center">
+	<img width="60%" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/textures.png">
+</div>
+<br>
+
+<h2 class="headerText">Classification</h2>
+
+		<h2 class="headerText">Friction Prediction</h2>
+
 
 	</div>
 </body>
