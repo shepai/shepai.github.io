@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -28,6 +29,7 @@
 <script src="https://shepai.github.io/search.js">
 
 </script>
+<script src="https://shepai.github.io//tex-mml-chtml.js"></script>
 
 </div>
 	<!-- the main content -->
@@ -105,6 +107,120 @@ The new marker skins were attached to the rig setup and used to gather the same 
     <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/morph/B.png">
     <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/morph/silicone.jpeg">
 </div>
+<h3 class="headerText"> Marker Prediction</h3>
+
+We labelled and trained a regression model to predict the location of optical markers, in an effort to reduce the dimentionality of the data. 
+<p>
+    We employed the use of three regression models: Ridge Regression (with alpha = 1), Linear Regression, and Random Forest Regression (RFR) with depth 25. These models were trained 20 times with different random states, and the performance metric was determined by the average distance between labelled and predicted points divided by the diagonal pixel space \( \sqrt{h^2 + w^2} \) to normalise the error. We then subtracted this normalised error to obtain a percentage accuracy. The values were normalised to make them comparable across any image size <cite>florence2020dense, articlestats</cite>.
+    </p>
+    
+    <p>
+    Images were converted to greyscale as a preprocessing step, and a Sobel filter was applied to highlight the markers and reduce noise <cite>yergibay2024nusense</cite>. Results of this experiment are shown in Table 1.
+    </p>
+    <div align="center">
+    <table border="1" style="border-collapse: collapse; text-align: center;">
+      <caption><strong>Table 1:</strong> Comparison of regression models where test and training accuracy is averaged over 20 trials using the normalized accuracy metric and standard deviation.</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Av Test Accuracy</th>
+          <th>Av Train Accuracy</th>
+          <th>Test Std</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ridge</td>
+          <td>87.902%</td>
+          <td>99.99%</td>
+          <td>0.72%</td>
+        </tr>
+        <tr>
+          <td>Linear</td>
+          <td>87.19%</td>
+          <td>99.9%</td>
+          <td>0.87%</td>
+        </tr>
+        <tr>
+          <td>RFR</td>
+          <td>76.79%</td>
+          <td>82.41%</td>
+          <td>1.55%</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+    <p>
+    The Ridge regression model performed the best out of the three models. We suspect some of the issues may stem from the large dimensionality of the input data, which also caused some of the models to take hours to train. We therefore employed Principal Component Analysis (PCA) to reduce the high-dimensional image data to 150 components. This smaller dataset was then passed into the models.
+    </p>
+    
+    <p>
+    Results of this experiment are shown in Table 2. This approach led to increased accuracy for the RFR model, but little difference in test accuracy for the other models.
+    </p>
+    <div align="center">
+    <table border="1" style="border-collapse: collapse; text-align: center;">
+      <caption><strong>Table 2:</strong> Comparison of regression models with PCA applied to the image data. Testing and training accuracy are averaged over 20 trials using the normalized accuracy metric and standard deviation.</caption>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Av Test Accuracy</th>
+          <th>Av Train Accuracy</th>
+          <th>Test Std</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ridge</td>
+          <td>87.95%</td>
+          <td>80.64%</td>
+          <td>0.48%</td>
+        </tr>
+        <tr>
+          <td>Linear</td>
+          <td>88.11%</td>
+          <td>80.55%</td>
+          <td>0.48%</td>
+        </tr>
+        <tr>
+          <td>RFR</td>
+          <td>85.83%</td>
+          <td>88.92%</td>
+          <td>1.13%</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+    <p>
+    Although the regression models show strong accuracy in point prediction, it raises questions as to whether this dimensionality reduction step provides benefits for classification tasks. There is an additional processing layer from image to point extraction. Furthermore, slight prediction errors may impact the accuracy of subsequent classification tasks.
+    </p>
+    
+    <p>
+    Another limitation of the point extraction method is that the labelling process was human-annotated. Errors may arise from fatigue or mistakes during point labelling. Despite these limitations, the models performed fairly well at predicting marker positions.
+    </p>
+    
+<br>
+<div align="center"><a href="https://www.kaggle.com/datasets/dextershepherd/tactip-optical-markers-labelled" target="_blank" style="text-decoration: none;">
+    <button style="
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background-color: #034485;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    ">
+      <!-- GitHub SVG Logo -->
+      <svg height="20" width="20" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+		<path d="M15.9 3.3h4.2v25.4h-4.2V17.9l-6.7 10.8H4.5l8.1-12.9L4.9 3.3h4.9l6.1 9.9V3.3z"/>
+	  </svg>
+  
+      See Dataset
+    </button>
+  </a></div>
 <br><br>
 <div align="center"><a href="https://github.com/shepai/RoboSkin" target="_blank" style="text-decoration: none;">
     <button style="
