@@ -184,8 +184,71 @@ Perhaps understandably, most papers on tactile sensing for texture classificatio
 </div>
 
 		<h2 class="headerText">Friction Prediction</h2>
-
-
+		<p>
+			Initially, we used a range of regression models (Linear, Ridge, Logistic) but found that the Random Forest classifier significantly outperformed the other regression models. Therefore, we only proceeded with the results of Ridge and Random Forest, which performed better than the Linear and Logistic models.
+			</p>
+			
+			<p>
+			Friction detection model performance was calculated using the mean squared error (MSE) between predicted and true values, with the mean calculated over all textures in the dataset. Although there is more noise in the voltage readings of the electrical sensors, the Random Forest regression model handled this well.
+			</p>
+			
+			<p>
+			Table 1 displays the results, showing a smaller error from the optical sensor. However, the relative performance of the electrical sensors is good and better than for the texture classification task. The TacTip values are more closely clustered around the line of best fit. Although the electrical sensor readings are noisier and more widely spread, their regression model produced a close match to the actual values. The results shown in Table 2 are for the clear-silicone TacTip and for various configurations of the electrical sensor (which also has a silicone tip).
+			</p>
+			
+			<p>
+			The Random Forest Regression classifier was found to be one of the quickest to train and highest performing for friction prediction across both sensors. We performed a comparison to evaluate how the different classifiers performed for the task of friction prediction using mean squared error as the metric. The same models were compared for both the electrical and optical sensors, where appropriate for the data type.
+			</p>
+			
+			<p>
+			The LSTM and CNN classifiers both used hidden layers of 350 nodes. The neural models had one output node and were trained with the Adam optimizer with a learning rate of 0.001. The results are shown in Table 1. The Random Forest was the highest performing model.
+			</p>
+			<div align="center">
+			<table border="1" style="border-collapse: collapse; text-align: center;">
+			  <caption>
+				<strong>Table 1:</strong> Model Performance Across Different Sensors (averaged over 20 trials)
+			  </caption>
+			  <thead>
+				<tr>
+				  <th>Model</th>
+				  <th>Sensor</th>
+				  <th>Test MSE</th>
+				  <th>Train MSE</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr><td>Ridge Regression</td><td>Optical</td><td>0.0002</td><td>0.0000</td></tr>
+				<tr><td>Ridge Regression</td><td>Electrical</td><td>0.0238</td><td>0.0255</td></tr>
+				<tr><td>CNN</td><td>Optical</td><td>0.0412</td><td>0.0366</td></tr>
+				<tr><td>LSTM</td><td>Optical</td><td>0.0416</td><td>0.0368</td></tr>
+				<tr><td>LSTM</td><td>Electrical</td><td>0.0368</td><td>0.0361</td></tr>
+				<tr><td>Random Forest</td><td>Electrical</td><td>0.0030</td><td>0.0003</td></tr>
+				<tr><td>Random Forest</td><td>Optical</td><td>0.0002</td><td>0.0000</td></tr>
+			  </tbody>
+			</table>
+			</div>
+			<br>
+			<div align="center">
+			<table border="1" style="border-collapse: collapse; text-align: center;">
+			  <caption>
+				<strong>Table 2:</strong> Friction prediction results showing mean squared error (MSE) between actual values and Random Forest regression model (RFR) predictions on the test data. Piezoelectric sensors are denoted as Piez and accelerometers as Acc. Results for the TacTip were gathered using the original image size. Each model was trialled 10 times.
+			  </caption>
+			  <thead>
+				<tr>
+				  <th>Sensor</th>
+				  <th>Regression Model</th>
+				  <th>Min MSE</th>
+				  <th>Train MSE Average</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr><td>Piez</td><td>RFR</td><td>0.022</td><td>0.024</td></tr>
+				<tr><td>Acc</td><td>RFR</td><td>0.019</td><td>0.021</td></tr>
+				<tr><td>Acc &amp; Piez</td><td>RFR</td><td>0.018</td><td>0.021</td></tr>
+				<tr><td>TacTip</td><td>RFR</td><td>0.0043</td><td>0.0049</td></tr>
+			  </tbody>
+			</table>
+</div>
 		<br><br>
 		<div align="center"><a href="https://github.com/shepai/RoboSkin" target="_blank" style="text-decoration: none;">
 			<button style="

@@ -28,11 +28,271 @@
 <script src="https://shepai.github.io/search.js">
 
 </script>
-
+<script src="https://shepai.github.io//tex-mml-chtml.js"></script>
 </div>
 	<!-- the main content -->
 	<div class="main">
+		<h1 class="headerText">3D Printed tactile dataset</h1>
+		The work within this page is under review currently and can also be found in detail in my thesis. 
+		<br><br>
+		<p>
+			Various designs were discussed for making textures for this dataset. Initially, we investigated 3D scanning real-life textures to make the dataset reflective of the real world. However, this presented issues such as non-uniformity of the texture. If the sensor strokes one part of the texture, it may classify it differently from another. Our previous dataset had uniform patterns, so this was not an issue. Therefore, mathematically generated patterns were chosen.
+			</p>
+			
+			<p>
+			It is easy to parameterize a 2D surface when dealing with sinusoidal waves. We have five parameters: amplitudes along the two directions, frequencies along the two directions, and a phase shift between the directions. This also simplifies scalability for different sensors.
+			</p>
+			
+			<p>
+			Other repetitive shapes (squares, pyramids, etc.) can be obtained from a sum of sine functions. Detecting the minimum sine pattern that the sensor can detect may help benchmark the sensor for more advanced shapes.
+			</p>
+			
+			<h3>Texture One</h3>
+			
+			<p>
+			In this equation, \( A_1 \) and \( A_2 \) represent the amplitudes of the sine waves in the \( x \)- and \( y \)-directions, respectively. The parameters \( f_1 \) and \( f_2 \) denote the frequencies of the sine components along the \( x \)- and \( y \)-axes. The variable \( \phi \) is a phase offset applied to the sine term involving \( y \). The variables \( x \) and \( y \) are spatial inputs, and the output \( z_1 \) is the sum of two sine functions modulated by their respective amplitudes, frequencies, and phase.
+			</p>
+			
+			<p>
+			We use \( A_1 = 1 \), \( A_2 = 2 \), \( f_1 = 1 \), \( f_2 = 1 \), \( \phi = \pi / 2 \).
+			</p>
+			
+			<p>
+			\[
+			z_1 = A_1 \sin(f_1 x) + A_2 \sin(f_2 y + \phi)
+			\]
+			</p>
+			
+			<h3>Texture Two</h3>
+			
+			<p>
+			Texture Two also uses the same equation as Texture One, with the same parameters for \( A_1 \), \( f_1 \), and \( f_2 \), however the variable \( A_2 \) is set to 1.
+			</p>
+			
+			<h3>Texture Three</h3>
+			
+			<p>
+			We define the function \( z_3 \) over a grid using the following summation:
+			</p>
+			
+			<p>
+			\[
+			z_3 = \sum_{\substack{i=1 \\ i \text{ odd}}}^{N} \left(A_i \sin(i x) + A_i \sin(i y) \right)
+			\]
+			</p>
+			
+			<p>
+			In this expression, \( N \) is the number of terms in the summation, taken over odd integers from 1 to \( N \). For our texture we used \( N = 25 \).
+			</p>
+			
+			<p>
+			Each term in the series uses the coefficient:
+			</p>
+			
+			<p>
+			\[
+			A_i = \frac{8}{\pi^2} \cdot \frac{(-1)^{\frac{i - 1}{2}}}{i^2}
+			\]
+			</p>
+			
+			<p>
+			This controls the amplitude of the sine wave. The sine functions \( \sin(i x) \) and \( \sin(i y) \) vary with spatial coordinates \( x \) and \( y \), respectively, and share the same frequency \( f = i \) and amplitude \( A_i \). The phase offset is set to zero and therefore omitted in the formula.
+			</p>
+			
+			<p>
+			The function \( z_3 \) is initialized as a zero-valued array of the same shape as \( x \) and is built up iteratively by adding sine wave components in both the \( x \)- and \( y \)-directions. This results in a 2D Fourier-like series that combines symmetrical sine waves to construct a spatial pattern.
+			</p>
+			
+			<h3>Texture Four</h3>
+			
+			<p>
+			Texture Four uses the same summation equation as Texture Three, however with a modified coefficient:
+			</p>
+			
+			<p>
+			\[
+			A_i = \frac{4}{\pi i}
+			\]
+			</p>
+			
+			<p>
+			Additionally, this equation uses \( N = 25 \). The decay and lack of sign alternation lead to sharper features, with more pronounced ridges and edges.
+			</p>
+			
+			<h3>Texture Five</h3>
+			
+			<p>
+			Texture Five also uses the same summation equation as Texture Three and the same coefficient as Texture Three. The difference is that one directional component is removed, resulting in no variation along one axis and producing a protruded shape rather than variation in both directions.
+			</p>
+			
+			<p>
+			\[
+			z_5 = \sum_{\substack{i=1 \\ i \text{ odd}}}^{N} \left(A_i \sin(i x) \right)
+			\]
+			</p>
+			
+			<h3>Texture Six</h3>
+			
+			<p>
+			Texture Six uses the same summation equation as Texture Three and the same coefficient as Texture Four. The second directional component is set to zero (as in Texture Five), resulting in no variation in height along one axis and producing a protruded shape rather than bidirectional variation.
+			</p>
+			
+			<p>
+			There is significant overlap between these texture equations, making the generation of new patterns that are not widely different very feasible.
+			</p>
+			
+			<p>
+			All the models were converted to STL file format as blocks for 3D printing. These models were constrained to be the same height to ensure that the sensor could be lowered to the same position for each experiment.
+			</p>
+			<br>
+			<h2 class="headerText">Printer experiments</h2>
+			Several 3D print filament types were used to make a protruded sine-wave block. We firstly wanted to evaluate how different filament brands and types differ in terms of material properties. 
+			<br><br>
+We additionally evaluated the textures over varying manufactures of 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings of mitigating these issues. 
+<br><br>
+We will inspect this using the variance of images from a TacTip sensor. Pressing the sensor on the same part of the block should have similar impacts on the sensor reading. 
+<br><br>
+Visual inspection is used to judge the quality of a print, particularly for "stringing". Stringing is when the printer’s nozzle leaks a small amount of molten filament while moving between separate parts or sections, leaving thin strands of plastic connecting them. If from a human perspective there is not a lot in varying quality, we know these will result in lower variance. 
+<br><br>
+If there is insignificant difference in variance between datasets then we can assume that the print quality makes no difference to the model. 
+<br><br>
+<p>
+	We used four popular printers: the Ender-3 V3 printer, the Creality Ender-3 V3 SE printer, the Bambu Lab P1P printer, and the Formlabs Form 3 resin printer. The printer specifications are outlined in Table 1. Resin printers are generally more expensive but yield better quality for small details.
+	</p>
+	<div align="center">
+	<table border="1" style="border-collapse: collapse; text-align: center;">
+	  <caption>
+		<strong>Table 1:</strong> Comparison of Ender-3 V3, Creality Ender-3 V3 SE, Bambu Lab P1P printers and Formlabs Form 3 resin printer.
+	  </caption>
+	  <thead>
+		<tr>
+		  <th>Spec</th>
+		  <th>Ender-3 V3</th>
+		  <th>Ender-3 V3 SE</th>
+		  <th>Bambu P1P</th>
+		  <th>Resin</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<tr>
+		  <td>Build volume</td>
+		  <td>220×220×250 mm</td>
+		  <td>220×220×250 mm</td>
+		  <td>256×256×256 mm</td>
+		  <td>145×145×185 mm</td>
+		</tr>
+		<tr>
+		  <td>Motion system</td>
+		  <td>Cartesian Bed slingers</td>
+		  <td>Cartesian Bed slingers</td>
+		  <td>CoreXY </td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Print speed</td>
+		  <td>≤600 mm/s</td>
+		  <td>≤250 mm/s (180 typical)</td>
+		  <td>≤500 mm/s</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Acceleration</td>
+		  <td>≤20,000 mm/s²</td>
+		  <td>~2,500 mm/s²</td>
+		  <td>20,000 mm/s²</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Hotend temperature</td>
+		  <td>Up to 300°C</td>
+		  <td>Up to 260°C</td>
+		  <td>Up to 300°C</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Bed temperature</td>
+		  <td>≤110°C</td>
+		  <td>≤100°C</td>
+		  <td>≤100°C</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Extruder</td>
+		  <td>Direct drive</td>
+		  <td>Sprite direct drive</td>
+		  <td>Direct drive, all-metal</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Extruder aperture</td>
+		  <td>0.4 mm</td>
+		  <td>0.4 mm</td>
+		  <td>0.4 mm</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Leveling</td>
+		  <td>Auto (varies by model)</td>
+		  <td>CR Touch + strain</td>
+		  <td>Auto (built-in)</td>
+		  <td>na</td>
+		</tr>
+		<tr>
+		  <td>Connectivity</td>
+		  <td>Touchscreen, SD/USB</td>
+		  <td>Touchscreen, SD/USB-C</td>
+		  <td>App, cloud, slicer</td>
+		  <td>USB</td>
+		</tr>
+	  </tbody>
+	</table>
+</div>
+	<p>
+	We used three different 1.75 mm filaments: Rapid PETG (Elegoo), PLA+ (eSUN), and PLA-Lite (eSUN). For the resin printer, we used Grey V4 resin. According to manufacturer specifications, these filaments have a dimensional tolerance of ±0.02 mm.
+	</p>
+	
+	<p>
+	We chose the PLA filaments because PLA is an economical standard widely used across 3D printing users. PLA-Lite was cheaper than PLA+, although PLA+ was marketed as a higher quality material. We selected both to explore whether this difference had an impact on results.
+	</p>
+	
+	<p>
+	We used PETG because it provides greater durability, but it can be trickier to print with, potentially introducing more variance unless parameters such as speed, temperature, leveling, and other settings are properly tuned.
+	</p>
+	<h2 class="headerText">Results</h2>
+	From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication. 
+	
 
+			<div align="center"><a href="https://github.com/shepai/3D-textures" target="_blank" style="text-decoration: none;">
+				<button style="
+				  display: inline-flex;
+				  align-items: center;
+				  gap: 8px;
+				  padding: 10px 16px;
+				  background-color: #24292e;
+				  color: white;
+				  border: none;
+				  border-radius: 6px;
+				  font-size: 14px;
+				  font-weight: 500;
+				  cursor: pointer;
+				">
+				  <!-- GitHub SVG Logo -->
+				  <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+					<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+					0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+					-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+					2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+					0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+					2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+					2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+					1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+					1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+					8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+				  </svg>
+			  
+				  See Repo
+				</button>
+			  </a></div>
 	</div>
 </body>
 <script>
