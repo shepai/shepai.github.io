@@ -170,17 +170,17 @@ We then can loop through each of the blocks using the observe function, and pick
 		<pre><code>
 obs=e.get_observation()
 for i in range(len(obs["blocks"])):
-			location=obs["blocks"][i]
-			colour=obs["block_colours"][i] #not needed for this task
-			sizes=obs["block_sizes"][i] #not needed for this task
+	location=obs["blocks"][i]
+	colour=obs["block_colours"][i] #not needed for this task
+	sizes=obs["sizes"][i] #not needed for this task
 
-			location[2]=loaction[2]+=0.05 #move slightly above the block so it does not topple it
-			e.move_gripper_to(location) #move to block
-			e.step(100) #update
-			e.pick_block() #place block down
-			e.step()
+	location[2]=location[2]+0.05 #move slightly above the block so it does not topple it
+	e.move_gripper_to(location) #move to block
+	e.step(100) #update
+	e.pick_block() #place block down
+	e.step()
 
-			e.put_block() #drop the block
+	e.put_block() #drop the block
 		</code></pre>
 Now this will move the arm to each of the blocks, pick it up, but then immediatly drop it again as seen in the use of the command put_block. You will need to put code imbetween these instructions to move the arm to the target position. 
 		<br><br>
