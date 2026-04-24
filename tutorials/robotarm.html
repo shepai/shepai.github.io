@@ -85,7 +85,7 @@
 		<br>
 		To have the work you will need to install the GitHub from <a href="https://github.com/shepai/Robot_shape_learning">here</a>. Download this, extract the folder and open it up in vscode under File>Add folder to workspace, then select the downloaded folder. 
 		  <br>
-		  You should then be able to open up the lesson file which is under Robot_shape_learning>Code>Mujoco>lesson>example.ipynb If you are new to notebooks, they are quite simple. They are made up of text to explain tasks and code cells to run your code. Check out online tutorials to find out more if you are struggling To run a code cell you can click the run button next to the cell. 
+		  You should then be able to open up the lesson file which is under <a href="https://github.com/shepai/Robot_shape_learning/blob/main/Code/Mujoco/lesson/example.ipynb">Robot_shape_learning>Code>Mujoco>lesson>example.ipynb</a> If you are new to notebooks, they are quite simple. They are made up of text to explain tasks and code cells to run your code. Check out online tutorials to find out more if you are struggling To run a code cell you can click the run button next to the cell. 
 		  	Within this file has the necesary libraries you need to install. Make sure you have pip installed. If you do not, or have errors. Open up the command prompt and type
 		<pre><code>python -m ensurepip --upgrade
 			</code></pre>
@@ -188,7 +188,64 @@ Now this will move the arm to each of the blocks, pick it up, but then immediatl
 
 <br><br>
 		<h2>Large Language Model Integration</h2>
+This part is using the ollama library to make use of a large language models or decision making. We give it a prompt explaining the task, and the environment. Then get it to output instructions of what to do next. This part of the lesson is very much about exploration into what works. You will need to use string manipulation tools, and explore ways to get the best information out of the LLM with the way you use prompts. 
+We have converted the ollama libary functions into a simple to use class. You can find this all imported in the worksheet. 
 
+<pre><code>
+from Controller.languageModel import *
+decision = Decisions(model="gemma3")
+
+the_prompts = decision.system_prompt
+print(the_prompts)
+</code></pre>
+
+We have also prewritten a function to convert your observations to text. Of course, you can play around with this and edit it in anyway you see fit. Our addition has been to round the numbers to give less irrelevantinformtion to the model. 
+<pre><code>
+def observations_to_text(obs):
+    string="Environment information"
+    for key in obs:
+        if type(obs[key])==type([]):
+            string+=key+": "
+            for i in range(len(obs[key])):
+                try:
+                    string+=str(np.round(np.array(obs[key][i]),2))+", "
+                except:
+                    string+=str(obs[key][i])+", "
+        else:
+            string+=key+": "+str(obs[key])
+        string+="\n"
+    return string
+print(observations_to_text(e.get_observation()))
+</code></pre>
+<br>
+Therefore we can set the given task to the model, then give it an observation and get a response. 
+<pre><code>
+decision.set_task("You are given two blocks and you need to stack them on top of eachother")
+reply=decision.chat(observations_to_text(e.get_observation()))
+</code></pre>
+
+The following code produced the answer:
+<pre>
+	Okay, I understand. I have the following information:
+
+*   **Blocks:** I have a block with coordinates (0.5001556420835115, 2.5718474500556497e-06, 0.023754118231847754).
+*   **Block Colors:** The block is red (approximately).
+*   **Robot End Position:** The robot's end position is (0.5000313875544178, -5.123351179911375e-06, 0.7099992578096335).
+*   **Holding Constraint:** None.
+*   **Block Name:** `cube_small.urdf`
+*   **Size:** 1
+*   **Contacts:** None.
+*   **Holding:** None
+
+I will now proceed to pick up the block and place it on top of the other block.
+
+```
+pick_block(0)
+move_gripper_to(0.5000313875544178, -5.123351179911375e-06, 0.7099992578096335)
+put_block()
+```
+</pre>
+You will need to extract the instructions from the text output and place it into functions. 
 	</div>
 </body>
 <script>
