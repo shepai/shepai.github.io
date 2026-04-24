@@ -36,19 +36,70 @@
 	<div class="main">
 		<h1 class="headerText">Robot Arm Control Lesson</h1>
 		<h5>Posted 24/04/2026</h5>
+		 <div align="center"><a href="https://github.com/shepai/Robot_shape_learning" target="_blank" style="text-decoration: none;">
+            <button style="
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 10px 16px;
+              background-color: #24292e;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              font-size: 14px;
+              font-weight: 500;
+              cursor: pointer;
+            ">
+              <!-- GitHub SVG Logo -->
+              <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+                2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+                0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+                2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+                2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+                1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+                1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+                8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+              See Repo
+            </button>
+          </a></div>
+		  <br>
 		In this tutorial we will be using Mujoco, a simulator developed by Google Deepmind. The repository also supports PyBullet, however this tutorial focuses on the Mujoco as it is easier to install. This tutorial is also aimed at Windows users, though everything other than the setup works for Linux.
 		Controlling robotic arms is considered a solved task, using methods like inverse kinematics which calculates the required movements in each joint for a target coordinate. This simulation has this all solved, all you need to do is make use of existing commands to control the robot. 
 		The first task is to get an understanding of how the robot arm can be controlled, then we lead on to autonomous problem solving. We employ the use of a large language model that has pretrined knowledge we can make use of. 
 		Of course, large language models have their limitations, but for the sake of this educational task we can make use of the problem solving abilities of a large language model. 
 		<br><br>
 		<h2>Setup</h2>
+		For the language model you will need to install ollama. You can either download from the websie, or (easier) type this command into your windows command prompt app:
+		<pre><code>winget install Ollama.Ollama</code></pre> 
+		This can take some time to install, so work through the other isntallations while you wait. Once it oes install, we need to install a language model. Use the following command:
+		<pre><code>ollama pull gemma3</code></pre> 
 		You will need an IDE (an environment to code in), for which we recommed VSCODE. You can <a href="https://code.visualstudio.com/download">download this here</a> 
-		We will need to install Python. I recommend installing the Python from the Windows App store as it integrates nicely with VSCode. Once you load up VSCode, go to extentions and search for notebooks. 
+		We will need to install Python. I recommend installing the Python from the Windows App store as it integrates nicely with VSCode. Once you load up VSCode, go to extentions (the three squares and rotated square icon on the left bar of the screen) and search for notebooks. Once you find the Jupyter extention click install. 
+		<br><br>
+		<img src="https://shepai.github.io/assets/tutorials/extention.png" width="100%" >
 		<br>
-		<img src="https://shepai.github.io/assets/tutorials/extention.png">
+		<br>
+		To have the work you will need to install the GitHub from <a href="https://github.com/shepai/Robot_shape_learning">here</a>. Download this, extract the folder and open it up in vscode under File>Add folder to workspace, then select the downloaded folder. 
+		  <br>
+		  You should then be able to open up the lesson file which is under Robot_shape_learning>Code>Mujoco>lesson>example.ipynb If you are new to notebooks, they are quite simple. They are made up of text to explain tasks and code cells to run your code. Check out online tutorials to find out more if you are struggling To run a code cell you can click the run button next to the cell. 
+		  	Within this file has the necesary libraries you need to install. Make sure you have pip installed. If you do not, or have errors. Open up the command prompt and type
+		<pre><code>python -m ensurepip --upgrade
+			</code></pre>
+			Then you can run the download code window in the worksheet, or simply run the commands in your command prompt.
+			<pre><code>python -m pip install --upgrade pip setuptools wheel
+pip install numpy 
+pip install mujoco
+pip install dm_control
+pip install matplotlib
+pip install ollama
+			</code></pre>
 		<br><br>
 		<h2>Loading the Simulation</h2>
-		
+		We load the simulation by cre
 		<br><br>
 		<h2>Controlling the Robot</h2>
 		
