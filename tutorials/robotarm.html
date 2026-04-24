@@ -136,8 +136,53 @@ e.update_task()
 </code></pre>
 <img src="https://shepai.github.io/assets/tutorials/mujocoobj.png" width="100%" >
 		<br><br>
-		<h2>Task Solving</h2>
 
+	Finally, we can observe all information from the environment by using the get_observation function. It returns a distionary datatype with keys for blocks, colours and sizes. Each index in the array represents the information for that number block. 
+
+	<pre><code>
+dictionary=e.get_observation()
+print("Block coordinates:",dictionary['blocks'])
+print("Block colours:",dictionary['block_colours'])
+print("Block sizes:",dictionary['sizes'])
+
+print("All data items",list(dictionary.keys()))
+	</code></pre>
+		<h2>Task Solving</h2>
+Lets focus on task 1, the task is to generate a number of blocks, loop through and pick them up one by one. Like all algorithms, we need to break down the steps to solving the problem. 
+<p style="margin-left: 40px;">
+	1) Generate the blocks 
+	<br> 2) Pick a target location to stack the blocks
+	<br> 3) Then loop through each block, pick it up and drop it in the target location 
+	<br> </p>
+Using the various commands we mentioned above, we can firstly generate our blocks. We can also pick a target location with an array This can be anything, I have chosen (0.5,-0.5,0.2). 
+		<pre><code>
+e=Env(PATH_TO_FILE)
+viewer=mujoco.viewer.launch_passive(e.model, e.data)
+e.setViewer(viewer)
+e.generate_blocks(4)
+e.update_task()
+# target location 
+target_location=[0.5,-0.5,0.2]
+		</code></pre>
+<img src="https://shepai.github.io/assets/tutorials/cubes.png" width="100%" >
+<br>
+We then can loop through each of the blocks using the observe function, and pick one by one.  
+		<pre><code>
+obs=e.get_observation()
+for i in range(len(obs["blocks"])):
+			location=obs["blocks"][i]
+			colour=obs["block_colours"][i] #not needed for this task
+			sizes=obs["block_sizes"][i] #not needed for this task
+
+			location[2]=loaction[2]+=0.05 #move slightly above the block so it does not topple it
+			e.move_gripper_to(location) #move to block
+			e.step(100) #update
+			e.pick_block() #place block down
+			e.step()
+
+			e.put_block() #drop the block
+		</code></pre>
+Now this will move the arm to each of the blocks, pick it up, but then immediatly drop it again as seen in the use of the command put_block. You will need to put code imbetween these instructions to move the arm to the target position. 
 		<br><br>
 		<h2>Large Language Model Integration</h2>
 
