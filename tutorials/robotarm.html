@@ -98,18 +98,42 @@ pip install matplotlib
 pip install ollama
 			</code></pre>
 		<br><br>
-		<h2>Loading the Simulation</h2>
+		<h2>Loading the Simulation and Controlling the Robot</h2>
 		We load the simulation by creating the environment as an object. If you  get errors in the worksheet saying that there is no path or directory found, you will need to make sure the path is to the the folder "kuka_iiwa_14/" which you downloaded from our GitHub in the setup. I have called this PATH_TO_FILE in the code below:
 		<pre><code>
 e=Env(PATH_TO_FILE)
 viewer=mujoco.viewer.launch_passive(e.model, e.data)
 e.setViewer(viewer)
 		</code></pre>
-		Thiw will bring up the window with the robot arm.
+		This will bring up the window with the robot arm. 
+		<br>
 		<img src="https://shepai.github.io/assets/tutorials/mujocoload.png" width="100%" >
+		<br>
+		You can start to move this arm around by using the command to move_gripper_to and the parameters of the coordinates where you want the hand part to be. The code line below calculates the gripper movements needed to x coodirnate 0.4, y 0.5 and z 0.1. 
+		In order to make it actually move we must use the step function to catch the simulator up.
+		<pre><code>
+e.move_gripper_to([0.4,0.5,0.1])
+e.step()
+		</code></pre>
 		<br><br>
-		<h2>Controlling the Robot</h2>
-		
+		We can then add objects to the simulation using commands such as:
+		<pre><code>e.generate_blocks(5)
+e.update_task()</code></pre>
+For generating 5 blocks we can use the generate_blocks but if you wanted to be specific about a block and its creation you can use the following:
+<pre><code>
+position=[0.4,0.5,0.05]
+colour=[1,0,0,1] 
+size=[0.02,0.02,0.02]
+e.generate_block(position,colour,size)
+e.update_task()
+</code></pre>
+		Always end with the update_task function to make sure that the simulator loads in the changes. To remove everything you can use e.reset(). Lets see an example, the below code generates three blocks of varying colours and sizes.
+<pre><code>
+e.generate_block([0.4,0.5,0.05],[1,0,0,1],[0.02,0.02,0.02])
+e.generate_block([0.6,0.4,0.05],[1=0,1,0,1],[0.04,0.04,0.04])
+e.generate_block([0.7,0.3,0.05],[0,0,1,1],[0.02,0.02,0.1])
+e.update_task()
+</code></pre>
 		<br><br>
 		<h2>Task Solving</h2>
 
