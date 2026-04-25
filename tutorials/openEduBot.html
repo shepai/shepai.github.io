@@ -87,9 +87,51 @@
             - If the robot is slower or performing worse than before, it means i is low on power. Keep it powered up for best results! 
             - Make sure to keep the screws tight. This requires readjusting every so often. 
           </p>
-          
-          
-	</div>
+        <br>
+        <h2>The Library</h2>
+          <h3>Flashing CircuitPython</h3>
+          We have support for both MicroPython and CircuitPython. This tutorial will be focused on the CircuitPython approach because it contains a variant of numpy. Numpy is useful if we want to recreate networks on the device.
+          Make sure the raspberry pi pico has circuitpython. You can check by connecting the robot via USB to your computer, opening Thonny IDE and seeing what is running on the device. If it gives you the option to install, it means there is no firmware on yet. If it says micropython, you will need to reflash it. If it has circuitpython already, then you are good to go! 
+          Flashing the device is quite simple, you disconnect the USB and power, hold down the boot select button on the Pico, and then reconnect to the computer while keeping the button surpressed. 
+          Drag and drop the latest circuitpython uf2 file from <a href="https://circuitpython.org/downloads">here</a> onto the device. There are plent of online tutorials on how to do this if you get stuck. 
+          Make sure the uf2 is for the right controller. The pico and pico wireless use different uf2. Also the cytron board <a href="https://circuitpython.org/board/cytron_maker_pi_rp2040/">requires its own</a> as well. 
+          <br><br>
+          The final thing is to make sure you have the right libraries on device. Download the <a href="https://circuitpython.org/libraries">Adafruit library bundle</a> for the device you need. 
+          Copy and paste the files/folders from the library bundle download into the /lib directory of the Pico. Only copy the libraries you need. 
+          - simpleio 
+          - adafruit_motor 
+          If you get no module found errors, just look for it in the downloaded folder and copy it over. You will also need to upload the openEduBot Library found <a href="https://github.com/shepai/OpenEduBot/blob/main/Library/EduBot_CP.py">here</a>.
+          <h3>Coding</h3>
+        The library is called using the following commands. If you are using the other boards you will need to change the parameter boardtype. 
+<pre>
+<code>
+from EduBot_CP import wheelBot
+
+bot = wheelBot()
+</code>
+</pre>
+<pre>
+<code>
+from EduBot_CP import wheelBot
+
+bot = wheelBot(board_type="pico")
+</code>
+</pre>
+<pre>
+    <code>
+from EduBot_CP import wheelBot
+
+bot = wheelBot(board_type="pico_1")
+</code>
+</pre>
+
+To get code to run on boot, we must save it as code.py in the main directory of the Pico. This will always run on start up, whether or not the device is connected to a computer or not. As long as it has power. 
+
+
+
+
+
+        </div>
 </body>
 <script>
 
