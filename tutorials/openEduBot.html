@@ -74,9 +74,21 @@
           Build instructions can be found <a href="https://github.com/shepai/OpenEduBot/blob/main/Instructions%20and%20code/WheelBot/buildInstructions.pdf">here</a>. The chassis contains two light sensitive resitorys and two dc motors. For a controller it makes use of a Raspberry Pi Pico.
 
           The library supports a few different boards (in order) the robotics board, motor driver and cytron board. In the library we refer to the boiard type (in order) as blank or "default", "pico", "pico_1". 
+          <br>
           <img src="https://shepai.github.io/assets/tutorials/pico.webp" width="30%">
           <img src="https://shepai.github.io/assets/tutorials/pico_1.webp" width="30%">
           <img src="https://shepai.github.io/assets/tutorials/other.webp" width="30%">
+          <br>
+          Hardware bugs to watch out for: 
+          <p style="margin-left: 40px;">
+            - Firstly check the wires are going to the right pins. A common mistake is trying to read from a sensor and it is not in the right pin. <br>
+            - If a component is very hot, its likely that there is a wring problem, make sure negative and positive are in the right place, and they have not crossed. (Screw mounting points can do this) <br>
+            - If no power is found in the motors or sensors, its likely the switch on the motor driver is not switched on, or the batteries are empty. 
+            - If the robot is slower or performing worse than before, it means i is low on power. Keep it powered up for best results! 
+            - Make sure to keep the screws tight. This requires readjusting every so often. 
+          </p>
+          
+          
 	</div>
 </body>
 <script>
