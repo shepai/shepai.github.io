@@ -213,6 +213,76 @@ Once the libraries are uploaded under the <code>lib</code> folder, upload the
 <code>demo code.py</code> file to the pico and rename it to <code>code.py</code> 
 so it runs on boot.
 </p>
+<pre><code>import busio
+import digitalio
+import board
+from dataloggerCP import datalogger
+import adafruit_mpu6050
+import time</code></pre>
+
+<p>The program then sets up communication interfaces. SPI is configured for communicating with a data logger (likely an SD card), and I2C is set up to talk to the MPU6050 sensor.</p>
+
+<pre><code>spi = busio.SPI(board.GP2, board.GP3, board.GP4)
+cs = board.GP1
+i2c = busio.I2C(board.GP21, board.GP20)</code></pre>
+
+<p>A button is configured as an input with a pull-up resistor. This means the button reads <code>True</code> when not pressed and <code>False</code> when pressed. An LED is also configured as an output to indicate whether recording is active.</p>
+
+<pre><code>btn = digitalio.DigitalInOut(board.GP18)
+btn.direction = digitalio.Direction.INPUT
+btn.pull = digitalio.Pull.UP
+
+LED = digitalio.DigitalInOut(board.GP28)
+LED.direction = digitalio.Direction.OUTPUT</code></pre>
+
+<p>The MPU6050 sensor and the data logger are then initialized.</p>
+
+<pre><code>mpu = adafruit_mpu6050.MPU6050(i2c)
+logger = datalogger(spi, cs)</code></pre>
+
+<p>A function called <code>read()</code> is defined. This function collects acceleration and gyroscope data from the sensor, converts the values into strings, and formats them as a comma-separated line suitable for saving in a CSV file.</p>
+
+<pre><code>def read():
+    xa, ya, za = mpu.acceleration
+    xg, yg, zg = mpu.gyro
+    return str(xa)+","+str(ya)+","+str(za)+","+str(xg)+","+str(yg)+","+str(zg)+"\n"</code></pre>
+
+<p>Some variables are initialized to control the program state. The <code>toggle</code> variable determines whether recording is active, the LED is initially turned off, and <code>num</code> is used to create unique filenames.</p>
+
+<pre><code>toggle = False
+LED.value = False
+num = 0</code></pre>
+
+<p>The main loop runs continuously. Inside the loop, the program checks if the button is pressed. Because of the pull-up configuration, a pressed button is detected when <code>btn.value</code> is <code>False</code>. When pressed, the recording state is toggled and the LED changes state.</p>
+
+<pre><code>while 1:
+    if not btn.value:
+        toggle = not toggle
+        LED.value = not LED.value</code></pre>
+
+<p>If a file is currently open, it is closed to stop recording. If no file is open, a new CSV file is created with a name like <code>log0.csv</code>, <code>log1.csv</code>, and so on.</p>
+
+<pre><code>        if logger.opened:
+            logger.close()
+        else:
+            logger.create_file("log" + str(num) + ".csv")
+            num += 1</code></pre>
+
+<p>A short delay is added to prevent multiple rapid button presses from being registered.</p>
+
+<pre><code>        time.sleep(0.2)</code></pre>
+
+<p>If recording is active, the program reads a line of sensor data and writes it to the file.</p>
+
+<pre><code>    if toggle:
+        dataline = read()
+        logger.write_data(dataline)</code></pre>
+
+<p>Another short delay controls how frequently data is recorded.</p>
+
+<pre><code>    time.sleep(0.1)</code></pre>
+
+<p>Overall, the system works as a simple data logger. Pressing the button starts recording motion data to a new file and turns the LED on. Pressing the button again stops recording and turns the LED off.</p>
 
 <h2>Gathering your dataset</h2>
 
@@ -238,6 +308,91 @@ Try to keep recordings similar length.
 
 <h2>Machine Learning</h2>
 This part of the tutorial focuses on classifying our datasets. If you haven't managed to download data, we have an example dataset in the repository to make use of. 
+<br><br>
+<p>The first step in building a machine learning model from sensor data is loading the recorded files into a usable format. Each file contains raw motion data collected from the device, where each row represents a moment in time and contains acceleration and gyroscope readings across three axes. Since the CSV files do not include column names, these are manually assigned after loading so the data can be accessed more clearly.</p>
+You should use your data you gathered to load in. 
+<pre><code>df = pd.read_csv("demos/1/walking.csv", header=None)
+df.columns = ["ax", "ay", "az", "gx", "gy", "gz"]
+df.head()</code></pre>
+
+<p>Once loaded, the data can be visualised to understand its structure and behaviour over time. Plotting the acceleration and gyroscope signals helps reveal patterns such as periodic motion, noise, or differences between activities. This step is important because it gives an intuition for what the model will later try to learn.</p>
+
+<pre><code>plt.plot(df['ax'], label="x-axis")
+plt.plot(df['ay'], label="y-axis")
+plt.plot(df['az'], label="z-axis")
+plt.title("Acceleration over time")
+plt.legend()
+plt.show()
+
+plt.plot(df['gx'], label="x-axis")
+plt.plot(df['gy'], label="y-axis")
+plt.plot(df['gz'], label="z-axis")
+plt.title("Gyroscope over time")
+plt.legend()
+plt.show()</code></pre>
+
+<p>To train a model, multiple recordings are needed, each representing a different class of behaviour. These files are grouped together along with labels that describe what action is being performed. For example, walking, running, and idle might each correspond to different motion patterns. These lists allow the program to systematically load all data and associate each sequence with the correct label.</p>
+
+<pre><code>files = ["demos/1/walking.csv","demos/1/running.csv","demos/1/idle.csv"]
+labels = ["walking","running","idle"]</code></pre>
+
+<p>The data from these files is then converted into a format suitable for machine learning. Instead of treating each row independently, the data is grouped into sequences over time, forming a large time-series dataset. This is essential because motion is not defined by a single reading, but by how readings change over time. A function such as <code>convert_data</code> typically performs this step by stacking windows of data together and aligning them with their labels.</p>
+
+<p>To learn from this type of sequential data, a Long Short-Term Memory (LSTM) network is used. An LSTM is a type of neural network designed specifically for time-series data. Unlike standard neural networks that treat inputs independently, LSTMs maintain a memory of previous inputs, allowing them to recognise patterns that unfold over time. This makes them well suited for motion data, where the difference between actions like walking and running lies in the rhythm and progression of movement rather than individual values.</p>
+
+<p>The model is constructed using stacked LSTM layers. The first layer processes the full sequence and passes its output to the next layer, allowing the network to build increasingly complex representations of the motion. Dropout layers are included to reduce overfitting by randomly disabling parts of the network during training. Finally, dense layers convert the learned representation into a prediction over the possible classes.</p>
+
+<pre><code>n_timesteps = X_data.shape[1]
+n_channels  = X_data.shape[2]
+n_classes   = len(np.unique(y_data))
+
+model = Sequential([
+    LSTM(64, return_sequences=True, input_shape=(n_timesteps, n_channels)),
+    Dropout(0.3),
+
+    LSTM(64),
+    Dropout(0.3),
+
+    Dense(32, activation="relu"),
+    Dense(n_classes, activation="softmax")
+])
+
+model.compile(
+    optimizer=Adam(1e-3),
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+model.summary()</code></pre>
+
+<p>Once defined, the model is trained using the collected dataset. During training, the network adjusts its internal parameters to minimise the difference between its predictions and the true labels. This process is repeated over multiple epochs, gradually improving performance.</p>
+
+<pre><code>history = model.fit(
+    X_data, y_data,
+    epochs=10,
+    batch_size=32,
+    validation_split=0,
+    shuffle=True
+)
+
+loss, acc = model.evaluate(X_data, y_data, verbose=0)
+print("Model Accuracy:", acc*100,"%")</code></pre>
+
+<p>After training, it is important to evaluate how well the model is performing. A confusion matrix provides a detailed view of this by showing how often each class is correctly or incorrectly predicted. This helps identify specific weaknesses, such as one activity being confused with another.</p>
+
+<pre><code>from sklearn.metrics import confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score
+
+y_pred_probs = model.predict(X_data)
+y_pred = np.argmax(y_pred_probs, axis=1)
+
+cm = confusion_matrix(y_data, y_pred)
+disp = ConfusionMatrixDisplay(cm)
+disp.plot()
+plt.show()</code></pre>
+
+<p>Overall, this pipeline transforms raw sensor readings into a trained model capable of recognising patterns in motion. The key idea is that the LSTM learns temporal relationships in the data, allowing it to distinguish between different activities based on how the signals evolve over time rather than just their instantaneous values.</p>
 
 	</div>
 
