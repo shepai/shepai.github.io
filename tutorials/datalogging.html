@@ -245,7 +245,8 @@ logger = datalogger(spi, cs)</code></pre>
 <pre><code>def read():
     xa, ya, za = mpu.acceleration
     xg, yg, zg = mpu.gyro
-    return str(xa)+","+str(ya)+","+str(za)+","+str(xg)+","+str(yg)+","+str(zg)+"\n"</code></pre>
+    return str(xa)+","+str(ya)+","+str(za)+","
+    +str(xg)+","+str(yg)+","+str(zg)+"\n"</code></pre>
 
 <p>Some variables are initialized to control the program state. The <code>toggle</code> variable determines whether recording is active, the LED is initially turned off, and <code>num</code> is used to create unique filenames.</p>
 
@@ -333,7 +334,9 @@ plt.show()</code></pre>
 
 <p>To train a model, multiple recordings are needed, each representing a different class of behaviour. These files are grouped together along with labels that describe what action is being performed. For example, walking, running, and idle might each correspond to different motion patterns. These lists allow the program to systematically load all data and associate each sequence with the correct label.</p>
 
-<pre><code>files = ["demos/1/walking.csv","demos/1/running.csv","demos/1/idle.csv"]
+<pre><code>files = ["demos/1/walking.csv",
+    "demos/1/running.csv",
+    "demos/1/idle.csv"]
 labels = ["walking","running","idle"]</code></pre>
 
 <p>The data from these files is then converted into a format suitable for machine learning. Instead of treating each row independently, the data is grouped into sequences over time, forming a large time-series dataset. This is essential because motion is not defined by a single reading, but by how readings change over time. A function such as <code>convert_data</code> typically performs this step by stacking windows of data together and aligning them with their labels.</p>
@@ -347,7 +350,8 @@ n_channels  = X_data.shape[2]
 n_classes   = len(np.unique(y_data))
 
 model = Sequential([
-    LSTM(64, return_sequences=True, input_shape=(n_timesteps, n_channels)),
+    LSTM(64, return_sequences=True, 
+    input_shape=(n_timesteps, n_channels)),
     Dropout(0.3),
 
     LSTM(64),
