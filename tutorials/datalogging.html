@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="assets/test1.ico" type="favicon/ico">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">Dexter Shepherd</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+
+<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a align="right" href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" class="ai ai-google-scholar ai-2x"></a>
+<a align="right" href="https://github.com/shepai" class="fa fa-github"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Searchhttps://github.com/shepai/datalogger_education/" name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+		<h1 class="headerText">Datalogging device</h1>
+		<h5>Posted 25/04/2026</h5>
+		 <div align="center"><a href="https://github.com/shepai/datalogger_education" target="_blank" style="text-decoration: none;">
+            <button style="
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 10px 16px;
+              background-color: #24292e;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              font-size: 14px;
+              font-weight: 500;
+              cursor: pointer;
+            ">
+              <!-- GitHub SVG Logo -->
+              <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+                2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+                0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+                2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+                2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+                1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+                1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+                8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+              See Repo
+            </button>
+          </a></div>
+		  <br>
+          This tutorial covers the creation of a data logging device. We will learn how to use a Raspberry Pi Pico, connect a gyroscope/accelerometer sensor and create a dataset tat can be used for machine learning classification. 
+          <br><br>
+          Smart fitness watches use small sensors that detect movement in 3D space, and can make use of the movements to detect if you are walking, running, cycling etchttps://github.com/shepai/datalogger_education/. and how quickly you are doing this. They pair this with heart rate monitors to provide more health information. This is something known as "multimodal", where we combine various sensors which often improves model accuracy. 
+          We will be (on a simple scale) learning to implement our own data gathering device, so that we too can make models for classifying movement. 
+
+          <h2>Device construction</h2>
+          <p>
+You will need a Raspberry Pi Pico, a computer with USB connection and to download 
+<a href="https://thonny.org/">Thonny IDE</a>.
+</p>
+
+<p>
+Once you have all of these, you may need to reflash the Raspberry Pi Pico if it is new. 
+To do this hold down the bootsel button and then connect the USB to the pico and computer. 
+Be sure to keep the button pressed during this time. Once it is connected it should come 
+up with the boot menu. Drag the most 
+<a href="https://circuitpython.org/board/raspberry_pi_pico/">recent download of CircuitPython</a> 
+for Pico into the folder.
+</p>
+
+<p>
+See <a href="https://learn.adafruit.com/getting-started-with-raspberry-pi-pico-circuitpython/circuitpython">
+this tutorial</a> for more detail.
+</p>
+
+<p>
+Once all set up you will need to upload the library dependencies to the board. The files 
+can be found under <code>/Circuitpython_Dependencies</code>. Copy and paste the contents 
+of this folder into <code>lib/</code> on the pico. If there are compatibility issues with 
+any of these libraries it might be because your CircuitPython flash is more up to date 
+than these libraries. If so you will need to install the latest ones from 
+<a href="https://circuitpython.org/libraries">here</a>.
+</p>
+
+<h2>Wiring</h2>
+
+<p>
+To wire up your data logger you will need to select sensors you want to read from, 
+SD card reader (optional), breadboard, buttons and Pico.
+</p>
+
+<p>
+First begin by placing each component you will be using on the breadboard so that the 
+lines do not cross, we will use jumper wires to connect the electronics.
+</p>
+
+<h3>SD card</h3>
+
+<p>
+The SD card is optional, though if you do not use an SD card the device cannot be 
+connected to Thonny while you gather data, otherwise you will get an error stating:
+</p>
+
+<pre><code>Traceback (most recent call last): File "&lt;stdin&gt;", 
+line 48, in &lt;module&gt; File "&lt;stdin&gt;", 
+line 20, in __init__ 
+RuntimeError: Cannot remount path when visible via USB.
+</code></pre>
+
+<p>
+If this happens, simply unplug the device and make sure your code is running on boot 
+by saving it as <code>code.py</code>. If using USB and it keeps reconnecting to Thonny, 
+use a power bank and gather your dataset manually. Ideally in datalogging for larger datasets you would use some form of external storage, like an SD card, because it can store more data. 
+</p>
+
+<p>If you do have an SD card then it is wired as follows:</p>
+
+<div class="center">
+  <img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/Screenshot from 2026-02-06 17-15-32.png" width="70%">
+</div>
+
+<table>
+<tr><th>SD Pin</th><th>Pico Pin</th></tr>
+<tr><td>MOSI</td><td>GP3</td></tr>
+<tr><td>MISO</td><td>GP4</td></tr>
+<tr><td>GND</td><td>GND</td></tr>
+<tr><td>5V/3.3</td><td>See table below</td></tr>
+<tr><td>SCK</td><td>GP2</td></tr>
+<tr><td>CS</td><td>GP1</td></tr>
+</table>
+
+<p>Different SD readers may have different power requirements:</p>
+
+<table>
+<tr><th>SD card holder</th><th>Power requirement</th><th>Pin on Pico</th></tr>
+<tr>
+<td><img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/Screenshot%20from%202026-02-06%2017-16-28.png" width="30%"></td>
+<td>5V</td><td>VBUS</td>
+</tr>
+<tr>
+<td><img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/Screenshot%20from%202026-02-06%2017-16-35.png"  width="30%"></td>
+<td>3.3V</td><td>3.3</td>
+</tr>
+</table>
+
+<h3>MPU6050 sensor</h3>
+
+<p>
+The MPU6050 is a gyroscope, accelerometer and temperature sensor. We will use it 
+to gather human movement datasets.
+</p>
+
+<div class="center">
+  <img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/MPU6050-Gyroscope-Accelerometer-Raspberry-Pi-Pico.png" width="30%" style="transform: rotate(90deg);">
+</div>
+
+<table>
+<tr><th>MPU6050 Pin</th><th>Pico Pin</th></tr>
+<tr><td>GND</td><td>GND</td></tr>
+<tr><td>VCC</td><td>3.3</td></tr>
+<tr><td>SDA</td><td>GP20</td></tr>
+<tr><td>SCL</td><td>GP21</td></tr>
+</table>
+
+<h3>Push button</h3>
+
+<p>
+We include a push button to allow you to stop and start recording.
+</p>
+
+<div class="center">
+  <img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/Screenshot 2026-02-07 093117.png" width="30%" style="transform: rotate(90deg);">
+</div>
+
+<h3>LED</h3>
+
+<p>
+The LED is our user interface. It indicates whether data is being recorded.
+</p>
+
+<div class="center">
+  <img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/Screenshot 2026-02-07 092959.png" width="70%">
+</div>
+
+<p>
+The longer pin is positive, shorter is negative. Connect the shorter pin to GND 
+and the longer pin to GP28.
+</p>
+
+<h2>Coding</h2>
+
+<p>
+Once the libraries are uploaded under the <code>lib</code> folder, upload the 
+<code>demo code.py</code> file to the pico and rename it to <code>code.py</code> 
+so it runs on boot.
+</p>
+
+<h2>Gathering your dataset</h2>
+
+<p>
+Now you have a device that can record multiple datasets. When powered, it is ready. 
+Press the button to start recording (LED on), press again to stop.
+</p>
+
+<p>
+Files will be saved as <code>log0.csv</code>, <code>log1.csv</code>, etc. Keep track 
+of what each file represents for later classification.
+</p>
+
+<div class="center">
+  <img src="https://raw.githubusercontent.com/shepai/datalogger_education/refs/heads/main/Assets/46090.jpg" width="70%">
+</div>
+
+<p>
+Ideally, use an external phone charger to power the device on the move. Otherwise, 
+keep it connected to your laptop and carefully perform tasks while holding the device. 
+Try to keep recordings similar length.
+</p>
+
+
+	</div>
+</body>
+<script>
+
+
+</script>
+
+</html>
