@@ -126,10 +126,42 @@ bot = wheelBot(board_type="pico_1")
 </pre>
 
 To get code to run on boot, we must save it as code.py in the main directory of the Pico. This will always run on start up, whether or not the device is connected to a computer or not. As long as it has power. 
+Moving the robot is quire simple, we select the motor, a direction and a speed. The code below turns one of the motors for full speed for 5 seconds, then reverses the direction of rotation for another 5. It then rotates the other motor in the same way and finally stops moving. 
+<pre>
+    <code>
+speed_1=100 #100% speed
+bot.motorOn(4, "r", speed_1)
+time.sleep(5)
 
+bot.motorOn(4, "f", speed_1)
+time.sleep(5)
 
+#other motor 
+bot.motorOn(3, "r", speed_1)
+time.sleep(5)
 
+bot.motorOn(3, "f", speed_1)
+time.sleep(5)
 
+bot.stop() #stop moving
+</code>
+</pre>
+So moving is fairly simple, lets connect to the light sensors now. We can test that the sensors are working by covering them with our hands and seeing the values printed change. Also using your phone torch. If there is no change then its likely the wiring is wrong. Try GP27 to replace whichever sensor is failing. 
+
+<pre>
+    <code>
+from analogio import AnalogIn
+sensor_gain=0.5
+def get_intensity(pint):
+    return (pin.value*3.3) /65536
+
+s1 = AnalogIn(board.GP28)
+s2 = AnalogIn(board.GP26)
+
+while True:
+    print(get_intensity(s1),get_intensity(s2))
+    </code>
+</pre>
 
         </div>
 </body>
