@@ -267,7 +267,25 @@ You can also automate this by loading in the file as a string, replacing the lig
 model = mujoco.MjModel.from_xml_string(xml_string)
 </code>
 </pre>
-
+The ground textures are stored under the asset tags. At the moment it is default to flat grid. You can instead import stl floors
+<pre>
+<code>
+  mesh name="terrain_mesh" 
+  file="my_bumpy_terrain.stl" 
+  scale="1 1 1"
+</code>
+</pre>
+And replace the floor geom tag with a line calling that stl. 
+<pre>
+<code>
+geom name="floor" 
+type="mesh" 
+mesh="terrain_mesh" 
+pos="0 0 0" 
+rgba="0.5 0.5 0.5 1"
+</code>
+</pre>
+Check out the repo on generating terrain STL <a href="https://github.com/shepai/Terrain_generator_3D">here</a>
 </div>
 
 
