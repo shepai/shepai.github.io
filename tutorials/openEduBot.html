@@ -169,9 +169,106 @@ while True:
    <br><br>
    <img src="https://shepai.github.io/assets/tutorials/sim_wheelbot.PNG" width="80%">
    <br><br>
+  
+  <h3>Coding</h3>
+Firstly we import mujoco, if you have not got mujoco installed simply install it using <code>pip install mujoco</code>. We then put the directory to the repo directory that stores the wheelbot xml file. The xml file is simply a structured format that provides the physical structure of a robot for mujoco. 
 
+<pre><code>
+import mujoco
+import mujoco.viewer
+import numpy as np
+import time
 
-        </div>
+path="repo/robot/wheelbot.xml"
+# Load model
+model = mujoco.MjModel.from_xml_path(path)
+data = mujoco.MjData(model)
+</code></pre>
+
+Once you call in the model and data, mujoco has laoded the wheelbot robot. To view it we can use the mujoco viewer:
+
+<pre>
+<code>
+with mujoco.viewer.launch_passive(model, 
+  data, show_left_ui=False, 
+  show_right_ui=False) as viewer:
+    while viewer.is_running():
+        mujoco.mj_forward(model, data)
+        mujoco.mj_step(model, data)
+        viewer.sync()
+</code>
+</pre>
+A small window with the simualted robot will appear. We make a physics steps using the forward and step functions, and then updated the viewer with viewer.sync(). 
+Like the real wheelbot, we want to be able to read from the light sensors. For this we must simualte them. To being with we must find the light source.
+<pre>
+  <code>
+light_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_LIGHT, 'top_lamp')
+light_pos = model.light_pos[light_id]
+  </code>
+</pre>   
+Then we can calculate the intensity from the sensor positions to the light source. The following function allows selection of each sensor individually. 
+<pre>
+<code>
+def get_virtual_light_intensity(data, site_name):
+    # Get current world position of the sensor site
+    sensor_pos = data.site(site_name).xpos
+    
+    # distance from sensor to light position
+    distance = np.linalg.norm(sensor_pos - light_pos)
+    
+    # intensity calculation
+    return 1.0 / (distance**2 + 0.01)
+</code>
+</pre>
+
+So we can set the left and right and read one by one:
+<pre>
+<code>
+left_val = get_virtual_light_intensity(data, 'light_sensor_left')
+right_val = get_virtual_light_intensity(data, 'light_sensor_right')
+print(f"Left Sensor: {left_val:.3f}, Right Sensor: {right_val:.3f}")
+</code>
+</pre>
+Finally, to make changes to the motors we can set the velocities using the ctrl paramter. 
+
+<pre>
+<code>
+data.ctrl[0] = right_val*-100
+data.ctrl[1] = left_val*-100
+#remember to update the simulation using forward and step!!
+mujoco.mj_forward(model, data)
+mujoco.mj_step(model, data)
+</code>
+</pre>
+
+<h3>Editing the sim</h3>
+Though we have set up a basic flat environment with a light source, you will want to make edits to the light source position, as well as potentialy edit the terrain. 
+To do this we must dive into the xml structure and make edits. 
+Changing the light position is very simple. A line in the wheelbot.xml file shows:
+
+<pre>
+<code>
+light pos="2 2 0.5" 
+  cutoff="100"  
+  dir="0 0 -1" 
+  diffuse="1 1 1" 
+  specular=".2 .2 .2" 
+  directional="false"  
+  castshadow="true"
+ 
+</code>
+</pre>
+The pos tab refers to its position in 3D space. The unit of measurement is meters. So this is half a meter off the ground, and 2 meters on the x and 2 meters on the y. 
+To change this just edit the numbers, and seperate them by space. 
+<br>
+You can also automate this by loading in the file as a string, replacing the light pos line with your changed one. Then loading the mujoco model using the xml:
+<pre>
+<code>
+model = mujoco.MjModel.from_xml_string(xml_string)
+</code>
+</pre>
+
+</div>
 
 
 </body>
