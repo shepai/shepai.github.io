@@ -241,6 +241,14 @@ mujoco.mj_step(model, data)
 </code>
 </pre>
 
+Finally, to get the position of the robot you can use the qpos parameter to get x y and z. 
+
+<pre>
+<code>
+robot_pos = data.qpos[0:3]
+</code>
+</pre>
+
 <h3>Editing the sim</h3>
 Though we have set up a basic flat environment with a light source, you will want to make edits to the light source position, as well as potentialy edit the terrain. 
 To do this we must dive into the xml structure and make edits. 
