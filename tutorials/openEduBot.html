@@ -202,7 +202,9 @@ A small window with the simualted robot will appear. We make a physics steps usi
 Like the real wheelbot, we want to be able to read from the light sensors. For this we must simualte them. To being with we must find the light source.
 <pre>
   <code>
-light_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_LIGHT, 'top_lamp')
+light_id = mujoco.mj_name2id(model, 
+    mujoco.mjtObj.mjOBJ_LIGHT, 
+    'top_lamp')
 light_pos = model.light_pos[light_id]
   </code>
 </pre>   
@@ -224,9 +226,12 @@ def get_virtual_light_intensity(data, site_name):
 So we can set the left and right and read one by one:
 <pre>
 <code>
-left_val = get_virtual_light_intensity(data, 'light_sensor_left')
-right_val = get_virtual_light_intensity(data, 'light_sensor_right')
-print(f"Left Sensor: {left_val:.3f}, Right Sensor: {right_val:.3f}")
+left_val = get_virtual_light_intensity(data, 
+    'light_sensor_left')
+right_val = get_virtual_light_intensity(data, 
+    'light_sensor_right')
+print(f"Left Sensor: {left_val:.3f},
+       Right Sensor: {right_val:.3f}")
 </code>
 </pre>
 Finally, to make changes to the motors we can set the velocities using the ctrl paramter. 
