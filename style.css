@@ -588,7 +588,7 @@ li {
 }
 
 .image-row img {
-  width: 250px;   /* adjust as needed */
+  width: 25%;   /* adjust as needed */
   height: auto;
   border-radius: 6px; /* optional but looks nicer */
   object-fit: cover;
