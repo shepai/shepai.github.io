@@ -472,6 +472,103 @@ table {
   text-decoration: none;
   cursor: pointer;
 }
+	.review-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	}
+
+	.review-list li {
+	padding: 6px 0;
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #eee;
+	}
+
+	.conf {
+	font-weight: 600;
+	}
+
+	.location {
+	color: #666;
+	font-size: 0.9em;
+	}
+.education-item,
+.experience-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* remove last border for cleaner end */
+.education-item:last-child,
+.experience-item:last-child {
+  border-bottom: none;
+}
+
+/* ===== Meta Text (University, Dates) ===== */
+.education-item p,
+.experience-item p {
+  margin: 4px 0;
+  color: #4b5563;
+}
+
+.education-item em,
+.experience-item em {
+  color: #6b7280;
+  font-style: normal;
+  font-size: 0.95rem;
+}
+
+/* Strong (institution names) */
+.education-item strong,
+.experience-item strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* ===== Lists ===== */
+ul {
+  margin: 10px 0 0 18px;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+/* ===== Reviewer / Conference List (if you use earlier section) ===== */
+.review-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.review-list li:last-child {
+  border-bottom: none;
+}
+
+.conf {
+  font-weight: 600;
+  color: #111827;
+}
+
+.location {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* ===== Section spacing ===== */
+section {
+  margin-bottom: 2rem;
+}
 @media 
 only screen and (max-width: 760px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
@@ -548,4 +645,5 @@ only screen and (max-width: 760px),
 		margin: auto;
 		display:block;
 	}
+
 }
