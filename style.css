@@ -564,7 +564,35 @@ li {
   color: #6b7280;
   font-size: 0.95rem;
 }
+.title-with-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
+.info-link {
+  font-size: 1rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.info-link:hover {
+  color: #111827;
+}
+.image-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.image-row img {
+  width: 250px;   /* adjust as needed */
+  height: auto;
+  border-radius: 6px; /* optional but looks nicer */
+  object-fit: cover;
+}
 /* ===== Section spacing ===== */
 section {
   margin-bottom: 2rem;
