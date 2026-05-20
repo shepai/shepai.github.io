@@ -27,6 +27,97 @@
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+  <style>
+    /* ONLY page-specific styles */
+    .contactPage {
+      max-width: 850px;
+      margin: auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .contactHero {
+      margin-bottom: 30px;
+    }
+
+    .contactHero h1 {
+      font-size: 3rem;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .contactSub {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      max-width: 600px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    .contactCard {
+      margin-top: 40px;
+      padding: 35px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 15px 40px rgba(0,0,0,.12);
+    }
+
+    .contactForm {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 25px;
+    }
+
+    .contactRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contactForm input,
+    .contactForm textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .contactForm textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    .contactForm input:focus,
+    .contactForm textarea:focus {
+      border-color: #4f9dff;
+      box-shadow: 0 0 0 3px rgba(79,157,255,.15);
+    }
+
+    .contactButton {
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .contactButton:hover {
+      transform: translateY(-2px);
+    }
+
+    .socialLinks {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 28px;
+    }
+  </style>
 <script src="search.js">
     
 </script>
@@ -35,32 +126,42 @@
 	<!-- the main content -->
 	<br>
 	
-	<div class="main">
-		<div align="center" class="iconPage">
-			<img class="imageCircle" src="assets/robot2.jpg">
-		</div>
-		<h1 class="headerText">Contact</h1>
-		<hr class="break">
-			<form action="mailto:drs25@sussex.ac.uk" method="post" enctype="text/plain">
-		Name:<br>
-		<input type="text" name="name"><br>
-		E-mail:<br>
-		<input type="text" name="mail"><br>
-		Contact number:<br>
-		<input type="text" name="number"><br>
-		Comment:<br>
-		<input type="text" name="comment" size="30"><br><br>
-		<input class="buttonF" type="submit" value="Send">
-		<input class="buttonF" type="reset" value="Reset">
-	</form>
-	<!-- <h3 class="contentText">Follow us on social media! </h3>
-	<table>
-	<th><a align="center" href="https://www.facebook.com/SHEP-AI-101118428133298/"><i class="contactIcon fa fa-facebook"></i></a></th>
-	<th><a align="center" href="https://twitter.com/ai_shep"><i class="contactIcon fa fa-twitter"></i></a></th>
-	<th><a align="center" href="https://www.instagram.com/shep.ai/"><i class="contactIcon fa fa-instagram"></i></a></th>
-	</table>
-	<h3 class="contentText">Contact us! Let us know what you think, where we can improve, or any questions? We love feedback. </h3> -->
-	</div>
+	  <div class="main contactPage">
+
+    <div class="iconPage contactHero">
+      <img class="imageCircle" src="assets/robot2.jpg" alt="Robot image">
+      <h1 class="headerText">Contact</h1>
+      <p class="contactSub">
+        Interested in robotics, AI research, collaboration, or building something ambitious? Drop me a message.
+      </p>
+    </div>
+
+    <div class="contactCard">
+      <form class="contactForm" action="https://formspree.io/f/mpqnqgbo" method="POST">
+
+        <div class="contactRow">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+        </div>
+
+        <input type="text" name="subject" placeholder="Subject">
+
+        <textarea name="message" placeholder="Tell me about your project, question, or idea..." required></textarea>
+
+        <button class="buttonF contactButton" type="submit">Send Message</button>
+      </form>
+
+      <div class="socialLinks">
+        <a href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        <a href="https://github.com/shepai" title="GitHub"><i class="fa fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+      </div>
+
+      <p class="contactFooter">
+        Open to research collaborations, technical consulting, and interesting AI ideas.
+      </p>
+    </div>
+  </div>
 </body>
 
 </html>
