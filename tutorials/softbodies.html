@@ -108,7 +108,24 @@ Each vertex within can be defined as a point in 3D space at position pos. This p
 &lt;/body&gt;
   </code>
 </pre>
-The flexible_structure body will be populated with various points in the shape of the object you want to be flexible. 
+The flexible_structure body will be populated with various points in the shape of the object you want to be flexible. The next step is to define the edge structure of our object by connecting tendonds. OUtside of the worldbody tags, we can create a tendon map. 
+
+<code>
+&lt;tendon&gt;
+    //within here we will put our edge connections
+&lt;/tendon&gt;
+</code>
+</pre>
+Where inside each is a listend tendon to connect two points. 
+<pre>
+<code>
+&lt;spatial name="t_o1" solreflimit="0.001 1" solimplimit="0.99 0.999 0.001" springlength="0.0765"&gt;
+    &lt;site site="centre_1"/&gt;
+    &lt;site site="centre_2"/&gt;
+&lt;/spatial&gt;
+</code>
+</pre>
+That is the basics of making a shape, and those tools are what allows us to make larger shapes like the dome in the image below: 
 
 <div class="center">
   <img src="https://shepai.github.io/assets/tutorials/soft/mesh.png" width="50%">
