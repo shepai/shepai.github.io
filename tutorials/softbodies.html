@@ -81,11 +81,49 @@ pip install mujoco
 
           <h2>Soft approaches</h2>
             There are a number of approaches to soft bodies in Mujoco. We explore two types, one where we are manually setting the body frame using a node-vertex style system. The other is using an existing object file set to have soft properties. 
-            
+            We explore both of the approaches below, their pros and cons. This tutorial assumes you have an understanding of how the Mujoco xml scene structure works, otherwise jumping straight into soft-bodied simulation may be a step too far. 
           <h3>Point based</h3>
+The point based method can be more complex to make shapes, but easier to control constraints and stiffness. In simple terms, we generate vertices and joints between points in 3D space, giving them spring and dampening factors. We can define each point under one flexible body. 
+We have called it "flexible_structure" for this demonstration. 
+<pre>
+<code>
+&lt;body name="flexible_structure" pos="0 0 0.8"&gt;
+    //within here we will put our vertex nodes
+&lt;/body&gt;
+</code>
+</pre>
+Each vertex within can be defined as a point in 3D space at position pos. This point is in (0.05,0.0,0.05). Make sure to use unique names for each point, and a good naming convention hat will be simple for you to understand.Here we define the x y and z movements. We also define the shape as a sphere using the geom tag. It will be  avery small sphere of size 0.005.  
+<pre>
+  <code>
+&lt;body name="center_1" pos="0.05 0.0 0.05"&gt;
+  &lt;joint type="slide" axis="1 0 0" name="j_c1_x" stiffness="5" 
+    damping="3" limited="true" range="-0.05 0.05"/&gt;
+  &lt;joint type="slide" axis="0 1 0" name="j_c1_y" stiffness="5" 
+    damping="3" limited="true" range="-0.05 0.05"/&gt;
+  &lt;joint type="slide" axis="0 0 1" name="j_c1_z" stiffness="5" 
+    damping="3" limited="true" range="-0.05 0.05"/&gt;
+  &lt;geom type="sphere" size="0.005" 
+    rgba="0.0 0.6 0.0 1" mass="0.01"/&gt;
+  &lt;site name="s_c1"/&gt;
+&lt;/body&gt;
+  </code>
+</pre>
+The flexible_structure body will be populated with various points in the shape of the object you want to be flexible. 
+
+<div class="center">
+  <img src="https://shepai.github.io/assets/tutorials/soft/mesh.png" width="50%">
+</div>
+
 
           <h3>3D object</h3>
-         
+The 3D object method is much simpler from a development point of view, as you are importing a .obj file. Mujoco uses the object mesh to make a flexible body. The downside is this flexible mesh is a lot harder to control than the point based method. 
+
+<div class="center">
+  <img src="https://shepai.github.io/assets/tutorials/soft/flexible obj.png" width="25%">
+
+  <img src="https://shepai.github.io/assets/tutorials/soft/Screenshot from 2026-06-11 14-49-56.png" width="25%">
+</div>
+
         </div>
 
 
