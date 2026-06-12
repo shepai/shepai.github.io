@@ -96,11 +96,14 @@ Each vertex within can be defined as a point in 3D space at position pos. This p
 <pre>
   <code>
 &lt;body name="center_1" pos="0.05 0.0 0.05"&gt;
-  &lt;joint type="slide" axis="1 0 0" name="j_c1_x" stiffness="5" 
+  &lt;joint type="slide" axis="1 0 0" 
+    name="j_c1_x" stiffness="5" 
     damping="3" limited="true" range="-0.05 0.05"/&gt;
-  &lt;joint type="slide" axis="0 1 0" name="j_c1_y" stiffness="5" 
+  &lt;joint type="slide" axis="0 1 0" 
+    name="j_c1_y" stiffness="5" 
     damping="3" limited="true" range="-0.05 0.05"/&gt;
-  &lt;joint type="slide" axis="0 0 1" name="j_c1_z" stiffness="5" 
+  &lt;joint type="slide" axis="0 0 1" 
+    name="j_c1_z" stiffness="5" 
     damping="3" limited="true" range="-0.05 0.05"/&gt;
   &lt;geom type="sphere" size="0.005" 
     rgba="0.0 0.6 0.0 1" mass="0.01"/&gt;
@@ -119,7 +122,9 @@ The flexible_structure body will be populated with various points in the shape o
 Where inside each is a listend tendon to connect two points. 
 <pre>
 <code>
-&lt;spatial name="t_o1" solreflimit="0.001 1" solimplimit="0.99 0.999 0.001" springlength="0.0765"&gt;
+&lt;spatial name="t_o1" solreflimit="0.001 1" 
+  solimplimit="0.99 0.999 0.001" 
+  springlength="0.0765"&gt;
     &lt;site site="centre_1"/&gt;
     &lt;site site="centre_2"/&gt;
 &lt;/spatial&gt;
