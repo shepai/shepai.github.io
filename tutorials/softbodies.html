@@ -141,12 +141,52 @@ That is the basics of making a shape, and those tools are what allows us to make
           <h3>3D object</h3>
 The 3D object method is much simpler from a development point of view, as you are importing a .obj file. Mujoco uses the object mesh to make a flexible body. The downside is this flexible mesh is a lot harder to control than the point based method. 
 
-We can use an obj file, though be aware if it has too many verticies it maytake too much processing. This method is much slower than 
+We can use an obj file, though be aware if it has too many verticies it maytake too much processing. This method is much slower than the method of specifying the structures manually, mainly because there aresignificnatly more connections from the obj file. 
 <div class="center">
   <img src="https://shepai.github.io/assets/tutorials/soft/flexible obj.png" width="30%">
 
   <img src="https://shepai.github.io/assets/tutorials/soft/Screenshot from 2026-06-11 14-49-56.png" width="30%">
 </div>
+Importing the object is done through specifying within the assets tab the mesh.
+
+<pre>
+
+<code>
+&lt;mesh name="my_existing_mesh" 
+  file="/home/dexter/Documents/GitHub/
+    Robot_foot/assets/dome_small.obj" 
+  scale="1 1 1"/&gt;
+</code>
+</pre>
+
+Then we can use the flexicomp tags to import a flexible mesh. I have only been able to get this to work on Linux. 
+<pre>
+<code>
+&lt;body name="soft_sheet_anchor" pos="0 0 0.4"&gt;
+    &lt;flexcomp name="soft_mesh" 
+    type="mesh" 
+    file="/home/dexter/Documents/GitHub/
+      Robot_foot/assets/dome_small.obj" 
+    scale="1 1 1" 
+    material="cloth_mat" 
+    mass="7"&gt;
+        &lt;edge equality="true" 
+        damping="15"/&gt;
+        &lt;plugin 
+        plugin="mujoco.elasticity.shell"&gt;
+            &lt;config key="young" 
+            value="5e7"/&gt;
+            &lt;config key="poisson" 
+            value="0.25"/&gt;
+            &lt;config key="thickness" 
+            value="0.002"/&gt;
+            &lt;config key="damping" 
+            value="40"/&gt;
+        &lt;/plugin&gt;
+    &lt;/flexcomp&gt;
+&lt;/body&gt;
+</code>
+</pre>
 
         </div>
 
