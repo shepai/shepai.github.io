@@ -140,14 +140,39 @@ That is the basics of making a shape, and those tools are what allows us to make
 <h4>Filling in the gaps</h4>
 Having a mesh is great, but realistically we want to simulate soft bodies. In the 3D object section we can do this easily by importing the 3D object mesh which is already interconnected. But if we are creating our own mesh, implementing a solid looking structure can be done in a number of ways.
 
-The easiest is image overlay. This only works for certain grid meshes as it prealigns with the image. The image must be a png to work. 
+The easiest is image overlay. This only works for certain grid meshes as it prealigns with the image. The image must be a png to work.
 
 <div class="center">
-    <img src="https://shepai.github.io/assets/tutorials/soft/pearl.png" width="30%">
+    <img src="https://shepai.github.io/assets/tutorials/soft/pearl.png" width="40%">
 </div>
+The more complex route is setting out a flex material to cover the mesh.  We firstly need to specify that there will be a mesh in the assets tags at the top. 
+<pre>
+<code>
+&lt;asset&gt;
+  &lt;material name="black_mesh_mat" 
+    rgba="0.05 0.05 0.05 1" shininess="0.1"/&gt;
+&lt;/asset&gt;
+</code>
+</pre>
+Then we can specify which nodes are involved, and how they connect to each node. We use the deformable tags below the worldbody close tag. The body element relates to the nodes we want to include. Specify the vertex as 0 0 0 to be on the point. If you change this it will hover at that coordinate from the origin vertex. 
+We then specify the element connections, so the ezample below connects a triangle.  
+
+<pre>
+ <code>
+&lt;deformable&gt;
+        <!-- Setting vertex to 0 0 0 positions the mesh points exactly at the origins of the tracked bodies -->
+        &lt;flex name="black_skin" 
+              material="black_mesh_mat" 
+              dim="2"
+              body="center_1 center_2 center_3 "
+              vertex="0 0 0   0 0 0   0 0 0  "
+              element="0 1 2 "/&gt;
+    &lt;/deformable&gt;
+ </code> 
+</pre>
 
 
-The more complex route is setting out a flex material to cover the mesh. 
+
 
           <h3>3D object</h3>
 The 3D object method is much simpler from a development point of view, as you are importing a .obj file. Mujoco uses the object mesh to make a flexible body. The downside is this flexible mesh is a lot harder to control than the point based method. 
