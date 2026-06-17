@@ -137,6 +137,17 @@ That is the basics of making a shape, and those tools are what allows us to make
   <img src="https://shepai.github.io/assets/tutorials/soft/mesh.png" width="30%">
 </div>
 
+<h4>Filling in the gaps</h4>
+Having a mesh is great, but realistically we want to simulate soft bodies. In the 3D object section we can do this easily by importing the 3D object mesh which is already interconnected. But if we are creating our own mesh, implementing a solid looking structure can be done in a number of ways.
+
+The easiest is image overlay. This only works for certain grid meshes as it prealigns with the image. The image must be a png to work. 
+
+<div class="center">
+    <img src="https://shepai.github.io/assets/tutorials/soft/pearl.png" width="30%">
+</div>
+
+
+The more complex route is setting out a flex material to cover the mesh. 
 
           <h3>3D object</h3>
 The 3D object method is much simpler from a development point of view, as you are importing a .obj file. Mujoco uses the object mesh to make a flexible body. The downside is this flexible mesh is a lot harder to control than the point based method. 
