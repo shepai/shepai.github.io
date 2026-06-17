@@ -141,7 +141,15 @@ That is the basics of making a shape, and those tools are what allows us to make
 Having a mesh is great, but realistically we want to simulate soft bodies. In the 3D object section we can do this easily by importing the 3D object mesh which is already interconnected. But if we are creating our own mesh, implementing a solid looking structure can be done in a number of ways.
 
 The easiest is image overlay. This only works for certain grid meshes as it prealigns with the image. The image must be a png to work.
-
+We must define the path to our image in the assets tag. 
+<pre>
+<code>
+&lt;asset&gt;
+  &lt;texture name="skin_tex" type="2d" 
+    file="path/to/file.png"/&gt;
+&lt;/asset&gt;
+</code>
+</pre>
 <div class="center">
     <img src="https://shepai.github.io/assets/tutorials/soft/pearl.png" width="40%">
 </div>
