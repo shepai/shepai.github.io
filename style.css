@@ -560,9 +560,44 @@ li {
   color: #111827;
 }
 
+.teaching-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.teaching-item {
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.teaching-item:last-child {
+  border-bottom: none;
+}
+
+.teach {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
 .location {
   color: #6b7280;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  margin-bottom: 10px;
+}
+
+.details {
+  margin: 0;
+  padding-left: 20px;
+  color: #374151;
+}
+
+.details li {
+  margin-bottom: 6px;
+  line-height: 1.5;
 }
 .title-with-link {
   display: flex;
