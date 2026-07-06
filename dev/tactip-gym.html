@@ -33,7 +33,74 @@
 	<!-- the main content -->
 	<div class="main">
         <h1 class="headerText">TacTip gym environment</h1>
-        
+
+ <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/armgif.gif">
+    <h1>TacTip-gym</h1>
+
+    <p>
+        <strong>TacTip-gym</strong> is a reinforcement learning environment designed for training and evaluating
+        agents using <em>vision-based tactile sensing</em> with the TacTip sensor.
+        It extends standard RL frameworks such as <code>OpenAI Gym</code> / <code>Gymnasium</code>
+        to support tactile perception tasks in robotics.
+    </p>
+
+    <div class="box">
+        <h3>What is TacTip?</h3>
+        <p>
+            The TacTip is a biomimetic optical tactile sensor that uses a gel-like surface and internal markers
+            tracked by a camera to measure deformation. This allows robots to "feel" contact, edges, texture,
+            and shear forces in a way similar to human touch.
+        </p>
+    </div>
+
+    <h3>Key Features</h3>
+    <ul>
+        <li>Gym-style API for reinforcement learning compatibility</li>
+        <li>Simulated tactile observations based on TacTip sensor physics</li>
+        <li>Useful for sim-to-real tactile robotics research</li>
+        <li>Designed for benchmarking tactile perception and control tasks</li>
+    </ul>
+
+    <h3>Typical Use Cases</h3>
+    <ul>
+        <li>Edge and surface following with tactile feedback</li>
+        <li>Object manipulation using touch perception</li>
+        <li>Learning contact-rich policies for soft robotics</li>
+        <li>Comparing vision vs tactile-based control strategies</li>
+    </ul>
+
+    <h3>Environment Structure</h3>
+    <p>
+        The environment follows the standard Gym interface:
+    </p>
+
+    <pre><code>
+obs = env.reset()
+action = policy(obs)
+obs, reward, done, info = env.step(action)
+    </code></pre>
+
+    <h3>Why TacTip-gym?</h3>
+    <p>
+        Traditional RL environments rely on visual or state-based inputs. TacTip-gym introduces
+        <strong>high-dimensional tactile observations</strong>, enabling research into:
+    </p>
+
+    <ul>
+        <li>Contact-driven learning</li>
+        <li>Robust manipulation under uncertainty</li>
+        <li>Sensorimotor learning from touch</li>
+    </ul>
+
+    <div class="box">
+        <p>
+            This project is ideal for researchers working in robotics, reinforcement learning,
+            and tactile perception who want to explore how machines can learn from touch.
+        </p>
+    </div>
+
+
+
 <br><br>
 <div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
   <button style="
