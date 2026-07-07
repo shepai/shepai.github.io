@@ -41,7 +41,7 @@
           MuJoCo (Multi-Joint dynamics with Contact) is a physics simulation engine widely used in robotics research for modelling complex interactions between bodies, joints, and contacts in real time. We explored this in <a href="softbodies.html">a previous tutorial</a> for development of soft bodied simulations. In this tutorial we will be exploring existing tactile gyms I have created. 
 
           These gyms provide TacTip or TacTip style optical tactile sensing to physical robots. Constructing real robots with tactile sensors is costly, and not simple to run reinforcement learning on. This is why we work in simulation. However, making a simulation work well enough
-        Each gym has a GitHub link, and an associated simulation 
+        Each gym has a GitHub link, and an associated setup instruction in the GitHub readmes. I will not be explaining the setup of mujoco or the gyms, as it is covered on those pages. 
           <h2>TacTip gym</h2>
           The tacTip gym provides a TacTip sensor on various robot bodies. It is also simple to attach to your own robotic design. This gym is all about attaching soft bodied sensors onto robot chassis, so that we can gather tactile information in a phsyics simulation. 
       <br> <br><div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
@@ -73,11 +73,13 @@
               </svg>
               See Repo
             </button>
-
+           
           </a></div>
+          <br><br>
+           This tutorial page will show you how to get started with the existing gyms, and how to add the sensor to your own robot chassis. 
           <h2>Tactile ball gym</h2>
           The tactile ball gym applies the principles from the TacTip gym environment, but on an actual moving chassis. This chassis uses two tactips as wheels, with a central body hodling the electronics and cameras. 
-          The aim of this simulation is to explore whole body tactile sensors. 
+          The aim of this simulation is to explore whole body tactile sensors. This gym has the one chassis, but across different terrains and environments. 
 <br><br><div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
             <button style="
               display: inline-flex;
