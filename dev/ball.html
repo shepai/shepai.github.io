@@ -102,6 +102,14 @@ We have a keyboard tutorial for controlling the robot in real time. Space for ju
     <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%">
 <br><br>
 
+<h3>Image to marker modelling</h3>
+We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
+We will need a model that takes in the input image, resize it for processing reasons and then map it to the 3D coordinates. 
+<br><br>
+<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="60%">
+<br><br>
+
+
      <h2>Physical construction</h2>
 
 </section>
