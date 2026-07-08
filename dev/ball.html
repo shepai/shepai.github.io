@@ -92,13 +92,14 @@
 
     <h2>Simulation gym environment</h2>
     The gym environment found on the GitHub provides several terrain types for the ball to be placed in. The ball takes in two input images from cameras either side, this shows optical markers like a TacTip would have but on a rotating base. The outside is made of a soft approximation of tendons. There is a generation script under the generation folder where you can change the stiffness and damping, which should be calibrated to the silicone. 
-
+You will notice that the ball has a skeletal outside, and yet the images it renders have a black background. To begin with we rendered the skin, but this increased the time of processing and only added an aesthetic value. We can still render the markers without needing a skin backdrop. 
+          
 <br><br>
-<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/robot/technical.png" width="60%">
+<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/robot/technical.png" width="60%">
 <br><br>
 We have a keyboard tutorial for controlling the robot in real time. Space for jump, WASD keys for direction. The keyboard code can be found under the examples on the GitHub.
     <br><br>
-    <img src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%">
+    <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%">
 <br><br>
 
      <h2>Physical construction</h2>
