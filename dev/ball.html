@@ -110,7 +110,8 @@ We have a keyboard tutorial for controlling the robot in real time. Space for ju
     <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%"></div>
 <br><br>
 Check out an example of the marker data from one sensor. 
-<div style="width:500px;margin: auto;" class="plot-container" id="plot" ></div>
+<div style="width:300px;margin: auto;" class="plot-container" id="plot" ></div>
+<button onclick="nextExample()">See Other Example</button>
 
 <h3>Image to marker modelling</h3>
 We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
@@ -224,91 +225,80 @@ The averages of train and test accuracy are displayed in the table below.
 	</div>
 </body>
 <script>
-
+let currentSample = 0;
+let markerSamples = [];
 Papa.parse("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/data_examples.csv", {
     download: true,
     header: true,
 
     complete: function(results) {
 
-        let data = results.data;
+    let data = results.data;
 
-        console.log(data);
+    let markerColumns = Object.keys(data[0])
+        .filter(col => col.includes("marker"));
 
+    let markerIDs = [...new Set(
+        markerColumns.map(col => {
+            return col.match(/marker_(\d+)/)[1];
+        })
+    )];
 
-        // Get all marker columns
-        let markerColumns = Object.keys(data[0])
-            .filter(col => col.includes("marker"));
-
-
-        console.log(markerColumns);
-
-
-        // Get marker IDs
-        let markerIDs = [...new Set(
-            markerColumns.map(col => {
-                return col.match(/marker_(\d+)/)[1];
-            })
-        )];
+    markerIDs.sort((a,b)=>a-b);
 
 
-        // Sort numerically
-        markerIDs.sort((a,b)=>a-b);
+    markerSamples = data.map(row => {
 
+        let markers = [];
 
-        console.log(markerIDs);
+        markerIDs.forEach(id => {
 
-
-        // Convert every row into marker XYZ arrays
-        let markerSamples = data.map(row => {
-
-            let markers = [];
-
-            markerIDs.forEach(id => {
-
-                markers.push([
-                    Number(row[`marker_${id}_x`]),
-                    Number(row[`marker_${id}_y`]),
-                    Number(row[`marker_${id}_z`])
-                ]);
-
-            });
-
-            return markers;
+            markers.push([
+                Number(row[`marker_${id}_x`]),
+                Number(row[`marker_${id}_y`]),
+                Number(row[`marker_${id}_z`])
+            ]);
 
         });
 
+        return markers;
 
-        console.log(markerSamples);
+    });
 
 
-        // Plot first sample
-        plotMarkers(markerSamples[0]);
+    // initial plot
+    plotMarkers(markerSamples[0]);
 
-    }
+}
 });
+function nextExample(){
 
+    currentSample++;
 
+    // loop back to start
+    if(currentSample >= markerSamples.length){
+        currentSample = 0;
+    }
+
+    plotMarkers(markerSamples[currentSample]);
+
+}
 
 function plotMarkers(points) {
-
 
     let trace = {
         x: points.map(p => p[0]),
         y: points.map(p => p[1]),
         z: points.map(p => p[2]),
-
         mode: "markers",
-
         marker:{
             size:5
         },
-
         type:"scatter3d"
     };
 
 
-    Plotly.newPlot(
+    Plotly.react(
         "plot",
         [trace],
         {
