@@ -146,7 +146,11 @@ We used a Ridge regression model with alpha as 1, Linear regression model, Rando
   <div style="text-align: center;">
 <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/MLP.png" width="250px"></div>
   </span>
-</span> and CNN. These were chosen as popular models of different methods. 
+</span> and <span class="tooltip"><u>CNN</u><span class="tooltip-text"><div style="text-align: center;">
+  The CNN architecture consists of three convolutional layers followed by fully connected regression layers. The input tactile images (64×64×3) are processed using convolutional filters of size 3×3 with increasing feature depth (32, 64, and 128 filters), interleaved with max-pooling layers to reduce spatial dimensionality. The extracted feature maps are flattened and passed through a 256-neuron dense layer before the final regression layer outputs the predicted 3D positions of 149 markers (447 values). The model is trained using mean squared error loss and the Adam optimiser.
+
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/CNN.png" width="250px"></div>
+  </span></span> . These were chosen as popular models of different methods. 
 
 The averages of train and test accuracy are displayed in the table below. 
 <table style="margin: 0 auto;" border="1" cellspacing="0" cellpadding="6">
