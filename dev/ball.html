@@ -109,8 +109,8 @@ We have a keyboard tutorial for controlling the robot in real time. Space for ju
     <div style="text-align: center;">
     <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%"></div>
 <br><br>
-Check out an example of the marker data
-<div id="plot" style="width: 50%;"></div>
+Check out an example of the marker data from one sensor. 
+<div style="width:500px;margin: auto;" class="plot-container" id="plot" ></div>
 
 <h3>Image to marker modelling</h3>
 We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
