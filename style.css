@@ -628,6 +628,35 @@ li {
   border-radius: 6px; /* optional but looks nicer */
   object-fit: cover;
 }
+.tooltip {
+    position: relative;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 250px;
+    background-color: black;
+    color: white;
+    text-align: left;
+    padding: 8px;
+    border-radius: 5px;
+
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
 /* ===== Section spacing ===== */
 section {
   margin-bottom: 2rem;

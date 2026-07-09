@@ -129,7 +129,13 @@ R(\theta_x,\theta_y,\theta_z)^{T}
 <div style="text-align: center;">
 <img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="60%"></div>
 <br><br>
+We tested various regression models with 20 trials each, the dataset randomised with a different seed eachtime. 
+We used a Ridge regression model with alpha as 1, Linear regression model, Random forest regression, <span class="tooltip">multi-layer perceptron <span class="tooltip-text">
 
+  </span>
+</span> and CNN. These were chosen as popular models of different methods. 
+
+The averages of train and test accuracy are displayed in the table below. 
 <table style="margin: 0 auto;" border="1" cellspacing="0" cellpadding="6">
     <thead>
         <tr>
@@ -142,9 +148,9 @@ R(\theta_x,\theta_y,\theta_z)^{T}
     <tbody>
       <tr>
             <td>Linear Regression</td>
-            <td>- %</td>
-            <td>- %</td>
-            <td>- %</td>
+            <td>- </td>
+            <td>- </td>
+            <td>- </td>
         </tr>
         <tr>
             <td>Ridge Regression</td>
@@ -155,21 +161,21 @@ R(\theta_x,\theta_y,\theta_z)^{T}
         
         <tr>
             <td>Random Forest</td>
-            <td>- %</td>
-            <td>- %</td>
-            <td>- %</td>
+            <td>- </td>
+            <td>- </td>
+            <td>- </td>
         </tr>
         <tr>
             <td>MLP</td>
-            <td>- %</td>
-            <td>- %</td>
-            <td>- %</td>
+            <td>- </td>
+            <td>- </td>
+            <td>- </td>
         </tr>
         <tr>
             <td>CNN</td>
-            <td>- %</td>
-            <td>- %</td>
-            <td>- %</td>
+            <td>- </td>
+            <td>- </td>
+            <td>- </td>
         </tr>
     </tbody>
 </table>
