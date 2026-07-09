@@ -135,7 +135,7 @@ R(\theta_x,\theta_y,\theta_z)^{T}
 <img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="80%"></div>
 <br><br>
 We tested various regression models with 20 trials each, the dataset randomised with a different seed eachtime. 
-We used a Ridge regression model with alpha as 1, Linear regression model, Random forest regression, <span class="tooltip">multi-layer perceptron <span class="tooltip-text">
+We used a Ridge regression model with alpha as 1, Linear regression model, Random forest regression, <span class="tooltip"><u>multi-layer perceptron</u> <span class="tooltip-text">
   The multi-layer perceptron used hidden layer sizes 4096, 4096, 256, 149. We imported the class from SciKit learn for simplicity. The model used ReLU activation, 200 epochs and a batch size of 32. 
   <div style="text-align: center;">
 <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/MLP.png" width="250px"></div>
@@ -147,27 +147,64 @@ The averages of train and test accuracy are displayed in the table below.
     <thead>
         <tr>
             <th>Model</th>
-            <th>Train MSE</th>
-            <th>Test MSE</th>
+            <th>Av Train MSE</th>
+            <th>Av Test MSE</th>
             <th>Std</th>
+            <th><span class="tooltip"><u>Av training time (minutes)</u><span class="tooltip-text">These times are for training on a computer with specs: <table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System</td>
+<td>Dell Precision T1700 workstation</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Intel Xeon E3-1246 v3 (4 cores, 8 threads, 3.5 GHz base frequency)</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>32 GB DDR3 1600 MHz system memory</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>NVIDIA Quadro K620 (GM107 architecture, 2 GB VRAM)</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>1 TB Samsung SSD 860 SATA drive</td>
+</tr>
+<tr>
+<td>Operating System</td>
+<td>Linux (Ubuntu)</td>
+</tr>
+</tbody>
+</table></span></span></th>
         </tr>
     </thead>
     <tbody>
       <tr>
             <td>Linear Regression</td>
-            <td>- </td>
-            <td>- </td>
-            <td>- </td>
+            <td>0.00455 </td>
+            <td>0.00211 </td>
+            <td>0.00212 </td>
+            <td>13.3667 </td>
         </tr>
         <tr>
             <td>Ridge Regression</td>
             <td> 0.00066 </td>
             <td> 0.00071 </td>
             <td> 1.2739 x10^-5</td>
+            <td> 0.4942</td>
         </tr>
         
         <tr>
             <td>Random Forest</td>
+            <td>- </td>
             <td>- </td>
             <td>- </td>
             <td>- </td>
@@ -177,9 +214,11 @@ The averages of train and test accuracy are displayed in the table below.
             <td>- </td>
             <td>- </td>
             <td>- </td>
+            <td>- </td>
         </tr>
         <tr>
             <td>CNN</td>
+            <td>- </td>
             <td>- </td>
             <td>- </td>
             <td>- </td>
