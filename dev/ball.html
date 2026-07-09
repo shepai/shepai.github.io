@@ -35,7 +35,8 @@
         <h1 class="headerText">Tactile ball environment</h1>
         <section id="about">
     <h1>Tactile Ball Robot</h1>
-          <img src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/roll.gif" width="100%">
+    <div style="text-align: center;">
+          <img src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/roll.gif" width="100%"></div>
     <p>
         The <strong>Tactile Ball Robot</strong> is an open-source robotics platform designed to
         investigate tactile perception, adaptive locomotion, and embodied artificial intelligence
@@ -95,20 +96,59 @@
 You will notice that the ball has a skeletal outside, and yet the images it renders have a black background. To begin with we rendered the skin, but this increased the time of processing and only added an aesthetic value. We can still render the markers without needing a skin backdrop. 
           
 <br><br>
-<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/robot/technical.png" width="60%">
+<div style="text-align: center;">
+<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/robot/technical.png" width="60%"></div>
 <br><br>
 We have a keyboard tutorial for controlling the robot in real time. Space for jump, WASD keys for direction. The keyboard code can be found under the examples on the GitHub. You can change the gym environment within the keyboard example using the <code>gym.make("name of environment")</code>
     <br><br>
-    <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%">
+    <div style="text-align: center;">
+    <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%"></div>
 <br><br>
 
 <h3>Image to marker modelling</h3>
 We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
-We will need a model that takes in the input image, resize it for processing reasons and then map it to the 3D coordinates. 
+We will need a model that takes in the input image, resize it for processing reasons and then map it to the 3D coordinates. The label data has been automatically gathered by presssing the soft sensor across the <a href="https://arxiv.org/abs/2606.25886">3D texture dataset</a>
 <br><br>
-<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="60%">
+<div style="text-align: center;">
+<img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="60%"></div>
 <br><br>
 
+<table style="margin: 0 auto;" border="1" cellspacing="0" cellpadding="6">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Train MSE</th>
+            <th>Test MSE</th>
+            <th>Std</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Linear Regression</td>
+            <td> - %</td>
+            <td>- %</td>
+            <td>- %</td>
+        </tr>
+        <tr>
+            <td>Ridge Regression</td>
+            <td>- %</td>
+            <td>- %</td>
+            <td>- %</td>
+        </tr>
+        <tr>
+            <td>Random Forest</td>
+            <td>- %</td>
+            <td>- %</td>
+            <td>- %</td>
+        </tr>
+        <tr>
+            <td>CNN</td>
+            <td>- %</td>
+            <td>- %</td>
+            <td>- %</td>
+        </tr>
+    </tbody>
+</table>
 
      <h2>Physical construction</h2>
 
