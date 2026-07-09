@@ -658,11 +658,6 @@ li {
     visibility: visible;
     opacity: 1;
 }
-
-.tooltip-text img {
-    width: 100%;
-    display: block;
-}
 /* ===== Section spacing ===== */
 section {
   margin-bottom: 2rem;
