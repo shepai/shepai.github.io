@@ -9,9 +9,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse"></script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async 
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+window.addEventListener("load", () => {
+    const script = document.createElement("script");
+    script.src = "https://polyfill.io/v3/polyfill.min.js?features=es6";
+    script.async = true;
+    document.head.appendChild(script);
+});
+</script>
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -136,7 +142,7 @@ R(\theta_x,\theta_y,\theta_z)^{T}
 <br><br>
 We tested various regression models with 20 trials each, the dataset randomised with a different seed eachtime. 
 We used a Ridge regression model with alpha as 1, Linear regression model, Random forest regression, <span class="tooltip"><u>multi-layer perceptron</u> <span class="tooltip-text">
-  The multi-layer perceptron used layer sizes 4096, 512, 149. We imported the class from SciKit learn for simplicity. The model used ReLU activation, 200 epochs and a batch size of 32. 
+  The multi-layer perceptron used layer sizes 4096, 512, 149. We imported the class from SciKit learn for simplicity. The model used ReLU activation, 200 epochs and a batch size of 64. 
   <div style="text-align: center;">
 <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/MLP.png" width="250px"></div>
   </span>
