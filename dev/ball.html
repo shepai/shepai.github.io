@@ -7,6 +7,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async 
+src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -109,6 +112,19 @@ We have a keyboard tutorial for controlling the robot in real time. Space for ju
 We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
 We will need a model that takes in the input image, resize it for processing reasons and then map it to the 3D coordinates. The label data has been automatically gathered by presssing the soft sensor across the <a href="https://arxiv.org/abs/2606.25886">3D texture dataset</a>. The target pose defines the position and orientation of the object relative to the tactile sensor. The first three parameters correspond to the object's Cartesian position (x,y,z), while the remaining three parameters represent rotations about the x-, y-, and z-axes 
 (θx​,θy,θz​). Lowering the z-coordinate increases the indentation of the sensor into the object, while varying the rotational components changes the local orientation of the contacted surface. The object pose was systematically varied to generate a diverse set of tactile observations. The initial object position was defined as (x,y,z)=(0.3,0.3,0.22) m. The object was translated along the x- and y-axes, while the z-axis position was varied between 0.18 m and 0.22 m to simulate different contact depths and levels of sensor indentation. The orientation of the object was independently rotated around each axis, with roll, pitch, and yaw angles sampled between −π/2 and π/2 radians, covering a range of possible surface orientations. Additionally, multiple surface textures were evaluated, and the contact speed was varied between 0 and 0.3 m/s.
+AS rotations varied, we standardized the rotations to the same origin using the following rotation. This converts the global coordinate system to a local one, so the model can be invariant of angular position. 
+<p>
+\[
+\mathbf{p}_{i}^{local}
+=
+R(\theta_x,\theta_y,\theta_z)^{T}
+\left(
+\mathbf{p}_{i}^{global}
+-
+\mathbf{t}
+\right)
+\]
+</p>
 <br><br>
 <div style="text-align: center;">
 <img align="center" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/regression.png" width="60%"></div>
@@ -124,20 +140,27 @@ We will need a model that takes in the input image, resize it for processing rea
         </tr>
     </thead>
     <tbody>
-        <tr>
+      <tr>
             <td>Linear Regression</td>
+            <td>- %</td>
+            <td>- %</td>
+            <td>- %</td>
+        </tr>
+        <tr>
+            <td>Ridge Regression</td>
             <td> 0.00066 </td>
             <td> 0.00071 </td>
             <td> 1.2739 x10^-5</td>
         </tr>
+        
         <tr>
-            <td>Ridge Regression</td>
+            <td>Random Forest</td>
             <td>- %</td>
             <td>- %</td>
             <td>- %</td>
         </tr>
         <tr>
-            <td>Random Forest</td>
+            <td>MLP</td>
             <td>- %</td>
             <td>- %</td>
             <td>- %</td>
