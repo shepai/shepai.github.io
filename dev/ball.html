@@ -7,9 +7,11 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse"></script>
+  <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async 
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> -->
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -107,6 +109,8 @@ We have a keyboard tutorial for controlling the robot in real time. Space for ju
     <div style="text-align: center;">
     <img align="center" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/jump.gif" width="60%"></div>
 <br><br>
+Check out an example of the marker data
+<div id="plot" style="width: 50%;"></div>
 
 <h3>Image to marker modelling</h3>
 We can grab the markers using the <code>env.unwrapped.get_markers()</code> which will return an array of N markers by 3 coordinates. Of course, for simplicity we could use this in the processing instead of using the image, but in reality we will have an iamge rather than 3D array. 
@@ -131,7 +135,9 @@ R(\theta_x,\theta_y,\theta_z)^{T}
 <br><br>
 We tested various regression models with 20 trials each, the dataset randomised with a different seed eachtime. 
 We used a Ridge regression model with alpha as 1, Linear regression model, Random forest regression, <span class="tooltip">multi-layer perceptron <span class="tooltip-text">
-
+  The multi-layer perceptron used hidden layer sizes 4096, 4096, 256, 149. We imported the class from SciKit learn for simplicity. The model used ReLU activation, 200 epochs and a batch size of 32. 
+  <div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/MLP.png" width="250px"></div>
   </span>
 </span> and CNN. These were chosen as popular models of different methods. 
 
@@ -219,7 +225,100 @@ The averages of train and test accuracy are displayed in the table below.
 </body>
 <script>
 
+Papa.parse("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/data_examples.csv", {
+    download: true,
+    header: true,
 
+    complete: function(results) {
+
+        let data = results.data;
+
+        console.log(data);
+
+
+        // Get all marker columns
+        let markerColumns = Object.keys(data[0])
+            .filter(col => col.includes("marker"));
+
+
+        console.log(markerColumns);
+
+
+        // Get marker IDs
+        let markerIDs = [...new Set(
+            markerColumns.map(col => {
+                return col.match(/marker_(\d+)/)[1];
+            })
+        )];
+
+
+        // Sort numerically
+        markerIDs.sort((a,b)=>a-b);
+
+
+        console.log(markerIDs);
+
+
+        // Convert every row into marker XYZ arrays
+        let markerSamples = data.map(row => {
+
+            let markers = [];
+
+            markerIDs.forEach(id => {
+
+                markers.push([
+                    Number(row[`marker_${id}_x`]),
+                    Number(row[`marker_${id}_y`]),
+                    Number(row[`marker_${id}_z`])
+                ]);
+
+            });
+
+            return markers;
+
+        });
+
+
+        console.log(markerSamples);
+
+
+        // Plot first sample
+        plotMarkers(markerSamples[0]);
+
+    }
+});
+
+
+
+function plotMarkers(points) {
+
+
+    let trace = {
+        x: points.map(p => p[0]),
+        y: points.map(p => p[1]),
+        z: points.map(p => p[2]),
+
+        mode: "markers",
+
+        marker:{
+            size:5
+        },
+
+        type:"scatter3d"
+    };
+
+
+    Plotly.newPlot(
+        "plot",
+        [trace],
+        {
+            scene:{
+                aspectmode:"data"
+            }
+        }
+    );
+
+}
 </script>
 
 </html>
