@@ -658,6 +658,10 @@ li {
     visibility: visible;
     opacity: 1;
 }
+.plot-container {
+    width: 50%;
+    margin: auto;
+}
 /* ===== Section spacing ===== */
 section {
   margin-bottom: 2rem;
