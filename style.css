@@ -57,10 +57,10 @@ pre {
     margin: 20px auto;
 }
 .stl-single {
-    width: 700px;
+    width: 800px;
     max-width: 90%;
     height: 500px;
-    margin: 30px auto;
+    margin: auto;
 }
 
 .stl-single canvas {
