@@ -710,14 +710,14 @@ only screen and (max-width: 760px),
 	.stl-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    width: 90%;
+    width: 100%;
     max-width: 420px;
     margin: 10px auto;
     }
 
     .stl-box {
         height: 420px;
-        width: 100%;
+        width: 420px;
     }
 	.AIbox{
 		width:100%;
