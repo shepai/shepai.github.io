@@ -693,6 +693,17 @@ only screen and (max-width: 760px),
 	.main {
 		width:85%;
 	}
+	.stl-grid {
+        grid-template-columns: 1fr !important;
+        width: 100%;
+        padding: 0 10px;
+    }
+
+
+    .stl-box {
+        height: 250px;
+        width: 100%;
+    }
 	.AIbox{
 		width:100%;
 		height: 200px;
