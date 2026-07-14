@@ -52,20 +52,20 @@ pre {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    width: 100%;
+    width: 90%;
     max-width: 1000px;
     margin: 20px auto;
 }
 
 .stl-grid div {
-    width: 100%;
+    width: 90%;
     height: 300px;
     min-width: 0;
     position: relative;
 }
 
 .stl-grid canvas {
-    width: 100% !important;
+    width: 90% !important;
     height: 100% !important;
 }
 .textBox{
