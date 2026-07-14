@@ -351,7 +351,7 @@ function createSTLViewer(containerID, url){
 
     let container = document.getElementById(containerID);
 
-
+	let mesh = null;
     // Scene
     let scene = new THREE.Scene();
 
@@ -471,13 +471,10 @@ function createSTLViewer(containerID, url){
 
 
 
-            let mesh = new THREE.Mesh(
-
-                geometry,
-
-                material
-
-            );
+            mesh = new THREE.Mesh(
+				geometry,
+				material
+			);
 
 
             scene.add(mesh);
@@ -505,7 +502,7 @@ function createSTLViewer(containerID, url){
             );
 
 
-            let scale = 80 / maxDim;
+            let scale = 30 / maxDim;
 
 mesh.scale.setScalar(scale);
 
@@ -580,27 +577,24 @@ camera.lookAt(
 
     // Animation loop
 
-    function animate(){
+   function animate(){
 
+    requestAnimationFrame(animate);
 
-        requestAnimationFrame(
-            animate
-        );
+    if(mesh){
 
-
-        renderer.render(
-
-            scene,
-
-            camera
-
-        );
-
+        mesh.rotation.z += 0.005;
 
     }
 
+    renderer.render(
+        scene,
+        camera
+    );
 
-    animate();
+}
+
+animate();
 
 
 }
