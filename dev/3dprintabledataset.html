@@ -272,8 +272,228 @@ If there is insignificant difference in variance between datasets then we can as
 	We used PETG because it provides greater durability, but it can be trickier to print with, potentially introducing more variance unless parameters such as speed, temperature, leveling, and other settings are properly tuned.
 	</p>
 	<h2 class="headerText">Results</h2>
-	From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication. 
-	
+	<!-- From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication.  -->
+
+<section id="printer-classification">
+    <p>
+        The dataset consisted of all six textures produced using all printer–filament
+        combinations, resulting in a total of 8,100 images. To reduce memory
+        requirements, all images were converted to greyscale and downsampled to
+        40% of their original resolution, a preprocessing step previously shown not
+        to affect classification performance. Data augmentation was applied to the
+        training datasets to account for LED noise and global lighting variation.
+    </p>
+
+    <p>
+        Gaussian noise with a mean of 0 and standard deviation of 5 was added to
+        each pixel to create an additional noisy image. Brightness variation was
+        introduced by adding and subtracting 10 intensity values from each pixel,
+        creating two additional images. This increased the dataset to 1200 images
+        per printer–filament combination. The ablation study showed that brightness
+        augmentation did not improve accuracy, while noise injection provided a
+        substantial improvement. Therefore, only noise augmentation was used for
+        subsequent experiments.
+    </p>
+
+    <p>
+        Principal Component Analysis (PCA) was then applied to reduce image
+        dimensionality while retaining important tactile features. Preliminary
+        analysis showed a reduction in explained variance after approximately 15
+        components. Therefore, 25 principal components were selected as a balance
+        between dimensionality reduction and preservation of meaningful features.
+        PCA was fitted only on the training split, with the test split transformed
+        using the fitted PCA model. The resulting components were used as input for
+        both Random Forest Classifiers and Artificial Neural Networks.
+    </p>
+
+    <figure>
+        <img src="https://YOUR_SERVER/path/PCA_Explained.png"
+             alt="Cumulative explained variance from PCA for Bambu, Resin and Ender printers"
+             style="width:80%; display:block; margin:auto;">
+        <figcaption>
+            Cumulative explained variance of PCA for tactile images collected from
+            the Bambu, Resin and Ender-3 V3 SE printers. The curves show the number
+            of principal components required to represent each dataset, highlighting
+            differences in variability introduced by different manufacturing
+            processes.
+        </figcaption>
+    </figure>
+
+
+    <h3>Data Augmentation Ablation Study</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Printer</th>
+                <th>Experiment</th>
+                <th>Accuracy (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="4">Bambu</td>
+                <td>No augmentation</td>
+                <td>86.35</td>
+            </tr>
+            <tr>
+                <td>Brightness</td>
+                <td>86.71</td>
+            </tr>
+            <tr>
+                <td>Noise</td>
+                <td>92.40</td>
+            </tr>
+            <tr>
+                <td>All augmentations</td>
+                <td>92.52</td>
+            </tr>
+			<br><br>
+            <tr>
+                <td rowspan="4">Ender-3 V3 SE</td>
+                <td>No augmentation</td>
+                <td>54.15 ± 0.033</td>
+            </tr>
+            <tr>
+                <td>Brightness</td>
+                <td>54.76 ± 0.031</td>
+            </tr>
+            <tr>
+                <td>Noise</td>
+                <td>76.52 ± 0.025</td>
+            </tr>
+            <tr>
+                <td>All augmentations</td>
+                <td>73.23 ± 0.023</td>
+            </tr>
+			<br><br>
+            <tr>
+                <td rowspan="4">Resin</td>
+                <td>No augmentation</td>
+                <td>80.40 ± 0.0261</td>
+            </tr>
+            <tr>
+                <td>Brightness</td>
+                <td>79.99 ± 0.015</td>
+            </tr>
+            <tr>
+                <td>Noise</td>
+                <td>94.98 ± 0.008</td>
+            </tr>
+            <tr>
+                <td>All augmentations</td>
+                <td>94.50 ± 0.009</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+        Each classifier was initially trained using a single printer–filament
+        combination and evaluated on unseen printer–filament combinations to assess
+        generalisation across manufacturing conditions. Models trained on a single
+        print configuration achieved high accuracy on similar prints but showed
+        reduced performance when evaluated on unseen manufacturing conditions.
+    </p>
+
+
+    <h3>Classification Performance</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Train Accuracy</th>
+                <th>Test Accuracy</th>
+                <th>Unseen Print Accuracy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>RFC Ender-3 V3 SE</td>
+                <td>100.0%</td>
+                <td>99.53%</td>
+                <td>31.4%</td>
+            </tr>
+            <tr>
+                <td>ANN Ender-3 V3 SE</td>
+                <td>99.7%</td>
+                <td>99.3%</td>
+                <td>33.21%</td>
+            </tr>
+            <tr>
+                <td>RFC Bambu only</td>
+                <td>100%</td>
+                <td>99.7%</td>
+                <td>63.98%</td>
+            </tr>
+            <tr>
+                <td>ANN Bambu only</td>
+                <td>100%</td>
+                <td>99.8%</td>
+                <td>53.73%</td>
+            </tr>
+            <tr>
+                <td>RFC Resin</td>
+                <td>100%</td>
+                <td>99.3%</td>
+                <td>70.66%</td>
+            </tr>
+            <tr>
+                <td>ANN Resin</td>
+                <td>100%</td>
+                <td>99.9%</td>
+                <td>61.41%</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h3>Confusion Matrices</h3>
+
+    <figure>
+		<object data="https://raw.githubusercontent.com/shepai/3D-textures/main/assets/confusion_RFC_bambu.png"
+			type="application/pdf"
+			width="45%">
+		<p>
+			PDF viewer not available.
+		</p>
+	</object>
+	<object data="https://raw.githubusercontent.com/shepai/3D-textures/main/assets/confusion_RFC_resin.png"
+			type="application/pdf"
+			width="45%">
+		<p>
+			PDF viewer not available.
+		</p>
+	</object>
+	<object data="https://raw.githubusercontent.com/shepai/3D-textures/main/assets/confusion_RFC_ender.png"
+			type="application/pdf"
+			width="45%">
+		<p>
+			PDF viewer not available.
+		</p>
+	</object>
+       
+
+        <figcaption>
+            Confusion matrices for the Random Forest classifier trained on Bambu,
+            Resin and Ender-3 V3 SE datasets. Although manufacturing variation
+            reduces performance on unseen prints, classification remains above
+            chance level (16.7% for six classes), demonstrating that transferable
+            tactile features exist across different printing processes.
+        </figcaption>
+    </figure>
+
+    <p>
+        Misclassifications primarily occurred between visually and physically
+        similar textures. For example, textures 2 and 3, and textures 1 and 5,
+        showed increased confusion. These errors are likely caused by small
+        variations in the printed geometry, where subtle differences in peak shape
+        or surface defects influence the tactile response. The classifier therefore
+        learns both the intended texture structure and manufacturing-specific
+        variations within the printed samples.
+    </p>
+
+</section>
 
 			<div align="center"><a href="https://github.com/shepai/3D-textures" target="_blank" style="text-decoration: none;">
 				<button style="
