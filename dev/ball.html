@@ -236,6 +236,10 @@ The averages of train and test accuracy are displayed in the table below.
     </tbody>
 </table>
 
+Examples of the truth value and prediction value:
+<div style="width:300px;margin: auto;" class="plot-container" id="plot_cnn" ></div>
+<button class="buttonF" style="margin: auto;" onclick="nextExample_cnn()">See Other Examples</button>
+
      <h2>Physical construction</h2>
 
 </section>
@@ -276,6 +280,9 @@ The averages of train and test accuracy are displayed in the table below.
 <script>
 let currentSample = 0;
 let markerSamples = [];
+let currentSample_cnn = 0;
+let truthSamples = [];
+let predictionSamples = [];
 Papa.parse("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/data_examples.csv", {
     download: true,
     header: true,
@@ -292,7 +299,71 @@ Papa.parse("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/hea
             return col.match(/marker_(\d+)/)[1];
         })
     )];
+function loadCSV(url){
 
+    return new Promise((resolve) => {
+
+        Papa.parse(url, {
+            download: true,
+            header: true,
+
+            complete: function(results){
+
+                let data = results.data;
+
+                let markerColumns = Object.keys(data[0])
+                    .filter(col => col.includes("marker"));
+
+                let markerIDs = [...new Set(
+                    markerColumns.map(col =>
+                        col.match(/marker_(\d+)/)[1]
+                    )
+                )];
+
+                markerIDs.sort((a,b)=>a-b);
+
+
+                let samples = data.map(row => {
+
+                    let markers = [];
+
+                    markerIDs.forEach(id => {
+
+                        markers.push([
+                            Number(row[`marker_${id}_x`]),
+                            Number(row[`marker_${id}_y`]),
+                            Number(row[`marker_${id}_z`])
+                        ]);
+
+                    });
+
+                    return markers;
+
+                });
+
+                resolve(samples);
+
+            }
+
+        });
+
+    });
+
+}
+Promise.all([
+    loadCSV("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/truth.csv"),
+    loadCSV("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/predictions.csv")
+]).then(([truth, prediction]) => {
+
+    truthSamples = truth;
+    predictionSamples = prediction;
+
+    plotMarkersCNN(
+        truthSamples[0],
+        predictionSamples[0]
+    );
+
+});
     markerIDs.sort((a,b)=>a-b);
 
 
@@ -332,7 +403,58 @@ function nextExample(){
     plotMarkers(markerSamples[currentSample]);
 
 }
+function plotMarkersCNN(truth, prediction){
 
+    let truthTrace = {
+        x: truth.map(p=>p[0]),
+        y: truth.map(p=>p[1]),
+        z: truth.map(p=>p[2]),
+        mode: "markers",
+        type: "scatter3d",
+        name: "Truth",
+        marker:{
+            size:5,
+            color:"blue"
+        }
+    };
+
+    let predTrace = {
+        x: prediction.map(p=>p[0]),
+        y: prediction.map(p=>p[1]),
+        z: prediction.map(p=>p[2]),
+        mode: "markers",
+        type: "scatter3d",
+        name: "Prediction",
+        marker:{
+            size:5,
+            color:"red"
+        }
+    };
+
+    Plotly.react("plot_cnn", [truthTrace, predTrace], {
+        margin:{l:0,r:0,t:0,b:0},
+        paper_bgcolor:"rgba(0,0,0,0)",
+        scene:{
+            bgcolor:"rgba(0,0,0,0)",
+            aspectmode:"data"
+        }
+    });
+
+}
+function nextExample_cnn(){
+
+    currentSample_cnn++;
+
+    if(currentSample_cnn >= truthSamples.length){
+        currentSample_cnn = 0;
+    }
+
+    plotMarkersCNN(
+        truthSamples[currentSample_cnn],
+        predictionSamples[currentSample_cnn]
+    );
+
+}
 function plotMarkers(points) {
 
     let trace = {
