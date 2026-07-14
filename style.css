@@ -708,17 +708,15 @@ only screen and (max-width: 760px),
         height: 350px;
     }
 	.stl-grid {
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     width: 90%;
-    max-width: 120px;
+    max-width: 220px;
     margin: 10px auto;
     }
-
-
+
     .stl-box {
-        height: 250px;
+        height: 220px;
         width: 100%;
     }
 	.AIbox{
