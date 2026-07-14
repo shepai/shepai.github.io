@@ -708,9 +708,12 @@ only screen and (max-width: 760px),
         height: 350px;
     }
 	.stl-grid {
-        grid-template-columns: 1fr !important;
-        width: 100%;
-        padding: 0 10px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 90%;
+    max-width: 120px;
+    margin: 10px auto;
     }
 
 
