@@ -56,7 +56,17 @@ pre {
     max-width: 1000px;
     margin: 20px auto;
 }
+.stl-single {
+    width: 700px;
+    max-width: 90%;
+    height: 500px;
+    margin: 30px auto;
+}
 
+.stl-single canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
 .stl-grid div {
     width: 90%;
     
@@ -693,6 +703,10 @@ only screen and (max-width: 760px),
 	.main {
 		width:85%;
 	}
+	.stl-single {
+        width: 100%;
+        height: 350px;
+    }
 	.stl-grid {
         grid-template-columns: 1fr !important;
         width: 100%;
