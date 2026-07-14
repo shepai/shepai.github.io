@@ -40,6 +40,9 @@
         <h2 class="headerText">Methods</h2>
         <h3 class="headerText">Data gathering</h3>
         The orientation data gathering process used an MPU6050 (gyroscope and acceleration sensor) attached to the top of the robot chassis. The robot chassis had foot sensors on both the feet and motors that would rotate the pose angle. Our aim was to detect the orientation of the robot based entirely on data from the feet. Although a standard gyroscope can be used for this task, we wanted to demonstrate the versatility and sensitivity of PressTip sensors. 
+        <br><br><div style="text-align: center;">
+        <img style="width:100%;" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/schematicFoot.png">
+        </div><br><br>
         A data set was gathered while the robot tilted on one foot, left and right, between 30 and 130 degrees in the outer direction of the leg, while recording the data from the MPU6050 at that time. Only one foot would turn at a time, which is what would cause the tilt in that direction. All tactile sensor readings were recorded and placed in a comma separated values (csv) file. The robot itself used a Raspberry Pi Pico microcontroller costing approximately £4 and requiring a low amount of energy. 
         Tactile feet sensors provide far richer environmental information than an MPU6050 alone. Through direct contact with the ground, they offer real-time information about the surface and potential variations in terrain, as well as the distribution of weight on each foot. As we shall see, this information can also be used to accurately predict pose angles. 
         The orientation was gathered across multiple textures. Varnished wood, smooth concrete, rough concrete and carpet.
