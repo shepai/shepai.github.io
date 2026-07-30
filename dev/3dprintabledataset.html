@@ -663,8 +663,17 @@ Though this dataset is designed to be scalable like the USAF resolution tests in
     This texture combines three directional cosine waves to create a pattern with a triangular symmetry.
 </p>
 <p>
+	 \[
+    C(x,y) = \cos\left(0.5x + \frac{\sqrt{3}}{2}y\right)
+    \]
+	<br>
+ 	\[
+    D(x,y) =  \cos\left(0.5x - \frac{\sqrt{3}}{2}y\right)
+    \]
+	
+	<br>
     \[
-    z_{11} = \cos(x) + \cos\left(0.5x + \frac{\sqrt{3}}{2}y\right) + \cos\left(0.5x - \frac{\sqrt{3}}{2}y\right)
+    z_{11} = \cos(x) +  C(x,y) +  D(x,y)
     \]
 </p>
 
@@ -753,8 +762,17 @@ Though this dataset is designed to be scalable like the USAF resolution tests in
     This texture blends three layers of harmonic frequencies with varied weights and phase shifts to build a rich composite surface.
 </p>
 <p>
+
+	\[
+    A(x,y) = \sin(x)\cos(y) + 0.25\sin(4x)\sin(4y)
+    \]
+	<br>
+	\[
+    B(x,y) =0.5\sin\left(2x + \frac{\pi}{4}\right)\cos(2y)
+    \]
+	<br>
     \[
-    z_{20} = \sin(x)\cos(y) + 0.5\sin\left(2x + \frac{\pi}{4}\right)\cos(2y) + 0.25\sin(4x)\sin(4y)
+    z_{20} = A(x,y) + B(x,y)
     \]
 </p>
 
