@@ -10,6 +10,10 @@
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/STLLoader.js"></script>
+<script src="https://shepai.github.io//tex-mml-chtml.js"></script>
 <!-- <script>
 window.addEventListener("load", () => {
     const script = document.createElement("script");
@@ -252,7 +256,10 @@ We adapted this design to support larger motors for more power, and a larger bat
 
 The mold for the soft skin was also 3D pritned and the files can be found on the Github. We undertook two designs for the molds. The first was a mold that was smooth, and the second had 5mm extrusions acting as grips. Our design was centred around off-road terrain. 
 
-
+<div class="stl-grid">
+				<div id="stl1">Loading...</div>
+				<div id="stl2">Loading...</div>
+			</div>
 </section>
 <br><br>
 <div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
@@ -511,5 +518,24 @@ console.log(
   window.innerWidth
 );
 </script>
+<script>
+const stlFiles = [
 
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/central_mold.stl",
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/mold tyre.stl",
+
+];
+
+
+const containers = [
+
+    "stl1",
+    "stl2",
+
+];
+
+</script>
+<script src="3dviewer.js">
+
+</script>
 </html>
