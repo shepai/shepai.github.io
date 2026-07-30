@@ -284,17 +284,22 @@ If there is insignificant difference in variance between datasets then we can as
 	</p>
 
 <h2>Scanning 3D prints</h2>
+<p>
 Several 3D print filament types were used to make a protruded sine-wave block. We first wanted to evaluate how different filament brands and types differ in terms of material properties. We additionally evaluated the textures produced by different 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings mitigating these issues. 
+<br>
 We employed as a methods of evaluation a RGBD camera (Intel Realsense) to investigate how the variance impacted classification tasks.
+<br>
 We used the Intel Realsense D405 stereoscopic RGBD camera to scan the texture blocks in 3D. The camera has a scanning precision of less than 1mm when at its ideal recording range. We used Intel Realsense viewer software to record at a resolution of 848x480 and export the scans to PLY format
+<br>
 We recorded the texture blocks from a top-down perspective at a range of 8.5cm, with supplementary lighting provided by lamps on the side and top of the scanning rig. 
 These scans were static from only one perspective, so aspects of the texture blocks side or underside were not captured. 
-
-The processed point clouds were aligned using an iterative closest point~\cite{arun1987least} (ICP) registration algorithm. Floor regions were first removed through RANSAC plane segmentation using a distance threshold of 0.002 m. A multi-stage point-to-point ICP procedure was then applied using progressively smaller voxel sizes and correspondence thresholds. This coarse-to-fine registration approach initially corrected larger positional offsets before refining the alignment to achieve a high-resolution fit. The final transformation matrix obtained from ICP was applied to the source point cloud.
-
+<br>
+The processed point clouds were aligned using an iterative closest point (ICP) registration algorithm. Floor regions were first removed through RANSAC plane segmentation using a distance threshold of 0.002 m. A multi-stage point-to-point ICP procedure was then applied using progressively smaller voxel sizes and correspondence thresholds. This coarse-to-fine registration approach initially corrected larger positional offsets before refining the alignment to achieve a high-resolution fit. The final transformation matrix obtained from ICP was applied to the source point cloud.
+<br>
 After registration, the geometric difference between the two point clouds was calculated using nearest-neighbour distances. For each point in the reference cloud, the distance to the closest point in the aligned comparison cloud was calculated. The mean of these distances was taken as the average raw distance error, while the standard deviation was used to quantify the spread of point deviations.
-
+<br>
 To account for scan error, we placed the same block in the scanner for each texture and scanned it 5 times. We then averaged the difference. We subtract the error (calculated as the std between the same print same texture averaged over 5 readings to calculate the error of the scanning) from the raw average distance in order to more accurately approximate the difference in points.
+</p>
 <style>
 	table {
     border-left: none;
@@ -338,6 +343,7 @@ To account for scan error, we placed the same block in the scanner for each text
         </tbody>
     </table>
 
+
     <figcaption>
         <strong>Table 1.</strong> Measurement of the print errors averaged over all textures, and then the corrected distances calculated by averaging the error from the scan and subtracting it from the distances. The measurements are in meters.
     </figcaption>
@@ -349,9 +355,23 @@ To account for scan error, we placed the same block in the scanner for each text
     separation between repeated scans after ICP alignment, providing an estimate of the
     overall repeatability error.
 </p>
+<p>
+    The Bambu printer produced an average raw deviation of 
+    <span>3.06 &times; 10<sup>-4</sup> m</span>, while the Ender-3 V3 exhibited a larger deviation of 
+    <span>4.21 &times; 10<sup>-4</sup> m</span>. The resin printed samples showed the lowest raw deviation, 
+    with an average distance error of <span>2.49 &times; 10<sup>-4</sup> m</span>.
+</p>
+<p>
+    The standard error associated with the measurement method was calculated as 
+    <span>1.93 &times; 10<sup>-4</sup> m</span> and was used to account for uncertainty 
+    introduced by the measurement process. After applying this correction, the remaining 
+    geometric deviations were <span>1.13 &times; 10<sup>-4</sup> m</span> for the Bambu printer, 
+    <span>2.28 &times; 10<sup>-4</sup> m</span> for the Ender-3, and 
+    <span>5.58 &times; 10<sup>-5</sup> m</span> for the resin samples.
+</p>
 
-</body>
-</html>
+The corrected deviations indicate that the resin printed samples exhibited the highest repeatability, followed by the Bambu printer, while the Ender-3 showed the largest variation between repeated prints. These results suggest that the manufacturing process has a measurable influence on dimensional consistency.
+
 
 
 <h2 class="headerText">Results</h2>
@@ -578,6 +598,167 @@ To account for scan error, we placed the same block in the scanner for each text
 
 </section>
 
+<h2>Possible Extensions of Datasets</h2>
+Though this dataset is designed to be scalable like the USAF resolution tests in the 1950s, we did work on further 3D patterns generated from geometric functions. This extentsion serves as a greater challenge for tactile surface classification. 
+<div class="stl-grid">
+
+				<div id="stl7">Loading...</div>
+				<div id="stl8">Loading...</div>
+				<div id="stl9">Loading...</div>
+				<div id="stl10">Loading...</div>
+
+				<div id="stl11">Loading...</div>
+				<div id="stl12">Loading...</div>
+				<div id="stl13">Loading...</div>
+				<div id="stl14">Loading...</div>
+
+				<div id="stl5">Loading...</div>
+				<div id="stl16">Loading...</div>
+				<div id="stl17">Loading...</div>
+				<div id="stl18">Loading...</div>
+
+			</div>
+<h3><strong>Texture Seven</strong></h3>
+<p>
+    This texture uses a sine and cosine combination to make a higher frequency continuous pointed pattern.
+</p>
+<p>
+    \[
+    z_7 = \sin(x + y) + 0.5 \cos(2x - 2y)
+    \]
+</p>
+
+<h3><strong>Texture Eight</strong></h3>
+<p>
+    This texture calculates the hypotenuse of the sine of \(x\) and cosine of \(y\), scaling it by pi inside an outer sine function.
+</p>
+<p>
+    \[
+    z_8 = \sin\left(\pi \sqrt{\sin^2(x) + \cos^2(y)}\right)
+    \]
+</p>
+
+<h3><strong>Texture Nine</strong></h3>
+<p>
+    This texture sums the absolute values of the sine of \(x\) and cosine of \(y\) to create a grid of round ridges.
+</p>
+<p>
+    \[
+    z_9 = |\sin(x)| + |\cos(y)|
+    \]
+</p>
+
+<h3><strong>Texture Ten</strong></h3>
+<p>
+    This texture overlays a primary grid of intersecting sine waves with a higher frequency modulation pattern.
+</p>
+<p>
+    \[
+    z_{10} = \sin(x)\sin(y) + 0.3\cos(3x)\cos(3y)
+    \]
+</p>
+
+<h3><strong>Texture Eleven</strong></h3>
+<p>
+    This texture combines three directional cosine waves to create a pattern with a triangular symmetry.
+</p>
+<p>
+    \[
+    z_{11} = \cos(x) + \cos\left(0.5x + \frac{\sqrt{3}}{2}y\right) + \cos\left(0.5x - \frac{\sqrt{3}}{2}y\right)
+    \]
+</p>
+
+<h3><strong>Texture Twelve</strong></h3>
+<p>
+    This texture subtracts the absolute product of sine and cosine components from a flat plane to generate inverted peaks.
+</p>
+<p>
+    \[
+    z_{12} = 1.0 - |\sin(x)\cos(y)|
+    \]
+</p>
+
+<h3><strong>Texture Thirteen</strong></h3>
+<p>
+    This texture evaluates the maximum envelope of two primary waves and adds a scaled down minimum of their double frequencies.
+</p>
+<p>
+    \[
+    z_{13} = \max(\sin(x), \cos(y)) + 0.5\min(\sin(2x), \cos(2y))
+    \]
+</p>
+
+<h3><strong>Texture Fourteen</strong></h3>
+<p>
+    This texture modulates a cosine wave over \(y\) using an exponential growth scale driven by the sine of \(x\).
+</p>
+<p>
+    \[
+    z_{14} = e^{\sin(x)}\cos(y)
+    \]
+</p>
+
+<h3><strong>Texture Fifteen</strong></h3>
+<p>
+    This texture maps the negative magnitude of half-angle sine and cosine products to form an inverted grid pattern.
+</p>
+<p>
+    \[
+    z_{15} = -\left(\sin^2\left(\frac{x}{2}\right)\cos^2\left(\frac{y}{2}\right)\right)^{0.5}
+    \]
+</p>
+
+<h3><strong>Texture Sixteen</strong></h3>
+<p>
+    This texture feeds a nested sine function into a primary sine wave, modulated by an overarching cosine component.
+</p>
+<p>
+    \[
+    z_{16} = \sin(x + \sin(y))\cos(y)
+    \]
+</p>
+
+<h3><strong>Texture Seventeen</strong></h3>
+<p>
+    This texture computes the arcsine of interacting sine and cosine waves to produce a restricted domain heightmap.
+</p>
+<p>
+    \[
+    z_{17} = \arcsin(\sin(x)\cos(y))
+    \]
+</p>
+
+<h3><strong>Texture Eighteen</strong></h3>
+<p>
+    This texture creates complex interference by adding cross-nested phase modulations between the \(x\) and \(y\) axes.
+</p>
+<p>
+    \[
+    z_{18} = \sin(x + \cos(y)) + \cos(y + \sin(x))
+    \]
+</p>
+
+<h3><strong>Texture Nineteen</strong></h3>
+<p>
+    This texture calculates a restricted boundary pattern using a nested combination of arccosine, cosine, arcsine, and sine functions.
+</p>
+<p>
+    \[
+    z_{19} = \arccos(\cos(x + \arcsin(\sin(y))))
+    \]
+</p>
+
+<h3><strong>Texture Twenty</strong></h3>
+<p>
+    This texture blends three layers of harmonic frequencies with varied weights and phase shifts to build a rich composite surface.
+</p>
+<p>
+    \[
+    z_{20} = \sin(x)\cos(y) + 0.5\sin\left(2x + \frac{\pi}{4}\right)\cos(2y) + 0.25\sin(4x)\sin(4y)
+    \]
+</p>
+
+
 			<div align="center"><a href="https://github.com/shepai/3D-textures" target="_blank" style="text-decoration: none;">
 				<button style="
 				  display: inline-flex;
@@ -619,7 +800,20 @@ const stlFiles = [
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z2_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z3_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z4_surface.stl",
-    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z5_surface.stl"
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z5_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z6_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z7_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z8_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z9_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z10_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z11_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z12_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z13_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z14_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z15_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z16_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z17_surface.stl",
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z18_surface.stl",
 
 ];
 
@@ -631,7 +825,20 @@ const containers = [
     "stl3",
     "stl4",
     "stl5",
-    "stl6"
+    "stl6",
+    "stl7",
+    "stl8",
+    "stl9",
+    "stl10",
+    "stl11",
+    "stl12",
+    "stl13",
+    "stl14",
+    "stl15",
+    "stl16",
+    "stl17",
+    "stl18",
+    "stl19",
 
 ];
 
