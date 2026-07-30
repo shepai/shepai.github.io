@@ -289,9 +289,11 @@ table {
 }
 
 .main {
-    display: block;
-    width: 45%;
-    margin: 0 auto;
+  display: table;
+  width:45%;
+  margin-right: auto;
+  margin-left: auto;
+  
 }
 .title { 
 	font-family: Rockwell,Courier Bold,Courier,Georgia,Times,Times New Roman,serif; 
