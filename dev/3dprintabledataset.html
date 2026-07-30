@@ -282,6 +282,78 @@ If there is insignificant difference in variance between datasets then we can as
 </p>
 <p>By releasing both the source models and the complete fabrication pipeline, researchers are able not only to reproduce the benchmark presented here but also to generate additional textures that remain compatible with the benchmark methodology. This enables direct comparison between future tactile sensing approaches while promoting consistency across independently collected datasets.}
 	</p>
+
+<h2>Scanning 3D prints</h2>
+Several 3D print filament types were used to make a protruded sine-wave block. We first wanted to evaluate how different filament brands and types differ in terms of material properties. We additionally evaluated the textures produced by different 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings mitigating these issues. 
+We employed as a methods of evaluation a RGBD camera (Intel Realsense) to investigate how the variance impacted classification tasks.
+We used the Intel Realsense D405 stereoscopic RGBD camera to scan the texture blocks in 3D. The camera has a scanning precision of less than 1mm when at its ideal recording range. We used Intel Realsense viewer software to record at a resolution of 848x480 and export the scans to PLY format
+We recorded the texture blocks from a top-down perspective at a range of 8.5cm, with supplementary lighting provided by lamps on the side and top of the scanning rig. 
+These scans were static from only one perspective, so aspects of the texture blocks side or underside were not captured. 
+
+The processed point clouds were aligned using an iterative closest point~\cite{arun1987least} (ICP) registration algorithm. Floor regions were first removed through RANSAC plane segmentation using a distance threshold of 0.002 m. A multi-stage point-to-point ICP procedure was then applied using progressively smaller voxel sizes and correspondence thresholds. This coarse-to-fine registration approach initially corrected larger positional offsets before refining the alignment to achieve a high-resolution fit. The final transformation matrix obtained from ICP was applied to the source point cloud.
+
+After registration, the geometric difference between the two point clouds was calculated using nearest-neighbour distances. For each point in the reference cloud, the distance to the closest point in the aligned comparison cloud was calculated. The mean of these distances was taken as the average raw distance error, while the standard deviation was used to quantify the spread of point deviations.
+
+To account for scan error, we placed the same block in the scanner for each texture and scanned it 5 times. We then averaged the difference. We subtract the error (calculated as the std between the same print same texture averaged over 5 readings to calculate the error of the scanning) from the raw average distance in order to more accurately approximate the difference in points.
+<style>
+	table {
+    border-left: none;
+    border-right: none;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-collapse: collapse;
+}
+
+
+</style>
+<figure>
+    <table id="printer-errors-scan">
+        <thead>
+            <tr>
+                <th>Printer</th>
+                <th>Average Raw Dist</th>
+                <th>Method Error</th>
+                <th>Corrected Dist</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Bambu</td>
+                <td>0.000306111</td>
+                <td>0.000193344</td>
+                <td>0.000112767</td>
+            </tr>
+            <tr>
+                <td>Ender-3 V3</td>
+                <td>0.000421495</td>
+                <td>0.000193344</td>
+                <td>0.000228150</td>
+            </tr>
+            <tr>
+                <td>Resin</td>
+                <td>0.000249134</td>
+                <td>0.000193344</td>
+                <td>0.000055790</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <figcaption>
+        <strong>Table 1.</strong> Measurement of the print errors averaged over all textures, and then the corrected distances calculated by averaging the error from the scan and subtracting it from the distances. The measurements are in meters.
+    </figcaption>
+</figure>
+
+<p>
+    The calculated point cloud deviations for each manufacturing method are presented in
+    <strong>Table&nbsp;1</strong>. The average raw distance values represent the mean geometric
+    separation between repeated scans after ICP alignment, providing an estimate of the
+    overall repeatability error.
+</p>
+
+</body>
+</html>
+
+
 <h2 class="headerText">Results</h2>
 	<!-- From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication.  -->
 
