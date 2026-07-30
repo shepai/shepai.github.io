@@ -153,7 +153,7 @@ We used a Ridge regression model with alpha as 1, Linear regression model, Rando
   </span></span> . These were chosen as popular models of different methods. 
 
 The averages of train and test accuracy are displayed in the table below. 
-<table style="margin: 0 auto;" border="1" cellspacing="0" cellpadding="6">
+<table style="margin: 0 auto;overflow-x:auto;" border="1" cellspacing="0" cellpadding="6">
     <thead>
         <tr>
             <th>Model</th>
@@ -250,7 +250,9 @@ We adapted this design to support larger motors for more power, and a larger bat
 <img src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/body_design2.png" width="40%">
 </div>
 
-The mold for the soft skin was also 3D pritned and the files can be fouund on the Github. 
+The mold for the soft skin was also 3D pritned and the files can be found on the Github. We undertook two designs for the molds. The first was a mold that was smooth, and the second had 5mm extrusions acting as grips. Our design was centred around off-road terrain. 
+
+
 </section>
 <br><br>
 <div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
@@ -504,7 +506,10 @@ function plotMarkers(points) {
 });
 
 }
-
+console.log(
+  document.documentElement.scrollWidth,
+  window.innerWidth
+);
 </script>
 
 </html>
