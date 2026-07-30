@@ -245,7 +245,7 @@ Examples of the truth value (blue) and prediction value (red) from the CNN:
 <button class="buttonF" style="margin: auto;" onclick="nextExample_cnn()">See Other Examples</button>
 
      <h2>Physical construction</h2>
-  <h3>CAD design</h3>
+  <h3>CAD design to 3D printing</h3>
   We designed the parts using SketctUp. The ball is made up of a central body that houses N20 geared motors, space for batteries in the bottom (to also weight it down), camera and controller. The N20 notors rotate the wheel using a gear printed into the wheel.  
 The parts are found on the <a href="https://github.com/shepai/tactile-ball-robot/tree/main/physical%20robot/3D%20print">Github</a> and can be 3D printed. I recommend using stronger filaments like PETG or resin. The soft body is designed to be glued around the outer hull of the wheel, overlapping slightly with the main body. 
 We adapted this design to support larger motors for more power, and a larger battery. 
@@ -260,6 +260,22 @@ The mold for the soft skin was also 3D pritned and the files can be found on the
 				<div id="stl1">Loading...</div>
 				<div id="stl2">Loading...</div>
 			</div>
+
+Thee process of making the skin and the flesh requires two different molds. The first mold uses a larger dome shape - which is placed in the centre, overhanging with 5mm gap between the main mold and this new part. Silicone is poured inside the hole and set. Once the optical marker layer is added. The next mold with a smaller dome is added, which provides another 5mm gap. We pour in more silicone to provide greater strength to the skin, and hold in place the optical markers. 
+<div class="stl-grid">
+				<div id="stl3">Loading...</div>
+				<div id="stl4">Loading...</div>
+			</div>
+
+The final parts for printing included the wheels, and the main body. The main body is designed to hold two DC gear motors, a springloaded actuator, camera, controller and 
+<div class="stl-grid">
+				<div id="stl5">Loading...</div>
+				<div id="stl6">Loading...</div>
+			</div>
+
+  <h3>Assembly</h3>
+  The mold was printed with 10% infill at 100% speed on the Creality Ender-3 v3 SE. We used a sprayable polyfiller to give the outside a smooth coat, before sanding it down. This is to make sure the mold is fluid-tight, and to smoothen the print as much as possbile. 
+
 </section>
 <br><br>
 <div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
@@ -523,6 +539,10 @@ const stlFiles = [
 
     "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/central_mold.stl",
     "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/mold tyre.stl",
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/mold skin.stl",
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/mold flesh l1.stl",
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/TacWheel.stl",
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/TacBall_holder_bigmotor.stl",
 
 ];
 
@@ -531,6 +551,10 @@ const containers = [
 
     "stl1",
     "stl2",
+    "stl3",
+    "stl4",
+    "stl5",
+    "stl6",
 
 ];
 
