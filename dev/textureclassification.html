@@ -260,9 +260,81 @@ Each image was 110 X 120 pixels over 20 frames, till we cut this down to 4 frame
 The new marker skins were attached to the rig setup and used to gather the same dataset as previous experiments. We apply Sobel filters and reduce the images by mean scaling. All the preprocessing steps and model parameters matched that of all previous experiments}. We chose the CNN model due to its success in previous experiments.
 	We used molds with holes, groves and smooth to make a range of tips. Then we coloured in patterns with white paint. 
 <div class="stl-grid">
-  <div id="stl">Loading...</div>
+  <div id="stl1">Loading...</div>
   <div id="stl2">Loading...</div>
 </div>
+The results of the moolds can be seen on the <a href="TacTip.html">TacTip design page</a>. 
+
+We used a Convolutional neural network (CNN) we adopted a network with hidden layer of 128 nodes, along with 15 output nodes (one for each possible texture class). The CNN was more interpretable from an image point of view making it the ideal choice, though other models have been used on the same classification task. We used activation functions of ReLU on each layer, kernel size 3 and a stride of 1. Cross entropy loss was used with the stochastic gradient descent optimizer at learning rate 0.005. Images were converted into a long image representing the temporality of the video. After experiments, we could get a high accuracy at as low as 4 frames from the video. Each morphology of TacTip marker design was trained over 20 trials and accuracy averaged in the results.
+
+We used Saliancy maps to analyse what was going on inside the CNNs to help distinguish useful features. Saliency maps are a technique for visualizing which parts of an input most influence a model’s prediction, effectively highlighting the pixels where small changes would cause the largest change in the output. In our implementation, we first prepared and normalised the input images, enabled gradient tracking, and ran them through the trained model to obtain the predicted class. We then performed a backward pass on the output corresponding to that predicted class, which gave us the gradient of the class score with respect to each input pixel. Taking the absolute value of these gradients produced a saliency tensor showing pixel-level importance. Finally, we collapsed the channels, visualized the resulting 2D saliency map with a heat-map, revealing which parts of the tactile image the model relied on most strongly for its decision.
+<br><br>
+<figure>
+    <table id="morphology-accuracy">
+        <thead>
+            <tr>
+                <th>Morphology</th>
+                <th>Test Accuracy</th>
+                <th>Train Accuracy</th>
+                <th>Std</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>A</td>
+                <td>97.15%</td>
+                <td>98.07%</td>
+                <td>0.009</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>99.98%</td>
+                <td>99.99%</td>
+                <td>0.00</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>98.23%</td>
+                <td>98.5%</td>
+                <td>0.01</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>97.48%</td>
+                <td>97.78%</td>
+                <td>0.0095</td>
+            </tr>
+            <tr>
+                <td>Standard TacTip</td>
+                <td>99.97%</td>
+                <td>99.99%</td>
+                <td>0.00</td>
+            </tr>
+            <tr>
+                <td>E</td>
+                <td>89.25%</td>
+                <td>90.31%</td>
+                <td>2.7</td>
+            </tr>
+            <tr>
+                <td>No Markers</td>
+                <td>99.94%</td>
+                <td>99.99%</td>
+                <td>0.003</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <figcaption>
+        Model average Accuracy by Morphology. All these models were averaged over 20 trials.
+    </figcaption>
+</figure>
+<br><br>
+Despite having no markers, the no marker design performed at a much higher accuracy than the alternative morphologies. All the designs had high accuracy. When we looked at the sobel-filtered images  we noticed there were glare marks on the surface of the gel. These LED markers moved differently dependent on the force on the sensor. These were clearly standing in for the absence of markers. 
+In summary of the morphology experiments, the size of optical markers can indeed impact how the accuracy performs at lower resolutions. This was only evaluated on our task for texture classification, however more work in the area of object and edge recognition would further enhance the study on how pattern shape could help reduce the resolution of tactile images. This work can help decrease the computational costs of this technology. 
+
+The novel work in morphology changes for classification could be enhanced by using more procedurally generated morphology to explore a wider range of designs. Our focus has been texture classification, rather than edge detection, though experimentation into more than just texture classification could reveal more about the morphologies pros and cons. The methods discussed such as saliency maps would be very useful to determine which aspects of the morphology are useful for each task. 
+
 
 <br><br>
 		<div align="center"><a href="https://github.com/shepai/RoboSkin" target="_blank" style="text-decoration: none;">
@@ -302,8 +374,8 @@ The new marker skins were attached to the rig setup and used to gather the same 
 </body>
 <script>
 const stlFiles = [
-    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D%20files/Skin/MouldTIp.stl",
-    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D%20files/TacTip/no%20holes%201.stl",
+    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D files/Skin/tipMould.stl",
+    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D files/TacTip/no holes 1.stl",
 
 ];
 
