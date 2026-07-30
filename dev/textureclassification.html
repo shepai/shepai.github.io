@@ -28,7 +28,10 @@
 <script src="https://shepai.github.io/search.js">
 
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/STLLoader.js"></script>
+<script src="https://shepai.github.io//tex-mml-chtml.js"></script>
 </div>
 	<!-- the main content -->
 	<div class="main">
@@ -249,7 +252,19 @@ Perhaps understandably, most papers on tactile sensing for texture classificatio
 			  </tbody>
 			</table>
 </div>
-		<br><br>
+
+<h2>Morphology Experiments</h2>
+<br>
+Each image was 110 X 120 pixels over 20 frames, till we cut this down to 4 frames each after hyper-parameter sweeps to find the minimum length to still maintain accuracy. The video shows movement of the TacTip sensor over various directions along 1.5 mm straight lines in 100 different directions. Each direction had evenly spaced radii of a semicircle centred on the original touching point. The rig used three-axis of stepper motors of dimensions 300mm by 300mm by 150mm to allow direction and force to be applied to the sensor across each surface. The forces used were of 0.0785 – 0.0824N, 1.9031 – 1.9228N, 3.0039 – 3.0235N and 4.336 – 4.367N pushed directly onto the texture with the sensor facing downwards so the tip of the soft body would be in contact first. 
+<br>
+The new marker skins were attached to the rig setup and used to gather the same dataset as previous experiments. We apply Sobel filters and reduce the images by mean scaling. All the preprocessing steps and model parameters matched that of all previous experiments}. We chose the CNN model due to its success in previous experiments.
+	We used molds with holes, groves and smooth to make a range of tips. Then we coloured in patterns with white paint. 
+<div class="stl-grid">
+  <div id="stl">Loading...</div>
+  <div id="stl2">Loading...</div>
+</div>
+
+<br><br>
 		<div align="center"><a href="https://github.com/shepai/RoboSkin" target="_blank" style="text-decoration: none;">
 			<button style="
 			  display: inline-flex;
@@ -286,7 +301,22 @@ Perhaps understandably, most papers on tactile sensing for texture classificatio
 	
 </body>
 <script>
+const stlFiles = [
+    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D%20files/Skin/MouldTIp.stl",
+    "https://raw.githubusercontent.com/shepai/RoboSkin/main/Assets/3D%20files/TacTip/no%20holes%201.stl",
 
+];
+
+
+const containers = [
+
+    "stl1",
+    "stl2",
+
+];
+
+</script>
+<script src="3dviewer.js">
 
 </script>
 
