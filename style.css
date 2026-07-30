@@ -287,13 +287,15 @@ table {
   font-size: 20px;
   width:100%;
 }
-
+/* * {
+  outline: 1px solid red;
+} */
 .main {
   display: table;
   width:45%;
   margin-right: auto;
   margin-left: auto;
-  
+   overflow: hidden;
 }
 .title { 
 	font-family: Rockwell,Courier Bold,Courier,Georgia,Times,Times New Roman,serif; 
