@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/test1.ico" type="favicon/ico">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">Dexter Shepherd</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+
+<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a align="right" href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" class="ai ai-google-scholar ai-2x"></a>
+<a align="right" href="https://github.com/shepai" class="fa fa-github"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Searchhttps://github.com/shepai/datalogger_education/" name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+		<h1 class="headerText">Making Accesible Research</h1>
+		<h5>Posted 03/08/2026</h5>
+    <i>If you can't explain it simply, you don't understand it well enough - Albert Einstein</i>
+    <br><br>
+		 This tutorial is centred around this very website. Under my <a href="https://shepai.github.io/development.html">development</a> page I post my research milestones. Papers are great for recording knowledge, but often the knowledge gets cut short because of page limits, or work gets taken out because it didn't end up as part of the story.  
+     Sometimes it is nice to decide yourself what research you want to show others. And more importantly, make that research clearer through interactive displays rather than the paper format we base research dissemination on from hundreds of years ago. 
+     Data samples should be accessible, plots should be interactive and the reader should actually understand what you have done by the end - without the need to digest the paper in a journal club. 
+     <br><br>
+     This tutorial suggests a few methods of making your research more accesible through website form. 
+
+    <h2>Displaying data</h2>
+    
+    <h2>Adding Links, Images, GIFs, Audio and Video</h2>
+
+<p>
+    Unlike a paper document, a webpage can link directly to other websites,
+    documents, or research papers. This allows readers to quickly access
+    additional information without having to search for it themselves.
+</p>
+
+<p>
+    Hyperlinks are created using the <code>&lt;a&gt;</code> (anchor) tag.
+</p>
+
+<pre><code>&lt;p&gt;
+    Read more about HTML on
+    &lt;a href="https://developer.mozilla.org/" target="_blank"&gt;
+        MDN Web Docs
+    &lt;/a&gt;.
+&lt;/p&gt;
+</code></pre>
+
+<ul>
+    <li><code>href</code> specifies the destination.</li>
+    <li><code>target="_blank"</code> opens the link in a new browser tab.</li>
+</ul>
+
+<h3>Embedding Images</h3>
+
+<p>
+    Images are added using the <code>&lt;img&gt;</code> tag.
+</p>
+
+<pre><code>&lt;img src="images/cat.jpg"
+     alt="A sleeping cat"
+     width="400"&gt;
+</code></pre>
+
+<p>
+    The <code>src</code> attribute tells the browser where to find the image,
+    while <code>alt</code> provides a description if the image cannot be displayed
+    and improves accessibility. The <code>width</code> attribute controls the
+    displayed size.
+</p>
+
+<p>Common image formats include:</p>
+
+<ul>
+    <li><strong>.jpg / .jpeg</strong> - Best for photographs.</li>
+    <li><strong>.png</strong> - Supports transparency.</li>
+    <li><strong>.webp</strong> - Modern format with excellent compression.</li>
+    <li><strong>.svg</strong> - Vector graphics that remain sharp at any size.</li>
+</ul>
+
+<h3>Embedding GIFs</h3>
+
+<p>
+    GIFs are embedded exactly like normal images because they are image files.
+</p>
+
+<pre><code>&lt;img src="images/animation.gif"
+     alt="Animated demonstration"
+     width="400"&gt;
+</code></pre>
+
+<p>
+    GIFs are useful for showing short animations or demonstrating a process.
+    However, GIFs cannot contain sound and often have much larger file sizes
+    than videos. If your animation is longer than a few seconds, a video is
+    usually the better choice.
+</p>
+
+<h3>Embedding Audio</h3>
+
+<p>
+    HTML can also play audio directly on your webpage using the
+    <code>&lt;audio&gt;</code> element.
+</p>
+
+<pre><code>&lt;audio controls&gt;
+    &lt;source src="audio/interview.mp3" type="audio/mpeg"&gt;
+    &lt;source src="audio/interview.ogg" type="audio/ogg"&gt;
+    Your browser does not support the audio element.
+&lt;/audio&gt;
+</code></pre>
+
+<p>
+    The <code>controls</code> attribute automatically provides play, pause and
+    volume controls.
+</p>
+
+<p>Common audio formats include:</p>
+
+<ul>
+    <li><strong>.mp3</strong> - Most commonly used.</li>
+    <li><strong>.ogg</strong> - Open format supported by modern browsers.</li>
+    <li><strong>.wav</strong> - High quality but much larger file sizes.</li>
+</ul>
+
+<h3>Embedding Video</h3>
+
+<p>
+    When your media includes sound or lasts longer than a few seconds,
+    use the <code>&lt;video&gt;</code> element instead of a GIF.
+</p>
+
+<pre><code>&lt;video controls width="640"&gt;
+    &lt;source src="videos/tutorial.mp4" type="video/mp4"&gt;
+    &lt;source src="videos/tutorial.webm" type="video/webm"&gt;
+    Your browser does not support the video tag.
+&lt;/video&gt;
+</code></pre>
+
+<p>
+    The <code>controls</code> attribute adds play, pause, volume and fullscreen
+    controls automatically.
+</p>
+
+<p>Common video formats include:</p>
+
+<ul>
+    <li><strong>.mp4</strong> - Recommended for almost all websites.</li>
+    <li><strong>.webm</strong> - Smaller file sizes with excellent browser support.</li>
+    <li><strong>.ogg</strong> - Less common but supported by some browsers.</li>
+</ul>
+
+<h3>Where Are These Files Stored?</h3>
+
+<p>
+    Before HTML can display an image, GIF, audio file or video, the media must
+    exist somewhere that the browser can access. Usually, these files are stored
+    inside your website project in folders such as <code>images</code>,
+    <code>audio</code> and <code>videos</code>.
+</p>
+
+<pre><code>website/
+│
+├── index.html
+├── images/
+│   ├── cat.jpg
+│   └── animation.gif
+├── audio/
+│   └── interview.mp3
+└── videos/
+    └── tutorial.mp4
+</code></pre>
+
+<p>
+    Alternatively, media can be hosted online and linked using a full web address.
+</p>
+
+<pre><code>&lt;img src="https://example.com/images/cat.jpg"
+     alt="Cat"&gt;
+
+&lt;audio controls&gt;
+    &lt;source src="https://example.com/audio/music.mp3"
+            type="audio/mpeg"&gt;
+&lt;/audio&gt;
+
+&lt;video controls width="600"&gt;
+    &lt;source src="https://example.com/videos/demo.mp4"
+            type="video/mp4"&gt;
+&lt;/video&gt;
+</code></pre>
+
+<h3>Choosing the Correct Media</h3>
+
+<table>
+    <tr>
+        <th>Media</th>
+        <th>Best Used For</th>
+    </tr>
+    <tr>
+        <td>Image (.jpg, .png, .webp)</td>
+        <td>Photos, diagrams and screenshots.</td>
+    </tr>
+    <tr>
+        <td>GIF (.gif)</td>
+        <td>Short silent animations.</td>
+    </tr>
+    <tr>
+        <td>Audio (.mp3, .ogg, .wav)</td>
+        <td>Music, narration, interviews and sound effects.</td>
+    </tr>
+    <tr>
+        <td>Video (.mp4, .webm)</td>
+        <td>Tutorials, demonstrations, presentations and animations with sound.</td>
+    </tr>
+</table>
+
+<p>
+    As a general rule, use an image for static content, a GIF for short silent
+    animations, audio when only sound is needed, and video whenever your content
+    includes sound or longer demonstrations. Modern video formats are usually
+    much smaller and higher quality than GIFs for longer animations.
+</p>
+  
+  
+  </div>
+
+</body>
+<script>
+
+
+</script>
+
+</html>
