@@ -46,8 +46,634 @@
 
      You can make use of our javascript package that you can download here:
      <a href="https://shepai.github.io/downloads/JS_Package.js">Javascript package</a>
-    <h2>Displaying data</h2>
+<h2>Interactive Data Visualisation</h2>
 
+<p>
+    When presenting scientific results, plots are often included as static
+    images or screenshots. While this is convenient for a traditional paper,
+    static figures remove much of the information contained within the original
+    data. A screenshot shows only one viewpoint, one selection of data, and one
+    set of visual settings chosen by the author.
+</p>
+
+<p>
+    Interactive plots allow readers to explore the data themselves. Instead of
+    looking at a fixed image, users can rotate 3D plots, zoom into regions of
+    interest, hide or reveal different parts of the data, and examine individual
+    examples. This creates a more transparent and engaging way of communicating
+    results.
+</p>
+
+<h3>Why Use Interactive Plots?</h3>
+
+<p>
+    Interactive visualisations are particularly useful when working with complex
+    datasets. For example, a machine learning model may produce thousands of
+    predictions, or a motion capture system may record hundreds of marker
+    positions over time. A single static image cannot show all of this
+    information without becoming cluttered.
+</p>
+
+<p>
+    Instead, we can allow the reader to interact with the data and decide what
+    they want to investigate.
+</p>
+
+<ul>
+    <li>
+        <strong>Explore different examples:</strong>
+        Instead of displaying one example from a dataset, users can cycle
+        through many samples.
+    </li>
+
+    <li>
+        <strong>Change the viewpoint:</strong>
+        3D data can be rotated and inspected from different angles.
+    </li>
+
+    <li>
+        <strong>Compare multiple sources:</strong>
+        Predictions can be shown alongside ground truth measurements.
+    </li>
+
+    <li>
+        <strong>Reduce clutter:</strong>
+        Users can hide information they are not interested in.
+    </li>
+
+    <li>
+        <strong>Improve reproducibility:</strong>
+        Readers can directly inspect the evidence behind reported results.
+    </li>
+</ul>
+
+
+<h3>Loading and Displaying Data</h3>
+
+<p>
+    In this example, JavaScript is used to load data from a CSV file and convert
+    it into a format that can be displayed as a 3D plot. The CSV file contains
+    marker positions, where each marker has an <code>x</code>, <code>y</code>,
+    and <code>z</code> coordinate.
+</p>
+
+<p>
+    The <code>loadCSV()</code> function automatically finds marker columns,
+    extracts their coordinates, and converts each row into a collection of
+    3D points.
+</p>
+
+<pre><code>
+function loadCSV(url){
+
+    return new Promise((resolve) => {
+
+        Papa.parse(url, {
+            download: true,
+            header: true,
+
+            complete: function(results){
+
+                let data = results.data;
+
+                // Extract marker positions
+                // Convert rows into 3D points
+
+                resolve(samples);
+
+            }
+
+        });
+
+    });
+
+}
+</code></pre>
+
+<p>
+    Once the data has been loaded, it can be displayed using an interactive
+    plotting library such as Plotly.
+</p>
+
+<h3>Displaying the Plot on the Webpage</h3>
+
+<p>
+    Before JavaScript can draw a plot, the webpage needs a location where the
+    visualisation will be placed. This is done by creating an empty HTML
+    container with a unique <code>id</code>.
+</p>
+
+<p>
+    The JavaScript code uses this ID to find the correct location on the page
+    and insert the interactive plot.
+</p>
+
+<pre><code>
+&lt;div 
+    style="width:300px; margin:auto;" 
+    class="plot-container" 
+    id="plot_cnn"&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+    This creates an empty box on the webpage. The plot is not stored inside the
+    HTML itself; instead, JavaScript dynamically fills this container with an
+    interactive Plotly figure.
+</p>
+
+<p>
+    The <code>id</code> must match the ID provided when creating the plot in
+    JavaScript.
+</p>
+
+<pre><code>
+createPlot(
+    "plot_cnn",
+    "plot_cnn"
+);
+</code></pre>
+
+<p>
+    Here, the first value (<code>"plot_cnn"</code>) is the name used to keep
+    track of the plot, while the second value identifies the HTML element where
+    the plot should appear.
+</p>
+
+<h3>Creating an Interactive Plot</h3>
+
+<p>
+    Rather than generating a static image, we create a plot object that can
+    receive new data. This means the same plot can be updated repeatedly without
+    needing to reload the webpage.
+</p>
+
+<pre><code>
+createPlot("plot_cnn", "plot_cnn");
+
+addMarkers(
+    "plot_cnn",
+    truthSamples[0],
+    "blue"
+);
+
+addMarkers(
+    "plot_cnn",
+    predictionSamples[0],
+    "red"
+);
+</code></pre>
+
+<p>
+    In this example, blue markers represent the true positions and red markers
+    represent the model predictions. Because the plot is interactive, the user
+    can rotate the scene and examine where the prediction differs from the
+    ground truth.
+</p>
+<h3>Processing Data from a CSV File</h3>
+
+<p>
+    Experimental data is often stored in a table format, such as a CSV
+    (Comma-Separated Values) file. CSV files are commonly used because they are
+    simple, portable, and can be opened by many different programs including
+    Excel, MATLAB, Python, and statistical software.
+</p>
+
+<p>
+    However, a CSV file is not immediately suitable for visualisation. The data
+    first needs to be loaded, organised, and converted into a structure that
+    the plotting library understands.
+</p>
+
+<p>
+    In this example, the CSV file contains 3D marker positions. Each marker has
+    three values representing its position in space:
+</p>
+
+<pre><code>
+marker_1_x, marker_1_y, marker_1_z,
+marker_2_x, marker_2_y, marker_2_z,
+marker_3_x, marker_3_y, marker_3_z
+</code></pre>
+
+<p>
+    Each row represents one sample or frame of data. For example, in a motion
+    capture experiment, each row could represent one moment in time.
+</p>
+
+<pre><code>
+Sample 1:
+marker_1 = [x, y, z]
+marker_2 = [x, y, z]
+marker_3 = [x, y, z]
+
+
+Sample 2:
+marker_1 = [x, y, z]
+marker_2 = [x, y, z]
+marker_3 = [x, y, z]
+</code></pre>
+
+
+<h3>Loading the CSV File</h3>
+
+<p>
+    The first step is loading the CSV file into the webpage. Because files are
+    loaded from the internet or the local server, this happens asynchronously.
+    This means the browser starts loading the file and continues running other
+    code while it waits for the data.
+</p>
+
+<p>
+    The function therefore returns a <code>Promise</code>, which allows the rest
+    of the program to wait until the data is ready.
+</p>
+
+<pre><code>
+function loadCSV(url){
+
+    return new Promise((resolve) => {
+
+        Papa.parse(url, {
+
+            download: true,
+            header: true,
+
+            complete: function(results){
+
+                let data = results.data;
+
+                resolve(data);
+
+            }
+
+        });
+
+    });
+
+}
+</code></pre>
+
+<p>
+    The <code>header:true</code> option tells Papa Parse that the first row of
+    the CSV contains column names. This means we can access values using their
+    column names rather than remembering their position.
+</p>
+
+
+<h3>Finding Marker Columns</h3>
+
+<p>
+    Rather than manually writing every marker name, the function automatically
+    searches the CSV headings for columns containing the word
+    <code>"marker"</code>.
+</p>
+
+<pre><code>
+let markerColumns = Object.keys(data[0])
+    .filter(col => col.includes("marker"));
+</code></pre>
+
+<p>
+    For example, this converts:
+</p>
+
+<pre><code>
+[
+    "time",
+    "marker_1_x",
+    "marker_1_y",
+    "marker_1_z",
+    "marker_2_x",
+    "marker_2_y",
+    "marker_2_z"
+]
+</code></pre>
+
+<p>
+    into:
+</p>
+
+<pre><code>
+[
+    "marker_1_x",
+    "marker_1_y",
+    "marker_1_z",
+    "marker_2_x",
+    "marker_2_y",
+    "marker_2_z"
+]
+</code></pre>
+
+<p>
+    This makes the code flexible because it can handle datasets with different
+    numbers of markers without needing to be rewritten.
+</p>
+
+
+<h3>Extracting Marker IDs</h3>
+
+<p>
+    The next step is identifying which markers exist. The function extracts the
+    marker number from each column name using a regular expression.
+</p>
+
+<pre><code>
+col.match(/marker_(\d+)/)[1]
+</code></pre>
+
+<p>
+    For example:
+</p>
+
+<table>
+<tr>
+    <th>Column name</th>
+    <th>Extracted ID</th>
+</tr>
+
+<tr>
+    <td>marker_1_x</td>
+    <td>1</td>
+</tr>
+
+<tr>
+    <td>marker_12_y</td>
+    <td>12</td>
+</tr>
+
+<tr>
+    <td>marker_25_z</td>
+    <td>25</td>
+</tr>
+
+</table>
+
+<p>
+    The IDs are then sorted numerically so that markers appear in the correct
+    order.
+</p>
+
+<pre><code>
+markerIDs.sort((a,b)=>a-b);
+</code></pre>
+
+
+<h3>Converting Rows into 3D Points</h3>
+
+<p>
+    Plotting libraries do not understand CSV tables directly. They require the
+    data to be converted into arrays of coordinates.
+</p>
+
+<p>
+    The function loops through every row in the CSV and creates an array of
+    3D points.
+</p>
+
+<pre><code>
+let samples = data.map(row => {
+
+    let markers = [];
+
+    markerIDs.forEach(id => {
+
+        markers.push([
+            Number(row[`marker_${id}_x`]),
+            Number(row[`marker_${id}_y`]),
+            Number(row[`marker_${id}_z`])
+        ]);
+
+    });
+
+    return markers;
+
+});
+</code></pre>
+
+<p>
+    For example, one row of CSV data:
+</p>
+
+<pre><code>
+marker_1_x = 10
+marker_1_y = 25
+marker_1_z = 5
+
+marker_2_x = 15
+marker_2_y = 20
+marker_2_z = 8
+</code></pre>
+
+<p>
+    becomes:
+</p>
+
+<pre><code>
+[
+    [10, 25, 5],
+    [15, 20, 8]
+]
+</code></pre>
+
+<p>
+    This is the format required by the plotting function. Each inner array
+    represents one point in 3D space:
+</p>
+
+<pre><code>
+[x coordinate, y coordinate, z coordinate]
+</code></pre>
+
+
+<h3>The Final Data Structure</h3>
+
+<p>
+    After processing, the entire CSV file is converted into a list of samples:
+</p>
+
+<pre><code>
+samples = [
+
+    // Sample 1
+    [
+        [x1,y1,z1],
+        [x2,y2,z2],
+        [x3,y3,z3]
+    ],
+
+    // Sample 2
+    [
+        [x1,y1,z1],
+        [x2,y2,z2],
+        [x3,y3,z3]
+    ]
+
+]
+</code></pre>
+
+<p>
+    This structure allows the webpage to easily display different examples by
+    selecting a different sample index:
+</p>
+
+<pre><code>
+addMarkers(
+    "plot_cnn",
+    samples[currentSample]
+);
+</code></pre>
+
+<p>
+    The key idea is that the CSV file is transformed from a human-readable
+    table into a computer-friendly structure that can be efficiently explored,
+    plotted, and updated interactively.
+</p>
+
+<h2>Viewing Multiple Examples</h2>
+
+<p>
+    A common problem with machine learning and experimental datasets is that
+    showing one example does not represent the full range of results. A model may
+    perform well on some samples and poorly on others.
+</p>
+
+<p>
+    Instead of creating hundreds of separate figures, we can provide a button
+    that updates the plot with a different example.
+</p>
+
+<pre><code>
+&lt;button class="buttonF"
+        onclick="nextExample_cnn()"&gt;
+    See Other Examples
+&lt;/button&gt;
+</code></pre>
+
+<p>
+    The button calls a JavaScript function which increases the current sample
+    number, clears the existing plot, and displays the next example.
+</p>
+
+<pre><code>
+function nextExample_cnn(){
+
+    currentSample_cnn++;
+
+    if(currentSample_cnn >= truthSamples.length){
+        currentSample_cnn = 0;
+    }
+
+    createPlot(
+        "plot_cnn",
+        "plot_cnn"
+    );
+
+    addMarkers(
+        "plot_cnn",
+        truthSamples[currentSample_cnn],
+        "blue"
+    );
+
+    addMarkers(
+        "plot_cnn",
+        predictionSamples[currentSample_cnn],
+        "red"
+    );
+
+}
+</code></pre>
+
+<p>
+    This simple interaction turns a single figure into a complete exploration
+    tool. A reader can inspect many different examples without leaving the page.
+</p>
+
+
+<h2>Interactive Controls Beyond Changing Samples</h3>
+
+<p>
+    Buttons do not have to only change which example is displayed. They can be
+    used to control almost any aspect of the visualisation.
+</p>
+
+<p>
+    For example, a dataset may contain multiple classes. Instead of displaying
+    everything at once, buttons can allow users to show or hide specific groups.
+</p>
+
+<pre><code>
+&lt;button onclick="showClass('walking')"&gt;
+    Show Walking
+&lt;/button&gt;
+
+&lt;button onclick="showClass('running')"&gt;
+    Show Running
+&lt;/button&gt;
+
+&lt;button onclick="hideAll()"&gt;
+    Clear Data
+&lt;/button&gt;
+</code></pre>
+
+<p>
+    Other useful interactive controls include:
+</p>
+
+<ul>
+    <li>
+        <strong>Filtering:</strong>
+        Remove certain classes, subjects, time periods, or experimental
+        conditions.
+    </li>
+
+    <li>
+        <strong>Comparison toggles:</strong>
+        Switch between different models, algorithms, or experimental settings.
+    </li>
+
+    <li>
+        <strong>Sliders:</strong>
+        Move through time-series data frame-by-frame.
+    </li>
+
+    <li>
+        <strong>Colour controls:</strong>
+        Change colours based on error, confidence, or category.
+    </li>
+
+    <li>
+        <strong>Visibility controls:</strong>
+        Hide predictions, raw measurements, annotations, or intermediate results.
+    </li>
+</ul>
+
+
+<h3>Moving Beyond Traditional Figures</h3>
+
+<p>
+    Interactive plots change the role of a figure from something that only
+    communicates a final result into something that allows readers to investigate
+    the data themselves.
+</p>
+
+<p>
+    This is particularly valuable for modern computational research, where
+    datasets and models are often too complex to summarise with a single image.
+    By embedding interactive visualisations directly into webpages, researchers
+    can provide both the high-level story and the detailed evidence behind it.
+</p>
+
+<p>
+    A static plot answers:
+    <em>"What result did the author choose to show?"</em>
+</p>
+
+<p>
+    An interactive plot allows the reader to ask:
+    <em>"What happens if I look at another example, another class, or another
+    part of the data?"</em>
+</p>
     <h2>Adding Links, Images, GIFs, Audio and Video</h2>
 
 <p>
