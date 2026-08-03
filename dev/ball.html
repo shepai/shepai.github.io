@@ -305,126 +305,42 @@ The final parts for printing included the wheels, and the main body. The main bo
       1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
       8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
     </svg>
-
     See Repo
   </button>
 </a></div>
 	</div>
 </body>
+<script src="csv.js">
+
+</script>
 <script>
 let currentSample = 0;
 let markerSamples = [];
 let currentSample_cnn = 0;
 let truthSamples = [];
 let predictionSamples = [];
-Papa.parse("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/data_examples.csv", {
-    download: true,
-    header: true,
-
-    complete: function(results) {
-
-    let data = results.data;
-
-    let markerColumns = Object.keys(data[0])
-        .filter(col => col.includes("marker"));
-
-    let markerIDs = [...new Set(
-        markerColumns.map(col => {
-            return col.match(/marker_(\d+)/)[1];
-        })
-    )];
-function loadCSV(url){
-
-    return new Promise((resolve) => {
-
-        Papa.parse(url, {
-            download: true,
-            header: true,
-
-            complete: function(results){
-
-                let data = results.data;
-
-                let markerColumns = Object.keys(data[0])
-                    .filter(col => col.includes("marker"));
-
-                let markerIDs = [...new Set(
-                    markerColumns.map(col =>
-                        col.match(/marker_(\d+)/)[1]
-                    )
-                )];
-
-                markerIDs.sort((a,b)=>a-b);
 
 
-                let samples = data.map(row => {
-
-                    let markers = [];
-
-                    markerIDs.forEach(id => {
-
-                        markers.push([
-                            Number(row[`marker_${id}_x`]),
-                            Number(row[`marker_${id}_y`]),
-                            Number(row[`marker_${id}_z`])
-                        ]);
-
-                    });
-
-                    return markers;
-
-                });
-
-                resolve(samples);
-
-            }
-
-        });
-
-    });
-
-}
 Promise.all([
+    loadCSV("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/data_examples.csv"),
     loadCSV("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/truth.csv"),
     loadCSV("https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/data/predictions.csv")
-]).then(([truth, prediction]) => {
+])
+.then(([markers, truth, prediction]) => {
 
+    markerSamples = markers;
     truthSamples = truth;
     predictionSamples = prediction;
 
-    plotMarkersCNN(
-        truthSamples[0],
-        predictionSamples[0]
-    );
+    createPlot("example");
+    addMarkers("example", markerSamples[0], "black");
+
+    createPlot("plot_cnn", "plot_cnn");
+    addMarkers("plot_cnn", truthSamples[0], "blue");
+    addMarkers("plot_cnn", predictionSamples[0], "red");
 
 });
-    markerIDs.sort((a,b)=>a-b);
 
-
-    markerSamples = data.map(row => {
-
-        let markers = [];
-
-        markerIDs.forEach(id => {
-
-            markers.push([
-                Number(row[`marker_${id}_x`]),
-                Number(row[`marker_${id}_y`]),
-                Number(row[`marker_${id}_z`])
-            ]);
-
-        });
-
-        return markers;
-
-    });
-
-
-    // initial plot
-    plotMarkers(markerSamples[0]);
-
-}
-});
 function nextExample(){
 
     currentSample++;
@@ -434,47 +350,11 @@ function nextExample(){
         currentSample = 0;
     }
 
-    plotMarkers(markerSamples[currentSample]);
+    createPlot("example");
+    addMarkers("example",markerSamples[currentSample], "black");
 
 }
-function plotMarkersCNN(truth, prediction){
 
-    let truthTrace = {
-        x: truth.map(p=>p[0]),
-        y: truth.map(p=>p[1]),
-        z: truth.map(p=>p[2]),
-        mode: "markers",
-        type: "scatter3d",
-        name: "Truth",
-        marker:{
-            size:5,
-            color:"blue"
-        }
-    };
-
-    let predTrace = {
-        x: prediction.map(p=>p[0]),
-        y: prediction.map(p=>p[1]),
-        z: prediction.map(p=>p[2]),
-        mode: "markers",
-        type: "scatter3d",
-        name: "Prediction",
-        marker:{
-            size:5,
-            color:"red"
-        }
-    };
-
-    Plotly.react("plot_cnn", [truthTrace, predTrace], {
-        margin:{l:0,r:0,t:0,b:0},
-        paper_bgcolor:"rgba(0,0,0,0)",
-        scene:{
-            bgcolor:"rgba(0,0,0,0)",
-            aspectmode:"data"
-        }
-    });
-
-}
 function nextExample_cnn(){
 
     currentSample_cnn++;
@@ -483,52 +363,12 @@ function nextExample_cnn(){
         currentSample_cnn = 0;
     }
 
-    plotMarkersCNN(
-        truthSamples[currentSample_cnn],
-        predictionSamples[currentSample_cnn]
-    );
+    createPlot("plot_cnn",divId ="plot_cnn");
+     addMarkers("plot_cnn",truthSamples[currentSample_cnn],colour="blue");
+     addMarkers("plot_cnn",predictionSamples[currentSample_cnn],colour="red");
 
 }
-function plotMarkers(points) {
 
-    let trace = {
-        x: points.map(p => p[0]),
-        y: points.map(p => p[1]),
-        z: points.map(p => p[2]),
-        mode: "markers",
-        marker:{
-            size:5
-        },
-        type:"scatter3d"
-    };
-
-
-    Plotly.react(
-        "plot",
-        [trace],
-        {
-            scene:{
-                aspectmode:"data"
-            }
-        }
-    );
-    Plotly.react("plot", [trace], {
-    margin: {
-        l: 0,
-        r: 0,
-        t: 0,
-        b: 0
-    },
-
-    paper_bgcolor: "rgba(0,0,0,0)",
-
-    scene: {
-        bgcolor: "rgba(0,0,0,0)",
-        aspectmode: "data"
-    }
-});
-
-}
 console.log(
   document.documentElement.scrollWidth,
   window.innerWidth
