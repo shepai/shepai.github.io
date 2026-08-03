@@ -37,6 +37,9 @@
 	<div class="main">
 		<h1 class="headerText">Texture classification</h1>
 		Much of this work is published in <a href="https://doi.org/10.3390/s25164971">this paper</a> and my PhD thesis.
+		<div id="table-of-contents">
+    <h2>Contents</h2>
+</div>
 		<h2 class="headerText">Rig Construction</h2>
 		A 3 degrees of freedom rig (x-axis, y-axis, z-axis), of dimensions 300mm by 300mm by 150mm, was constructed to move a sensor around a 3D environment. This rig was used to gather texture data by stroking the sensor along 1.5mm straight lines in 100 different directions along evenly spaced radii of a semicircle centred on the original touching point. The sensor moved across fixed-down samples from the texture set. Recordings were gathered at various contact forces, using touching point forces of 0.0785 – 0.0824N, 1.9031 – 1.9228N, 3.0039 – 3.0235N and 4.336 – 4.367N. The dataset consists of 3000 items gathered over 15 textures. Each dataset item contains multiple sensor readings concatenated over the time that the sensor is in contact with the surface (approximately 10 seconds).
 		<br>
@@ -388,8 +391,8 @@ const containers = [
 ];
 
 </script>
-<script src="3dviewer.js">
-
-</script>
+ <script src="../code/JS_Package.js">
+load_3d();
+ </script>
 
 </html>
