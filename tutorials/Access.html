@@ -45,7 +45,7 @@
      This tutorial suggests a few methods of making your research more accesible through website form. 
 
     <h2>Displaying data</h2>
-    
+
     <h2>Adding Links, Images, GIFs, Audio and Video</h2>
 
 <p>
@@ -241,7 +241,158 @@
     much smaller and higher quality than GIFs for longer animations.
 </p>
   
-  
+  <h2>Enhancing the Supplementary</h2>
+
+<p>
+    In traditional research papers, supplementary material is often used to
+    provide additional information that supports the main work without
+    interrupting the flow of the paper. This might include details such as
+    hyperparameter searches, comparisons between different model architectures,
+    ablation studies, or additional experimental results.
+</p>
+
+<p>
+    While this information is important for reproducibility and transparency,
+    placing it in a separate supplementary document means readers must leave
+    the main paper to find it. Many readers simply skip these sections,
+    missing valuable context about how the results were obtained.
+</p>
+
+<p>
+    A webpage allows us to improve upon this idea. Instead of separating
+    supplementary information into another document, we can embed it directly
+    within the page where it is most relevant. Readers who only want the main
+    story can continue reading uninterrupted, while those wanting more detail
+    can reveal the extra information only when they need it.
+</p>
+
+<p>
+    One simple way to achieve this is with <strong>tooltips</strong>. A tooltip
+    displays additional text, images, or diagrams when the user hovers their
+    mouse over a highlighted word or phrase.
+</p>
+
+
+    For example, rather than interrupting a paragraph to explain what a
+    <span class="tooltip">
+        <u>CNN</u>
+        <span class="tooltip-text">
+            <div style="text-align:center;">
+
+                <strong>Convolutional Neural Network (CNN)</strong><br><br>
+
+                The CNN architecture consists of three convolutional layers
+                followed by fully connected regression layers. The input
+                tactile images (64x64x3) are processed using convolutional
+                filters of size 3x3 with increasing feature depth (32, 64,
+                and 128 filters), interleaved with max-pooling layers to
+                reduce spatial dimensionality.
+
+                <br><br>
+
+                The extracted feature maps are flattened and passed through
+                a 256-neuron dense layer before the final regression layer
+                outputs the predicted 3D positions of 149 markers
+                (447 values). The model is trained using Mean Squared Error
+                loss and the Adam optimiser.
+
+                <br><br>
+
+                <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/CNN.png"
+                     width="250">
+
+            </div>
+        </span>
+    </span>
+    is, readers can simply hover over the highlighted text to view a detailed
+    explanation without leaving the page or disrupting the flow of the article.
+
+
+<h3>Tooltip HTML</h3>
+
+<p>
+    Tooltips are created using nested <code>&lt;span&gt;</code> elements. The
+    outer span marks the word to hover over, while the inner span contains the
+    hidden supplementary content.
+</p>
+
+<pre><code>&lt;span class="tooltip"&gt;
+    &lt;u&gt;CNN&lt;/u&gt;
+
+    &lt;span class="tooltip-text"&gt;
+        Extra explanation goes here.
+
+        &lt;br&gt;&lt;br&gt;
+
+        &lt;img src="CNN.png" width="250"&gt;
+    &lt;/span&gt;
+
+&lt;/span&gt;
+</code></pre>
+
+<p>
+    The tooltip can contain almost any HTML content, including paragraphs,
+    images, lists, tables, equations, or even videos. This makes it an ideal
+    way to include supplementary information exactly where it is needed.
+</p>
+
+<h3>Tooltip CSS</h3>
+
+<p>
+    The following CSS hides the supplementary content until the user hovers
+    over the highlighted word.
+</p>
+
+<pre><code>.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+
+    width: 500px;
+    background: white;
+    color: black;
+
+    border: 1px solid #aaa;
+    border-radius: 8px;
+
+    padding: 10px;
+
+    position: absolute;
+    z-index: 999;
+
+    left: 50%;
+    bottom: 120%;
+    transform: translateX(-50%);
+
+    transition: opacity 0.2s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+</code></pre>
+
+<p>
+    The CSS ensures that the supplementary information remains hidden while
+    the page loads, only becoming visible when the user hovers over the
+    highlighted text. This keeps the main page clean and easy to read while
+    still making detailed explanations available exactly where they are most
+    useful.
+</p>
+
+<p>
+    This technique is particularly effective for explaining technical terms,
+    mathematical equations, model architectures, parameter choices, or any
+    information that would otherwise interrupt the narrative of your article.
+</p>
+
+ </span>
   </div>
 
 </body>
