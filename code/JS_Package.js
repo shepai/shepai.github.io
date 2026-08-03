@@ -1,13 +1,13 @@
 
 function load_3d(){
-for(let i=0; i<stlFiles.length; i++){
+    for(let i=0; i<stlFiles.length; i++){
 
-    createSTLViewer(
-        containers[i],
-        stlFiles[i]
-    );
+        createSTLViewer(
+            containers[i],
+            stlFiles[i]
+        );
 
-}
+    }
 }
 
 
