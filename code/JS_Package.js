@@ -1,5 +1,5 @@
 
-
+function load_3d(){
 for(let i=0; i<stlFiles.length; i++){
 
     createSTLViewer(
@@ -8,6 +8,8 @@ for(let i=0; i<stlFiles.length; i++){
     );
 
 }
+}
+
 
 function createSTLViewer(containerID, url){
 
