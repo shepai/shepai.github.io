@@ -382,3 +382,90 @@ function addMarkers(plotName, points, colour = "red") {
         trace
     );
 }
+
+window.onload = function(){
+
+    let toc = document.getElementById("table-of-contents");
+
+    let headings = document.querySelectorAll("h2, h3, h4");
+
+    let rootList = document.createElement("ul");
+
+    let currentLists = {
+        2: rootList
+    };
+
+    headings.forEach(function(heading, index){
+
+        // Create an ID if it does not already exist
+        if(!heading.id){
+            heading.id = "section-" + index;
+        }
+
+        let level = Number(heading.tagName.substring(1));
+
+        let item = document.createElement("li");
+
+        let link = document.createElement("a");
+
+        link.href = "#" + heading.id;
+        link.textContent = heading.textContent;
+
+        item.appendChild(link);
+
+
+        // If this is a main section
+        if(level === 2){
+
+            rootList.appendChild(item);
+
+            currentLists[2] = rootList;
+
+        }
+
+
+        // If this is a subsection
+        else if(level === 3){
+
+            if(!currentLists[2].lastElementChild){
+                return;
+            }
+
+            let subList = document.createElement("ul");
+
+            subList.appendChild(item);
+
+            currentLists[2]
+                .lastElementChild
+                .appendChild(subList);
+
+            currentLists[3] = subList;
+
+        }
+
+
+        // If this is a sub-subsection
+        else if(level === 4){
+
+            if(!currentLists[3]){
+                return;
+            }
+
+            let subSubList = document.createElement("ul");
+
+            subSubList.appendChild(item);
+
+            currentLists[3]
+                .lastElementChild
+                .appendChild(subSubList);
+
+            currentLists[4] = subSubList;
+
+        }
+
+    });
+
+
+    toc.appendChild(rootList);
+
+}
