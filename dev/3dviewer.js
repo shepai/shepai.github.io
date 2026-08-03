@@ -9,8 +9,6 @@ for(let i=0; i<stlFiles.length; i++){
 
 }
 
-
-
 function createSTLViewer(containerID, url){
 
 
