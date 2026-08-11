@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">Dexter Shepherd</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a align="right" href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" class="ai ai-google-scholar ai-2x"></a>
+<a align="right" href="https://github.com/shepai" class="fa fa-github"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+        <h1 class="headerText">Modular Neuromorphic  Skin</h1>
+        <div id="table-of-contents">
+    <h2>Contents</h2>
+</div>  
+<h2>Introduction</h2>
+<p>
+Tactile sensing has become an increasingly important capability in robotics, enabling robots to perceive physical interactions with their environment and improve tasks such as manipulation, locomotion, and human–robot interaction. Much of the existing work has focused on task-specific regions of a robot, particularly the hands and fingers, where tactile information can directly support grasping and manipulation. More recently, tactile sensing has also been investigated for robotic feet to support contact detection and locomotion. In comparison, the use of tactile sensing across the larger body of a robot remains considerably less explored. For humanoid and other highly articulated robots, whole-body tactile skin could provide information about contact location and distribution across the robot, enabling behaviours that are difficult to achieve using sparsely distributed tactile sensors [<a href="https://ieeexplore.ieee.org/abstract/document/6583342?casa_token=zBi6G56J8yUAAAAA:0nc7EBnREZV5H4SLlgg4Z1WG1RGuMqCYnAVZZstVIBGWzHJ3nmNMuZ78TgoimyNqKRxvcehqUTE">1</a>].
+<br><br>
+One of the principal challenges in developing whole-body tactile skin is scalability. Optical tactile sensors can provide high-resolution spatial information, but typically require cameras and optical components to be positioned at an appropriate focal distance from the sensing surface. This places constraints on the geometry and thickness of the sensor, making such approaches difficult to deploy across highly curved or articulated regions such as humanoid joints. Alternative approaches have therefore investigated large-area tactile skins constructed from multiple smaller sensing elements. Modular tactile sensing offers a practical means of covering complex surfaces while allowing individual sensing elements to be fabricated, assembled, and replaced independently [<a href="https://ieeexplore.ieee.org/abstract/document/6385559?casa_token=s090sXbU_ZEAAAAA:0dXlwQWzOOrdKR0Cs0g8UWEWWKTCaUFJIgde2aRqad5J8ioebybYGXxZZ82MK1wG1jqeq_IUtdA">2</a>,<a href="https://ieeexplore.ieee.org/abstract/document/4020266?casa_token=LP38-frgh5sAAAAA:aQGnppnXb9uv51pqy1_VSakpmSDmeLTIWwtEZQNfMPxP5IuDMdAt3__BsXcKS4xFXbBfJNi5JQ8">3</a>,<a href="https://ieeexplore.ieee.org/abstract/document/4020266/?casa_token=63zN2-hhu88AAAAA:9UA09IRWPXWwkjq261jJ9Fpe9Y02yinrdgPwZGXS9q7MJ-HmxI7BXgwjcg4JOeRnsUtzcryThhk">4</a>]. However, as the physical extent and number of sensing elements increases, the electrical interconnect becomes an increasingly significant design constraint. A conventional approach is to reduce the number of physical connections by incorporating local signal processing and serial communication. Systems such as [<a href="https://ieeexplore.ieee.org/abstract/document/1641896?casa_token=DtSZw2ITSkMAAAAA:-O04EBQcQSs66iF38p7dNCxI9S1sNV_vgRO-vES9-qprywKIbACgD6i3xzLOaNYjWy30TquOzkE">4</a>].
+<br><br>
+Flexible printed circuit boards (PCBs) provide another route towards scalable tactile skins by allowing sensing electronics to conform to non-planar surfaces while maintaining electrical connectivity. For example, capacitive load cells can be arranged into connectable sensing matrices, allowing individual modules to be combined to form larger sensing surfaces [<a href="https://ieeexplore.ieee.org/abstract/document/4020266/?casa_token=63zN2-hhu88AAAAA:9UA09IRWPXWwkjq261jJ9Fpe9Y02yinrdgPwZGXS9q7MJ-HmxI7BXgwjcg4JOeRnsUtzcryThhk">3</a>]. However, as the physical extent and number of sensing elements increases, the electrical interconnect becomes an increasingly significant design constraint. A conventional approach is to reduce the number of physical connections by incorporating local signal processing and serial communication. Systems such as [<a href="https://ieeexplore.ieee.org/abstract/document/1641896?casa_token=DtSZw2ITSkMAAAAA:-O04EBQcQSs66iF38p7dNCxI9S1sNV_vgRO-vES9-qprywKIbACgD6i3xzLOaNYjWy30TquOzkE">4</a>,<a href="https://ieeexplore.ieee.org/abstract/document/5771603?casa_token=sOti5VN_Y-4AAAAA:kC88_v5-L468ft7b6g2l_9BrGUY_T_CuBT3Oh7xjSxHPCmoHxy7sRnBPMq_IJ-a6l3HovVyVuYQ">5</a>] address this problem by placing electronics closer to the sensing elements, converting the analogue capacitance measurements into digital signals locally and transmitting the resulting data over a serial bus. Local processing can also provide functions such as sensor calibration and compensation for measurement drift[<a href="https://ieeexplore.ieee.org/abstract/document/4020266/?casa_token=63zN2-hhu88AAAAA:9UA09IRWPXWwkjq261jJ9Fpe9Y02yinrdgPwZGXS9q7MJ-HmxI7BXgwjcg4JOeRnsUtzcryThhk">3</a>]. However, as the physical extent and number of sensing elements increases, the electrical interconnect becomes an increasingly significant design constraint. A conventional approach is to reduce the number of physical connections by incorporating local signal processing and serial communication. Systems such as [<a href="https://ieeexplore.ieee.org/abstract/document/5771603?casa_token=sOti5VN_Y-4AAAAA:kC88_v5-L468ft7b6g2l_9BrGUY_T_CuBT3Oh7xjSxHPCmoHxy7sRnBPMq_IJ-a6l3HovVyVuYQ">5</a>].
+<br><br>
+This distributed approach reduces the number of analogue connections required between the sensing elements and the main controller and makes microcontroller-based architectures increasingly attractive for large tactile arrays. However, serial communication does not fundamentally eliminate the data-scaling problem. As additional sensing modules are connected to a common bus, the amount of data that must be transmitted and processed continues to increase, even when only a small subset of the sensors are experiencing meaningful changes. For a whole-body tactile skin containing a large number of sensing elements, continuously transmitting measurements from every sensor can therefore result in unnecessary communication, processing, and power consumption.
+<br><br>
+Neuromorphic sensing provides a potential alternative to this conventional sample-and-transmit architecture. Rather than continuously communicating the state of every sensing element, neuromorphic tactile sensors can encode changes in tactile stimuli as discrete events or spikes, transmitting information primarily when a meaningful change occurs. This event-driven representation has been successfully applied to tactile sensing, including systems based on spiking and neuromorphic architectures [<a href="https://ieeexplore.ieee.org/abstract/document/8315116/?casa_token=qpM2PgvF6yEAAAAA:G2Zp_o8TI_v2-OfLk4JTGW7ydfsYGWq-jaSZl9flrrApPpU7X5_Z88XMOZoU9cEBMjCUeNY7xFA">6</a>,<a href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2025.1735068/full?utm_source=chatgpt.com">7</a>,<a href="https://pubmed.ncbi.nlm.nih.gov/41428887/">8</a>]. Recent work has also demonstrated neuromorphic robotic skin capable of processing tactile information locally and responding to physical interactions [<a href="https://pubmed.ncbi.nlm.nih.gov/41428887/">8</a>]. These approaches suggest that moving computation and event generation closer to the individual sensing elements can reduce the amount of information that must be communicated while retaining the temporal information relevant to tactile interaction.
+<br><br>
+Despite these developments, comparatively little work has investigated the combination of modular tactile sensing and neuromorphic, event-driven communication as an architecture for large-area robotic skin. Modularisation provides a means of scaling the physical sensing surface, while neuromorphic processing provides a means of scaling the information produced by that surface. Combining the two therefore offers a potential route towards tactile skins that can be expanded across large and geometrically complex robotic bodies without requiring a proportional increase in wiring and communication bandwidth.
+<br><br>
+In this work, we investigate a modular neuromorphic tactile skin architecture in which sensing modules perform local processing and communicate tactile information using an event-driven representation. The proposed approach is designed to address the scalability of both the physical interconnect and the data communication requirements of large-area tactile skins. By distributing sensing and processing across modular units, the system aims to provide a scalable architecture suitable for deployment across the body of a robot, including regions where conventional centralised tactile arrays become impractical.
+<br><br>
+
+</p>
+<h2>Sensor Design</h2>
+We design the files in KiCad to build on the previous literature. Multimodality has proved its use in tasks such as texture classification. 
+        
+<h2>References</h2>
+
+<ol>
+    <li>
+        R. S. Dahiya, P. Mittendorfer, M. Valle, G. Cheng, and V. J. Lumelsky,
+        “Directions toward effective utilization of tactile skin: A review,”
+        <i>IEEE Sensors Journal</i>, vol. 13, no. 11, pp. 4121–4138, 2013.
+        doi: <a href="https://doi.org/10.1109/JSEN.2013.2279056">10.1109/JSEN.2013.2279056</a>.
+    </li>
+
+```
+<li>
+    P. Mittendorfer and G. Cheng,
+    “3D surface reconstruction for robotic body parts with artificial skins,”
+    in <i>2012 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</i>,
+    2012, pp. 4505–4510.
+    doi: <a href="https://doi.org/10.1109/IROS.2012.6385559">10.1109/IROS.2012.6385559</a>.
+</li>
+
+<li>
+    H.-K. Lee, S.-I. Chang, and E. Yoon,
+    “A flexible polymer tactile sensor: Fabrication and modular expandability for large area deployment,”
+    <i>IEEE Journal of Microelectromechanical Systems</i>, vol. 15, no. 6,
+    pp. 1681–1686, 2006.
+    doi: <a href="https://doi.org/10.1109/JMEMS.2006.886021">10.1109/JMEMS.2006.886021</a>.
+</li>
+
+<li>
+    Y. Ohmura, Y. Kuniyoshi, and A. Nagakubo,
+    “Conformable and scalable tactile sensor skin for curved surfaces,”
+    in <i>Proceedings of the 2006 IEEE International Conference on Robotics and Automation (ICRA)</i>,
+    2006, pp. 1348–1353.
+    doi: <a href="https://doi.org/10.1109/ROBOT.2006.1641896">10.1109/ROBOT.2006.1641896</a>.
+</li>
+
+<li>
+    A. Schmitz, P. Maiolino, M. Maggiali, L. Natale, G. Cannata, and G. Metta,
+    “Methods and technologies for the implementation of large-scale robot tactile sensors,”
+    <i>IEEE Transactions on Robotics</i>, vol. 27, no. 3,
+    pp. 389–400, 2011.
+    doi: <a href="https://doi.org/10.1109/TRO.2011.2132930">10.1109/TRO.2011.2132930</a>.
+</li>
+
+<li>
+    A. K. Gupta, R. Ghosh, A. N. Swaminathan, B. Deverakonda, G. Ponraj,
+    A. B. Soares, and N. V. Thakor,
+    “A neuromorphic approach to tactile texture recognition,”
+    in <i>2018 IEEE International Conference on Robotics and Biomimetics (ROBIO)</i>,
+    2018, pp. 1322–1328.
+    doi: <a href="https://doi.org/10.1109/ROBIO.2018.8665085">10.1109/ROBIO.2018.8665085</a>.
+</li>
+
+<li>
+    M. Koolani, S. Bamford, P. Trunin, S. F. Müller-Cleve, M. Lo Preti,
+    F. Mastrogiovanni, L. Beccai, and C. Bartolozzi,
+    “An event-based opto-tactile skin,”
+    <i>Frontiers in Neuroscience</i>, vol. 19, 2026,
+    Art. no. 1735068.
+    doi: <a href="https://doi.org/10.3389/fnins.2025.1735068">10.3389/fnins.2025.1735068</a>.
+</li>
+
+<li>
+    Y. Gao, J. Zhang, H. Zhang, L. Chow, G. Zhao, G. Guo, C. K. Yiu,
+    B. Zhang, Y. Huang, J. Zhou, Q. Zhang, T. Huang, Y. Guo, J. Li,
+    J. Li, X. Huang, Z. Chen, Z. Liu, Y. Qiu, C. Guo, and X. Yu,
+    “A neuromorphic robotic electronic skin with active pain and injury perception,”
+    <i>Proceedings of the National Academy of Sciences</i>, vol. 122, no. 52,
+    2025, Art. no. e2520922122.
+    doi: <a href="https://doi.org/10.1073/pnas.2520922122">10.1073/pnas.2520922122</a>.
+</li>
+```
+
+</ol>
+
+
+<br><br>
+<div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
+  <button style="
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #24292e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  ">
+    <!-- GitHub SVG Logo -->
+    <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+      2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+      0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+      2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+      2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+      1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+      1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+      8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    See Repo
+  </button>
+</a></div>
+	</div>
+</body>
+ <script src="../code/JS_Package.js">
+
+ </script>
+
+</html>
