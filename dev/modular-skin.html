@@ -56,11 +56,22 @@ In this work, we investigate a modular neuromorphic tactile skin architecture in
 </p>
 <h2>Sensor Design</h2>
 We design the files in KiCad to build on the previous literature. Multimodality has proved its use in tasks such as texture classification. We use designs from the <a href="https://shepai.github.io/dev/PressTip.html">PressTip</a> sensor with force sensitive resisters and accelerometers. In addition we introduce a temperature sensor to improve the classification accuracy with more modality. 
-
+The schematics outlines our use of a ATTINY1616. The original designs were built entirely from logic gates to make a simpler, one-use circuit. As time went on, we realised it was cheaper to have a microcontroller than it was to do it as logic gates. 
+A high resolution schematic can be found in the PCB files on the <a href="https://github.com/shepai/TacSheet/tree/main/PCB/Sheet">GitHub</a>
+<br>
+<div align="center"align="center">
+    <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/schematics.png">
+</div>
+<br><br>
 <h3>Protoyping</h3>
 
 <h3>PCB Fabrication</h3>
-
+We used KiCad to design the PCB, using surface mount parts for ease of manufacturing. 
+<br>
+<div align="center"align="center">
+    <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/PCB.png">
+</div>
+<br><br>
 <h2>Results</h2>
 
 <h2>References</h2>
@@ -139,7 +150,7 @@ We design the files in KiCad to build on the previous literature. Multimodality 
 
 
 <br><br>
-<div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
+<div align="center"><a href="https://github.com/shepai/TacSheet" target="_blank" style="text-decoration: none;">
   <button style="
     display: inline-flex;
     align-items: center;
