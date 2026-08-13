@@ -66,7 +66,8 @@ A high resolution schematic can be found in the PCB files on the <a href="https:
 <h3>Protoyping</h3>
 
 <h3>PCB Fabrication</h3>
-We used KiCad to design the PCB, using surface mount parts for ease of manufacturing. 
+We used KiCad to design the PCB, using surface mount parts for ease of manufacturing. As the ATTINY1616 provides many inputs. It would be a waste to have one controller per sensing tile. Instead, we have designed these hexagons, with gaps between each pad to allow for bend between pads. The edges are all interconnected. Some existing modular sensors have certain orders that the sensors can be connected in, or the power will incorrectly connect. By using our mirrored signal approach, our TacSheets can be conneced in any orientation. 
+
 <br>
 <div align="center"align="center">
     <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/PCB.png">
