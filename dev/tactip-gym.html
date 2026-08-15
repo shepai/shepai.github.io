@@ -102,6 +102,312 @@ obs, reward, done, info = env.step(action)
         </p>
     </div>
 
+<h2>Reinforcement Learning</h2>
+To trial the capabilities of the gym, we setup an edge following gym. 
+<h3>The Robot and Its Task</h3>
+
+<p>
+  The robot arm is simulated in MuJoCo and is controlled through a Gym-style
+  reinforcement learning environment. The task is to teach the arm to follow
+  the edge of a rectangular block using its fingertip.
+</p>
+
+<p>
+  The environment randomly rotates the block at the beginning of an episode
+  and selects a starting point on one of the four top edges. This means the
+  robot needs to learn a general strategy for following an edge rather than
+  memorising one fixed position.
+</p>
+
+<p>
+  The robot's fingertip is represented by an end-effector site called
+  <code>ee_site</code>. The learning agent, PPO, controls the movement of this
+  fingertip rather than directly controlling each individual joint.
+</p>
+
+
+<h3>What Does the Robot Observe?</h3>
+
+<p>
+  Before PPO chooses an action, the environment provides an observation
+  describing the current state of the task.
+</p>
+
+<p>
+  For the edge-following environment, the observation has a dimension of
+  <strong>213</strong>. The environment obtains this observation using
+  <code>get_nodes()</code> and then flattens the result into a single array.
+</p>
+
+<pre><code>observation = self.get_nodes().flatten()</code></pre>
+
+<p>
+  You can think of this observation as the information available to the
+  learning agent at each moment. PPO uses this information to decide what
+  movement the robot should make next.
+</p>
+
+<p>
+  The exact contents of the 213 values come from <code>get_nodes()</code>,
+  which is the positions of the optical markers of the TacTip. We have already put it into an embedded space to simplify the input. These coordinates are local
+  in 3D space relative to one another. 
+</p>
+
+
+<h3>How Does PPO Ask the Arm to Move?</h3>
+
+<p>
+  PPO produces a <strong>3-dimensional action</strong>. Instead of telling
+  individual robot joints exactly how far to rotate, the action is treated
+  as a movement of the robot's fingertip.
+</p>
+
+<p>
+  The action is scaled and added to the fingertip's current position:
+</p>
+
+<pre><code>self.current_position += action * 0.5</code></pre>
+
+<p>
+  This means that a larger action produces a larger change in the desired
+  fingertip position.
+</p>
+
+<p>
+  The third action component is currently disabled:
+</p>
+
+<pre><code>action[2] = 0</code></pre>
+
+<p>
+  This prevents the agent from moving the fingertip along the Z axis and
+  reduces the problem to primarily following the edge in the horizontal
+  plane.
+</p>
+
+
+<h3>How Does the Robot Actually Move?</h3>
+
+<p>
+  PPO does not directly control the six arm joints. Instead, it requests a
+  new fingertip position. The environment then uses inverse kinematics to
+  work out which joint positions are needed to reach that position.
+</p>
+
+<ol>
+  <li>
+    <strong>PPO produces an action.</strong>
+    The action contains three values describing the requested movement.
+  </li>
+  <li>
+    <strong>The target position changes.</strong>
+    The action is scaled by 0.5 and added to the current fingertip position.
+  </li>
+  <li>
+    <strong>Z movement is disabled.</strong>
+    The third action component is forced to zero.
+  </li>
+  <li>
+    <strong>Inverse kinematics solves the arm.</strong>
+    The requested fingertip position is passed to the IK solver.
+  </li>
+  <li>
+    <strong>Joint targets are calculated.</strong>
+    The IK solver determines suitable joint positions for the arm.
+  </li>
+  <li>
+    <strong>MuJoCo advances the simulation.</strong>
+    The joint targets are applied and the simulated robot moves.
+  </li>
+</ol>
+
+
+<h4>Inverse Kinematics</h4>
+
+<p>
+  Inverse kinematics, or IK, solves the opposite problem to normal robot
+  motion calculations. Instead of starting with joint angles and asking
+  where the fingertip will be, we start with a desired fingertip position
+  and ask which joint positions will place the fingertip there.
+</p>
+
+<p>
+  The environment uses the <code>ee_site</code> as the target and keeps the
+  end-effector orientation fixed:
+</p>
+
+<pre><code>fixed_orientation = [1.0, 0.0, 0.0, 0.0]</code></pre>
+
+<p>
+  The IK solver then calculates positions for joints 1 through 6 so that
+  the end-effector reaches the requested coordinates.
+</p>
+
+
+<h3>How Is Reward Enforced?</h3>
+
+<p>
+  Reward is how the environment tells PPO whether the robot's behaviour was
+  useful. A good action should help the fingertip stay close to the edge and
+  make progress along it.
+</p>
+
+<p>
+  The reward is made from three main ideas:
+</p>
+
+<ul>
+  <li>How close the fingertip is to the edge.</li>
+  <li>Whether the robot is making progress along the edge.</li>
+  <li>Whether sufficient contact is being maintained.</li>
+</ul>
+
+
+<h4>Distance from the Edge</h4>
+
+<p>
+  First, the environment finds the point on the block that is closest to
+  the robot's fingertip.
+</p>
+
+<pre><code>edge_point = self.closest_edge_point(tip)</code></pre>
+
+<p>
+  It then calculates the horizontal distance between the fingertip and this
+  point on the edge.
+</p>
+
+<pre><code>edge_error = np.linalg.norm(
+    tip[:2] - edge_point[:2]
+)</code></pre>
+
+<p>
+  The further the fingertip moves away from the edge, the larger the
+  <code>edge_error</code> becomes. This produces a negative reward:
+</p>
+
+<pre><code>-2.0 * edge_error</code></pre>
+
+<p>
+  Therefore, staying close to the edge is encouraged.
+</p>
+
+
+<h4>Progress Along the Edge</h4>
+
+<p>
+  The top edges of the block are divided into a sequence of points. The
+  environment keeps track of which point the robot should reach next.
+</p>
+
+<p>
+  When the fingertip gets sufficiently close to the current target point,
+  the environment moves on to the next point:
+</p>
+
+<pre><code>if edge_error &lt; 0.01:
+    self.current_target += 1</code></pre>
+
+<p>
+  The environment also calculates a progress value based on the distance
+  from the current target. The change in this value from the previous step
+  is used as a progress reward.
+</p>
+
+<pre><code>delta_progress = progress - self.previous_progress</code></pre>
+
+<p>
+  Progress is rewarded with:
+</p>
+
+<pre><code>+5.0 * delta_progress</code></pre>
+
+<p>
+  This means PPO is not only encouraged to stay near the edge, but also to
+  keep moving along it.
+</p>
+
+
+<h4>Contact Penalty</h4>
+
+<p>
+  The environment also contains a contact-force condition. If the measured
+  force is below <code>0.1</code>, a penalty of <code>5</code> is applied.
+</p>
+
+<pre><code>if force &lt; 0.1:
+    contact_penalty = 5</code></pre>
+
+<p>
+  In the current implementation, however, the force is temporarily set to
+  a fixed value of <code>0.2</code>. The actual contact-force calculation is
+  marked as a future implementation.
+</p>
+
+
+<h4>Overall Reward</h4>
+
+<p>
+  The different parts are combined into a single reward:
+</p>
+
+<pre><code>reward = (
+    -2.0 * edge_error
+    + 5.0 * delta_progress
+    - contact_penalty
+)</code></pre>
+
+<p>
+  In simple terms, the robot is rewarded for
+  <strong>staying close to the edge and making progress along it</strong>.
+</p>
+
+
+<h3>The PPO Control Loop</h3>
+
+<p>
+  The whole learning process can be thought of as a repeating loop:
+</p>
+
+<ol>
+  <li>
+    <strong>Observe:</strong>
+    the environment provides the current observation to PPO.
+  </li>
+  <li>
+    <strong>Choose an action:</strong>
+    PPO produces a 3-dimensional movement.
+  </li>
+  <li>
+    <strong>Move:</strong>
+    the action changes the desired fingertip position.
+  </li>
+  <li>
+    <strong>Solve:</strong>
+    inverse kinematics converts the desired fingertip position into joint
+    targets.
+  </li>
+  <li>
+    <strong>Simulate:</strong>
+    MuJoCo advances the robot.
+  </li>
+  <li>
+    <strong>Measure:</strong>
+    the environment calculates the new observation and reward.
+  </li>
+  <li>
+    <strong>Learn:</strong>
+    PPO uses the experience to improve its future decisions.
+  </li>
+</ol>
+
+<p>
+  Over many episodes, PPO learns which movements tend to produce higher
+  rewards. The goal is for the policy to eventually discover a reliable
+  strategy for keeping the fingertip on the edge and following it around
+  the block.
+</p>
+
 
 
 <br><br>
