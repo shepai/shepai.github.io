@@ -64,7 +64,23 @@ A high resolution schematic can be found in the PCB files on the <a href="https:
 </div>
 <br><br>
 <h3>Protoyping</h3>
+We prototyped the sensor on breadboards to begin with to test the overall concept. 
+ATTINY1616 were soldered on surface mount PCBs. 
+<br><br>
+ <div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/tacsheet/proto.jpg" width="40%">
+</div>
+<br><br>
+<h4>Programming</h4>
+To program the ATTINY1616 with the Arduino IDE requires a few steps. You will need an Arduino (we use the Arduino Uno) which will act as the programmer. 
+You will need to configure your Arduino IDE to be able to do this. Firstly install the <code>https://descartes.net/package_drazzy.com_index.json</code> by going to Arduino -> File -> Preferences. 
+Under Settings you can add additional URLs for the board manager. This is where you add this link. 
 
+Once installed, you can select the board type as the ATTINY 20 pin that includes the 1616, select the specific board as the 1616. Leave the rest of the programming settings as default. 
+
+
+<br><br>
+Then you will go to Tools -> Board -> Board Manager and install the ATTINYCore. This will give you access to all of the boards
 <h3>PCB Fabrication</h3>
 We used KiCad to design the PCB, using surface mount parts for ease of manufacturing. As the ATTINY1616 provides many inputs. It would be a waste to have one controller per sensing tile. Instead, we have designed these hexagons, with gaps between each pad to allow for bend between pads. The edges are all interconnected. Some existing modular sensors have certain orders that the sensors can be connected in, or the power will incorrectly connect. By using our mirrored signal approach, our TacSheets can be conneced in any orientation. 
 
@@ -73,6 +89,7 @@ We used KiCad to design the PCB, using surface mount parts for ease of manufactu
     <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/PCB.png">
 </div>
 <br><br>
+
 <h2>Results</h2>
 
 <h2>References</h2>
