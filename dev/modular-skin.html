@@ -73,12 +73,19 @@ ATTINY1616 were soldered on surface mount PCBs.
 <br><br>
 <h4>Programming</h4>
 To program the ATTINY1616 with the Arduino IDE requires a few steps. You will need an Arduino (we use the Arduino Uno) which will act as the programmer. 
-You will need to configure your Arduino IDE to be able to do this. Firstly install the <code>https://descartes.net/package_drazzy.com_index.json</code> by going to Arduino -> File -> Preferences. 
+You will need to configure your Arduino IDE to be able to do this. 
+The Arduino will need the <a href="https://github.com/ElTangas/jtag2updi">Jtag2UDPI</a> uploaded to it, before we can program through it. 
+
+Install the <code>https://descartes.net/package_drazzy.com_index.json</code> by going to Arduino -> File -> Preferences. 
 Under Settings you can add additional URLs for the board manager. This is where you add this link. 
 
 Once installed, you can select the board type as the ATTINY 20 pin that includes the 1616, select the specific board as the 1616. Leave the rest of the programming settings as default. 
 
+The programmer will need to have the Jtag2UDPI programmer selected. Once this is done, the software side is completed. 
 
+Attach a capacitor (we used 10uF) between GND and RST. The D6 pin of the arduino should go to a 4.7 ohms resister, and then that to the programmer pin of the ATTINY1616. GND and VCC should be connected to the same power pins as the Arduino. 
+
+Now you can upload sketches to the ATTINY1616 through the Arduino! 
 <br><br>
 Then you will go to Tools -> Board -> Board Manager and install the ATTINYCore. This will give you access to all of the boards
 <h3>PCB Fabrication</h3>
