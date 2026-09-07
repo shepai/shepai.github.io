@@ -662,9 +662,8 @@ li {
   margin: 20px 0;
   flex-wrap: wrap;
 }
-
 .image-row img {
-  width: 25%;   /* adjust as needed */
+	
   height: auto;
   border-radius: 6px; /* optional but looks nicer */
   object-fit: cover;
@@ -674,7 +673,108 @@ li {
     display: inline-block;
     cursor: help;
 }
+.projectControls {
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
 
+.keywordFilter {
+    position: relative;
+}
+
+#keywordButton,
+#clearFilters {
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.keywordDropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 12px;
+    min-width: 220px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.keywordDropdown.show {
+    display: block;
+}
+
+.keywordOption {
+    display: block;
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.keywordOption input {
+    margin-right: 8px;
+}
+
+.projectTable {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.projectTable tr {
+    height: 130px;
+}
+
+.projectTable th {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.projectImage {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    transition: none;
+}
+
+.projectImage:hover {
+    transform: none !important;
+    width: 100px !important;
+    height: 100px !important;
+}
+.projectTitle {
+    font-size: 18px;
+}
+
+.projectDescription {
+    margin-top: 8px;
+}
+
+.projectKeywords {
+    margin-top: 8px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.pagination {
+    width: 80%;
+    margin: 25px auto;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 3px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    font-weight: bold;
+}
 .tooltip-text {
     visibility: hidden;
     opacity: 0;
