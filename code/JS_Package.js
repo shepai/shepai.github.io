@@ -10,6 +10,7 @@ function load_3d(){
     }
 }
 
+
 function createSTLViewer(containerID, url){
 
 
@@ -384,280 +385,89 @@ function addMarkers(plotName, points, colour = "red") {
     );
 }
 
+window.onload = function(){
 
-// --------------------------------------------------
-// DISPLAY PROJECTS
-// --------------------------------------------------
+    let toc = document.getElementById("table-of-contents");
 
-function renderProjects() {
+    let headings = document.querySelectorAll("h2, h3, h4");
 
-    const projectList =
-        document.getElementById("projectList");
+    let rootList = document.createElement("ul");
 
-    const filteredProjects =
-        getFilteredProjects();
+    let currentLists = {
+        2: rootList
+    };
 
-    const totalPages =
-        Math.ceil(filteredProjects.length / projectsPerPage);
+    headings.forEach(function(heading, index){
 
-    // Make sure current page still exists
-    if (currentPage > totalPages && totalPages > 0) {
-        currentPage = totalPages;
-    }
+        // Create an ID if it does not already exist
+        if(!heading.id){
+            heading.id = "section-" + index;
+        }
 
-    const start =
-        (currentPage - 1) * projectsPerPage;
+        let level = Number(heading.tagName.substring(1));
 
-    const end =
-        start + projectsPerPage;
+        let item = document.createElement("li");
 
-    const pageProjects =
-        filteredProjects.slice(start, end);
+        let link = document.createElement("a");
 
+        link.href = "#" + heading.id;
+        link.textContent = heading.textContent;
 
-    let html = `
-        <table class="projectTable">
-    `;
+        item.appendChild(link);
 
 
-    pageProjects.forEach((project, index) => {
+        // If this is a main section
+        if(level === 2){
 
-        // Alternate based on the actual position
-        // on the current page.
-        const imageLeft = index % 2 === 0;
+            rootList.appendChild(item);
 
-
-        if (imageLeft) {
-
-            html += `
-                <tr>
-                    <th>
-                        <a href="${project.link}">
-                            <img
-                                class="imageCircle2 projectImage"
-                                src="${project.icon}"
-                                alt="${project.title}"
-                            >
-                        </a>
-                    </th>
-
-                    <th>
-                        <a
-                            class="projectTitle"
-                            href="${project.link}"
-                        >
-                            ${project.title}
-                        </a>
-
-                        <p class="textInfo projectDescription">
-                            ${project.description}
-                        </p>
-                    </th>
-                </tr>
-            `;
-
-        } else {
-
-            html += `
-                <tr>
-                    <th>
-                        <a
-                            class="projectTitle"
-                            href="${project.link}"
-                        >
-                            ${project.title}
-                        </a>
-
-                        <p class="textInfo projectDescription">
-                            ${project.description}
-                        </p>
-                    </th>
-
-                    <th>
-                        <a href="${project.link}">
-                            <img
-                                class="imageCircle2 projectImage"
-                                src="${project.icon}"
-                                alt="${project.title}"
-                            >
-                        </a>
-                    </th>
-                </tr>
-            `;
+            currentLists[2] = rootList;
 
         }
 
-    });
 
+        // If this is a subsection
+        else if(level === 3){
 
-    html += `</table>`;
-
-    projectList.innerHTML = html;
-
-    renderPagination(totalPages);
-
-}
-
-
-// --------------------------------------------------
-// PAGINATION
-// --------------------------------------------------
-
-function renderPagination(totalPages) {
-
-    const pagination =
-        document.getElementById("pagination");
-
-    pagination.innerHTML = "";
-
-    if (totalPages <= 1) {
-        return;
-    }
-
-
-    // Previous button
-
-    if (currentPage > 1) {
-
-        const previous =
-            document.createElement("button");
-
-        previous.textContent = "← Previous";
-
-        previous.onclick = function() {
-            currentPage--;
-            renderProjects();
-            window.scrollTo(0, 0);
-        };
-
-        pagination.appendChild(previous);
-
-    }
-
-
-    // Page numbers
-
-    for (let page = 1; page <= totalPages; page++) {
-
-        const button =
-            document.createElement("button");
-
-        button.textContent = page;
-
-        if (page === currentPage) {
-            button.classList.add("active");
-        }
-
-        button.onclick = function() {
-
-            currentPage = page;
-
-            renderProjects();
-
-            window.scrollTo(0, 0);
-
-        };
-
-        pagination.appendChild(button);
-
-    }
-
-
-    // Next button
-
-    if (currentPage < totalPages) {
-
-        const next =
-            document.createElement("button");
-
-        next.textContent = "Next →";
-
-        next.onclick = function() {
-
-            currentPage++;
-
-            renderProjects();
-
-            window.scrollTo(0, 0);
-
-        };
-
-        pagination.appendChild(next);
-
-    }
-
-}
-
-
-function createKeywordList() {
-
-    const keywordDropdown = document.getElementById("keywordDropdown");
-
-    const allKeywords = [
-        ...new Set(
-            projects.flatMap(project => project.keywords)
-        )
-    ];
-
-    allKeywords.sort((a, b) => a.localeCompare(b));
-
-    keywordDropdown.innerHTML = "";
-
-    allKeywords.forEach(keyword => {
-
-        const label = document.createElement("label");
-        label.className = "keywordOption";
-
-        const checkbox = document.createElement("input");
-
-        checkbox.type = "checkbox";
-        checkbox.value = keyword;
-
-        checkbox.addEventListener("change", function() {
-
-            if (this.checked) {
-                selectedKeywords.push(keyword);
-            } else {
-                selectedKeywords =
-                    selectedKeywords.filter(k => k !== keyword);
+            if(!currentLists[2].lastElementChild){
+                return;
             }
 
-            currentPage = 1;
-            renderProjects();
+            let subList = document.createElement("ul");
 
-        });
+            subList.appendChild(item);
 
-        label.appendChild(checkbox);
-        label.appendChild(
-            document.createTextNode(keyword)
-        );
+            currentLists[2]
+                .lastElementChild
+                .appendChild(subList);
 
-        keywordDropdown.appendChild(label);
+            currentLists[3] = subList;
 
-    });
-
-}
+        }
 
 
-// --------------------------------------------------
-// FILTER PROJECTS
-// --------------------------------------------------
+        // If this is a sub-subsection
+        else if(level === 4){
 
-function getFilteredProjects() {
+            if(!currentLists[3]){
+                return;
+            }
 
-    if (selectedKeywords.length === 0) {
-        return projects;
-    }
+            let subSubList = document.createElement("ul");
 
-    return projects.filter(project => {
+            subSubList.appendChild(item);
 
-        // OR filtering:
-        // project appears if it contains ANY selected keyword
+            currentLists[3]
+                .lastElementChild
+                .appendChild(subSubList);
 
-        return selectedKeywords.some(keyword =>
-            project.keywords.includes(keyword)
-        );
+            currentLists[4] = subSubList;
+
+        }
 
     });
+
+
+    toc.appendChild(rootList);
 
 }
