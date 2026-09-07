@@ -10,7 +10,6 @@ function load_3d(){
     }
 }
 
-
 function createSTLViewer(containerID, url){
 
 
@@ -385,89 +384,280 @@ function addMarkers(plotName, points, colour = "red") {
     );
 }
 
-window.onload = function(){
 
-    let toc = document.getElementById("table-of-contents");
+// --------------------------------------------------
+// DISPLAY PROJECTS
+// --------------------------------------------------
 
-    let headings = document.querySelectorAll("h2, h3, h4");
+function renderProjects() {
 
-    let rootList = document.createElement("ul");
+    const projectList =
+        document.getElementById("projectList");
 
-    let currentLists = {
-        2: rootList
-    };
+    const filteredProjects =
+        getFilteredProjects();
 
-    headings.forEach(function(heading, index){
+    const totalPages =
+        Math.ceil(filteredProjects.length / projectsPerPage);
 
-        // Create an ID if it does not already exist
-        if(!heading.id){
-            heading.id = "section-" + index;
-        }
+    // Make sure current page still exists
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    }
 
-        let level = Number(heading.tagName.substring(1));
+    const start =
+        (currentPage - 1) * projectsPerPage;
 
-        let item = document.createElement("li");
+    const end =
+        start + projectsPerPage;
 
-        let link = document.createElement("a");
-
-        link.href = "#" + heading.id;
-        link.textContent = heading.textContent;
-
-        item.appendChild(link);
-
-
-        // If this is a main section
-        if(level === 2){
-
-            rootList.appendChild(item);
-
-            currentLists[2] = rootList;
-
-        }
+    const pageProjects =
+        filteredProjects.slice(start, end);
 
 
-        // If this is a subsection
-        else if(level === 3){
-
-            if(!currentLists[2].lastElementChild){
-                return;
-            }
-
-            let subList = document.createElement("ul");
-
-            subList.appendChild(item);
-
-            currentLists[2]
-                .lastElementChild
-                .appendChild(subList);
-
-            currentLists[3] = subList;
-
-        }
+    let html = `
+        <table class="projectTable">
+    `;
 
 
-        // If this is a sub-subsection
-        else if(level === 4){
+    pageProjects.forEach((project, index) => {
 
-            if(!currentLists[3]){
-                return;
-            }
+        // Alternate based on the actual position
+        // on the current page.
+        const imageLeft = index % 2 === 0;
 
-            let subSubList = document.createElement("ul");
 
-            subSubList.appendChild(item);
+        if (imageLeft) {
 
-            currentLists[3]
-                .lastElementChild
-                .appendChild(subSubList);
+            html += `
+                <tr>
+                    <th>
+                        <a href="${project.link}">
+                            <img
+                                class="imageCircle2 projectImage"
+                                src="${project.icon}"
+                                alt="${project.title}"
+                            >
+                        </a>
+                    </th>
 
-            currentLists[4] = subSubList;
+                    <th>
+                        <a
+                            class="projectTitle"
+                            href="${project.link}"
+                        >
+                            ${project.title}
+                        </a>
+
+                        <p class="textInfo projectDescription">
+                            ${project.description}
+                        </p>
+                    </th>
+                </tr>
+            `;
+
+        } else {
+
+            html += `
+                <tr>
+                    <th>
+                        <a
+                            class="projectTitle"
+                            href="${project.link}"
+                        >
+                            ${project.title}
+                        </a>
+
+                        <p class="textInfo projectDescription">
+                            ${project.description}
+                        </p>
+                    </th>
+
+                    <th>
+                        <a href="${project.link}">
+                            <img
+                                class="imageCircle2 projectImage"
+                                src="${project.icon}"
+                                alt="${project.title}"
+                            >
+                        </a>
+                    </th>
+                </tr>
+            `;
 
         }
 
     });
 
 
-    toc.appendChild(rootList);
+    html += `</table>`;
+
+    projectList.innerHTML = html;
+
+    renderPagination(totalPages);
+
+}
+
+
+// --------------------------------------------------
+// PAGINATION
+// --------------------------------------------------
+
+function renderPagination(totalPages) {
+
+    const pagination =
+        document.getElementById("pagination");
+
+    pagination.innerHTML = "";
+
+    if (totalPages <= 1) {
+        return;
+    }
+
+
+    // Previous button
+
+    if (currentPage > 1) {
+
+        const previous =
+            document.createElement("button");
+
+        previous.textContent = "← Previous";
+
+        previous.onclick = function() {
+            currentPage--;
+            renderProjects();
+            window.scrollTo(0, 0);
+        };
+
+        pagination.appendChild(previous);
+
+    }
+
+
+    // Page numbers
+
+    for (let page = 1; page <= totalPages; page++) {
+
+        const button =
+            document.createElement("button");
+
+        button.textContent = page;
+
+        if (page === currentPage) {
+            button.classList.add("active");
+        }
+
+        button.onclick = function() {
+
+            currentPage = page;
+
+            renderProjects();
+
+            window.scrollTo(0, 0);
+
+        };
+
+        pagination.appendChild(button);
+
+    }
+
+
+    // Next button
+
+    if (currentPage < totalPages) {
+
+        const next =
+            document.createElement("button");
+
+        next.textContent = "Next →";
+
+        next.onclick = function() {
+
+            currentPage++;
+
+            renderProjects();
+
+            window.scrollTo(0, 0);
+
+        };
+
+        pagination.appendChild(next);
+
+    }
+
+}
+
+
+function createKeywordList() {
+
+    const keywordDropdown = document.getElementById("keywordDropdown");
+
+    const allKeywords = [
+        ...new Set(
+            projects.flatMap(project => project.keywords)
+        )
+    ];
+
+    allKeywords.sort((a, b) => a.localeCompare(b));
+
+    keywordDropdown.innerHTML = "";
+
+    allKeywords.forEach(keyword => {
+
+        const label = document.createElement("label");
+        label.className = "keywordOption";
+
+        const checkbox = document.createElement("input");
+
+        checkbox.type = "checkbox";
+        checkbox.value = keyword;
+
+        checkbox.addEventListener("change", function() {
+
+            if (this.checked) {
+                selectedKeywords.push(keyword);
+            } else {
+                selectedKeywords =
+                    selectedKeywords.filter(k => k !== keyword);
+            }
+
+            currentPage = 1;
+            renderProjects();
+
+        });
+
+        label.appendChild(checkbox);
+        label.appendChild(
+            document.createTextNode(keyword)
+        );
+
+        keywordDropdown.appendChild(label);
+
+    });
+
+}
+
+
+// --------------------------------------------------
+// FILTER PROJECTS
+// --------------------------------------------------
+
+function getFilteredProjects() {
+
+    if (selectedKeywords.length === 0) {
+        return projects;
+    }
+
+    return projects.filter(project => {
+
+        // OR filtering:
+        // project appears if it contains ANY selected keyword
+
+        return selectedKeywords.some(keyword =>
+            project.keywords.includes(keyword)
+        );
+
+    });
 
 }
