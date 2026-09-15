@@ -35,156 +35,165 @@
 </div>
 	<!-- the main content -->
 	<div class="main">
-		<h1 class="headerText">3D Printed tactile dataset</h1>
-		The work within this page is archived under <a href="https://arxiv.org/abs/2606.25886">arxiv</a>, under review currently and can also be found in detail in my thesis. 
-		The dataset can be downloaded <a href="https://figshare.com/articles/dataset/3D_Printable_Tactile_Dataset/30256453">here</a>
+		<h1 class="headerText">A 3D-Printable Dataset for Fair Testing and Comparisons of Tactile Sensors</h1>
+		The work within this page is archived under <a href="https://arxiv.org/abs/2606.25886">arxiv</a>, under review currently and can also be found in detail in my thesis.
+		The dataset can be downloaded <a href="https://figshare.com/articles/dataset/3D_Printable_Tactile_Dataset/30256453">here</a>. The full code and experimental data, including the texture generator, printer profiles and analysis pipeline, are available on <a href="https://github.com/shepai/3D-textures">GitHub</a>.
 		<div id="table-of-contents">
     <h2>Contents</h2>
 </div>
         <br><br>
 		<p>
-			Various designs were discussed for making textures for this dataset. Initially, we investigated 3D scanning real-life textures to make the dataset reflective of the real world. However, this presented issues such as non-uniformity of the texture. If the sensor strokes one part of the texture, it may classify it differently from another. Our previous dataset had uniform patterns, so this was not an issue. Therefore, mathematically generated patterns were chosen.
+			Existing texture datasets for tactile sensing mostly consist of sensor readings gathered from a specific sensor interacting with whatever surfaces happen to be available, rather than describing the textures themselves. This makes it difficult to fairly compare different tactile sensors or to reproduce results between labs. This work introduces a six-piece digital dataset of mathematically defined textures designed to be fabricated reliably across different research groups, along with a validation methodology that quantifies how much variance is introduced by 3D printing them.
 			</p>
-			
+
+			<p>
+			Various designs were discussed for making textures for this dataset. Initially, we investigated 3D scanning real-life textures to make the dataset reflective of the real world. However, this presented issues such as non-uniformity of the texture. If the sensor strokes one part of the texture, it may classify it differently from another. Our previous dataset had uniform patterns, so this was not an issue. Therefore, mathematically generated patterns were chosen, drawing inspiration from the USAF resolution calibration target and standards such as ISO 12233, which use well-defined geometric patterns that can be systematically scaled without loss of fidelity.
+			</p>
+
+			<p>
+			The six textures were deliberately designed to share the same fundamental spatial period while differing in their higher-order spectral content and surface topology (ridged, rounded, square-profile, and point-like asperity structures). This creates textures that are similar enough to present a meaningful discrimination challenge, while still spanning representative classes of surface geometries encountered in tactile sensing. We also intentionally kept the number of textures small to provide a simple, scalable benchmark that is practical to reproduce and extend, favouring simplicity and diagnostic value over exhaustive coverage of every possible stimulus.
+			</p>
+
 			<p>
 			It is easy to parameterize a 2D surface when dealing with sinusoidal waves. We have five parameters: amplitudes along the two directions, frequencies along the two directions, and a phase shift between the directions. This also simplifies scalability for different sensors.
 			</p>
-			
+
 			<p>
 			Other repetitive shapes (squares, pyramids, etc.) can be obtained from a sum of sine functions. Detecting the minimum sine pattern that the sensor can detect may help benchmark the sensor for more advanced shapes.
 			</p>
-			<div class="stl-grid">
-
-				<div id="stl1">Loading...</div>
-				<div id="stl2">Loading...</div>
-				<div id="stl3">Loading...</div>
-
-				<div id="stl4">Loading...</div>
-				<div id="stl5">Loading...</div>
-				<div id="stl6">Loading...</div>
-
+			<div align="center" style="margin: 20px 0;">
+				<p id="main-stl-label" style="font-weight:bold;">Loading...</p>
+				<div id="stl-viewer-main" style="width:100%; max-width:400px; height:300px; margin:auto; border:1px solid #ccc; border-radius:6px; background:#f4f4f4;"></div>
+				<div style="margin-top:10px;">
+					<button id="main-stl-prev" style="padding:6px 14px; margin-right:8px; cursor:pointer;">&laquo; Back</button>
+					<button id="main-stl-next" style="padding:6px 14px; cursor:pointer;">Next &raquo;</button>
+				</div>
 			</div>
 			<h3>Texture One</h3>
-			
+
 			<p>
 			In this equation, \( A_1 \) and \( A_2 \) represent the amplitudes of the sine waves in the \( x \)- and \( y \)-directions, respectively. The parameters \( f_1 \) and \( f_2 \) denote the frequencies of the sine components along the \( x \)- and \( y \)-axes. The variable \( \phi \) is a phase offset applied to the sine term involving \( y \). The variables \( x \) and \( y \) are spatial inputs, and the output \( z_1 \) is the sum of two sine functions modulated by their respective amplitudes, frequencies, and phase.
 			</p>
-			
-			<p>
-			We use \( A_1 = 1 \), \( A_2 = 2 \), \( f_1 = 1 \), \( f_2 = 1 \), \( \phi = \pi / 2 \).
-			</p>
-			
+
 			<p>
 			\[
 			z_1 = A_1 \sin(f_1 x) + A_2 \sin(f_2 y + \phi)
 			\]
 			</p>
-			
-			<h3>Texture Two</h3>
-			
+
 			<p>
-			Texture Two also uses the same equation as Texture One, with the same parameters for \( A_1 \), \( f_1 \), and \( f_2 \), however the variable \( A_2 \) is set to 1.
+			For Texture One we use \( A_1 = 1 \), \( A_2 = 0 \), \( f_1 = 1 \), \( f_2 = 1 \), \( \phi = \pi / 2 \), with \( x \in [0,\,6\pi+0.5] \) and \( y \in [0,\,6\pi+1.2] \). This produces variation along one direction only.
 			</p>
-			
+
+			<h3>Texture Two</h3>
+
+			<p>
+			Texture Two uses the same equation as Texture One and the same values for \( f_1 \), \( f_2 \) and \( \phi \), over the same ranges of \( x \) and \( y \), except that \( A_2 \) is set to 1, introducing sinusoidal variation in both directions.
+			</p>
+
 			<h3>Texture Three</h3>
-			
+
 			<p>
 			We define the function \( z_3 \) over a grid using the following summation:
 			</p>
-			
+
 			<p>
 			\[
 			z_3 = \sum_{\substack{i=1 \\ i \text{ odd}}}^{N} \left(A_i \sin(i x) + A_i \sin(i y) \right)
 			\]
 			</p>
-			
+
 			<p>
-			In this expression, \( N \) is the number of terms in the summation, taken over odd integers from 1 to \( N \). For our texture we used \( N = 25 \).
+			In this expression, \( N \) is the number of terms in the summation, taken over odd integers from 1 to \( N \). For our texture we used \( N = 25 \), over the same \( x \) and \( y \) ranges used for Textures One and Two.
 			</p>
-			
+
 			<p>
 			Each term in the series uses the coefficient:
 			</p>
-			
+
 			<p>
 			\[
 			A_i = \frac{8}{\pi^2} \cdot \frac{(-1)^{\frac{i - 1}{2}}}{i^2}
 			\]
 			</p>
-			
+
 			<p>
-			This controls the amplitude of the sine wave. The sine functions \( \sin(i x) \) and \( \sin(i y) \) vary with spatial coordinates \( x \) and \( y \), respectively, and share the same frequency \( f = i \) and amplitude \( A_i \). The phase offset is set to zero and therefore omitted in the formula.
+			This controls the amplitude of the sine wave. The sine functions \( \sin(i x) \) and \( \sin(i y) \) vary with spatial coordinates \( x \) and \( y \), respectively, and share the same frequency \( f = i \) and amplitude \( A_i \). The phase offset is set to zero and therefore omitted in the formula. As \( z_3 \) is built up by adding sine wave components in both the \( x \)- and \( y \)-directions, the result is a 2D Fourier-series-like symmetrical pattern.
 			</p>
-			
-			<p>
-			The function \( z_3 \) is initialized as a zero-valued array of the same shape as \( x \) and is built up iteratively by adding sine wave components in both the \( x \)- and \( y \)-directions. This results in a 2D Fourier-like series that combines symmetrical sine waves to construct a spatial pattern.
-			</p>
-			
+
 			<h3>Texture Four</h3>
-			
 			<p>
 			Texture Four uses the same summation equation as Texture Three, however with a modified coefficient:
 			</p>
-			
+
 			<p>
 			\[
 			A_i = \frac{4}{\pi i}
 			\]
 			</p>
-			
+
 			<p>
 			Additionally, this equation uses \( N = 25 \). The decay and lack of sign alternation lead to sharper features, with more pronounced ridges and edges.
 			</p>
-			
+
 			<h3>Texture Five</h3>
-			
+
 			<p>
-			Texture Five also uses the same summation equation as Texture Three and the same coefficient as Texture Three. The difference is that one directional component is removed, resulting in no variation along one axis and producing a protruded shape rather than variation in both directions.
+			Texture Five also uses the same summation equation as Texture Three, with the same coefficient as Texture Three. The difference is that one directional component is removed, resulting in no variation along one axis and producing a protruded shape rather than variation in both directions.
 			</p>
-			
+
 			<p>
 			\[
 			z_5 = \sum_{\substack{i=1 \\ i \text{ odd}}}^{N} \left(A_i \sin(i x) \right)
 			\]
 			</p>
-			
+
 			<h3>Texture Six</h3>
-			
+
 			<p>
-			Texture Six uses the same summation equation as Texture Three and the same coefficient as Texture Four. The second directional component is set to zero (as in Texture Five), resulting in no variation in height along one axis and producing a protruded shape rather than bidirectional variation.
+			Texture Six uses the same summation equation as Texture Five, but the coefficient, \(A_i\), is now defined as in Texture Four. As in Texture Five, the second directional component is set to zero, resulting in no variation in height along one axis and producing a protruded shape rather than bidirectional variation.
 			</p>
-			
+
 			<p>
 			There is significant overlap between these texture equations, making the generation of new patterns that are not widely different very feasible.
 			</p>
-			
+
+			<h2 class="headerText">Conversion to STL</h2>
 			<p>
-			All the models were converted to STL file format as blocks for 3D printing. These models were constrained to be the same height to ensure that the sensor could be lowered to the same position for each experiment.
+			All the models were converted to STL file format as blocks for 3D printing. These models were constrained to be the same maximum height of 7&nbsp;mm to ensure the sensor could be lowered to the same position for each experiment. When generating the patterns, a step size of 0.1 was used, converting to 0.53&nbsp;mm per step, with 189 points in the \(x\)-direction and 201 points in the \(y\)-direction, so that the blocks are not perfectly square, giving blocks of dimension 23.3&nbsp;mm \(\times\) 30&nbsp;mm. This was done to prevent human error and ensure the blocks only fit in the testing rig one way. These points form the vertices of the triangulated STL mesh.
 			</p>
-			<br>
+			<p>
+			The step size was selected so that the resulting mesh discretisation error (chordal deviation) remained below the nominal manufacturing resolution of the printers used. Consequently, any observed limitations in surface smoothness are attributable to the manufacturing process rather than the STL export itself. For FDM printing, increasing the STL resolution beyond this point provides no practical benefit, as the achievable geometry is ultimately constrained by the nozzle diameter and layer height. The same resolution constraints do not apply to the resin printer, but a step size of 0.1 was already smooth on visual inspection so we did not increase resolution further.
+			</p>
+
+			<h2 class="headerText">Experimental Setup</h2>
+			<p>
+			A texture housing unit was 3D printed to hold each of the texture blocks. We used a TacTip tactile sensor with 133 1&nbsp;mm optical markers. The testing rig pressed the sensor over each texture in a rectangular grid, taking snapshots of the tactile sensation. The \(x\) position of the centre of the TacTip was moved to 5 equally spaced positions between 4&nbsp;mm and 9&nbsp;mm, and the corresponding \(y\) position was moved to 5 equally spaced 1&nbsp;mm positions between 18&nbsp;mm and 23&nbsp;mm, giving 25 points across the texture. This was repeated twice, giving a dataset of 50 images per print. Previous work has shown that classification is largely invariant to contact force, so we used a single sensor contact force of 1.9 &plusmn; 0.009&nbsp;N throughout.
+			</p>
+
 			<h2 class="headerText">Printer experiments</h2>
-			Several 3D print filament types were used to make a protruded sine-wave block. We firstly wanted to evaluate how different filament brands and types differ in terms of material properties. 
+			Several 3D print filament types were used to make a protruded sine-wave block. We firstly wanted to evaluate how different filament brands and types differ in terms of material properties.
 			<br><br>
-We additionally evaluated the textures over varying manufactures of 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings of mitigating these issues. 
+We additionally evaluated the textures over varying manufactures of 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings of mitigating these issues.
 <br><br>
-We will inspect this using the variance of images from a TacTip sensor. Pressing the sensor on the same part of the block should have similar impacts on the sensor reading. 
+We will inspect this using the variance of images from a TacTip sensor. Pressing the sensor on the same part of the block should have similar impacts on the sensor reading.
 <br><br>
-Visual inspection is used to judge the quality of a print, particularly for "stringing". Stringing is when the printer’s nozzle leaks a small amount of molten filament while moving between separate parts or sections, leaving thin strands of plastic connecting them. If from a human perspective there is not a lot in varying quality, we know these will result in lower variance. 
+Visual inspection is used to judge the quality of a print, particularly for "stringing". Stringing is when the printer's nozzle leaks a small amount of molten filament while moving between separate parts or sections, leaving thin strands of plastic connecting them. If from a human perspective there is not a lot in varying quality, we know these will result in lower variance.
 <br><br>
-If there is insignificant difference in variance between datasets then we can assume that the print quality makes no difference to the model. 
+If there is insignificant difference in variance between datasets then we can assume that the print quality makes no difference to the model.
 <br><br>
 <p>
-	We used four popular printers: the Ender-3 V3 printer, the Creality Ender-3 V3 SE printer, the Bambu Lab P1P printer, and the Formlabs Form 3 resin printer. The printer specifications are outlined in Table 1. Resin printers are generally more expensive but yield better quality for small details.
+	We selected four printers for popularity and access: an Ender-3 printer, a Creality Ender-3 V3 SE printer, a Bambu Lab P1P printer, and a Formlabs Form 3 resin printer. Each printer type was tested with a single representative unit of that model, as we did not have access to more than one of each type. The printer specifications are outlined in Table 1. Resin printers are generally more expensive but yield better quality for small details. All printers used 0.4&nbsp;mm nozzles, though this can be reduced further.
 	</p>
 	<div align="center">
 	<table border="1" style="border-collapse: collapse; text-align: center; font-size: 12px;">
 	  <caption>
-		<strong>Table 1:</strong> Comparison of Ender-3 V3, Creality Ender-3 V3 SE, Bambu Lab P1P printers and Formlabs Form 3 resin printer.
+		<strong>Table 1:</strong> Comparison of the Ender-3, Creality Ender-3 V3 SE, Bambu Lab P1P printers and Formlabs Form 3 resin printer.
 	  </caption>
 	  <thead>
 		<tr>
 		  <th>Spec</th>
-		  <th>Ender-3 V3</th>
+		  <th>Ender-3</th>
 		  <th>Ender-3 V3 SE</th>
 		  <th>Bambu P1P</th>
 		  <th>Resin</th>
@@ -206,13 +215,6 @@ If there is insignificant difference in variance between datasets then we can as
 		  <td>na</td>
 		</tr>
 		<tr>
-		  <td>Print speed</td>
-		  <td>≤600 mm/s</td>
-		  <td>≤250 mm/s (180 typical)</td>
-		  <td>≤500 mm/s</td>
-		  <td>na</td>
-		</tr>
-		<tr>
 		  <td>Acceleration</td>
 		  <td>≤20,000 mm/s²</td>
 		  <td>~2,500 mm/s²</td>
@@ -228,7 +230,7 @@ If there is insignificant difference in variance between datasets then we can as
 		</tr>
 		<tr>
 		  <td>Bed temperature</td>
-		  <td>≤110°C</td>
+		  <td>≤100°C</td>
 		  <td>≤100°C</td>
 		  <td>≤100°C</td>
 		  <td>na</td>
@@ -265,127 +267,203 @@ If there is insignificant difference in variance between datasets then we can as
 	</table>
 </div>
 	<p>
-	We used three different 1.75 mm filaments: Rapid PETG (Elegoo), PLA+ (eSUN), and PLA-Lite (eSUN). For the resin printer, we used Grey V4 resin. According to manufacturer specifications, these filaments have a dimensional tolerance of ±0.02 mm.
+	We used three different 1.75 mm filaments: Rapid PETG (Elegoo), PLA+ (eSUN), and PLA-Lite (eSUN, referred to as PLA-). For the resin printer, we used Grey V4.1 resin. According to manufacturer specifications, these filaments have a dimensional tolerance of ±0.02 mm.
 	</p>
-	
+
 	<p>
 	We chose the PLA filaments because PLA is an economical standard widely used across 3D printing users. PLA-Lite was cheaper than PLA+, although PLA+ was marketed as a higher quality material. We selected both to explore whether this difference had an impact on results.
 	</p>
-	
+
 	<p>
 	We used PETG because it provides greater durability, but it can be trickier to print with, potentially introducing more variance unless parameters such as speed, temperature, leveling, and other settings are properly tuned.
+	</p>
+
+	<h3>Humidity and Environment Control</h3>
+	<p>
+	To minimise the effects of moisture absorption during filament storage and to ensure consistent print quality, all filament spools were stored in sealed dry containers based on the "Ultimate Filament Storage" cereal-box design from BambuLabs. Each container incorporated dedicated desiccant compartments and an integrated hygrometer, allowing the internal humidity to be monitored while maintaining a low-moisture environment. This reduced the exposure of hygroscopic filaments to ambient humidity between printing sessions, helping to prevent moisture-related defects such as bubbling, stringing, and reduced inter-layer adhesion. Prior to storage, filaments were dried: PLA for 8 hours at 50&deg;C and PETG for 8 hours at 60&deg;C, then immediately placed in the containers.
+	</p>
+	<p>
+	The Form 3 resin printer operates within an enclosed, temperature-regulated environment, reducing the influence of ambient conditions on print quality. All printers were located within the same laboratory space, where humidity was managed using an air purification system. While environmental factors cannot be entirely eliminated, printing conditions were kept consistent across all experiments.
+	</p>
+
+	<h3>Scalability and Hardware Limitations</h3>
+	<p>
+	While the benchmark geometries are saved as unitless STL files, making the underlying mathematical mesh inherently scalable to any dimension, the physical instantiation of these textures remains bounded by the minimum feature size and resolution of the specific 3D printer used. This study validates the benchmark at a single physical scale. Scaling the textures down significantly may result in the loss of high-frequency geometric features (such as wave peaks) if they fall below a printer's manufacturing limits, while scaling up may alter the mechanical interaction dynamics with the tactile sensor.
 	</p>
 
 	<h2 class="headerText">Benchmark Reproduction Workflow</h2>
 <p>To encourage reproducibility and facilitate future tactile sensing research, all resources used to construct the benchmark are publicly available through the accompanying GitHub repository. The repository contains the complete pipeline for generating printable texture samples, producing standardized printer-ready files, and reproducing the dataset collection process.
 </p>
-<p>The repository is organised into three primary components. First, a library of printable texture models is provided, including procedurally generated surface geometries. Secondly, the repository includes scripts for generating custom textures from user-defined parameters, allowing researchers to extend the benchmark with additional tactile patterns while maintaining consistent geometric constraints. Finally, standardized printing profiles and slicing configurations are supplied to ensure that benchmark samples can be fabricated consistently across compatible material extrusion 3D printers.
+<p>The repository is organised into three primary components. First, a library of printable texture models is provided, including procedurally generated surface geometries. Secondly, the repository includes scripts for generating custom textures from user-defined parameters, allowing researchers to extend the benchmark with additional tactile patterns while maintaining consistent geometric constraints. Finally, standardized printing profiles are supplied to ensure that benchmark samples can be fabricated consistently across compatible material extrusion 3D printers.
 </p>
 <p>The recommended reproduction workflow consists of four stages. First, users generate or select a texture model from the <a href="https://figshare.com/articles/dataset/3D_Printable_Tactile_Dataset/30256453">provided library</a>. Secondly, the model is sliced using the supplied printer profiles, ensuring identical print settings such as layer height, nozzle diameter, infill, and print orientation. Thirdly, the printed sample is fabricated using the specified filament materials and environmental conditions. Finally, the completed sample can be incorporated directly into the tactile data collection pipeline described in this work.
 </p>
-<p>By releasing both the source models and the complete fabrication pipeline, researchers are able not only to reproduce the benchmark presented here but also to generate additional textures that remain compatible with the benchmark methodology. This enables direct comparison between future tactile sensing approaches while promoting consistency across independently collected datasets.}
+<p>By releasing both the source models and the complete fabrication pipeline, researchers are able not only to reproduce the benchmark presented here but also to generate additional textures that remain compatible with the benchmark methodology. This enables direct comparison between future tactile sensing approaches while promoting consistency across independently collected datasets.
 	</p>
 
-<h2>Scanning 3D prints</h2>
+<h2 class="headerText">Evaluation of Materials and Print Quality</h2>
 <p>
-Several 3D print filament types were used to make a protruded sine-wave block. We first wanted to evaluate how different filament brands and types differ in terms of material properties. We additionally evaluated the textures produced by different 3D printers. If a cheaper filament, or printer, is significantly worse in quality than others then we need to advise against using this, or find combinations of print settings mitigating these issues. 
-<br>
-We employed as a methods of evaluation a RGBD camera (Intel Realsense) to investigate how the variance impacted classification tasks.
-<br>
-We used the Intel Realsense D405 stereoscopic RGBD camera to scan the texture blocks in 3D. The camera has a scanning precision of less than 1mm when at its ideal recording range. We used Intel Realsense viewer software to record at a resolution of 848x480 and export the scans to PLY format
-<br>
-We recorded the texture blocks from a top-down perspective at a range of 8.5cm, with supplementary lighting provided by lamps on the side and top of the scanning rig. 
-These scans were static from only one perspective, so aspects of the texture blocks side or underside were not captured. 
-<br>
-The processed point clouds were aligned using an iterative closest point (ICP) registration algorithm. Floor regions were first removed through RANSAC plane segmentation using a distance threshold of 0.002 m. A multi-stage point-to-point ICP procedure was then applied using progressively smaller voxel sizes and correspondence thresholds. This coarse-to-fine registration approach initially corrected larger positional offsets before refining the alignment to achieve a high-resolution fit. The final transformation matrix obtained from ICP was applied to the source point cloud.
-<br>
-After registration, the geometric difference between the two point clouds was calculated using nearest-neighbour distances. For each point in the reference cloud, the distance to the closest point in the aligned comparison cloud was calculated. The mean of these distances was taken as the average raw distance error, while the standard deviation was used to quantify the spread of point deviations.
-<br>
-To account for scan error, we placed the same block in the scanner for each texture and scanned it 5 times. We then averaged the difference. We subtract the error (calculated as the std between the same print same texture averaged over 5 readings to calculate the error of the scanning) from the raw average distance in order to more accurately approximate the difference in points.
+We wanted to evaluate the reproducibility of textures produced by different 3D printers, and whether different filament brands and types differ. If a cheaper filament, or printer, is significantly worse in quality than others, then we need to advise against using it, or find combinations of print settings that mitigate these issues. We employed two complementary methods of evaluation: an RGBD camera to assess structural differences in the physical prints, and a TacTip tactile sensor to investigate the variance in sensor response and how this variance impacted classification tasks.
 </p>
-<style>
-	table {
-    border-left: none;
-    border-right: none;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-    border-collapse: collapse;
-}
 
+<p>
+From initial visual inspection, prints with more plastic webbing/stringing between peaks were most common with lower-cost PLA, but this stringing did not itself affect the surface of the blocks. More important were differences in peak height and how well-defined summits were, since the sensor presses down from the top. We therefore selected a subset of printers spanning the print-quality spectrum for detailed evaluation: the highest-performing filament printer (Bambu Lab) paired with the lower-cost PLA- filament, the lowest-performing filament printer (Ender-3) paired with PLA+, and the resin printer as a consistently low-variance baseline. The Creality Ender-3 V3 SE was excluded from this extremes-spanning subset since we already had a higher-end and lower-end filament printer represented, and it did not show a significant difference from the other two.
+</p>
 
-</style>
+<h3>3D Scan Evaluation</h3>
+<p>
+For each printer, filament and texture combination investigated in detail, we made six repeat prints. We used an Intel RealSense D405 stereoscopic RGBD camera to scan the texture blocks in 3D. The camera has a scanning precision of less than 1&nbsp;mm at its ideal recording range. We used the Intel RealSense Viewer software to record at a resolution of 848&times;480 and export the scans to PLY format. We recorded the texture blocks from a top-down perspective at a range of 8.5&nbsp;cm, with supplementary lighting provided by lamps on the side and top of the scanning rig. These scans were static from only one perspective, so aspects of the texture blocks' sides or undersides were not captured.
+</p>
+<p>
+The processed point clouds were aligned using an iterative closest point (ICP) registration algorithm. Floor regions were first removed through RANSAC plane segmentation using a distance threshold of 2&nbsp;mm. A multi-stage point-to-point ICP procedure was then applied using progressively smaller voxel sizes and correspondence thresholds, correcting larger positional offsets before refining the alignment to a high-resolution fit. This produces a transformation matrix \(T^{*}\):
+</p>
+<p>
+\[
+T^{*} = \arg\min_{T} \sum_{i} \left\| p_i^{\text{target}} - T\left(p_i^{\text{source}}\right) \right\|^2
+\]
+</p>
+<p>
+where \(p_i\) is the position of a point in either the target or source point cloud and \(T\) is a candidate transformation. The final transformation matrix \(T^{*}\) is applied to the source point cloud, and the mean distance across all points is used as the distance between two prints.
+</p>
+<p>
+To quantify how much variance is introduced for a given texture by each printer-filament combination, we compared the mean distance between each pair of the six repeats (up to 30 comparisons per texture, fewer where some scans failed). We call this the <em>raw error</em>. We also calculated a <em>Method error</em>, obtained from six repeated scans of the same, unmoved block, which captures noise from LED lighting, print surface reflection and camera noise (the "noise floor"). Comparing the distribution of distances from repeated prints against the distribution from repeated scans of the same block, using a t-test, tells us whether the physical print-to-print signal cuts through this noise floor.
+</p>
+
 <figure>
     <table id="printer-errors-scan">
         <thead>
             <tr>
-                <th>Printer</th>
-                <th>Average Raw Dist</th>
-                <th>Method Error</th>
-                <th>Corrected Dist</th>
+                <th>Printer Class</th>
+                <th>Texture 1</th>
+                <th>Texture 2</th>
+                <th>Texture 3</th>
+                <th>Texture 4</th>
+                <th>Texture 5</th>
+                <th>Texture 6</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Bambu</td>
-                <td>0.000306111</td>
-                <td>0.000193344</td>
-                <td>0.000112767</td>
+                <td>Ender-3: raw error (mm)</td>
+                <td>4.21 &plusmn; 1.24&times;10<sup>-5</sup> (n=30)</td>
+                <td>3.85 &plusmn; 1.24&times;10<sup>-5</sup> (n=30)</td>
+                <td>3.35 &plusmn; 5.53&times;10<sup>-5</sup> (n=20)</td>
+                <td>4.21 &plusmn; 9.90&times;10<sup>-5</sup> (n=30)</td>
+                <td>4.52 &plusmn; 1.14&times;10<sup>-5</sup> (n=30)</td>
+                <td>6.33 &plusmn; 2.26&times;10<sup>-5</sup> (n=20)</td>
             </tr>
             <tr>
-                <td>Ender-3 V3</td>
-                <td>0.000421495</td>
-                <td>0.000193344</td>
-                <td>0.000228150</td>
+                <td>Ender-3 Method Error</td>
+                <td>2.14 (n=5)</td>
+                <td>2.64 (n=5)</td>
+                <td>&mdash;</td>
+                <td>1.86 (n=5)</td>
+                <td>1.90 (n=5)</td>
+                <td>2.28 (n=5)</td>
             </tr>
             <tr>
-                <td>Resin</td>
-                <td>0.000249134</td>
-                <td>0.000193344</td>
-                <td>0.000055790</td>
+                <td>Ender-3 T-test p-value</td>
+                <td>0.18</td>
+                <td>0.17</td>
+                <td>0.04</td>
+                <td>0.15</td>
+                <td>0.14</td>
+                <td>0.17</td>
+            </tr>
+            <tr>
+                <td>Bambu: raw error (mm)</td>
+                <td>2.77 &plusmn; 5.06&times;10<sup>-5</sup> (n=30)</td>
+                <td>2.49 &plusmn; 2.73&times;10<sup>-5</sup> (n=30)</td>
+                <td>2.65 &plusmn; 3.39&times;10<sup>-5</sup> (n=30)</td>
+                <td>2.27 &plusmn; 3.94&times;10<sup>-5</sup> (n=30)</td>
+                <td>2.49 &plusmn; 4.45&times;10<sup>-5</sup> (n=30)</td>
+                <td>2.18 &plusmn; 5.33&times;10<sup>-5</sup> (n=30)</td>
+            </tr>
+            <tr>
+                <td>Bambu Method Error</td>
+                <td>1.82 (n=5)</td>
+                <td>1.15 (n=5)</td>
+                <td>1.19 (n=5)</td>
+                <td>1.78 (n=5)</td>
+                <td>1.78 (n=5)</td>
+                <td>1.53 (n=5)</td>
+            </tr>
+            <tr>
+                <td>Bambu T-test p-value</td>
+                <td>0.21</td>
+                <td>0.25</td>
+                <td>0.22</td>
+                <td>0.22</td>
+                <td>0.24</td>
+                <td>0.39</td>
+            </tr>
+            <tr>
+                <td>Resin: raw error (mm)</td>
+                <td>2.48 &plusmn; 7.67&times;10<sup>-5</sup> (n=20)</td>
+                <td>3.94 &plusmn; 1.51&times;10<sup>-5</sup> (n=20)</td>
+                <td>2.84 &plusmn; 7.62&times;10<sup>-5</sup> (n=20)</td>
+                <td>2.50 &plusmn; 2.99&times;10<sup>-5</sup> (n=12)</td>
+                <td>2.42 &plusmn; 1.24&times;10<sup>-5</sup> (n=20)</td>
+                <td>3.00 &plusmn; 6.54&times;10<sup>-5</sup> (n=20)</td>
+            </tr>
+            <tr>
+                <td>Resin Method Error</td>
+                <td>2.26 (n=5)</td>
+                <td>1.63 (n=5)</td>
+                <td>1.88 (n=5)</td>
+                <td>2.39 (n=5)</td>
+                <td>2.19 (n=5)</td>
+                <td>1.57 (n=5)</td>
+            </tr>
+            <tr>
+                <td>Resin T-test p-value</td>
+                <td>0.42</td>
+                <td>0.16</td>
+                <td>0.20</td>
+                <td>0.27</td>
+                <td>0.40</td>
+                <td>0.14</td>
             </tr>
         </tbody>
     </table>
-
-
     <figcaption>
-        <strong>Table 1.</strong> Measurement of the print errors averaged over all textures, and then the corrected distances calculated by averaging the error from the scan and subtracting it from the distances. The measurements are in meters.
+        <strong>Table 2.</strong> Difference calculations for the Ender-3 (PLA+), Bambu Lab (PLA-) and Formlabs Form 3 resin printer (Grey V4.1), per texture. Raw error is the mean distance &plusmn; standard deviation between six repeat prints after ICP alignment; Method Error is the noise floor from repeated scans of a single, unmoved block; the T-test row reports the p-value for whether the raw error significantly exceeds this noise floor. All values are in mm (raw error and method error reported to matching order of magnitude).
     </figcaption>
 </figure>
 
 <p>
-    The calculated point cloud deviations for each manufacturing method are presented in
-    <strong>Table&nbsp;1</strong>. The average raw distance values represent the mean geometric
-    separation between repeated scans after ICP alignment, providing an estimate of the
-    overall repeatability error.
+Overall, the Ender-3 is the worst-performing printer, showing a larger difference between print batches than the Bambu or Resin. The Bambu and Resin have similar, smaller differences, both lying close to the noise floor of the scanning method itself &mdash; in most cases the t-test does not show the physical difference between prints clearly breaking through this noise floor. Because both printers' geometric deviations sit within, or close to, the optical scanner's noise floor, we treat the scan-based ranking between Bambu and Resin as unreliable for distinguishing the two, and instead look to the tactile classification results below.
+</p>
+
+<h3>Tactile Image Evaluation</h3>
+<p>
+To assess variability between tactile images, we collected TacTip readings from the 25 grid positions described above, with 2 readings per position, across each repeat sample. For each position, texture and printer/filament combination we calculated the mean pixel-level difference between unique pairs of repeats, using the mean-squared error between successive frames:
 </p>
 <p>
-    The Bambu printer produced an average raw deviation of 
-    <span>3.06 &times; 10<sup>-4</sup> m</span>, while the Ender-3 V3 exhibited a larger deviation of 
-    <span>4.21 &times; 10<sup>-4</sup> m</span>. The resin printed samples showed the lowest raw deviation, 
-    with an average distance error of <span>2.49 &times; 10<sup>-4</sup> m</span>.
+\[
+\mathrm{diff} = \frac{\sum^{n-1}_{i=0}(\mathrm{Frame}_{i}-\mathrm{Frame}_{i+1})^2}{n}
+\]
 </p>
 <p>
-    The standard error associated with the measurement method was calculated as 
-    <span>1.93 &times; 10<sup>-4</sup> m</span> and was used to account for uncertainty 
-    introduced by the measurement process. After applying this correction, the remaining 
-    geometric deviations were <span>1.13 &times; 10<sup>-4</sup> m</span> for the Bambu printer, 
-    <span>2.28 &times; 10<sup>-4</sup> m</span> for the Ender-3, and 
-    <span>5.58 &times; 10<sup>-5</sup> m</span> for the resin samples.
+This same calculation, applied to a stationary, unpressed TacTip, gives an estimate of background sensor noise, while applying it across the two repeat trials of the same block gives a method error. There were some corruptions in the dataset where LED power fluctuated and the image was too dark to use; this affected two samples (PLA+ Texture 6 batch 1 and Resin Texture 1 batch 1), removing a combined 100 images and leaving those particular texture/printer combinations with five batches instead of six (still six for the Bambu).
 </p>
-
-The corrected deviations indicate that the resin printed samples exhibited the highest repeatability, followed by the Bambu printer, while the Ender-3 showed the largest variation between repeated prints. These results suggest that the manufacturing process has a measurable influence on dimensional consistency.
-
-
+<p>
+Looking at the per-texture, per-printer pixel differences, the Ender-3 shows the most overlap between images, including a high difference between print batches of the same texture. The Bambu and Resin both show a clearer trend of lower variance for the same texture, with Textures 3 and 4, and Textures 2 and 3, tending to show lower variance between each other. The Bambu additionally shows more crossover between Textures 1, 5 and 6, which are structurally related as they are all protruding, single-direction waves, while Textures 2, 3 and 4 are all grids of shapes. From a sensor perspective, only the highest points of a block are touched; if Texture 2 or 3 is not as smooth or pointed as intended &mdash; as can happen with cheaper printer accuracy &mdash; it becomes more likely to be misclassified. From the filament-fed printers, the Bambu led to the least variance between prints, followed by the Ender-3; the resin printer had the lowest variance overall.
+</p>
 
 <h2 class="headerText">Results</h2>
-	<!-- From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication.  -->
+<!-- From our experiments outlined in the paper, we found that the resin printer lead to the least variance across prints. This makes resin printers the ideal choice for physical dataset replication.  -->
 
 <section id="printer-classification">
     <p>
-        The dataset consisted of all six textures produced using all printer–filament
-        combinations, resulting in a total of 8,100 images. To reduce memory
-        requirements, all images were converted to greyscale and downsampled to
-        40% of their original resolution, a preprocessing step previously shown not
+        To assess whether print variability affects downstream classification, we trained classifiers on textures gathered from the Ender-3 (PLA+), Bambu Lab (PLA-) and Resin printer-filament combinations. To mitigate time-varying sensor artifacts such as marker tracking noise or transient illumination fluctuations, two independent readings were recorded at each relative texture position, and a single TacTip sensor profile was used under identical robotic displacement constraints throughout, so that variations in the signal reflect physical manufacturing differences rather than sensor drift.
+    </p>
+    <p>
+        We trained both a Random Forest Classifier (RFC) and a feedforward artificial neural network (ANN), following our earlier work on tactile texture classification. The RFC used default scikit-learn hyperparameters: 50 decision trees, Gini impurity for splitting, unrestricted tree depth, \(\sqrt{n}\) features considered per split, and bootstrap sampling enabled. The ANN used a single hidden layer of size 50 and an output layer of 6, trained with cross-entropy loss and the Adam optimizer at a learning rate of 0.001 for 1500 epochs.
+    </p>
+
+    <p>
+        The dataset consisted of all six textures produced across the three selected printer-filament combinations, resulting in a total of 5,400 images. To reduce memory requirements, all images were converted to greyscale and downsampled to 40% of their original resolution, a preprocessing step previously shown not
         to affect classification performance. Data augmentation was applied to the
         training datasets to account for LED noise and global lighting variation.
     </p>
@@ -394,8 +472,7 @@ The corrected deviations indicate that the resin printed samples exhibited the h
         Gaussian noise with a mean of 0 and standard deviation of 5 was added to
         each pixel to create an additional noisy image. Brightness variation was
         introduced by adding and subtracting 10 intensity values from each pixel,
-        creating two additional images. This increased the dataset to 1200 images
-        per printer–filament combination. The ablation study showed that brightness
+        creating two additional images, quadrupling the data to 600 images per printer-filament batch (3,600 images across the 6 batches). The ablation study below showed that brightness
         augmentation did not improve accuracy, while noise injection provided a
         substantial improvement. Therefore, only noise augmentation was used for
         subsequent experiments.
@@ -404,12 +481,11 @@ The corrected deviations indicate that the resin printed samples exhibited the h
     <p>
         Principal Component Analysis (PCA) was then applied to reduce image
         dimensionality while retaining important tactile features. Preliminary
-        analysis showed a reduction in explained variance after approximately 15
-        components. Therefore, 25 principal components were selected as a balance
-        between dimensionality reduction and preservation of meaningful features.
+        analysis showed a sudden drop in explained variance after approximately 15
+        components. A component size of 300 lies on the curve of diminishing returns and was chosen to keep dimensionality low without losing meaningful variance in the data.
         PCA was fitted only on the training split, with the test split transformed
         using the fitted PCA model. The resulting components were used as input for
-        both Random Forest Classifiers and Artificial Neural Networks.
+        both the Random Forest Classifier and the ANN.
     </p>
 
     <figure>
@@ -418,15 +494,16 @@ The corrected deviations indicate that the resin printed samples exhibited the h
              style="width:80%; display:block; margin:auto;">
         <figcaption>
             Cumulative explained variance of PCA for tactile images collected from
-            the Bambu, Resin and Ender-3 V3 SE printers. The curves show the number
-            of principal components required to represent each dataset, highlighting
-            differences in variability introduced by different manufacturing
-            processes.
+            the Bambu, Resin and Ender-3 printers, against the number of
+            principal components required to represent each dataset. Dashed lines mark the 95% and 99% explained-variance thresholds. Differences between the curves reflect the intrinsic variability of tactile features produced by each printing process.
         </figcaption>
     </figure>
 
 
     <h3>Data Augmentation Ablation Study</h3>
+    <p>
+    To assess whether augmentation helped a classifier generalise across print batches, we trained a Random Forest Classifier on one batch of prints and tested it on a separate batch, repeating this over 20 trials per printer.
+    </p>
 
     <table>
         <thead>
@@ -438,67 +515,67 @@ The corrected deviations indicate that the resin printed samples exhibited the h
         </thead>
         <tbody>
             <tr>
-                <td rowspan="4">Bambu</td>
+                <td rowspan="4">Ender-3 (PLA+)</td>
                 <td>No augmentation</td>
-                <td>86.35</td>
+                <td>54.15 ± 0.03</td>
             </tr>
             <tr>
                 <td>Brightness</td>
-                <td>86.71</td>
+                <td>54.76 ± 0.03</td>
             </tr>
             <tr>
                 <td>Noise</td>
-                <td>92.40</td>
+                <td>76.52 ± 0.03</td>
             </tr>
             <tr>
                 <td>All augmentations</td>
-                <td>92.52</td>
+                <td>73.23 ± 0.02</td>
             </tr>
 			<br><br>
             <tr>
-                <td rowspan="4">Ender-3 V3 SE</td>
+                <td rowspan="4">Bambu (PLA-)</td>
                 <td>No augmentation</td>
-                <td>54.15 ± 0.033</td>
+                <td>89.52 ± 0.02</td>
             </tr>
             <tr>
                 <td>Brightness</td>
-                <td>54.76 ± 0.031</td>
+                <td>89.50 ± 0.02</td>
             </tr>
             <tr>
                 <td>Noise</td>
-                <td>76.52 ± 0.025</td>
+                <td>91.65 ± 0.01</td>
             </tr>
             <tr>
                 <td>All augmentations</td>
-                <td>73.23 ± 0.023</td>
+                <td>90.24 ± 0.02</td>
             </tr>
 			<br><br>
             <tr>
                 <td rowspan="4">Resin</td>
                 <td>No augmentation</td>
-                <td>80.40 ± 0.0261</td>
+                <td>80.40 ± 0.03</td>
             </tr>
             <tr>
                 <td>Brightness</td>
-                <td>79.99 ± 0.015</td>
+                <td>79.99 ± 0.02</td>
             </tr>
             <tr>
                 <td>Noise</td>
-                <td>94.98 ± 0.008</td>
+                <td>94.98 ± 0.01</td>
             </tr>
             <tr>
                 <td>All augmentations</td>
-                <td>94.50 ± 0.009</td>
+                <td>94.50 ± 0.01</td>
             </tr>
         </tbody>
     </table>
+    <p style="font-size: 13px;">
+    <strong>Table 3.</strong> Data augmentation ablation study across different 3D printers, from the Random Forest Classifier, averaged over 20 trials. The classifier was trained on one batch of prints and tested on a separate, unseen batch to assess whether augmentation helps with variability across prints. Data shown for the Ender-3 (PLA+), Bambu Lab (PLA-), and Formlabs Form 3 resin printer (Grey V4.1).
+    </p>
 
     <p>
-        Each classifier was initially trained using a single printer–filament
-        combination and evaluated on unseen printer–filament combinations to assess
-        generalisation across manufacturing conditions. Models trained on a single
-        print configuration achieved high accuracy on similar prints but showed
-        reduced performance when evaluated on unseen manufacturing conditions.
+        Each classifier was also trained using a single printer–filament
+        combination and evaluated on physically separate, held-out print batches from the same printer and filament, this time using a larger 5,400-image dataset (70% train split: 420 training samples, 180 same-batch test samples, and 5,100 unseen samples), across 20 trials.
     </p>
 
 
@@ -515,43 +592,51 @@ The corrected deviations indicate that the resin printed samples exhibited the h
         </thead>
         <tbody>
             <tr>
-                <td>RFC Ender-3 V3 SE</td>
-                <td>100.0%</td>
-                <td>99.53%</td>
-                <td>31.4%</td>
+                <td>RFC Ender-3</td>
+                <td>100.00% ± 0.00</td>
+                <td>99.53% ± 0.55</td>
+                <td>80.13% ± 1.22</td>
             </tr>
             <tr>
-                <td>ANN Ender-3 V3 SE</td>
-                <td>99.7%</td>
-                <td>99.3%</td>
-                <td>33.21%</td>
+                <td>ANN Ender-3</td>
+                <td>99.70% ± 0.024</td>
+                <td>95.30% ± 0.025</td>
+                <td>70.68% ± 0.173</td>
             </tr>
             <tr>
                 <td>RFC Bambu only</td>
-                <td>100%</td>
-                <td>99.7%</td>
-                <td>63.98%</td>
+                <td>100.00% ± 0.00</td>
+                <td>99.72% ± 0.28</td>
+                <td>93.56% ± 0.91</td>
             </tr>
             <tr>
                 <td>ANN Bambu only</td>
-                <td>100%</td>
-                <td>99.8%</td>
-                <td>53.73%</td>
+                <td>95.45% ± 0.02</td>
+                <td>94.88% ± 0.02</td>
+                <td>85.81% ± 0.04</td>
             </tr>
             <tr>
                 <td>RFC Resin</td>
-                <td>100%</td>
-                <td>99.3%</td>
-                <td>70.66%</td>
+                <td>100.00% ± 0.00</td>
+                <td>99.30% ± 0.44</td>
+                <td>95.70% ± 1.06</td>
             </tr>
             <tr>
                 <td>ANN Resin</td>
-                <td>100%</td>
-                <td>99.9%</td>
-                <td>61.41%</td>
+                <td>92.14% ± 0.05</td>
+                <td>91.36% ± 0.05</td>
+                <td>78.70% ± 0.08</td>
             </tr>
         </tbody>
     </table>
+    <p style="font-size: 13px;">
+    <strong>Table 4.</strong> Model classification performance across 20 trials. "Unseen Print Accuracy" shows performance when evaluated on physically distinct print batches held out entirely from training, using the same printer and filament configuration.
+    </p>
+
+    <p>
+        Models trained on a single print configuration achieved high accuracy on similar prints but showed
+        reduced performance when evaluated on unseen manufacturing conditions. The resin printer produced the highest cross-print accuracy of the three (95.70% with the Random Forest Classifier), with the Bambu Lab a competitive lower-cost alternative (93.56%), while the Ender-3 generalised the least well across separate print batches (80.13%).
+    </p>
 
 
     <h3>Confusion Matrices</h3>
@@ -578,49 +663,119 @@ The corrected deviations indicate that the resin printed samples exhibited the h
 			PDF viewer not available.
 		</p>
 	</object>
-       
+
 
         <figcaption>
             Confusion matrices for the Random Forest classifier trained on Bambu,
-            Resin and Ender-3 V3 SE datasets. Although manufacturing variation
-            reduces performance on unseen prints, classification remains above
+            Resin and Ender-3 datasets, all evaluated on unseen print batches. Although manufacturing variation
+            reduces performance on unseen prints, classification remains well above
             chance level (16.7% for six classes), demonstrating that transferable
             tactile features exist across different printing processes.
         </figcaption>
     </figure>
 
     <p>
-        Misclassifications primarily occurred between visually and physically
-        similar textures. For example, textures 2 and 3, and textures 1 and 5,
-        showed increased confusion. These errors are likely caused by small
+        Misclassifications consistently revolve around specific geometric similarities. Textures 2 and 3, and Textures 1 and 5,
+        show increased confusion, likely due to small
         variations in the printed geometry, where subtle differences in peak shape
-        or surface defects influence the tactile response. The classifier therefore
-        learns both the intended texture structure and manufacturing-specific
+        or surface defects influence the tactile response. Interestingly, the confusion between Textures 1 and 5 is a one-way relationship, suggesting a learned bias between similar patterns rather than symmetric ambiguity.
+    </p>
+
+    <p>
+        On the Ender-3, classification accuracy for Texture 1 degrades substantially to 61%, with 33% of its data mass leaking into Texture 5. This suggests that the fine micro-geometrical detail distinguishing Texture 1 sits close to the operational noise floor of the tactile sensor: on coarser extrusion systems such as the Ender-3, these faint signals are easily masked by macro-scale manufacturing noise such as layer shifts and extrusion variation, causing the model to confuse it with the more pronounced features of Texture 5. The much cleaner separation of Texture 1 on the high-fidelity resin platform shows that, once these baseline manufacturing artifacts are minimised, the tactile sensor's physical compliance can successfully extract the underlying texture signature. This suggests that cross-print generalisation is heavily influenced by printer-node variability, where manufacturing inconsistencies act as a confounding variable rather than a robust tactile trait. The classifier therefore learns both the intended texture structure and manufacturing-specific
         variations within the printed samples.
     </p>
 
 </section>
 
-<h2>Possible Extensions of Datasets</h2>
-Though this dataset is designed to be scalable like the USAF resolution tests in the 1950s, we did work on further 3D patterns generated from geometric functions. This extentsion serves as a greater challenge for tactile surface classification. 
-<div class="stl-grid">
+<h2 class="headerText">Discussion</h2>
+<p>
+It is worth noting that the geometric scan-based ranking of printers (Bambu marginally ahead of Resin, Section on 3D Scan Evaluation) and the tactile classification-based ranking (Resin substantially ahead of Bambu) disagree. Given that both printers' geometric deviations sit within, or close to, the optical scanner's noise floor, we treat the scan-based ordering as unreliable for distinguishing the two, and instead rely on the classification-based result, where the contact-based TacTip sensor is able to leverage localised physical surface compliance to pick up on micro-geometrical differences that a non-contact optical scanner cannot reliably resolve.
+</p>
 
-				<div id="stl7">Loading...</div>
-				<div id="stl8">Loading...</div>
-				<div id="stl9">Loading...</div>
-				<div id="stl10">Loading...</div>
+<h2 class="headerText">Conclusions</h2>
+<p>
+This paper introduces a method for generating geometrically patterned, rigid 3D printed textures that can be reliably reproduced across different research teams, enabling fair and consistent comparisons between sensors on texture classification tasks. Our investigations highlight that filament type and printer quality can significantly influence the resulting texture fidelity. Among the filament-fed printer models, the Bambu Lab showed less difference between print batches than the Ender-3, which also experienced more stringing and messier prints overall. The resin printer was best overall, showing the lowest difference between prints and the strongest classification generalisation to unseen prints.
+</p>
+<p>
+To assess how variance affects classification accuracy, we evaluated classification performance across multiple printer–filament combinations. The resin printer led to improved classification performance on unseen data and tended to show lower variance within tactile image comparisons; however, the 3D scan results did not show clear evidence of the resin printer outperforming the Bambu geometrically, and we consider that comparison to sit at the resolution limit of the scanning method. Among filament-based systems, higher-end printers such as the Bambu Lab performed competitively, while lower-cost systems such as the Ender-3 exhibited greater variability. Our evaluation suggests that high-resolution resin printing is a highly capable baseline, while the Bambu Lab paired with PLA provides a strong lower-cost alternative. Importantly, by introducing a variance-based evaluation methodology by which other researchers can compare their own prints to our dataset, we have provided a repeatable method that can be applied to assess other printer and filament combinations.
+</p>
+<p>
+Although the 3D scanning analysis quantifies the geometric fidelity of the printed textures, manufacturing imperfections remain a potential source of confounding: classifiers may exploit subtle print-induced artifacts in addition to the intended texture geometry, particularly for lower-fidelity fabrication methods such as FDM printing. While we cannot completely exclude the possibility that such artifacts contribute to classification performance, our results indicate that using a resin printer could largely eliminate this source of noise.
+</p>
+<p>
+A limitation of this study is that evaluations were conducted using a single physical unit per printer model, so observed variation reflects both localised unit-level maintenance state and model-level performance capability. Future cross-lab studies are required to isolate machine-specific wear from broader technology-class constraints. This work also did not explore slicer-level optimisation or printer calibration, which offer clear opportunities to further reduce variability, particularly for lower-cost systems. In summary, this study provides a reproducible dataset, a methodology for producing such datasets, and a structured evaluation framework for quantifying and comparing the effects of 3D printing parameters on texture consistency, supporting future work in texture analysis and fair tactile sensor benchmarking.
+</p>
+<p style="font-size: 13px;">
+<strong>Acknowledgments.</strong> DS was funded by a be.AI Leverhulme Trust Doctoral Scholarship. We thank Nashil Sowaruth for 3D printing the resin models.
+</p>
 
-				<div id="stl11">Loading...</div>
-				<div id="stl12">Loading...</div>
-				<div id="stl13">Loading...</div>
-				<div id="stl14">Loading...</div>
+<h2 class="headerText">Appendix: Intel RealSense D405 Configuration</h2>
+<p>The following tables detail the exact camera configuration used for the 3D scan evaluation described above, to aid reproducibility.</p>
+<div align="center">
+<table border="1" style="border-collapse: collapse; text-align: center; font-size: 12px;">
+  <caption><strong>Table A1:</strong> Intel RealSense D405 configuration used in our experiments.</caption>
+  <thead>
+    <tr><th>Property</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Device</td><td>Intel RealSense D405</td></tr>
+    <tr><td>Product Line</td><td>D400</td></tr>
+    <tr><td>Firmware Version</td><td>5.17.0.10</td></tr>
+    <tr><td>Depth Format</td><td>Z16</td></tr>
+    <tr><td>IR Format</td><td>Y8</td></tr>
+    <tr><td>Resolution</td><td>848 × 480</td></tr>
+    <tr><td>Frame Rate</td><td>15 FPS</td></tr>
+    <tr><td>Schema Version</td><td>1</td></tr>
+  </tbody>
+</table>
+</div>
+<br>
+<div align="center">
+<table border="1" style="border-collapse: collapse; text-align: center; font-size: 11px;">
+  <caption><strong>Table A2:</strong> Intel RealSense D405 camera parameters.</caption>
+  <thead>
+    <tr><th>Parameter</th><th>Value</th><th>Parameter</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Auto Exposure</td><td>True</td><td>Manual Exposure</td><td>33000</td></tr>
+    <tr><td>Depth Gain</td><td>16</td><td>Auto White Balance</td><td>True</td></tr>
+    <tr><td>Depth Units</td><td>100</td><td>Z Units</td><td>100</td></tr>
+    <tr><td>Depth Clamp Min</td><td>0</td><td>Depth Clamp Max</td><td>65536</td></tr>
+    <tr><td>Disparity Mode</td><td>0</td><td>Disparity Shift</td><td>0</td></tr>
+    <tr><td>Amplitude Factor</td><td>0</td><td>Lambda AD</td><td>800</td></tr>
+    <tr><td>Lambda Census</td><td>26</td><td>Left-Right Threshold</td><td>24</td></tr>
+    <tr><td>Median Threshold</td><td>500</td><td>Neighbor Threshold</td><td>7</td></tr>
+    <tr><td>Min Score Threshold A</td><td>1</td><td>Max Score Threshold B</td><td>2047</td></tr>
+    <tr><td>Second Peak Delta</td><td>325</td><td>Texture Count Threshold</td><td>0</td></tr>
+    <tr><td>Texture Difference Threshold</td><td>0</td><td>Use RSM</td><td>1</td></tr>
+    <tr><td>RAU Min E</td><td>1</td><td>RAU Min N</td><td>1</td></tr>
+    <tr><td>RAU Min S</td><td>1</td><td>RAU Min W</td><td>1</td></tr>
+    <tr><td>RAU Min NS Sum</td><td>3</td><td>RAU Min WE Sum</td><td>3</td></tr>
+    <tr><td>Region Shrink U</td><td>3</td><td>Region Shrink V</td><td>1</td></tr>
+    <tr><td>Region Color Threshold (R)</td><td>0.0499022</td><td>Region Color Threshold (G)</td><td>0.0499022</td></tr>
+    <tr><td>Region Color Threshold (B)</td><td>0.0499022</td><td>RSM Diff Threshold</td><td>4</td></tr>
+    <tr><td>RSM RAU SLO Diff Threshold</td><td>1</td><td>RSM Remove Threshold</td><td>0.375</td></tr>
+    <tr><td>Scanline P1</td><td>60</td><td>Scanline P2</td><td>342</td></tr>
+    <tr><td>Scanline P1 (1 Discon.)</td><td>105</td><td>Scanline P2 (1 Discon.)</td><td>190</td></tr>
+    <tr><td>Scanline P1 (2 Discon.)</td><td>70</td><td>Scanline P2 (2 Discon.)</td><td>130</td></tr>
+    <tr><td>Scanline Edge Tau (R)</td><td>72</td><td>Scanline Edge Tau (G)</td><td>72</td></tr>
+    <tr><td>Scanline Edge Tau (B)</td><td>72</td><td>Robbins-Monro Increment</td><td>10</td></tr>
+    <tr><td>Robbins-Monro Decrement</td><td>10</td><td>Ignore SAD</td><td>0</td></tr>
+  </tbody>
+</table>
+</div>
 
-				<div id="stl5">Loading...</div>
-				<div id="stl16">Loading...</div>
-				<div id="stl17">Loading...</div>
-				<div id="stl18">Loading...</div>
-
-			</div>
+<h2 class="headerText">Possible Extensions of Datasets</h2>
+Though this dataset is designed to be scalable like the USAF resolution tests in the 1950s, we did work on further 3D patterns generated from geometric functions. This extentsion serves as a greater challenge for tactile surface classification.
+<div align="center" style="margin: 20px 0;">
+	<p id="ext-stl-label" style="font-weight:bold;">Loading...</p>
+	<div id="stl-viewer-ext" style="width:100%; max-width:400px; height:300px; margin:auto; border:1px solid #ccc; border-radius:6px; background:#f4f4f4;"></div>
+	<div style="margin-top:10px;">
+		<button id="ext-stl-prev" style="padding:6px 14px; margin-right:8px; cursor:pointer;">&laquo; Back</button>
+		<button id="ext-stl-next" style="padding:6px 14px; cursor:pointer;">Next &raquo;</button>
+	</div>
+</div>
 <h3><strong>Texture Seven</strong></h3>
 <p>
     This texture uses a sine and cosine combination to make a higher frequency continuous pointed pattern.
@@ -673,7 +828,7 @@ Though this dataset is designed to be scalable like the USAF resolution tests in
  	\[
     D(x,y) =  \cos\left(0.5x - \frac{\sqrt{3}}{2}y\right)
     \]
-	
+
 	<br>
     \[
     z_{11} = \cos(x) +  C(x,y) +  D(x,y)
@@ -807,15 +962,17 @@ Though this dataset is designed to be scalable like the USAF resolution tests in
 					1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
 					8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
 				  </svg>
-			  
+
 				  See Repo
 				</button>
 			  </a></div>
 	</div>
 </body>
 <script>
+// All 19 generated texture STL files (Texture 1 - Texture 19; Texture 20 does not
+// yet have a corresponding STL export). The first 6 are the core benchmark set,
+// the remainder are the extended/harder benchmark set.
 const stlFiles = [
-
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z0_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z1_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z2_surface.stl",
@@ -834,37 +991,134 @@ const stlFiles = [
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z15_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z16_surface.stl",
     "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z17_surface.stl",
-    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z18_surface.stl",
-
+    "https://raw.githubusercontent.com/shepai/3D-textures/main/Generator/objects/z18_surface.stl"
 ];
 
+/**
+ * A single-model STL viewer with Back/Next navigation. Only the model that is
+ * currently on screen is ever fetched, so switching between textures is fast
+ * and the page never has to download all files at once.
+ */
+function createSingleStlViewer(containerId, prevBtnId, nextBtnId, labelId, files, labels) {
+    const container = document.getElementById(containerId);
+    const prevBtn = document.getElementById(prevBtnId);
+    const nextBtn = document.getElementById(nextBtnId);
+    const labelEl = document.getElementById(labelId);
+    if (!container || !prevBtn || !nextBtn || !labelEl || !files.length) return;
 
-const containers = [
+    const width = container.clientWidth || 380;
+    const height = container.clientHeight || 300;
 
-    "stl1",
-    "stl2",
-    "stl3",
-    "stl4",
-    "stl5",
-    "stl6",
-    "stl7",
-    "stl8",
-    "stl9",
-    "stl10",
-    "stl11",
-    "stl12",
-    "stl13",
-    "stl14",
-    "stl15",
-    "stl16",
-    "stl17",
-    "stl18",
-    "stl19",
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf4f4f4);
 
-];
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(0, -60, 45);
+    camera.up.set(0, 0, 1);
+    camera.lookAt(0, 0, 0);
 
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(width, height);
+    container.innerHTML = "";
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0x888888));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    keyLight.position.set(1, -1, 1);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    fillLight.position.set(-1, 1, 0.5);
+    scene.add(fillLight);
+
+    const loader = new THREE.STLLoader();
+    let mesh = null;
+    let currentIndex = 0;
+    let loadToken = 0; // guards against a slow load finishing after the user has moved on
+
+    function clearMesh() {
+        if (mesh) {
+            scene.remove(mesh);
+            mesh.geometry.dispose();
+            mesh.material.dispose();
+            mesh = null;
+        }
+    }
+
+    function loadIndex(index) {
+        const token = ++loadToken;
+        currentIndex = index;
+        labelEl.textContent = "Loading " + labels[index] + "...";
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+
+        loader.load(
+            files[index],
+            function (geometry) {
+                if (token !== loadToken) return; // a newer request has since started
+                clearMesh();
+                geometry.center();
+                geometry.computeBoundingBox();
+                const size = new THREE.Vector3();
+                geometry.boundingBox.getSize(size);
+                const maxDim = Math.max(size.x, size.y, size.z) || 1;
+                const scale = 40 / maxDim;
+
+                const material = new THREE.MeshPhongMaterial({
+                    color: 0x3f88c5,
+                    specular: 0x222222,
+                    shininess: 60
+                });
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.scale.set(scale, scale, scale);
+                scene.add(mesh);
+
+                labelEl.textContent = labels[index] + " (" + (index + 1) + " / " + files.length + ")";
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            },
+            undefined,
+            function () {
+                if (token !== loadToken) return;
+                labelEl.textContent = "Could not load " + labels[index] + ".";
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+            }
+        );
+    }
+
+    prevBtn.addEventListener("click", function () {
+        loadIndex((currentIndex - 1 + files.length) % files.length);
+    });
+    nextBtn.addEventListener("click", function () {
+        loadIndex((currentIndex + 1) % files.length);
+    });
+
+    (function animate() {
+        requestAnimationFrame(animate);
+        if (mesh) mesh.rotation.z += 0.008;
+        renderer.render(scene, camera);
+    })();
+
+    loadIndex(0);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const mainLabels = ["Texture 1", "Texture 2", "Texture 3", "Texture 4", "Texture 5", "Texture 6"];
+    const extLabels = [
+        "Texture 7", "Texture 8", "Texture 9", "Texture 10", "Texture 11", "Texture 12",
+        "Texture 13", "Texture 14", "Texture 15", "Texture 16", "Texture 17", "Texture 18", "Texture 19"
+    ];
+
+    createSingleStlViewer(
+        "stl-viewer-main", "main-stl-prev", "main-stl-next", "main-stl-label",
+        stlFiles.slice(0, 6), mainLabels
+    );
+
+    createSingleStlViewer(
+        "stl-viewer-ext", "ext-stl-prev", "ext-stl-next", "ext-stl-label",
+        stlFiles.slice(6), extLabels
+    );
+});
 </script>
- <script src="../code/JS_Package.js">
-load_3d();
- </script>
 </html>
