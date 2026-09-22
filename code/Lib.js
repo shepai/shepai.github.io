@@ -1,5 +1,11 @@
 const projects = [
     {
+        title:"EasyLabel",
+        description:"Simple labeller for dataset making",
+        image:"https://github.com/shepai/EasyLabel/raw/main/Example%20assets/image.png",
+        link:"https://github.com/shepai/EasyLabel"
+    },
+    {
         title: "OpenEduBot",
         description: "Tools for MicroPython educational robots for teaching in schools.",
         image: "assets/openEdu.jpg",
