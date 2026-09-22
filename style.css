@@ -121,7 +121,237 @@ pre {
 	border: 0;
 	border-style:hidden;
 }
+/* ================================
+   PROJECT DISPLAY
+   ================================ */
 
+#projects-container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* The desktop circle */
+
+.projects-circle {
+    position: relative;
+
+    width: 1050px;
+    height: 1050px;
+
+    max-width: 100%;
+
+    margin: 50px auto;
+}
+
+/* Individual project */
+
+.projects-circle .projects-item {
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    transform: translate(-50%, -50%);
+}
+
+
+/* Image */
+
+.projects-image {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition:
+        filter 0.4s ease,
+        transform 0.4s ease;
+}
+
+
+/* Overlay */
+
+.projects-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 50%;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    color: white;
+
+    pointer-events: none;
+}
+
+
+/* Title */
+
+.projects-overlay h3 {
+    margin: 0;
+
+    font-size: 1.1rem;
+
+    text-shadow:
+        0 2px 4px rgba(0,0,0,0.9);
+}
+
+
+/* Description */
+
+.projects-overlay p {
+    margin: 10px 0 0;
+
+    font-size: 0.85rem;
+    line-height: 1.4;
+
+    opacity: 0;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+/* Hover */
+
+.projects-item:hover .projects-image {
+    filter: brightness(25%) blur(1px);
+
+    transform: scale(1.05);
+}
+
+
+.projects-item:hover .projects-overlay p {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* ================================
+   NAVIGATION
+   ================================ */
+
+.projects-nav {
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 20;
+
+    width: 50px;
+    height: 50px;
+
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 25px;
+}
+
+
+#projects-prev {
+    left: 20px;
+}
+
+
+#projects-next {
+    right: 20px;
+}
+
+
+.projects-nav:disabled {
+    opacity: 0.25;
+
+    cursor: default;
+}
+
+
+#projects-page-info {
+    text-align: center;
+
+    margin: 10px;
+
+    font-size: 0.9rem;
+}
+
+
+/* ================================
+   MOBILE
+   ================================ */
+
+.projects-mobile {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 30px;
+
+    padding: 30px 0;
+}
+
+
+.projects-mobile .projects-item {
+    position: relative;
+
+    width: min(80vw, 250px);
+    height: min(80vw, 250px);
+}
+
+
+/* Mobile navigation */
+
+@media (max-width: 600px) {
+
+    #projects-prev,
+    #projects-next {
+        position: static;
+
+        transform: none;
+
+        margin: 10px;
+    }
+
+    #projects-container {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    #projects-display {
+        width: 100%;
+    }
+
+}
 .contactIcon {
 	font-size:36px!important;
 	color:black;
