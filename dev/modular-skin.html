@@ -96,7 +96,17 @@ We used KiCad to design the PCB, using surface mount parts for ease of manufactu
     <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/PCB.png">
 </div>
 <br><br>
-
+Our initial design planned to use the the analogue pins of the ATTINY, however, the ADC leakage across pins was significant. We switched to using a 16 channel multiplexer. 
+The newer design could read from up to 16 sensors, which meant the board had 6 force pads, three x-y-z accelerometer, two magnetic sensors, and one temperature sensor. The design expanded to a triangular design made up of 9 smaller triangles. 
+This design was costly. The expense of the CAN bus was the highest amount, however the CAN bus was ideal for this modular task. The best thing we can do is expand the PCB to get "more for your money" per pad. 
+This was seperated into two types of board, the CAN hub, and the pad array. The pad arrays were based on the PressTip design with an 8-channel I2C multiplexler. These multiplexers could have up to 4 devices per I2C channel. We cannot have incorrect attachments of I2C buses.
+The pad array modules would fit around the hub, with only a maximum of three that can be attached, following the modular triangle design. These nests of hubs and modules bring together 
+<br>
+<div align="center"align="center">
+    <img width="70%"  src="https://raw.githubusercontent.com/shepai/TacSheet/refs/heads/main/Assets/type2.PNG">
+</div>
+<br><br>
+This design expands the surface area of sensory reading, keeping most the pads cheaper per CAN bus. 
 <h2>Results</h2>
 
 <h2>References</h2>
