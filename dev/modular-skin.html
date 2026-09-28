@@ -71,6 +71,15 @@ ATTINY1616 were soldered on surface mount PCBs.
 <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/tacsheet/proto.jpg" width="40%">
 </div>
 <br><br>
+The full design could send information over a CAN bus, we tested it with three potentiometers and an event threshold of 0.97% of the maximum range. The prototype circuit was able to transmit analogue events across the CAN bus to central controller. At this point no experiments were done for transmission speed, this breadboard circuit was to test the PCB before designing it. 
+
+
+<br><br>
+ <div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/tacsheet/prototype.jpg" width="40%">
+</div>
+<br><br>
+
 <h4>Programming</h4>
 To program the ATTINY1616 with the Arduino IDE requires a few steps. You will need an Arduino (we use the Arduino Uno) which will act as the programmer. 
 You will need to configure your Arduino IDE to be able to do this. 
