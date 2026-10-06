@@ -9,7 +9,7 @@ const SITE_DATA = {
   "publications": [
     {
       "year": 2026,
-      "type": "PhD Thesis",
+      "type": "Thesis",
       "title": "Get a grip: evaluating tactile sensing technologies for adaptive robotic locomotion",
       "authors": "Shepherd D.",
       "venue": "University of Sussex",
@@ -63,6 +63,14 @@ const SITE_DATA = {
     },
     {
       "year": 2025,
+      "type": "Dataset",
+      "title": "Ant snapshot dataset",
+      "authors": "Jesusanmi O., Dexter Shepherd, Amin A., et al.",
+      "venue": "University of Sussex",
+      "doi": "10.25377/sussex.29109845"
+    },
+    {
+      "year": 2025,
       "type": "Journal Article",
       "title": "Texture and friction classification: optical TacTip vs. vibrational piezoelectric and accelerometer tactile sensors",
       "authors": "Shepherd D., Husbands P., Philippides A., et al.",
@@ -95,7 +103,7 @@ const SITE_DATA = {
     },
     {
       "year": 2023,
-      "type": "Dissertation",
+      "type": "Thesis",
       "title": "Bio-Inspired Robotic Navigation On Varied Terrain",
       "authors": "Shepherd D.",
       "venue": "ResearchGate",
