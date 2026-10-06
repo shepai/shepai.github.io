@@ -1037,9 +1037,226 @@ li {
 section {
   margin-bottom: 2rem;
 }
+/* Typography: Rockwell headings (same as the site title), thin rules, comfortable reading */
+		.page-text h1 {
+			margin: 0 0 .3rem;
+			font-family: Rockwell, "Courier Bold", Georgia, serif;
+			font-size: 2.1rem;
+			line-height: 1.15;
+		}
+		.page-text .lead {
+			margin: 0 0 .5rem;
+			color: #4b5563;
+			font-size: 1.1rem;
+		}
+		.page-text h2 {
+			margin: 2.75rem 0 .9rem;
+			padding-bottom: .4rem;
+			border-bottom: 1px solid #9ca3af;
+			font-family: Rockwell, "Courier Bold", Georgia, serif;
+			font-size: 1.45rem;
+			line-height: 1.25;
+		}
+		.page-text h3 {
+			margin: 2rem 0 .5rem;
+			font-size: 1.1rem;
+		}
+		.page-text p {
+			margin: 0 0 1rem;
+			color: #1f2937;
+			line-height: 1.7;
+		}
+		.page-text p a { text-underline-offset: 2px; }
+
+		/* Photos: equal-size rounded rectangles, centred, no circles.
+		   Add class "four" to a row of four photos. */
+		.image-row.photos {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 12px;
+			margin: 1.25rem 0 1.75rem;
+		}
+		.image-row.photos img {
+			width: min(190px, 13vw);            /* sized from the screen width, so three fit in the narrow column */
+			height: auto;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;                  /* crops to fit instead of squashing */
+			object-position: center 25%;        /* keeps faces near the top in the crop */
+			border-radius: 6px;
+		}
+		.image-row.photos.four img { width: min(140px, 10vw); }
+		@media (max-width: 760px) {
+			.image-row.photos img { width: 25vw; }
+			.image-row.photos.four img { width: 18vw; }
+		}
+
+		/* Embedded video */
+		.video {
+			position: relative;
+			height: 0;
+			padding-bottom: 56.25%;             /* 16:9 */
+			margin: 1.25rem 0 1.75rem;
+			overflow: hidden;
+			border-radius: 6px;
+		}
+		.video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+		/* Link buttons */
+		.button-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 1rem; }
+		.link-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 18px;
+			font-weight: bold;
+			color: #fff;
+			background: #0f0f0f;               /* same as the nav bar */
+			border: 2px solid #0f0f0f;
+			border-radius: 6px;
+			text-decoration: none;
+			transition: background-color .15s, color .15s;
+		}
+		.link-button .fa { font-size: 1.4em; }
+		.link-button:hover,
+		.link-button:focus-visible { color: #0f0f0f; background: #fff; }
+		.link-button:focus-visible { outline: 3px solid #f7a725; outline-offset: 2px; }
 /* publications.css – extends style.css
    Palette taken from the site: ink #0f0f0f (nav), orange #f7a725 (chat widget), greys from the CV styles. */
+.position > p,
+.subposition > p { max-width: 68ch; margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.7; }
+ 
+/* ---------- "At a glance" numbers ---------- */
+.facts { display: flex; flex-wrap: wrap; gap: 1.25rem 2.5rem; margin: 0 0 1.75rem; padding: 0; }
+.fact  { display: flex; flex-direction: column-reverse; justify-content: flex-end; max-width: 15rem; }   /* number on top, label below */
+.fact dd {
+  margin: 0;
+  font-family: Rockwell, Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.fact dd::before {            /* short accent bar, same length on every fact */
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 4px;
+  margin-bottom: .5rem;
+  background: var(--accent);
+}
+.fact dt { margin-top: .4rem; font-size: .875rem; line-height: 1.35; color: var(--muted); }
+ 
+/* ---------- Photos ----------
+   Change --photo-radius to 8px for rounded squares instead of circles. */
+.pub-page .photo-row {
+  --photo-radius: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 1.25rem 0 0;
+}
+.photo-row img {
+  display: block;
+  width: clamp(96px, 16vw, 150px);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;             /* crops instead of squashing */
+  border-radius: var(--photo-radius);
+}
+ 
+/* ---------- Award callout ---------- */
+.callout {
+  max-width: 68ch;
+  margin: 1.75rem 0 0;
+  padding: 1rem 1.25rem 1.25rem;
+  background: #f9fafb;
+  border-left: 4px solid var(--accent);
+}
+.callout p { margin: 0; font-size: 1.05rem; line-height: 1.6; }
+ 
+/* ---------- Conference sub-sections ---------- */
+.pub-page h3.sub-title {
+  position: static;
+  margin: 2rem 0 .6rem;
+  padding: 0;
+  border-top: 0;
+  font-size: 1.3rem;
+}
+.subposition + .subposition { margin-top: 2.25rem; padding-top: .25rem; border-top: 1px solid var(--rule); }
+.position .pub-links { margin-top: 1rem; }
+ /* Typography: Rockwell headings (same as the site title), thin rules, comfortable reading */
+		.positions h1 {
+			margin: 0 0 .3rem;
+			font-family: Rockwell, "Courier Bold", Georgia, serif;
+			font-size: 2.1rem;
+			line-height: 1.15;
+		}
+		.positions .lead {
+			margin: 0 0 .5rem;
+			color: #4b5563;
+			font-size: 1.1rem;
+		}
+		.positions h2 {
+			margin: 2.75rem 0 .9rem;
+			padding-bottom: .4rem;
+			border-bottom: 1px solid #9ca3af;
+			font-family: Rockwell, "Courier Bold", Georgia, serif;
+			font-size: 1.45rem;
+			line-height: 1.25;
+		}
+		.positions h3 {
+			margin: 2rem 0 .5rem;
+			font-size: 1.1rem;
+		}
+		.positions p {
+			margin: 0 0 1rem;
+			color: #1f2937;
+			line-height: 1.7;
+		}
+		.positions p a { text-underline-offset: 2px; }
 
+		/* Photos: up to three per row, equal-size rounded rectangles (no circles) */
+		.image-row.photos {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 12px;
+			margin: 1.25rem 0 1.75rem;
+		}
+		.image-row.photos img {
+			width: min(190px, 13vw);            /* sized from the screen width, so three fit in the narrow column */
+			height: auto;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;                  /* crops to fit instead of squashing */
+			object-position: center 25%;        /* keeps faces near the top in the crop */
+			border-radius: 6px;
+		}
+		@media (max-width: 760px) {
+			.image-row.photos img { width: 25vw; }
+		}
+
+		/* Link button */
+		.link-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 18px;
+			font-weight: bold;
+			color: #fff;
+			background: #0f0f0f;               /* same as the nav bar */
+			border: 2px solid #0f0f0f;
+			border-radius: 6px;
+			text-decoration: none;
+			transition: background-color .15s, color .15s;
+		}
+		.link-button .fa { font-size: 1.4em; }
+		.link-button:hover,
+		.link-button:focus-visible { color: #0f0f0f; background: #fff; }
+		.link-button:focus-visible { outline: 3px solid #f7a725; outline-offset: 2px; }
+/* ---------- Colour fixes for the dark-red accent (white text, not near-black) ---------- */
+.pub-award,
+.pub-filters button[aria-pressed="true"] .count { color: #fff; }
 :root {
   --ink: #0f0f0f;
   --text: #1f2937;
