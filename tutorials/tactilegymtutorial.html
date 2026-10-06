@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +7,42 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/test1.ico" type="favicon/ico">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+	<style>
+		/* Tutorial-only styles: code blocks, callouts, table of contents */
+		.main pre {
+			background: #1e2327;
+			color: #e6edf3;
+			padding: 14px 16px;
+			border-radius: 6px;
+			overflow-x: auto;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+		.main code { font-family: Consolas, Menlo, monospace; }
+		.main p code, .main li code, .main td code {
+			background: rgba(128,128,128,0.2);
+			padding: 1px 5px;
+			border-radius: 4px;
+			font-size: 0.92em;
+		}
+		.note {
+			border-left: 4px solid #4a90d9;
+			background: rgba(74,144,217,0.12);
+			padding: 10px 14px;
+			margin: 16px 0;
+			border-radius: 0 6px 6px 0;
+		}
+		.toc { margin: 16px 0 24px 0; }
+		.toc li { margin: 4px 0; }
+		.main table { border-collapse: collapse; margin: 14px 0; }
+		.main th, .main td { border: 1px solid rgba(128,128,128,0.5); padding: 6px 12px; text-align: left; }
+		.main img.demo { max-width: 100%; border-radius: 6px; margin: 10px 0; }
+		.ghbtn {
+			display: inline-flex; align-items: center; gap: 8px;
+			padding: 10px 16px; background-color: #24292e; color: white;
+			border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
+		}
+	</style>
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -18,105 +53,228 @@
 <a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
 <a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
 
-<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
-<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
-<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
-<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
 <a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
 <a align="right" href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" class="ai ai-google-scholar ai-2x"></a>
 <a align="right" href="https://github.com/shepai" class="fa fa-github"></a>
 <a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
 <a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
-<script src="https://shepai.github.io/search.js">
-
-</script>
-
+<script src="https://shepai.github.io/search.js"></script>
 </div>
+
 	<!-- the main content -->
 	<div class="main">
 		<h1 class="headerText">Tactile sensing in soft simulation tutorial</h1>
-		<h5>Posted 07/07/2026</h5>
-		 
-		  <br>
-          MuJoCo (Multi-Joint dynamics with Contact) is a physics simulation engine widely used in robotics research for modelling complex interactions between bodies, joints, and contacts in real time. We explored this in <a href="softbodies.html">a previous tutorial</a> for development of soft bodied simulations. In this tutorial we will be exploring existing tactile gyms I have created. 
+		<h5>Posted 06/10/2026</h5>
+		<br>
 
-          These gyms provide TacTip or TacTip style optical tactile sensing to physical robots. Constructing real robots with tactile sensors is costly, and not simple to run reinforcement learning on. This is why we work in simulation. However, making a simulation work well enough
-        Each gym has a GitHub link, and an associated setup instruction in the GitHub readmes. I will not be explaining the setup of mujoco or the gyms, as it is covered on those pages. 
-          <h2>TacTip gym</h2>
-          The tacTip gym provides a TacTip sensor on various robot bodies. It is also simple to attach to your own robotic design. This gym is all about attaching soft bodied sensors onto robot chassis, so that we can gather tactile information in a phsyics simulation. 
-      <br> <br><div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
-            <button style="
-              display: inline-flex;
-              align-items: center;
-              gap: 8px;
-              padding: 10px 16px;
-              background-color: #24292e;
-              color: white;
-              border: none;
-              border-radius: 6px;
-              font-size: 14px;
-              font-weight: 500;
-              cursor: pointer;
-            ">
-              <!-- GitHub SVG Logo -->
-              <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
-                0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
-                -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
-                2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
-                0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
-                2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
-                2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
-                1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
-                1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
-                8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              See Repo
-            </button>
-           
-          </a></div>
-          <br><br>
-           This tutorial page will show you how to get started with the existing gyms, and how to add the sensor to your own robot chassis. 
-          <h2>Tactile ball gym</h2>
-          The tactile ball gym applies the principles from the TacTip gym environment, but on an actual moving chassis. This chassis uses two tactips as wheels, with a central body hodling the electronics and cameras. 
-          The aim of this simulation is to explore whole body tactile sensors. This gym has the one chassis, but across different terrains and environments. 
-<br><br><div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
-            <button style="
-              display: inline-flex;
-              align-items: center;
-              gap: 8px;
-              padding: 10px 16px;
-              background-color: #24292e;
-              color: white;
-              border: none;
-              border-radius: 6px;
-              font-size: 14px;
-              font-weight: 500;
-              cursor: pointer;
-            ">
-              <!-- GitHub SVG Logo -->
-              <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
-                0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
-                -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
-                2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
-                0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
-                2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
-                2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
-                1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
-                1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
-                8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              See Repo
-            </button>
-          </a></div>
-        </div>
+		MuJoCo (Multi-Joint dynamics with Contact) is a physics simulation engine widely used in robotics research for modelling complex interactions between bodies, joints, and contacts in real time. We explored this in <a href="softbodies.html">a previous tutorial</a> for the development of soft bodied simulations. In this tutorial we will be exploring the tactile gyms I have created.
+		<br><br>
+		These gyms provide TacTip, or TacTip style, optical tactile sensing to simulated robots. Constructing real robots with tactile sensors is costly, and it is not simple to run reinforcement learning on physical hardware: training needs millions of interactions, and soft sensors wear out. This is why we work in simulation. However, making a simulation of a soft sensor work well enough to be useful is not trivial, so the gyms package that work up for you. Each gym follows the standard <a href="https://gymnasium.farama.org/" target="_blank">Gymnasium</a> interface, so it should slot into existing reinforcement learning code.
+		<br><br>
+		Each gym has a GitHub link and associated setup instructions in the GitHub readme. I will only cover installation briefly, as the repositories keep the up to date version.
 
+		<div id="table-of-contents">
+    <h2>Contents</h2>
+</div>
+
+		<h2 id="how">How the simulated TacTip works</h2>
+		The TacTip is an optical tactile sensor. A soft, silicone dome has rows of small pins on its inside surface, and a camera looks at the pin tips. When the dome touches something, it deforms and the pins move, and the camera sees those pin displacements. The tactile signal is the image of the pins, rather than a force reading.
+		<br><br>
+		In simulation, the dome is a mesh of points joined by a flexible structure so that it behaves like soft silicone (see the <a href="softbodies.html">soft body tutorial</a> for how this was built). A virtual camera inside the dome renders the pins each step, which gives us an image observation just like the real sensor would. The simulated sensor is based on my earlier <a href="https://github.com/shepai/Robot_foot" target="_blank">robot foot repo</a>.
+
+		<h2 id="tactip">TacTip gym</h2>
+		The TacTip gym provides a TacTip sensor on various robot bodies. It is also simple to attach to your own robotic design. This gym is all about attaching soft bodied sensors onto robot chassis, so that we can gather tactile information in a physics simulation.
+		<br><br><div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
+			<button class="ghbtn">
+				<svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+					<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+					0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+					-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+					2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+					0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+					2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+					2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+					1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+					1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+					8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+				</svg>
+				See Repo
+			</button>
+		</a></div>
+		<br>
+		<div align="center">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/example.gif" alt="TacTip in simulator" width="300">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/armgif.gif" alt="TacTip on a robot arm" width="300">
+		</div>
+
+		<h3 id="install">Installation</h3>
+		You will need Python with MuJoCo installed (see the MuJoCo setup pages for your operating system). Clone the repository, move into the folder, and install it in editable mode:
+<pre><code>git clone https://github.com/shepai/TacTip-gym.git
+cd TacTip-gym
+pip install -e .</code></pre>
+		Editable mode (<code>-e</code>) means that any changes you make to the source, such as editing the sensor parameters, take effect without reinstalling. You will also want OpenCV (<code>pip install opencv-python</code>) if you plan to view the tactile images.
+
+		<h3 id="envs">Available environments</h3>
+		Importing the package registers each environment with Gymnasium, so you can create one with <code>gym.make</code>.
+		<table>
+			<tr><th>Environment</th><th>Description</th></tr>
+			<tr><td><code>RandomTac-v0</code></td><td>A standalone TacTip with boxes of random placement. This is the simplest environment, and has no controllable actions as it is just the basic sensor.</td></tr>
+			<tr><td><code>RobotArm-v0</code></td><td>A TacTip mounted on the end of a robot arm that can move around and touch objects.</td></tr>
+		</table>
+
+		<h3 id="loop">Your first simulation loop</h3>
+		Start by creating the environment. Note that the import of <code>tactip_mujoco_gym</code> is needed even though it is never called directly, as it triggers the registration.
+<pre><code>import time
+import gymnasium as gym
+import tactip_mujoco_gym  # triggers register()
+
+import mujoco.viewer
+
+env = gym.make("RandomTac-v0")
+model = env.unwrapped.model
+data = env.unwrapped.data</code></pre>
+		The <code>model</code> and <code>data</code> objects are the underlying MuJoCo model and simulation state. We pull them out of <code>env.unwrapped</code> so that we can hand them to the MuJoCo viewer.
+		<br><br>
+		Then we open a viewer window to visualise the simulation. Inside the main loop there are three jobs: choose an <b>action</b> (what you want the robot body to do), <b>step</b> the environment (pass the command through and make a physics step), and <b>sync</b> the viewer so the window updates.
+<pre><code>with mujoco.viewer.launch_passive(model, data) as viewer:
+    while viewer.is_running():
+        # RandomTac has no actions that change anything, so we pass an empty list
+        obs, reward, terminated, truncated, info = env.step([])
+
+        # Sync viewer with updated physics
+        viewer.sync()
+
+        # Reset if the episode ends
+        if terminated:
+            obs, info = env.reset()</code></pre>
+		<div class="note">The examples folder in the repo contains complete versions of these scripts, which are a good starting point to copy from.</div>
+
+		<h3 id="view">Viewing the tactile image</h3>
+		The observation is a dictionary, and the tactile image lives under the <code>"image"</code> key. You can show what the sensor camera sees by adding the following inside the loop:
+<pre><code>import cv2
+
+img = obs["image"]
+cv2.imshow("sensor_cam", img)
+cv2.waitKey(1)
+# small sleep so it doesn't max out the CPU
+time.sleep(env.unwrapped.model.opt.timestep)</code></pre>
+		When a box presses into the dome, you should see the pin pattern distort around the contact point. That distortion is the tactile signal that a policy or classifier would learn from.
+
+		<h3 id="arm">The robot arm environment</h3>
+		<code>RobotArm-v0</code> gives the sensor a body that you can actually move. Its spaces are:
+		<table>
+			<tr><th>Space</th><th>Type</th><th>Shape</th><th>Description</th></tr>
+			<tr><td>Observation</td><td>Dict</td><td><code>{"image": (H, W, C)}</code></td><td>Tactile sensor image observation</td></tr>
+			<tr><td>Action</td><td>Box</td><td><code>(6,)</code></td><td>Six continuous motor commands</td></tr>
+		</table>
+		Because there is a real action space, we can now sample random actions and pass them in:
+<pre><code>env = gym.make("RobotArm-v0")
+model = env.unwrapped.model
+data = env.unwrapped.data
+obs, info = env.reset()
+
+with mujoco.viewer.launch_passive(model, data) as viewer:
+    while viewer.is_running():
+        action = env.action_space.sample()   # six random motor commands
+        obs, reward, terminated, truncated, info = env.step(action)
+        viewer.sync()
+
+        if terminated or truncated:
+            obs, info = env.reset()</code></pre>
+		Replace <code>env.action_space.sample()</code> with your own controller or a learned policy to do something useful.
+
+		<h3 id="own">Adding the sensor to your own robot</h3>
+		<!-- TODO (Dexter): fill this in with the actual file names / include mechanism used in the repo. -->
+		The sensor is defined in the MuJoCo model files in the repo's <code>assets</code> folder. To put a TacTip on your own chassis, the general process is:
+		<ol>
+			<li><b>Copy the sensor definition</b> from the assets folder into your own robot's model folder, keeping the mesh files next to it.</li>
+			<li><b>Include it in your robot's XML</b>, and attach it to the body where you want the sensor (for example the end of a limb or the rim of a wheel).</li>
+			<li><b>Position the sensor</b> so the dome faces outwards and has room to deform without starting inside another geometry.</li>
+			<li><b>Keep the sensor camera</b> inside the dome, as this is what produces the tactile image.</li>
+			<li><b>Register your own environment</b> that loads the new model, copying the observation handling from the existing environments.</li>
+		</ol>
+		If the sensor explodes or jitters on first load, reduce the simulation timestep slightly or check that nothing is overlapping at the start.
+
+		<h2 id="ball">Tactile ball gym</h2>
+		The tactile ball gym applies the principles from the TacTip gym environment, but on an actual moving chassis. This chassis uses two TacTips as wheels, with a central body holding the electronics and cameras. The aim of this simulation is to explore whole body tactile sensors, where the entire surface of the robot is sensing as it rolls. This gym has the one chassis, but across different terrains and environments.
+		<br><br><div align="center"><a href="https://github.com/shepai/tactile-ball-robot" target="_blank" style="text-decoration: none;">
+			<button class="ghbtn">
+				<svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+					<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+					0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+					-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+					2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+					0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+					2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+					2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+					1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+					1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+					8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+				</svg>
+				See Repo
+			</button>
+		</a></div>
+		<br>
+		<div align="center">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/roll.gif" alt="TacTip wheel simulation" width="300">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/ball2.png" alt="Tactile ball robot" width="300">
+		</div>
+
+		<h3>Installation</h3>
+		The gym lives in a subfolder of the repository, so install it from there:
+<pre><code>git clone https://github.com/shepai/tactile-ball-robot.git
+cd tactile-ball-robot/ball-gym
+pip install -e .</code></pre>
+
+		<h3>Running it</h3>
+		<!-- TODO (Dexter): replace the package name, environment ID(s), terrain options, and action/observation spaces with the real ones from ball-gym. -->
+		The ball gym follows the same pattern as the TacTip gym: import the package to register it, make the environment, and step it in a loop.
+<pre><code>import gymnasium as gym
+import ball_gym   # TODO: replace with the real package name
+
+env = gym.make("TacBall-v0")   # TODO: replace with the real environment ID
+obs, info = env.reset()
+
+for _ in range(1000):
+    action = env.action_space.sample()
+    obs, reward, terminated, truncated, info = env.step(action)
+    if terminated or truncated:
+        obs, info = env.reset()</code></pre>
+		<table>
+			<tr><th>Space</th><th>Type</th><th>Description</th></tr>
+			<tr><td>Observation</td><td>TODO</td><td>TODO: tactile images from the two TacTip wheels (and any body camera)</td></tr>
+			<tr><td>Action</td><td>TODO</td><td>TODO: wheel motor commands</td></tr>
+		</table>
+		The simulated chassis matches the physical robot in the repo's <code>physical robot</code> folder, and the <code>generate_robot</code> folder holds the scripts used to build the model. The <code>experiments/simulated</code> folder contains the experiments I ran in this gym, which are useful reference scripts.
+
+		<h2 id="rl">Training a policy with tactile observations</h2>
+		Since both gyms follow the Gymnasium interface, you can use standard reinforcement learning libraries. The main thing to be aware of is that observations are images, so you need a policy network that can process them (a small CNN encoder is a good start). With Stable-Baselines3, for example, you would use a <code>MultiInputPolicy</code> for the dictionary observation:
+<pre><code>from stable_baselines3 import PPO
+
+model = PPO("MultiInputPolicy", env, verbose=1)
+model.learn(total_timesteps=100_000)</code></pre>
+		Tips that tend to help with tactile images:
+		<ul>
+			<li><b>Downscale the image</b> (for example to 64x64) or convert to grayscale to speed up training considerably.</li>
+			<li><b>Run without the viewer</b> during training, as rendering a window slows the simulation down a lot.</li>
+			<li><b>Use several parallel environments</b> to collect more tactile data per second.</li>
+		</ul>
+
+		<h2 id="trouble">Troubleshooting</h2>
+		<ul>
+			<li><b><code>NameNotFound</code> error when calling <code>gym.make</code>:</b> the package was not imported, so the environments were never registered. Make sure <code>import tactip_mujoco_gym</code> comes first.</li>
+			<li><b>Viewer window does not open:</b> check your MuJoCo and graphics setup. On macOS the viewer may need to be launched with <code>mjpython</code>.</li>
+			<li><b>No tactile image window appears:</b> make sure OpenCV is installed, and that <code>cv2.waitKey(1)</code> is called every loop so the window refreshes.</li>
+			<li><b>Simulation runs slowly:</b> soft bodies are expensive. Close the camera window, reduce the image resolution, or train without the viewer.</li>
+		</ul>
+
+		<h2>Next steps</h2>
+		From here you could try collecting a dataset of tactile images against object shape, training a policy to push objects with the arm, or exploring how the ball gym handles different terrains. If you build something with these gyms, or find a bug, please open an issue on the relevant GitHub repository or <a href="https://shepai.github.io/contact.html">get in touch</a>.
+	</div>
 
 </body>
-<script>
+ <script src="../code/JS_Package.js">
 
-
-</script>
+ </script>
 
 </html>
