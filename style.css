@@ -1700,3 +1700,51 @@ only screen and (max-width: 760px),
         overflow-x: hidden;
     }
 }
+/* ===== Research paper pages (use with: class="main tutorial paper") ===== */
+
+/* Display equations scroll sideways instead of overflowing */
+.paper mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+/* Tables */
+.paper table.compact { margin-left: auto; margin-right: auto; font-size: 12px; }
+.paper table.compact.small { font-size: 11px; }
+.paper table.compact th,
+.paper table.compact td { text-align: center; }
+.paper table caption { margin-bottom: 6px; }
+.paper tbody + tbody { border-top: 3px solid rgba(128,128,128,0.6); }
+
+/* Figures and captions */
+.paper figure { margin: 1.2em 0; text-align: center; }
+.paper figure img { max-width: 100%; height: auto; }
+.paper figure img.wide { width: 80%; }
+.paper figure img.half { width: 45%; }
+.paper figcaption,
+.paper .caption-text { font-size: 13px; }
+
+/* STL viewers */
+.paper .viewer-wrap { margin: 20px 0; text-align: center; }
+.paper .viewer-label { font-weight: bold; }
+.paper .viewer-box {
+  width: 100%; max-width: 400px; height: 300px; margin: auto;
+  border: 1px solid #ccc; border-radius: 6px; background: #f4f4f4;
+}
+.paper .viewer-btns { margin-top: 10px; }
+.paper .viewer-btns button { padding: 6px 14px; cursor: pointer; }
+.paper .viewer-btns button + button { margin-left: 8px; }
+
+@media screen and (max-width: 600px) {
+  /* Make the equation scrollbar visible on phones */
+  .paper mjx-container[display="true"] { scrollbar-width: thin; }
+  .paper mjx-container[display="true"]::-webkit-scrollbar { height: 6px; }
+  .paper mjx-container[display="true"]::-webkit-scrollbar-thumb {
+    background: rgba(128,128,128,0.6); border-radius: 3px;
+  }
+  .paper figure img.half,
+  .paper figure img.wide { width: 100%; }
+}
