@@ -1599,6 +1599,83 @@ only screen and (max-width: 760px),
   ol.refs li { display: grid; grid-template-columns: 2.6em 1fr; padding: .4em 0; border-bottom: 1px solid rgba(128,128,128,.3); }
   ol.refs li:target { background: rgba(255, 220, 80, .35); }
   ol.refs a.link { word-break: break-all; }
+/* ===== Tutorial pages (scoped to .tutorial) ===== */
+.tutorial pre {
+  background: #1e2327;
+  color: #e6edf3;
+  padding: 14px 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.tutorial code { font-family: Consolas, Menlo, monospace; }
+.tutorial p code,
+.tutorial li code,
+.tutorial td code {
+  background: rgba(128,128,128,0.2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+.tutorial .note {
+  border-left: 4px solid #4a90d9;
+  background: rgba(74,144,217,0.12);
+  padding: 10px 14px;
+  margin: 16px 0;
+  border-radius: 0 6px 6px 0;
+}
+.tutorial .toc { margin: 16px 0 24px 0; }
+.tutorial .toc li { margin: 4px 0; }
+.tutorial table { border-collapse: collapse; margin: 14px 0; }
+.tutorial th,
+.tutorial td {
+  border: 1px solid rgba(128,128,128,0.5);
+  padding: 6px 12px;
+  text-align: left;
+}
+.tutorial img.demo { max-width: 100%; border-radius: 6px; margin: 10px 0; }
+.tutorial .ghbtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; background-color: #24292e; color: white;
+  border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
+}
+.tutorial .table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.main.tutorial {
+  display: block;
+  box-sizing: border-box;
+}
+
+/* ----- Phone mode ----- */
+@media screen and (max-width: 600px) {
+  .tutorial {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+  }
+
+  .tutorial pre {
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: pre;            /* don't wrap, scroll instead */
+    overflow-x: scroll;          /* always show the scrollbar */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;                       /* Firefox */
+    scrollbar-color: #6b7680 #2a3036;
+  }
+  /* Chrome / Safari / Android: makes the bar actually visible */
+  .tutorial pre::-webkit-scrollbar { height: 8px; }
+  .tutorial pre::-webkit-scrollbar-track { background: #2a3036; border-radius: 4px; }
+  .tutorial pre::-webkit-scrollbar-thumb { background: #6b7680; border-radius: 4px; }
+
+  .tutorial table { max-width: 100%; }
+}
 @media screen and (max-width: 600px) {
 
     .main {

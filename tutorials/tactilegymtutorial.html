@@ -2,47 +2,12 @@
 <html>
 <head>
 	<title>SHEP AI</title>
-	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<link rel="stylesheet" type="text/css" href="../style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/test1.ico" type="favicon/ico">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-	<style>
-		/* Tutorial-only styles: code blocks, callouts, table of contents */
-		.main pre {
-			background: #1e2327;
-			color: #e6edf3;
-			padding: 14px 16px;
-			border-radius: 6px;
-			overflow-x: auto;
-			font-size: 14px;
-			line-height: 1.5;
-		}
-		.main code { font-family: Consolas, Menlo, monospace; }
-		.main p code, .main li code, .main td code {
-			background: rgba(128,128,128,0.2);
-			padding: 1px 5px;
-			border-radius: 4px;
-			font-size: 0.92em;
-		}
-		.note {
-			border-left: 4px solid #4a90d9;
-			background: rgba(74,144,217,0.12);
-			padding: 10px 14px;
-			margin: 16px 0;
-			border-radius: 0 6px 6px 0;
-		}
-		.toc { margin: 16px 0 24px 0; }
-		.toc li { margin: 4px 0; }
-		.main table { border-collapse: collapse; margin: 14px 0; }
-		.main th, .main td { border: 1px solid rgba(128,128,128,0.5); padding: 6px 12px; text-align: left; }
-		.main img.demo { max-width: 100%; border-radius: 6px; margin: 10px 0; }
-		.ghbtn {
-			display: inline-flex; align-items: center; gap: 8px;
-			padding: 10px 16px; background-color: #24292e; color: white;
-			border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
-		}
-	</style>
+	<!-- Tutorial styles now live in style.css, scoped under .tutorial -->
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -62,7 +27,7 @@
 </div>
 
 	<!-- the main content -->
-	<div class="main">
+	<div class="main tutorial">
 		<h1 class="headerText">Tactile sensing in soft simulation tutorial</h1>
 		<h5>Posted 06/10/2026</h5>
 		<br>
@@ -74,8 +39,8 @@
 		Each gym has a GitHub link and associated setup instructions in the GitHub readme. I will only cover installation briefly, as the repositories keep the up to date version.
 
 		<div id="table-of-contents">
-    <h2>Contents</h2>
-</div>
+			<h2>Contents</h2>
+		</div>
 
 		<h2 id="how">How the simulated TacTip works</h2>
 		The TacTip is an optical tactile sensor. A soft, silicone dome has rows of small pins on its inside surface, and a camera looks at the pin tips. When the dome touches something, it deforms and the pins move, and the camera sees those pin displacements. The tactile signal is the image of the pins, rather than a force reading.
@@ -103,8 +68,8 @@
 		</a></div>
 		<br>
 		<div align="center">
-			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/example.gif" alt="TacTip in simulator" width="300">
-			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/armgif.gif" alt="TacTip on a robot arm" width="300">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/example.gif" alt="TacTip in simulator" width="50%">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/armgif.gif" alt="TacTip on a robot arm" width="50%">
 		</div>
 
 		<h3 id="install">Installation</h3>
@@ -116,11 +81,13 @@ pip install -e .</code></pre>
 
 		<h3 id="envs">Available environments</h3>
 		Importing the package registers each environment with Gymnasium, so you can create one with <code>gym.make</code>.
-		<table>
-			<tr><th>Environment</th><th>Description</th></tr>
-			<tr><td><code>RandomTac-v0</code></td><td>A standalone TacTip with boxes of random placement. This is the simplest environment, and has no controllable actions as it is just the basic sensor.</td></tr>
-			<tr><td><code>RobotArm-v0</code></td><td>A TacTip mounted on the end of a robot arm that can move around and touch objects.</td></tr>
-		</table>
+		<div class="table-scroll">
+			<table>
+				<tr><th>Environment</th><th>Description</th></tr>
+				<tr><td><code>RandomTac-v0</code></td><td>A standalone TacTip with boxes of random placement. This is the simplest environment, and has no controllable actions as it is just the basic sensor.</td></tr>
+				<tr><td><code>RobotArm-v0</code></td><td>A TacTip mounted on the end of a robot arm that can move around and touch objects.</td></tr>
+			</table>
+		</div>
 
 		<h3 id="loop">Your first simulation loop</h3>
 		Start by creating the environment. Note that the import of <code>tactip_mujoco_gym</code> is needed even though it is never called directly, as it triggers the registration.
@@ -132,20 +99,22 @@ import mujoco.viewer
 
 env = gym.make("RandomTac-v0")
 model = env.unwrapped.model
-data = env.unwrapped.data</code></pre>
+data = env.unwrapped.data
+obs, info = env.reset()</code></pre>
 		The <code>model</code> and <code>data</code> objects are the underlying MuJoCo model and simulation state. We pull them out of <code>env.unwrapped</code> so that we can hand them to the MuJoCo viewer.
 		<br><br>
 		Then we open a viewer window to visualise the simulation. Inside the main loop there are three jobs: choose an <b>action</b> (what you want the robot body to do), <b>step</b> the environment (pass the command through and make a physics step), and <b>sync</b> the viewer so the window updates.
 <pre><code>with mujoco.viewer.launch_passive(model, data) as viewer:
     while viewer.is_running():
-        # RandomTac has no actions that change anything, so we pass an empty list
-        obs, reward, terminated, truncated, info = env.step([])
+        # RandomTac has no actions that change anything,
+        # so we pass an empty list
+        obs, r, te, tr, info = env.step([])
 
         # Sync viewer with updated physics
         viewer.sync()
 
         # Reset if the episode ends
-        if terminated:
+        if te or tr:
             obs, info = env.reset()</code></pre>
 		<div class="note">The examples folder in the repo contains complete versions of these scripts, which are a good starting point to copy from.</div>
 
@@ -162,11 +131,13 @@ time.sleep(env.unwrapped.model.opt.timestep)</code></pre>
 
 		<h3 id="arm">The robot arm environment</h3>
 		<code>RobotArm-v0</code> gives the sensor a body that you can actually move. Its spaces are:
-		<table>
-			<tr><th>Space</th><th>Type</th><th>Shape</th><th>Description</th></tr>
-			<tr><td>Observation</td><td>Dict</td><td><code>{"image": (H, W, C)}</code></td><td>Tactile sensor image observation</td></tr>
-			<tr><td>Action</td><td>Box</td><td><code>(6,)</code></td><td>Six continuous motor commands</td></tr>
-		</table>
+		<div class="table-scroll">
+			<table>
+				<tr><th>Space</th><th>Type</th><th>Shape</th><th>Description</th></tr>
+				<tr><td>Observation</td><td>Dict</td><td><code>{"image": (H, W, C)}</code></td><td>Tactile sensor image observation</td></tr>
+				<tr><td>Action</td><td>Box</td><td><code>(6,)</code></td><td>Six continuous motor commands</td></tr>
+			</table>
+		</div>
 		Because there is a real action space, we can now sample random actions and pass them in:
 <pre><code>env = gym.make("RobotArm-v0")
 model = env.unwrapped.model
@@ -175,11 +146,12 @@ obs, info = env.reset()
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while viewer.is_running():
-        action = env.action_space.sample()   # six random motor commands
-        obs, reward, terminated, truncated, info = env.step(action)
+        # six random motor commands
+        action = env.action_space.sample()
+        obs, r, te, tr, info = env.step(action)
         viewer.sync()
 
-        if terminated or truncated:
+        if te or tr:
             obs, info = env.reset()</code></pre>
 		Replace <code>env.action_space.sample()</code> with your own controller or a learned policy to do something useful.
 
@@ -216,8 +188,8 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
 		</a></div>
 		<br>
 		<div align="center">
-			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/roll.gif" alt="TacTip wheel simulation" width="300">
-			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/ball2.png" alt="Tactile ball robot" width="300">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/roll.gif" alt="TacTip wheel simulation" width="50%">
+			<img class="demo" src="https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/ball2.png" alt="Tactile ball robot" width="50%">
 		</div>
 
 		<h3>Installation</h3>
@@ -230,21 +202,23 @@ pip install -e .</code></pre>
 		<!-- TODO (Dexter): replace the package name, environment ID(s), terrain options, and action/observation spaces with the real ones from ball-gym. -->
 		The ball gym follows the same pattern as the TacTip gym: import the package to register it, make the environment, and step it in a loop.
 <pre><code>import gymnasium as gym
-import ball_gym   # TODO: replace with the real package name
+import ball_gym  # TODO: replace with the real package name
 
-env = gym.make("TacBall-v0")   # TODO: replace with the real environment ID
+env = gym.make("TacBall-v0")  # TODO: replace with the real environment ID
 obs, info = env.reset()
 
 for _ in range(1000):
     action = env.action_space.sample()
-    obs, reward, terminated, truncated, info = env.step(action)
-    if terminated or truncated:
+    obs, r, te, tr, info = env.step(action)
+    if te or tr:
         obs, info = env.reset()</code></pre>
-		<table>
-			<tr><th>Space</th><th>Type</th><th>Description</th></tr>
-			<tr><td>Observation</td><td>TODO</td><td>TODO: tactile images from the two TacTip wheels (and any body camera)</td></tr>
-			<tr><td>Action</td><td>TODO</td><td>TODO: wheel motor commands</td></tr>
-		</table>
+		<div class="table-scroll">
+			<table>
+				<tr><th>Space</th><th>Type</th><th>Description</th></tr>
+				<tr><td>Observation</td><td>TODO</td><td>TODO: tactile images from the two TacTip wheels (and any body camera)</td></tr>
+				<tr><td>Action</td><td>TODO</td><td>TODO: wheel motor commands</td></tr>
+			</table>
+		</div>
 		The simulated chassis matches the physical robot in the repo's <code>physical robot</code> folder, and the <code>generate_robot</code> folder holds the scripts used to build the model. The <code>experiments/simulated</code> folder contains the experiments I ran in this gym, which are useful reference scripts.
 
 		<h2 id="rl">Training a policy with tactile observations</h2>
@@ -272,9 +246,6 @@ model.learn(total_timesteps=100_000)</code></pre>
 		From here you could try collecting a dataset of tactile images against object shape, training a policy to push objects with the arm, or exploring how the ball gym handles different terrains. If you build something with these gyms, or find a bug, please open an issue on the relevant GitHub repository or <a href="https://shepai.github.io/contact.html">get in touch</a>.
 	</div>
 
+	<script src="../code/JS_Package.js"></script>
 </body>
- <script src="../code/JS_Package.js">
-
- </script>
-
 </html>
