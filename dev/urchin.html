@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SHEP AI</title>
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/STLLoader.js"></script>
+<script src="https://shepai.github.io//tex-mml-chtml.js"></script>
+<!-- <script>
+window.addEventListener("load", () => {
+    const script = document.createElement("script");
+    script.src = "https://polyfill.io/v3/polyfill.min.js?features=es6";
+    script.async = true;
+    document.head.appendChild(script);
+});
+</script> -->
+<style>
+  /* Styles for the literature review only; colours inherit from the site theme */
+  #about h3 { margin-top: 1.6em; }
+  #about a.c { font-size: .85em; text-decoration: none; white-space: nowrap; }
+  #about a.c:hover { text-decoration: underline; }
+  #table-of-contents ol { margin: .3em 0 0; padding-left: 1.3em; }
+  .tablewrap { overflow-x: auto; margin: 1em 0; }
+  .tablewrap table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: .9em; }
+  .tablewrap th, .tablewrap td { text-align: left; vertical-align: top; padding: .5em .7em; border: 1px solid rgba(128,128,128,.4); }
+  .tablewrap th { font-weight: bold; }
+  .tablewrap tr.this td { font-weight: bold; }
+  .tcap { font-size: .85em; opacity: .8; margin-top: -.4em; }
+  ol.refs { list-style: none; padding-left: 0; font-size: .92em; }
+  ol.refs li { display: grid; grid-template-columns: 2.6em 1fr; padding: .4em 0; border-bottom: 1px solid rgba(128,128,128,.3); }
+  ol.refs li:target { background: rgba(255, 220, 80, .35); }
+  ol.refs a.link { word-break: break-all; }
+</style>
+</head>
+<body class="backgroundC">
+<div class="topnav">
+<p class="title" align="center">Dexter Shepherd</p>
+<a align="left" class="topnavlogo"><img src="https://shepai.github.io/assets/eyeT.png" width="50px" height="50px"></a>
+<a class="topnavleft" href="https://shepai.github.io/index.html">Home</a>
+<a class="topnavleft" href="https://shepai.github.io/index.html#about">About</a>
+<a class="topnavleft" href="https://shepai.github.io/downloads.html">Downloads</a>
+<a class="topnavleft" href="https://shepai.github.io/contact.html">Contact</a><br>
+<!-- <a align="right" href="https://www.facebook.com/SHEP-AI-101118428133298/" class="fa fa-facebook"></a>
+<a align="right" href="https://twitter.com/ai_shep" class="fa fa-twitter"></a>
+<a align="right" href="https://www.instagram.com/shep.ai/" class="fa fa-instagram"></a>
+<a align="right" href="https://www.youtube.com/channel/UCQr_MHaJ53feVK19lDKDxCQ?view_as=subscriber" class="fa fa-youtube"></a> -->
+<a align="right" href="https://www.linkedin.com/in/dexter-shepherd-1a4a991b8/" class="fa fa-linkedin"></a>
+<a align="right" href="https://scholar.google.com/citations?hl=en&user=hJSy6CYAAAAJ" class="ai ai-google-scholar ai-2x"></a>
+<a align="right" href="https://github.com/shepai" class="fa fa-github"></a>
+<a class="topnavright" class="search-container"><input id="searchbar" type="text" placeholder="Search.." name="search"></a>
+<a href="#" class="topnavright"><i onclick="search()" class="icon fa fa-search"></i></a>
+<script src="https://shepai.github.io/search.js">
+
+</script>
+
+</div>
+	<!-- the main content -->
+	<div class="main">
+        <h1 class="headerText">Tactile Urchin Robot</h1>
+        <section id="about">
+    Repo based on the <a href="https://github.com/shepai/tactile-ball-robot">ball robot gym</a>, but makes use of a sea urchin inspired robot instead. The ball is made of a Icosahedron shape of interconnected tactile triangular sensors.
+These sensors are based on the <a href="https://github.com/shepai/TacSheet">TacSheet repo</a>. 
+<br><br>
+
+<div id="table-of-contents">
+    <h2>Contents</h2>
+</div>
+
+<h2>Background</h2>
+
+<h3 id="rolling">Ball locomotion</h3>
+<p>Rolling is a locomotion strategy found in nature and increasingly exploited in robotics. Armour and Vincent&rsquo;s review of rolling in nature and robotics separates organisms into active and passive rollers, depending on whether they generate their own rolling motion or are rolled by external forces, and compares seven design principles for rolling robots on how well they suit unknown but fairly smooth terrain <a class="c" href="#ref-1">[1]</a>. Chase and Pandya identify the attractions of the spherical form as holonomic motion, a sealed internal environment and an ability to rebound from collisions. They also note that early &ldquo;hamster-ball&rdquo; designs suffered from limited torque and energy loss to internal friction, which motivated a wide range of alternative propulsion principles <a class="c" href="#ref-2">[2]</a>. A more recent systematic review covering 1996 to 2023 catalogues the locomotion systems and control schemes of spherical rolling robots, restricting its scope to machines that use the shell itself to move <a class="c" href="#ref-3">[3]</a>.</p>
+<p>The main trade-off across this literature is that the properties that make a ball attractive (an enclosed body, omnidirectionality, robustness to impact) are tied to a design in which the shell turns around, or is driven by, an internal mechanism. How that mechanism is arranged largely decides what the robot can do on real ground.</p>
+
+<h3 id="terrain">Rolling across terrain</h3>
+<p>Rolling is most attractive where wheels and legs struggle. Polyhedral rolling bodies can rest on modest slopes without any actuation, and can operate in low-gravity or low-friction settings where conventional wheeled robots cannot <a class="c" href="#ref-6">[6]</a>. The near-spherical Buckybot platform, for instance, offers both passive and active rolling, which its designers highlight for fast travel and for descending steep slopes <a class="c" href="#ref-6">[6]</a>. Broader reviews of planetary surface mobility give the wider context in which such morphologies are considered <a class="c" href="#ref-5">[5]</a>.</p>
+<p>The limitations are equally well documented. Shi et al. state that conventional fixed-shell spherical robots are mainly suited to flat ground and have difficulty with steep slopes, uneven surfaces and obstacle-rich environments, and that single-mode pendulum or wheel drives restrict them on slippery or deformable ground <a class="c" href="#ref-4">[4]</a>. Their own response is to make the shell reconfigurable, scaling it between 400 and 500 mm so that the prototype can clear obstacles up to 30 mm <a class="c" href="#ref-4">[4]</a>. This points to a general lesson: a purely smooth, passive shell is a poor interface with rough terrain, and robots that change their morphology gain terrain adaptability.</p>
+
+<h3 id="urchin">Sea-urchin-inspired robots and the rotation problem</h3>
+<p>Sea-urchin-inspired robots take that lesson in a particular direction. Mateos&rsquo;s bionic sea urchin robot distributes fourteen telescopic actuators (&ldquo;spines&rdquo;) over a spherical body. Extended, the spines let the robot stand and propel itself; folded away, they let it roll <a class="c" href="#ref-7">[7]</a>. The robot can stand on three, four or five spines on a flat surface, and on rough ground it extends four spines until all are in contact so that its inclination is secured. It then moves by extending a further spine to push while compressing another to choose the direction <a class="c" href="#ref-7">[7]</a>. A companion paper describes the same idea as a spherical mobile robot wearing an actuated exoskeleton. With the spines contracted it behaves as a rolling ball, and with the spines extended in a controlled pattern it can walk across flat ground, snow and rocks <a class="c" href="#ref-8">[8]</a>.</p>
+<p>Polyhedral relatives follow the same logic. Buckybot is based on a truncated icosahedron with twelve linearly actuated pentagonal faces, which extend to tip the robot from one resting face to the next. Because the body is isotropic it works in any orientation and can be thrown or dropped without affecting what it does afterwards <a class="c" href="#ref-6">[6]</a>.</p>
+<p>These architectures sidestep a practical difficulty of shell-driven balls. In a barycentric or pendulum-driven sphere, the shell rotates around an internal drive and payload, so anything attached to the shell moves relative to the electronics inside, and the mechanism must stay sealed and decoupled from the rotating body (see the driving principles surveyed in <a class="c" href="#ref-2">[2]</a>). In a spined or piston-driven robot, the pistons push the body round from outside a single rigid core, so the controller, batteries, actuators and sensors remain fixed relative to one another. The whole robot still tumbles as it moves, which is why Buckybot&rsquo;s designers propose placing identical sensors on every face so that sensing capability does not depend on orientation, and why they suggest compliant material in place of rigid faces to absorb impact <a class="c" href="#ref-6">[6]</a>. Both suggestions point directly towards sensorised, soft outer surfaces.</p>
+
+<h3 id="touch">Tactile skins and whole-body sensing</h3>
+<p>Tactile sensing has historically been concentrated on fingertips and hands. Dahiya et al.&rsquo;s review, which starts from the human sense of touch, notes that tactile sensing has now been extended to the whole body although many issues remain open <a class="c" href="#ref-9">[9]</a>. Recent skin work shows what the benefit can look like in practice. Egli et al. fit a soft sensorised skin to a tendon-driven humanoid hand and report that the soft skin yields firmer grasps and that integrated piezoresistive sensors enhance tactile sensing <a class="c" href="#ref-10">[10]</a>. DexSkin is a soft, conformable capacitive electronic skin that localises contact over a large, contoured region and can be tailored to different geometries <a class="c" href="#ref-11">[11]</a>. Both are motivated by manipulation, but the same properties (conformability, coverage and local contact information) are what a robot with a faceted or curved body needs.</p>
+<p>Tactile sensing has also been taken in a complementary direction, towards locomotion and terrain. Our study of the bio-inspired TacTip sensor tests its suitability for automatically detecting surface conditions, with trained models able to recover heading direction, applied force and differences in surface texture <a class="c" href="#ref-12">[12]</a>. We have also examined how much resolution is needed. One paper looks at low-resolution tactile sensing for edge and pose detection <a class="c" href="#ref-13">[13]</a>. Another compares a high-resolution optical TacTip against a low-resolution electrical sensor combining accelerometers and piezoelectric elements for texture and friction classification <a class="c" href="#ref-14">[14]</a>. In a related simulation study, agents with only a low-resolution depth sensor evolved contour-following behaviour for energy-efficient travel over complex terrain. The behaviour transferred to a real robot in initial experiments, and we suggested the low resolution contributed to this robustness <a class="c" href="#ref-14">[14]</a>. The trade-off can be framed as one of cost and compute, with low-resolution sensing cheaper and computationally less expensive than high-resolution optics <a class="c" href="#ref-14">[14]</a>.</p>
+<p>For a body with many faces, this matters. Covering a whole robot with high-resolution optical sensors is expensive and bulky, whereas many small, low-resolution patches are feasible and, on the evidence above, can still support useful judgements about contact, edges and surface properties.</p>
+
+<h3 id="gap">Gap and motivation</h3>
+<p>Taken together, the literature offers three partial solutions. Shell-driven rolling robots are fast and well protected but limited on difficult terrain. Spined and piston-driven bodies recover terrain adaptability while keeping the electronics in one place, yet the examples above sense the world only through a few range finders or proposals for them <a class="c" href="#ref-6">[6]</a>. Tactile skins give rich contact information, but have mostly been developed for hands and humanoids rather than for a body that rolls and pushes against terrain with its whole surface.</p>
+
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th>Approach</th><th>What it offers</th><th>What is missing for this work</th><th>Refs</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Shell-driven spherical robots</td><td>Holonomic, sealed, impact-tolerant, fast on smooth ground</td><td>Limited on slopes, obstacles and soft ground; shell rotates relative to internal parts</td><td><a class="c" href="#ref-2">[2]</a> <a class="c" href="#ref-4">[4]</a></td></tr>
+    <tr><td>Urchin and polyhedral robots with extendable spines or faces</td><td>Terrain adaptation by pushing, standing and rolling; electronics stay in one body; isotropic geometry</td><td>Little or no touch sensing; rigid contact surfaces</td><td><a class="c" href="#ref-6">[6]</a> <a class="c" href="#ref-7">[7]</a> <a class="c" href="#ref-8">[8]</a></td></tr>
+    <tr><td>Tactile skins on hands and humanoids</td><td>Soft, conformable, large-area contact sensing</td><td>Not designed for a tumbling, whole-body locomotion platform</td><td><a class="c" href="#ref-9">[9]</a> <a class="c" href="#ref-10">[10]</a> <a class="c" href="#ref-11">[11]</a></td></tr>
+    <tr><td>Low-resolution tactile sensing for terrain</td><td>Cheap, light on computation; surface, edge and slip information</td><td>Studied on feet and single sensors, not distributed over a whole body</td><td><a class="c" href="#ref-12">[12]</a> <a class="c" href="#ref-13">[13]</a> <a class="c" href="#ref-14">[14]</a> <a class="c" href="#ref-15">[15]</a></td></tr>
+    <tr class="this"><td>This work</td><td>Icosahedral body, pistons at the corners, tactile skin on the faces</td><td>To be built and tested</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+<p class="tcap">Summary of how the reviewed approaches relate to the proposed robot.</p>
+
+<p>This work therefore adds tactile skins to an icosahedral robot whose twelve corners are pistons. The aim is to combine the strengths of the urchin design (terrain adaptability, and a single rigid body that keeps the drive and electronics in place) with the move towards whole-body tactile sensing. The icosahedron&rsquo;s regular geometry, with identical faces between identical corner actuators, suggests that each face can carry the same sensing patch, giving orientation-independent sensing in the spirit of Buckybot&rsquo;s design argument <a class="c" href="#ref-6">[6]</a>. A soft skin may also help with impact and grip, as it does on robot hands <a class="c" href="#ref-10">[10]</a>. Building on the low-resolution results above, the skin can use inexpensive sensor patches whose signals indicate contact, surface type and slip across the body <a class="c" href="#ref-12">[12]</a><a class="c" href="#ref-14">[14]</a>. Together these should allow the robot to feel the ground it is pushing against and adapt its piston sequence accordingly.</p>
+
+<h2 id="references">References</h2>
+<ol class="refs">
+  <li id="ref-1"><span>[1]</span><span>Armour, R. H. and Vincent, J. F. V. (2006) Rolling in nature and robotics: a review. <em>Journal of Bionic Engineering</em>, 3(4), 195&ndash;208.<br><a class="link" href="https://doi.org/10.1016/S1672-6529(07)60003-1">https://doi.org/10.1016/S1672-6529(07)60003-1</a></span></li>
+  <li id="ref-2"><span>[2]</span><span>Chase, R. and Pandya, A. (2012) A review of active mechanical driving principles of spherical robots. <em>Robotics</em>, 1(1), 3&ndash;23.<br><a class="link" href="https://doi.org/10.3390/robotics1010003">https://doi.org/10.3390/robotics1010003</a></span></li>
+  <li id="ref-3"><span>[3]</span><span>Diouf, A., Belzile, B., Saad, M. and St-Onge, D. (2024) Spherical rolling robots: design, modeling, and control. A systematic literature review. <em>Robotics and Autonomous Systems</em>, 175, 104657.<br><a class="link" href="https://doi.org/10.1016/j.robot.2024.104657">https://doi.org/10.1016/j.robot.2024.104657</a></span></li>
+  <li id="ref-4"><span>[4]</span><span>Shi, K., Wang, H., Zhang, D. and Wang, R. (2025) Research on the structural design and motion characteristics of a self-reconfigurable spherical robot. <em>Mechanical Sciences</em>, 16, 887&ndash;906.<br><a class="link" href="https://doi.org/10.5194/ms-16-887-2025">https://doi.org/10.5194/ms-16-887-2025</a></span></li>
+  <li id="ref-5"><span>[5]</span><span>Thoesen, A. and Marvi, H. (2021) Planetary surface mobility and exploration: a review. <em>Current Robotics Reports</em>, 2, 239&ndash;249.<br><a class="link" href="https://doi.org/10.1007/s43154-021-00056-3">https://doi.org/10.1007/s43154-021-00056-3</a></span></li>
+  <li id="ref-6"><span>[6]</span><span>Grande, R. C., Kutzer, M. D. M., Brown, C. Y. and Armand, M. (2013) Buckybot: preliminary control and mapping algorithms for a robot geometrically based on a truncated icosahedron. <em>Johns Hopkins APL Technical Digest</em>, 32(3), 605&ndash;612.<br><a class="link" href="https://www.jhuapl.edu/sites/default/files/2024-09/32-03-Grande.pdf">https://www.jhuapl.edu/sites/default/files/2024-09/32-03-Grande.pdf</a></span></li>
+  <li id="ref-7"><span>[7]</span><span>Mateos, L. A. (2020) Bionic sea urchin robot with foldable telescopic actuator. <em>IEEE/ASME International Conference on Advanced Intelligent Mechatronics (AIM 2020)</em>. arXiv:2001.04250.<br><a class="link" href="https://arxiv.org/abs/2001.04250">https://arxiv.org/abs/2001.04250</a></span></li>
+  <li id="ref-8"><span>[8]</span><span>Mateos, L. A. (2020) Particle robots: a new specie of hybrid bio-inspired robotics. arXiv:2003.08289.<br><a class="link" href="https://arxiv.org/abs/2003.08289">https://arxiv.org/abs/2003.08289</a></span></li>
+  <li id="ref-9"><span>[9]</span><span>Dahiya, R. S., Metta, G., Valle, M. and Sandini, G. (2010) Tactile sensing: from humans to humanoids. <em>IEEE Transactions on Robotics</em>, 26(1), 1&ndash;20.<br><a class="link" href="https://doi.org/10.1109/TRO.2009.2033627">https://doi.org/10.1109/TRO.2009.2033627</a></span></li>
+  <li id="ref-10"><span>[10]</span><span>Egli, J., Forrai, B., Buchner, T., Su, J., Chen, X. and Katzschmann, R. K. (2024) Sensorized soft skin for dexterous robotic hands. <em>2024 IEEE International Conference on Robotics and Automation (ICRA)</em>, 18127&ndash;18133.<br><a class="link" href="https://arxiv.org/abs/2404.19448">https://arxiv.org/abs/2404.19448</a></span></li>
+  <li id="ref-11"><span>[11]</span><span>Wistreich, S., Shi, B., Tian, S., Clarke, S., Nath, M., Xu, C., Bao, Z. and Wu, J. (2025) DexSkin: high-coverage conformable robotic skin for learning contact-rich manipulation. <em>Proceedings of the 9th Conference on Robot Learning</em>, PMLR 305, 769&ndash;793.<br><a class="link" href="https://proceedings.mlr.press/v305/wistreich25a.html">https://proceedings.mlr.press/v305/wistreich25a.html</a></span></li>
+  <li id="ref-12"><span>[12]</span><span>Shepherd, D. R., Husbands, P., Philippides, A. and Johnson, C. (2023) Slip detection and surface prediction through bio-inspired tactile feedback. arXiv:2310.08192.<br><a class="link" href="https://arxiv.org/abs/2310.08192">https://arxiv.org/abs/2310.08192</a></span></li>
+  <li id="ref-13"><span>[13]</span><span>Shepherd, D. R., Husbands, P., Philippides, A. and Johnson, C. (2024) Versatility of low-resolution tactile sensing for edge and pose detection. <em>2024 5th International Conference on Artificial Intelligence, Robotics and Control (AIRC)</em>, Cairo, 22&ndash;24 April, 7&ndash;12.<br><a class="link" href="https://www.proceedings.com/content/076/076290webtoc.pdf">https://www.proceedings.com/content/076/076290webtoc.pdf</a> (proceedings contents)</span></li>
+  <li id="ref-14"><span>[14]</span><span>Shepherd, D. R., Husbands, P., Philippides, A. and Johnson, C. (2025) Texture and friction classification: optical TacTip vs. vibrational piezoelectric and accelerometer tactile sensors. <em>Sensors</em>, 25(16), 4971.<br><a class="link" href="https://doi.org/10.3390/s25164971">https://doi.org/10.3390/s25164971</a></span></li>
+  </ol>
+
+</section>
+<br><br>
+<div align="center"><a href="https://github.com/shepai/Tactile-Urchin-Robot" target="_blank" style="text-decoration: none;">
+  <button style="
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #24292e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  ">
+    <!-- GitHub SVG Logo -->
+    <svg height="20" width="20" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+      2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+      0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+      2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04
+      2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+      1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
+      1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
+      8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    See Repo
+  </button>
+</a></div>
+	</div>
+</body>
+ <script src="../code/JS_Package.js">
+
+ </script><!--"https://shepai.github.io/code/JS_Package.js">
+
+</script> -->
+<script>
+
+</script>
+<script>
+const stlFiles = [
+
+    "https://raw.githubusercontent.com/shepai/tactile-ball-robot/main/physical robot/3D print/Hemisphere/central_mold.stl",
+
+];
+
+
+const containers = [
+
+    "stl1",
+
+];
+
+load_3d();
+</script>
+
+</html>
