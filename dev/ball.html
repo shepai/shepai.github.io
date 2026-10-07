@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>SHEP AI</title>
-	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
+	<link rel="stylesheet" type="text/css" href="../style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
@@ -315,6 +315,299 @@ We do this instead of glueing as it gives more freedom to change tyres should th
 </div>
 <br><br>
 The initial wheel was designed with a slip ring, but an alternative design for a non-rotating camera that fits through the axel of the wheel. This would bypasss the need for a slip ring entirely. 
+
+<h4>Camera Embedded PCB</h4>
+A PCB was designed to embedd machine learning models and an OV5640 camera on the same device. It converts the image stream to an array of coordinates that it transmits via USB. 
+
+ <div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/schem.PNG" width="100%">
+</div>
+The PCB is designed for the ESP32-WROOM-32. The two LEDs are connected to a GPIO pin so toggle on and off is possible. Instead of surface mount, it was decided that the pins will be left as through-holes so that we can easily change the colour of the LEDS. This will be a further experiment into which colours work best for minimizing glare. 
+
+
+ <div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/Camera.png" width="40%">
+<img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/Camera_back.png" width="40%">
+</div>
+The compact design makes the PCB fit directly onto the wheel. The fabircation outputs can be found on the <a href="https://github.com/shepai/tactile-ball-robot/tree/main/physical%20robot/PCB/Camera/production">Github</a>
+
+<h5>Bill of Materials</h5>
+
+
+<details class="bom-accordion">
+  <summary>
+    <table class="bom-table">
+      <thead>
+        <tr>
+          <th class="bom-col-designator">Designator</th>
+          <th class="bom-col-footprint">Footprint</th>
+          <th class="bom-col-quantity">Quantity</th>
+          <th class="bom-col-value">Value</th>
+          <th class="bom-col-part">LCSC Part # (Click to expand...)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>C1, C7</td>
+          <td>0603-NO</td>
+          <td>2</td>
+          <td>22uF/10V(20%)</td>
+          <td>C60077</td>
+        </tr>
+        <tr>
+          <td>C10, C11, C12, C13</td>
+          <td>0805-NO</td>
+          <td>4</td>
+          <td>10uF</td>
+          <td>C15850</td>
+        </tr>
+      </tbody>
+    </table>
+  </summary>
+
+  <table class="bom-table bom-table-expanded">
+    <tbody>
+      <tr>
+        <td class="bom-col-designator">C14, C15, C20</td>
+        <td class="bom-col-footprint">0603</td>
+        <td class="bom-col-quantity">3</td>
+        <td class="bom-col-value">22uF/10V(20%)</td>
+        <td class="bom-col-part">C60077</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C16</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">4.7uF/6.3V(10%)</td>
+        <td class="bom-col-part">C2932473</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C17, C22</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">0.1uF/50V(10%)(NC)</td>
+        <td class="bom-col-part">C1525</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C18, C19, C21</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">3</td>
+        <td class="bom-col-value">0.1uF/50V(10%)</td>
+        <td class="bom-col-part">C19704</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C2</td>
+        <td class="bom-col-footprint">0805-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">22uF/10V(20%)</td>
+        <td class="bom-col-part">C29277</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C3</td>
+        <td class="bom-col-footprint">0805-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">4.7uF/6.3V(10%)</td>
+        <td class="bom-col-part">C107124</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C4</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">0.1uF/50V(10%)(NC)</td>
+        <td class="bom-col-part">C1590</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C5, C6, C8</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">3</td>
+        <td class="bom-col-value">0.1uF/50V(10%)</td>
+        <td class="bom-col-part">C1590</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">C9</td>
+        <td class="bom-col-footprint">0805-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">0.1uF/50V(10%)(NC)</td>
+        <td class="bom-col-part">C1711</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">D1</td>
+        <td class="bom-col-footprint">CHIPLED_0603_NOOUTLINE</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">LED</td>
+        <td class="bom-col-part">C2286</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">D2, D7</td>
+        <td class="bom-col-footprint">0603</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">LED</td>
+        <td class="bom-col-part">C5274290</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">D3</td>
+        <td class="bom-col-footprint">LESD5D50CT1G</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">LED</td>
+        <td class="bom-col-part">C5274290</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">D4, D5</td>
+        <td class="bom-col-footprint">LESD5D50CT1G</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">LESD5D5.0CT1G</td>
+        <td class="bom-col-part">C5274290</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">D6</td>
+        <td class="bom-col-footprint">SOD2513X120N</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">BAT760-7</td>
+        <td class="bom-col-part">C124187</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">FB1</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">ferrite</td>
+        <td class="bom-col-part">C1002</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">IC1</td>
+        <td class="bom-col-footprint">SOT229P700X180-4N</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">AMS1117-3.3</td>
+        <td class="bom-col-part">C6186</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">IC2</td>
+        <td class="bom-col-footprint">QFN50P500X500X80-29N-D</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">CP2102N-A01-GQFN28</td>
+        <td class="bom-col-part">C964632</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">J1</td>
+        <td class="bom-col-footprint">USB_Micro-B_Amphenol_10103594-0001LF_Horizontal</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">USB_B_Micro</td>
+        <td class="bom-col-part">C393940</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">OSC1</td>
+        <td class="bom-col-footprint">OSC_3.2X2.5MM</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">24MHz 3.3V Oscillator</td>
+        <td class="bom-col-part">C160452</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">Q1, Q2</td>
+        <td class="bom-col-footprint">SOT95P240X115-3N</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">SS8050-G</td>
+        <td class="bom-col-part">C2150</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R1_2</td>
+        <td class="bom-col-footprint">0603</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">R_0603_1608Metric</td>
+        <td class="bom-col-part">C25531</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R1, R2</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">R</td>
+        <td class="bom-col-part">C25531</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R10</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">22.1K(5%)</td>
+        <td class="bom-col-part">C43473</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R11</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">47.5k(5%)</td>
+        <td class="bom-col-part">C25896</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R12, R14, R16, R9</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">4</td>
+        <td class="bom-col-value">2k(5%)</td>
+        <td class="bom-col-part">C4109</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R13, R15, R7</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">3</td>
+        <td class="bom-col-value">10k(5%)(NC)</td>
+        <td class="bom-col-part">C25531</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R3</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">R</td>
+        <td class="bom-col-part">C15401</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R4, R5</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">10k(5%)</td>
+        <td class="bom-col-part">C15401</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R6</td>
+        <td class="bom-col-footprint">0603-NO</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">0R(5%)</td>
+        <td class="bom-col-part">C25531</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">R8</td>
+        <td class="bom-col-footprint">0402</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value">0R(5%)</td>
+        <td class="bom-col-part">C25531</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">SW1, SW2</td>
+        <td class="bom-col-footprint">SW_SPST_B3U-1000P</td>
+        <td class="bom-col-quantity">2</td>
+        <td class="bom-col-value">SW_Push</td>
+        <td class="bom-col-part">C128937</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">U1</td>
+        <td class="bom-col-footprint">SOT23-5</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value"></td>
+        <td class="bom-col-part">C469895</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">U2</td>
+        <td class="bom-col-footprint">SOT23-5</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value"></td>
+        <td class="bom-col-part">C469895</td>
+      </tr>
+      <tr>
+        <td class="bom-col-designator">X1</td>
+        <td class="bom-col-footprint">OV2640FSL</td>
+        <td class="bom-col-quantity">1</td>
+        <td class="bom-col-value"></td>
+        <td class="bom-col-part">C53207221</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
 
 <h4>Testing Rig and Dataset Gathering</h4>
 To investigate the difference between slip ring vs static camera for marker prediction, we constructed a testing rig with an x and y axis. The wheel is attached to a magnetic encoded DC motor. 
