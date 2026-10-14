@@ -130,35 +130,52 @@ obs, reward, terminated, truncated, info = env.step(action)
   <tr>
     <th>Environment</th>
     <th>Task</th>
+    <th>Observation size</th>
+    <th>Action size</th>
     <th>What makes it hard</th>
     <th>Ends when</th>
   </tr>
   <tr>
     <td><strong>Edge following</strong></td>
     <td>Follow the top edges of a randomly rotated block</td>
+    <td>213</td>
+    <td>3</td>
     <td>Staying on the edge using touch alone</td>
     <td>Step limit reached</td>
   </tr>
   <tr>
     <td><strong>Peg</strong></td>
     <td>Push an upright cylinder into a hole in a platform</td>
+    <td>218</td>
+    <td>3</td>
     <td>Pushing without tipping the cylinder over</td>
     <td>Cylinder falls in the hole, tips over or leaves the platform</td>
   </tr>
   <tr>
     <td><strong>ShapeInsertion</strong></td>
     <td>Push one of four shapes into its matching hole, in the right orientation</td>
+    <td>225</td>
+    <td>3</td>
     <td>Rotating the shape with a single contact point, and a different goal each episode</td>
     <td>Shape drops through the correct hole, or fails</td>
   </tr>
   <tr>
     <td><strong>Incline</strong></td>
     <td>Push a ball up a ramp whose friction changes every episode</td>
+    <td>222 (223 with friction observed)</td>
+    <td>2</td>
     <td>The surface friction is hidden, so the policy must infer it from how the ball moves</td>
     <td>Ball reaches the top, or rolls off the ramp</td>
   </tr>
 </table>
 </div>
+
+<p>
+  In every environment the first 213 values of the observation are the tactile marker
+  values from the TacTip. The task-specific values (object position, goal vector and so on)
+  are appended after them. If tactile events are enabled, a further block of
+  event values (one per taxel) is appended to the end of the observation.
+</p>
 
 <h2 id="shared">Shared Robot and Controller</h2>
 
@@ -173,7 +190,7 @@ obs, reward, terminated, truncated, info = env.step(action)
 
 <p>
   PPO produces an action which is treated as a movement of the robot's fingertip, not as
-  joint angles. In the edge-following and peg environments the action has
+  joint angles. In the edge-following, peg and shape-insertion environments the action has
   <strong>3 dimensions</strong>, and it is scaled and added to the fingertip's current position:
 </p>
 
@@ -186,7 +203,7 @@ obs, reward, terminated, truncated, info = env.step(action)
 <pre><code>action[2] = 0</code></pre>
 
 <p>
-  This stops the agent moving the fingertip along the Z axis and reduces the problem to
+  This is intended to stop the agent moving the fingertip along the Z axis and reduce the problem to
   pushing in the horizontal plane. The incline environment is different: the ramp is tilted,
   so the fingertip has to climb with the slope. It uses a <strong>2-dimensional action</strong>
   instead (see below).
@@ -242,8 +259,8 @@ obs, reward, terminated, truncated, info = env.step(action)
 <h3>The Reset Sequence</h3>
 
 <p>
-  Each environment resets in the same order, so the arm can never sweep an object out of
-  place at the start of an episode:
+  The three pushing environments (Peg, ShapeInsertion and Incline) reset in the same order,
+  so the arm can never sweep an object out of place at the start of an episode:
 </p>
 
 <ol>
@@ -253,6 +270,11 @@ obs, reward, terminated, truncated, info = env.step(action)
   <li>The object is placed, then the simulation runs for 50 steps with the arm held still so everything settles.</li>
   <li>The reward's "previous distance" values are stored, so the first step is not given a false reward.</li>
 </ol>
+
+<p>
+  Edge following has no movable object, so it simply randomises the block's rotation and
+  moves the arm to a random point on one of the block's top edges.
+</p>
 
 <h3>The PPO Control Loop</h3>
 
@@ -280,6 +302,25 @@ obs, reward, terminated, truncated, info = env.step(action)
 </p>
 
 <pre><code>reward = scale * (previous_distance - current_distance)</code></pre>
+
+<h3>The Low-Tip Penalty</h3>
+
+<p>
+  Edge following, Peg and ShapeInsertion also share a small penalty that applies when the
+  fingertip drops below the height of the thing it is touching. This discourages the agent from
+  pressing down into the surface or catching the object's lower edge, where it would tip it:
+</p>
+
+<pre><code>if tip_z &lt; reference_z:
+    r_low = 5.0 * (tip_z - reference_z)    # negative, grows with depth
+else:
+    r_low = 0</code></pre>
+
+<p>
+  The reference height is the closest edge point for edge following, the cylinder's centre for
+  Peg, and the shape's centre for ShapeInsertion. The value is added to the reward for the step.
+  Incline does not use it, because its fingertip height is already set from the ramp surface.
+</p>
 
 <hr>
 
@@ -310,20 +351,22 @@ obs, reward, terminated, truncated, info = env.step(action)
 <p>
   The 213 values are the positions of the optical markers of the TacTip. They have already been put
   into an embedded space to simplify the input, and the coordinates are local
-  in 3D space relative to one another.
+  in 3D space relative to one another. If tactile events are enabled, the event values
+  are appended to this array.
 </p>
 
 <h3>How Is Reward Enforced?</h3>
 
 <p>
   A good action should help the fingertip stay close to the edge and
-  make progress along it. The reward is made from three ideas:
+  make progress along it. The reward is made from four ideas:
 </p>
 
 <ul>
   <li>How close the fingertip is to the edge.</li>
   <li>Whether the robot is making progress along the edge.</li>
   <li>Whether sufficient contact is being maintained.</li>
+  <li>Whether the fingertip is staying at the height of the edge.</li>
 </ul>
 
 <h4>Distance from the Edge</h4>
@@ -347,13 +390,21 @@ edge_error = np.linalg.norm(
 <h4>Progress Along the Edge</h4>
 
 <p>
-  The top edges of the block are divided into a sequence of points. The
-  environment keeps track of which point the robot should reach next, and moves
+  The top edges of the block are divided into a sequence of points, 1&nbsp;cm apart. The
+  starting target is the point furthest from the fingertip at the start of the episode.
+  The environment keeps track of which point the robot should reach next, and moves
   on to the next point when the fingertip gets close enough:
 </p>
 
-<pre><code>if edge_error &lt; 0.01:
+<pre><code>if target_error &lt; 0.01:
     self.current_target += 1</code></pre>
+
+<p>
+  The progress value is the inverse of the horizontal distance from the fingertip to the
+  current target point, so it grows as the fingertip closes in on that point:
+</p>
+
+<pre><code>progress = 1 / target_error</code></pre>
 
 <p>
   The change in progress from the previous step is rewarded with:
@@ -367,7 +418,8 @@ edge_error = np.linalg.norm(
 <p>
   If the measured force is below <code>0.1</code>, a penalty of <code>5</code> is applied.
   In the current implementation the force is temporarily set to a fixed value of
-  <code>0.2</code>, and the real contact-force calculation is marked as a future implementation.
+  <code>0.2</code>, so the penalty never triggers, and the real contact-force calculation is
+  marked as a future implementation.
 </p>
 
 <pre><code>if force &lt; 0.1:
@@ -379,6 +431,7 @@ edge_error = np.linalg.norm(
     -2.0 * edge_error
     + 5.0 * delta_progress
     - contact_penalty
+    + r_low                  # low-tip penalty, see above
 )</code></pre>
 
 <p>
@@ -417,16 +470,18 @@ edge_error = np.linalg.norm(
 <h3>Observation and Action</h3>
 
 <p>
-  The observation has <strong>8 dimensions</strong>:
+  The observation has <strong>218 dimensions</strong>:
 </p>
 
 <ul>
-  <li>The fingertip position (3)</li>
+  <li>The tactile marker values from <code>get_nodes()</code> (213)</li>
   <li>The cylinder position (3)</li>
   <li>The horizontal vector from the cylinder to the hole (2)</li>
 </ul>
 
 <p>
+  The fingertip position is not part of the observation. The agent has to work out where its
+  fingertip is from the tactile signal and the cylinder's position.
   The action is the same 3-dimensional fingertip movement as before, with Z locked.
 </p>
 
@@ -442,6 +497,7 @@ edge_error = np.linalg.norm(
     10.0 * (previous_goal_dist - goal_dist)   # push the cylinder towards the hole
     + 1.0 * (previous_tip_dist - tip_dist)    # weak: reach the push point
     - 0.01                                    # time penalty
+    + r_low                                   # 5 * (tip_z - cyl_z) when the tip is below the cylinder centre
 )</code></pre>
 
 <ul>
@@ -460,7 +516,8 @@ edge_error = np.linalg.norm(
   The approach term guides the fingertip towards the <em>push point</em>: the spot on the far
   side of the cylinder from the hole, at the cylinder's mid-height. A fingertip placed there
   and moved towards the hole pushes the cylinder in. Pushing near the top of the cylinder is the
-  main cause of tipping, which is why the Z axis is locked at mid-height.
+  main cause of tipping, which is why the Z axis is locked and why the low-tip penalty
+  keeps the fingertip from dropping below mid-height.
 </p>
 
 <hr>
@@ -516,11 +573,11 @@ edge_error = np.linalg.norm(
 <h3>Observation and Action</h3>
 
 <p>
-  The observation has <strong>15 dimensions</strong>:
+  The observation has <strong>225 dimensions</strong>:
 </p>
 
 <ul>
-  <li>Fingertip position (3)</li>
+  <li>Tactile marker values from <code>get_nodes()</code> (213)</li>
   <li>Shape position (3)</li>
   <li>Sine and cosine of the shape's yaw (2)</li>
   <li>Vector from the shape to its target hole (2)</li>
@@ -531,7 +588,8 @@ edge_error = np.linalg.norm(
 <p>
   The shape identity and the target vector are essential. Without them the task could not be
   solved from the observation, because the same shape position needs a different push for each
-  shape. The action is the 3-dimensional fingertip movement with Z locked.
+  shape. As in Peg, the fingertip position is not part of the observation. The action is the
+  3-dimensional fingertip movement with Z locked.
 </p>
 
 <h3>Symmetry-Aware Orientation</h3>
@@ -540,6 +598,9 @@ edge_error = np.linalg.norm(
   Some shapes already fit through their hole at more than one angle. The yaw error accounts for
   this by wrapping the angle by the shape's rotational symmetry:
 </p>
+
+<pre><code>period = 2 * pi / symmetry_order
+yaw_error = (yaw + period / 2) % period - period / 2</code></pre>
 
 <ul>
   <li><strong>Circle:</strong> any rotation fits, so the yaw error is always zero</li>
@@ -559,11 +620,12 @@ edge_error = np.linalg.norm(
     + 1.0 * (previous_yaw_err - yaw_err)      # rotate towards the hole's orientation
     + 1.0 * (previous_tip_dist - tip_dist)    # weak: reach the push point
     - 0.01                                    # time penalty
+    + r_low                                   # 5 * (tip_z - shape_z) when the tip is below the shape centre
 )</code></pre>
 
 <ul>
-  <li><strong>Success:</strong> +100 when the shape drops through the <em>correct</em> hole.</li>
-  <li><strong>Fail:</strong> -50 if it drops through the wrong hole or off the edge, or tips over away from the target hole.</li>
+  <li><strong>Success:</strong> +100 when the shape drops below the plate surface within 3&nbsp;cm of the <em>correct</em> hole.</li>
+  <li><strong>Fail:</strong> -50 if it drops through the wrong hole or off the edge, or tips over more than 5&nbsp;cm from the target hole. Tipping over the target hole's mouth is allowed, since a shape tilts as it drops in.</li>
 </ul>
 
 <p>
@@ -584,7 +646,8 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
 
 <p>
   A sensible order is to train with a single shape and no rotation, then add random
-  rotation, then add all four shapes.
+  rotation, then add all four shapes. By default <code>spawn_yaw</code> is set to pi, so the
+  shape starts at a random yaw between -pi and pi.
 </p>
 
 <hr>
@@ -611,9 +674,12 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
 <h3>Randomised Friction</h3>
 
 <p>
-  At the start of each episode a single friction level between 0 and 1 is picked and mapped to
+  At the start of each episode a single friction level <code>f</code> between 0 and 1 is picked and mapped to
   both friction coefficients of the ramp:
 </p>
+
+<pre><code>sliding = 0.05 * (1.0 / 0.05) ** f      # log-interpolated, 0.05 to 1.0
+rolling = 0.008 * f                      # linear, 0 to 0.008</code></pre>
 
 <ul>
   <li><strong>Sliding friction</strong> from 0.05 to 1.0, interpolated on a log scale</li>
@@ -625,7 +691,8 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
   sliding friction alone, the ball would roll back down at nearly the same rate whatever the
   surface. The ramp and ball therefore use MuJoCo's 6-dimensional contact model, which includes
   rolling friction. The ball itself has very low friction, because MuJoCo uses the larger of the
-  two touching surfaces' values, so the ramp's friction dominates.
+  two touching surfaces' values, so the ramp's friction dominates. The ramp's colour also gets
+  darker as friction rises (visual only).
 </p>
 
 <h3>The Ramp Frame</h3>
@@ -640,17 +707,25 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
 
 <p>
   The action is <strong>2-dimensional</strong>: movement along the slope, and movement sideways.
+  Each component is clipped to the range -1 to 1 and scaled by 5&nbsp;mm, and is added to a
+  commanded fingertip position in slope coordinates:
+</p>
+
+<pre><code>cmd_s = clip(cmd_s + action[0] * 0.005, -0.06, L - 0.03)   # along the slope
+cmd_y = clip(cmd_y + action[1] * 0.005, -0.06, 0.06)       # sideways</code></pre>
+
+<p>
   The fingertip height is computed from the ramp surface so it stays level with the ball's
   centre, which stops it pushing over the top of the ball. Each environment step runs 10 physics
   steps with the joint targets held.
 </p>
 
 <p>
-  The observation has <strong>12 dimensions</strong>:
+  The observation has <strong>222 dimensions</strong>:
 </p>
 
 <ul>
-  <li>Fingertip position (3)</li>
+  <li>Tactile marker values from <code>get_nodes()</code> (213)</li>
   <li>Ball position (3)</li>
   <li>Ball velocity (3)</li>
   <li>Ball progress along the ramp, as a fraction of its length (1)</li>
@@ -658,8 +733,10 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
 </ul>
 
 <p>
-  An optional 13th value gives the policy the true friction level. This is useful for checking
-  that the task can be learned at all, but it is turned off by default.
+  An optional extra value gives the policy the true friction level, making the observation
+  <strong>223 dimensions</strong>. This is useful for checking
+  that the task can be learned at all, but it is turned off by default
+  (<code>OBSERVE_FRICTION = False</code>).
 </p>
 
 <h3>Hidden Friction</h3>
@@ -679,9 +756,14 @@ env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
     - 0.01                                            # time penalty
 )</code></pre>
 
+<p>
+  Here <code>ball_progress</code> is the ball's distance up the slope in metres, so the progress term
+  pays 30 per metre travelled.
+</p>
+
 <ul>
   <li><strong>Success:</strong> +100 when the ball gets within 4&nbsp;cm of the top.</li>
-  <li><strong>Fail:</strong> -50 if the ball rolls off the bottom, falls off the side, or pops off the surface.</li>
+  <li><strong>Fail:</strong> -50 if the ball rolls off the bottom, falls off the side (more than 10&nbsp;cm sideways), or pops off the surface.</li>
 </ul>
 
 <h3>Evaluation</h3>
