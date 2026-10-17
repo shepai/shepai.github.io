@@ -74,8 +74,16 @@ const SITE_DATA = {
       "type": "Journal Article",
       "title": "Texture and friction classification: optical TacTip vs. vibrational piezoelectric and accelerometer tactile sensors",
       "authors": "Shepherd D., Husbands P., Philippides A., et al.",
-      "venue": "Sensors, MDPI",
+      "venue": "Sensors",
       "doi": "10.3390/s25164971"
+    },
+    {
+      "year": 2026,
+      "type": "Journal Article",
+      "title": "A 3D-Printable Dataset for Fair Testing and Comparisons of Tactile Sensors",
+      "authors": "Shepherd D., Herzig N., Philippides A., et al.",
+      "venue": "Sensors",
+      "doi": "10.3390/s26206590"
     },
     {
       "year": 2024,
