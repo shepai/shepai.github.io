@@ -102,12 +102,82 @@ These sensors are based on the <a href="https://github.com/shepai/TacSheet">TacS
 
 <p>This work therefore adds tactile skins to an icosahedral robot whose twelve corners are pistons. The aim is to combine the strengths of the urchin design (terrain adaptability, and a single rigid body that keeps the drive and electronics in place) with the move towards whole-body tactile sensing. The icosahedron&rsquo;s regular geometry, with identical faces between identical corner actuators, suggests that each face can carry the same sensing patch, giving orientation-independent sensing in the spirit of Buckybot&rsquo;s design argument <a class="c" href="#ref-6">[6]</a>. A soft skin may also help with impact and grip, as it does on robot hands <a class="c" href="#ref-10">[10]</a>. Building on the low-resolution results above, the skin can use inexpensive sensor patches whose signals indicate contact, surface type and slip across the body <a class="c" href="#ref-12">[12]</a><a class="c" href="#ref-14">[14]</a>. Together these should allow the robot to feel the ground it is pushing against and adapt its piston sequence accordingly.</p>
 
-<h2>Simulation</h2>
-To begin with we developed a Mujoco simulation of the robot using the scale designed using the samle scale as the triangles. This would allow the robot to stand approximatly 83mm tall. 
+<h2 id="simulation">Simulation</h2>
+<p>To begin with we developed a MuJoCo simulation of the robot at the same scale as the designed tactile triangles. At this scale the robot stands approximately 83&nbsp;mm tall.</p>
 
 <div style="text-align: center;">
           <img src="https://raw.githubusercontent.com/shepai/Tactile-Urchin-Robot/refs/heads/main/assets/urchin.png" width="100%"></div>
-    <p>
+
+<h3 id="sim-model">Robot model</h3>
+<p>The model is generated from a parametric script that writes the MuJoCo XML. The outer shell is an icosahedron with an 80&nbsp;mm edge, made of 20 triangular tactile pads. Each pad carries a lattice of touch-sensor taxels, which mirror the TacSheet sensors on the physical robot. Twelve hubs sit inside the shell, one at each vertex. A linear actuator slides through each hub, and its foot pokes out through the opening where the five pad corners meet. Each spine is a position-controlled slide joint with a stroke of up to 25&nbsp;mm. A central core body holds the electronics and battery mass, and the whole robot moves freely on a flat plane.</p>
+<p>The simulation also produces an event-based tactile signal: a taxel fires an event whenever its reading changes by more than a threshold, and these events are accumulated into a decaying trace per pad. The tactile signals are not yet used by the controller described below. The current goal is to establish directed locomotion first, then add touch.</p>
+
+<h3 id="sim-task">Task: rolling towards a commanded direction</h3>
+<p>The aim is a controller that takes a direction, eventually from a joystick, and rolls the robot that way. A command is a ground-plane vector \(\mathbf{c} = (c_x, c_y)\) with each component in \(\{-1, 0, 1\}\), normalised to a unit direction \(\hat{\mathbf{d}}\). The command \((0,0)\) means &ldquo;stay still&rdquo;. During training each command is held for 3&nbsp;s, then a new one is drawn, so an episode of 1200 control steps contains several command segments. At the start of each episode the robot is given a random heading and allowed to settle for 0.3&nbsp;s, so that the same world command arrives in many different body-frame orientations.</p>
+
+<h3 id="sim-action">Sparse actuation</h3>
+<p>A standard network that outputs all twelve spine positions tends to move every actuator at once, which is neither how an urchin pushes nor efficient for a real robot. Instead, the learned policy outputs five gait parameters \(\mathbf{a} \in [-1, 1]^5\), and a fixed mapping turns these into spine extensions. At most three spines are extended at any time, and all others are fully retracted.</p>
+<p>The mapping works in the body frame. Let \(\hat{\mathbf{d}}_b\) be the command direction and \(\hat{\mathbf{g}}_b\) the downward direction, both expressed in the core&rsquo;s frame. A push point on the sphere is placed behind the direction of travel and below the body, with a learned correction:</p>
+<p>\[ \mathbf{p} = \operatorname{normalise}\big( -\cos\theta\,\hat{\mathbf{d}}_b + \sin\theta\,\hat{\mathbf{g}}_b + 0.5\,\mathbf{a}_{1:3} \big), \qquad \theta = 50^\circ. \]</p>
+<p>The fourth parameter sets a reach angle \(\rho\) between 40&deg; and 75&deg;, and the fifth sets the stroke amplitude between 50% and 100% of full extension. For spine direction \(\hat{\mathbf{s}}_i\), the extension weight falls smoothly to zero over an 8&deg; band at the edge of the reach:</p>
+<p>\[ w_i = \operatorname{clip}\!\left( \frac{\hat{\mathbf{s}}_i\cdot\mathbf{p} - \cos\rho}{\cos(\rho - 8^\circ) - \cos\rho},\; 0,\; 1 \right). \]</p>
+<p>Only the three spines closest to \(\mathbf{p}\) keep a non-zero weight; if none is within reach, the closest one is extended. The commanded extensions are the amplitude times \(w_i\), scaled to each actuator&rsquo;s range. With \(\mathbf{a} = \mathbf{0}\) this mapping is a hand-designed gait on its own, so learning only has to refine it. Because the sparsity rule lives in the environment rather than the network, it also holds when the robot is driven directly by a joystick.</p>
+
+<h3 id="sim-obs">Observations</h3>
+<p>The policy receives a 33-dimensional observation:</p>
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th>Signal</th><th>Size</th><th>Frame</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Command direction</td><td>3</td><td>Body</td></tr>
+    <tr><td>Gravity (down) direction</td><td>3</td><td>Body</td></tr>
+    <tr><td>Linear velocity of the core</td><td>3</td><td>Body</td></tr>
+    <tr><td>Angular velocity of the core</td><td>3</td><td>Body</td></tr>
+    <tr><td>Measured extension of each spine</td><td>12</td><td>Spine</td></tr>
+    <tr><td>Distance along and across the commanded line since the segment began</td><td>2</td><td>World</td></tr>
+    <tr><td>Velocity along and across the command</td><td>2</td><td>World</td></tr>
+    <tr><td>Previous gait action</td><td>5</td><td>&ndash;</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="tcap">Observation vector used by the locomotion policy. Velocities are scaled by a reference speed and all entries are clipped to \([-10, 10]\).</p>
+
+<h3 id="sim-reward">Reward</h3>
+<p>Let \(\mathbf{r}_t\) be the core&rsquo;s ground-plane displacement since the current command began, \(s_t = \mathbf{r}_t\cdot\hat{\mathbf{d}}\) the distance along the commanded line, and \(\ell_t = \mathbf{r}_t\cdot\hat{\mathbf{d}}_\perp\) the distance off it. For a non-zero command the reward at each control step is</p>
+<p>\[ R_t = \underbrace{\frac{s_t - s_{t-1}}{v_{\max}\,\Delta t}}_{\text{progress}} \;-\; 0.1\min\!\left(\frac{|\ell_t|}{0.1\,\text{m}}, 1\right) \;-\; 0.2\min\!\left(\frac{|\bar{v}_\perp|}{v_{\max}}, 1\right) \;-\; 0.02\,\overline{e^2}, \]</p>
+<p>where \(v_{\max}\) is a reference speed, \(\Delta t\) the control period, \(\bar{v}_\perp\) the sideways velocity smoothed with a 0.3&nbsp;s time constant, and \(\overline{e^2}\) the mean squared spine extension. The progress term (clipped to \([-3, 3]\)) sums over a segment to the distance travelled along the command, so the robot is rewarded for getting there rather than for any particular motion. The penalties discourage drifting off the line, crabbing sideways and needless pushing. For the stay-still command the reward is \(\exp\!\big(-(\lVert\mathbf{r}_t\rVert / 0.05\,\text{m})^2\big) - 0.5\min(\lVert\mathbf{v}\rVert / v_{\max}, 1)\), minus the same effort penalty. Each term is logged separately during training so that it is clear which one drives the return.</p>
+<p>The reference speed \(v_{\max}\) is measured rather than guessed: before training, the hand-designed gait (\(\mathbf{a} = \mathbf{0}\)) is run in five directions without learning, and the speed it reaches sets \(v_{\max}\). This check also confirms that the prior moves the robot the right way before any training time is spent.</p>
+
+<h3 id="sim-curriculum">Curriculum</h3>
+<p>Commands are introduced in stages: a single direction, then its opposite, then the four axes, then all eight compass directions, and finally the stay-still command (about 20% of commands at that stage). A quarter of commands are replayed from earlier stages so that earlier skills are not forgotten. At the end of each segment its progress score is recorded as the distance along the command divided by \(v_{\max}\) times the segment length. The stage advances once the mean score over the last 100 segments of the current stage reaches 0.3.</p>
+
+<h3 id="sim-training">Training</h3>
+<p>The policy is trained with Proximal Policy Optimisation (PPO) in Stable-Baselines3 across eight parallel environments, using separate multilayer perceptrons for the policy (two hidden layers of 64 units) and the value function (two layers of 128 units). The main settings are listed below.</p>
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th>Setting</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Physics steps per control step</td><td>5</td></tr>
+    <tr><td>Episode length</td><td>1200 control steps</td></tr>
+    <tr><td>Command segment length</td><td>3 s</td></tr>
+    <tr><td>Rollout length per environment</td><td>1024 steps</td></tr>
+    <tr><td>Minibatch size / epochs per update</td><td>1024 / 10</td></tr>
+    <tr><td>Learning rate</td><td>3 &times; 10<sup>&minus;4</sup></td></tr>
+    <tr><td>Discount \(\gamma\) / GAE \(\lambda\)</td><td>0.99 / 0.95</td></tr>
+    <tr><td>Clip range / target KL</td><td>0.2 / 0.03</td></tr>
+    <tr><td>Initial action log-std</td><td>&minus;1.0</td></tr>
+    <tr><td>Reward normalisation</td><td>Running return normalisation (VecNormalize)</td></tr>
+    <tr><td>Total training steps</td><td>5 &times; 10<sup>6</sup></td></tr>
+  </tbody>
+</table>
+</div>
+<p class="tcap">PPO training configuration.</p>
+<p>Progress is tracked through the value function&rsquo;s explained variance, the curriculum stage, and the logged reward components. Videos of the current policy are recorded at every 10% of training.</p>
+
 
 <h2 id="references">References</h2>
 <ol class="refs">
