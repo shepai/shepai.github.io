@@ -8,11 +8,20 @@
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <style>
-    /* small additions for the environment comparison table */
+    /* environment / results tables */
     .env-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95em; }
     .env-table th, .env-table td { border: 1px solid #888; padding: 8px 10px; text-align: left; vertical-align: top; }
     .env-table th { background: rgba(128,128,128,0.2); }
     .table-wrap { overflow-x: auto; }
+    pre { max-width: 100%; overflow-x: auto; }   /* code blocks scroll instead of widening the page on phones */
+    /* policy GIFs */
+    .gif-slot { margin: 16px 0 24px; }
+    .gif-slot img { display: block; width: 100%; }
+    .gif-slot img[src=""] { min-height: 60px; border: 1px dashed rgba(128,128,128,0.5); }   /* placeholder until a GIF is added */
+    .gif-slot figcaption { font-size: 0.9em; opacity: 0.8; margin-top: 6px; text-align: center; }
+    .gif-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 24px; }
+    .gif-grid .gif-slot { margin: 0; }
+    @media (max-width: 700px) { .gif-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body class="backgroundC">
@@ -50,10 +59,17 @@
         to support tactile perception tasks in robotics.
     </p>
     <p>
-        The gym now contains four tasks built on one shared robot arm: edge following,
+        The gym contains four tasks built on one shared robot arm: edge following,
         peg pushing, shape insertion and incline pushing. Each task tests a different
         part of contact-rich manipulation, and they share the same arm, controller and
         Gym interface, so a method can be compared across all of them.
+    </p>
+    <p>
+        Every task can be run in two observation modes. In <strong>privileged</strong> mode the policy
+        sees the true state of the scene (where the object is, where the goal is). In
+        <strong>tactile</strong> mode it only sees the TacTip markers and its own arm, which is the
+        setting a real robot would face. Training in privileged mode first is a quick way to check that a
+        task, reward and controller work before moving to the harder tactile version.
     </p>
  <div id="table-of-contents">
     <h2>Contents</h2>
@@ -72,10 +88,12 @@
     <ul>
         <li>Gym-style API for reinforcement learning compatibility</li>
         <li>Simulated tactile observations based on TacTip sensor physics</li>
-        <li>Useful for sim-to-real tactile robotics research</li>
-        <li>Designed for benchmarking tactile perception and control tasks</li>
-        <li>Four tasks of increasing difficulty that share one arm and one control scheme</li>
+        <li>Switch between privileged state and tactile-only observations with one argument</li>
+        <li>A smooth Cartesian controller: no drift, no IK jumps, and the fingertip moves at the speed it is asked to</li>
+        <li>Peg, shape and edge episodes start with the sensor already touching the object</li>
+        <li>Rewards that pay for progress, so agents learn to finish the task rather than hover near it</li>
         <li>Randomised starts, shapes and surface friction, so policies cannot memorise a single scene</li>
+        <li>Useful for sim-to-real tactile robotics research</li>
     </ul>
 
     <h3>Typical Use Cases</h3>
@@ -83,7 +101,7 @@
         <li>Edge and surface following with tactile feedback</li>
         <li>Object manipulation using touch perception</li>
         <li>Learning contact-rich policies for soft robotics</li>
-        <li>Comparing vision vs tactile-based control strategies</li>
+        <li>Comparing state-based and tactile-based control strategies</li>
         <li>Learning to cope with hidden physical properties such as friction</li>
     </ul>
 
@@ -93,6 +111,10 @@
     </p>
 
     <pre><code>
+import gymnasium as gym
+import tactip_mujoco_gym                            # registers the TacArm-* environments
+
+env = gym.make("TacArm-peg")                        # privileged observations (default)
 obs, info = env.reset()
 action = policy(obs)
 obs, reward, terminated, truncated, info = env.step(action)
@@ -121,122 +143,200 @@ obs, reward, terminated, truncated, info = env.step(action)
 
 <p>
   Every environment inherits from a common <code>RobotArmEnv</code> class, which itself builds
-  on <code>TactileGymEnv</code>. The base class owns the arm, the controller and the reset
-  logic. Each task then supplies its own scene, observation, reward and termination rule.
+  on <code>TactileGymEnv</code>. The base class owns the arm, the controller, the observation
+  modes and the reset logic. Each task then supplies its own scene, task state, reward and
+  termination rule.
 </p>
 
 <div class="table-wrap">
 <table class="env-table">
   <tr>
-    <th>Environment</th>
+    <th>Environment (ID)</th>
     <th>Task</th>
-    <th>Observation size</th>
-    <th>Action size</th>
-    <th>What makes it hard</th>
-    <th>Ends when</th>
+    <th>Observation size<br>privileged / tactile</th>
+    <th>Action</th>
+    <th>Episode</th>
+    <th>Success</th>
   </tr>
   <tr>
-    <td><strong>Edge following</strong></td>
-    <td>Follow the top edges of a randomly rotated block</td>
-    <td>213</td>
-    <td>3</td>
-    <td>Staying on the edge using touch alone</td>
-    <td>Step limit reached</td>
+    <td><strong>Edge following</strong><br><code>TacArm-edge</code></td>
+    <td>Start touching the top edge of a randomly rotated block and follow it all the way round</td>
+    <td>22 / 435</td>
+    <td>3: x, y, z</td>
+    <td>400 steps (8&nbsp;s)</td>
+    <td>One full anticlockwise lap</td>
   </tr>
   <tr>
-    <td><strong>Peg</strong></td>
-    <td>Push an upright cylinder into a hole in a platform</td>
-    <td>218</td>
-    <td>3</td>
-    <td>Pushing without tipping the cylinder over</td>
-    <td>Cylinder falls in the hole, tips over or leaves the platform</td>
+    <td><strong>Peg</strong><br><code>TacArm-peg</code></td>
+    <td>Start touching an upright cylinder and push it into a hole in the platform</td>
+    <td>20 / 434</td>
+    <td>2: x, y</td>
+    <td>250 steps (5&nbsp;s)</td>
+    <td>Cylinder drops into the hole</td>
   </tr>
   <tr>
-    <td><strong>ShapeInsertion</strong></td>
-    <td>Push one of four shapes into its matching hole, in the right orientation</td>
-    <td>225</td>
-    <td>3</td>
-    <td>Rotating the shape with a single contact point, and a different goal each episode</td>
-    <td>Shape drops through the correct hole, or fails</td>
+    <td><strong>ShapeInsertion</strong><br><code>TacArm-shape</code></td>
+    <td>Start touching one of four shapes and push it into its own hole</td>
+    <td>25 / 434</td>
+    <td>2: x, y</td>
+    <td>300 steps (6&nbsp;s)</td>
+    <td>Shape goes into the correct hole</td>
   </tr>
   <tr>
-    <td><strong>Incline</strong></td>
-    <td>Push a ball up a ramp whose friction changes every episode</td>
-    <td>222 (223 with friction observed)</td>
-    <td>2</td>
-    <td>The surface friction is hidden, so the policy must infer it from how the ball moves</td>
-    <td>Ball reaches the top, or rolls off the ramp</td>
+    <td><strong>Incline</strong><br><code>TacArm-hill</code></td>
+    <td>Intercept a ball rolling down a ramp, then push it to the top. Ramp friction changes every episode</td>
+    <td>23 (24 with friction) / 434</td>
+    <td>2: along the slope, sideways</td>
+    <td>300 steps (6&nbsp;s)</td>
+    <td>Ball within 4&nbsp;cm of the top</td>
   </tr>
 </table>
 </div>
 
 <p>
-  In every environment the first 213 values of the observation are the tactile marker
-  values from the TacTip. The task-specific values (object position, goal vector and so on)
-  are appended after them. If tactile events are enabled, a further block of
-  event values (one per taxel) is appended to the end of the observation.
+  The tactile sizes are for the 71-marker TacTip (213 marker values). The policy runs at 50&nbsp;Hz:
+  each environment step is 20 MuJoCo steps of 1&nbsp;ms.
 </p>
+
+<h2 id="observations">Observation Modes</h2>
+
+<p>
+  Both modes start with the same short <strong>proprioception</strong> block, because a real robot
+  always knows where its own arm is:
+</p>
+
+<ul>
+  <li>Fingertip position (3)</li>
+  <li>Commanded fingertip position minus measured fingertip position, divided by 1&nbsp;cm (3).
+      When the fingertip is pressed against something it lags behind the command, so this acts
+      as a rough force sense.</li>
+  <li>The smoothed velocity command the arm is currently following (2, or 3 for edge following)</li>
+</ul>
+
+<p>
+  What follows depends on the mode:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr>
+    <th>Mode</th>
+    <th>After the proprioception block</th>
+    <th>Use it for</th>
+  </tr>
+  <tr>
+    <td><strong>Privileged</strong> (default)</td>
+    <td>The task state: object position, vector to the goal, object velocity, whether the sensor is
+        touching, and so on (listed per environment below)</td>
+    <td>Checking that a task, reward and controller can be learned at all, and as an upper bound for tactile policies</td>
+  </tr>
+  <tr>
+    <td><strong>Tactile</strong></td>
+    <td>Marker displacement from the untouched sensor (3 per marker, in mm), then the change in each
+        marker since the previous step (3 per marker, in mm)</td>
+    <td>Learning from touch alone: the object and the goal are never given directly</td>
+  </tr>
+</table>
+</div>
+
+<p>
+  The mode can be chosen when the environment is made, or switched afterwards. Either way the
+  observation space is rebuilt from a real observation, so its size can never get out of step with
+  what <code>step()</code> returns:
+</p>
+
+<pre><code>env = gym.make("TacArm-peg", privileged=False)     # tactile from the start (use this for training)
+env.unwrapped.set_privileged(True)                 # or switch later; rebuilds env.observation_space</code></pre>
+
+<p>
+  The marker reading comes from <code>get_nodes()</code>, which returns every <code>s_c*</code>
+  marker site in the sensor's own frame. The untouched marker positions are recorded once when
+  the environment is built, with the arm held in free space, and every tactile observation is
+  measured against them. Values are reported in millimetres so they are already of order one.
+</p>
+
+<p>
+  Tactile events from the <code>tx_*</code> taxels on the objects can still be added in either mode.
+  They are appended as one value per taxel: the signed number of events since the previous step.
+  While events are switched off, MuJoCo's sensor evaluation is disabled entirely, because computing
+  thousands of unused touch sensors was a large part of the simulation cost.
+</p>
+
+<pre><code>env.unwrapped.set_event(True)      # append taxel events to the observation
+events = env.unwrapped.get_events()   # raw events: [taxel_index, polarity, time]</code></pre>
 
 <h2 id="shared">Shared Robot and Controller</h2>
 
 <p>
-  The robot arm is simulated in MuJoCo and is controlled through a Gym-style
-  reinforcement learning environment. The learning agent, PPO, controls the movement of the
-  fingertip rather than directly controlling each individual joint. The fingertip is
-  represented by an end-effector site called <code>ee_site</code>.
+  The robot arm is simulated in MuJoCo. The learning agent controls the movement of the
+  fingertip rather than each individual joint. The fingertip is represented by an end-effector
+  site called <code>ee_site</code>.
 </p>
 
-<h3>How Does PPO Ask the Arm to Move?</h3>
+<h3>How Does the Agent Ask the Arm to Move?</h3>
 
 <p>
-  PPO produces an action which is treated as a movement of the robot's fingertip, not as
-  joint angles. In the edge-following, peg and shape-insertion environments the action has
-  <strong>3 dimensions</strong>, and it is scaled and added to the fingertip's current position:
+  Every action component lies between -1 and 1 and is read as a fingertip <em>velocity</em>.
+  Before it is used, it passes through a light low-pass filter:
 </p>
 
-<pre><code>self.current_position += action * 0.5</code></pre>
+<pre><code>velocity_cmd = 0.6 * velocity_cmd + 0.4 * action
+target      += velocity_cmd * 0.005                # 5 mm per step at full speed (0.25 m/s)</code></pre>
 
 <p>
-  The third action component is disabled:
+  The filter matters more than it looks. Early in training the agent's actions are mostly
+  exploration noise, and unfiltered noise jerks the fingertip back and forth. In the peg task that
+  knocks the cylinder over almost every time, so the agent never sees a successful push to learn
+  from. With the filter, a roughly correct policy plus the same noise went from 0 to 12 successes
+  out of 16 attempts. The filtered velocity is part of the observation, so the agent always knows
+  what the arm is currently doing.
 </p>
-
-<pre><code>action[2] = 0</code></pre>
 
 <p>
-  This is intended to stop the agent moving the fingertip along the Z axis and reduce the problem to
-  pushing in the horizontal plane. The incline environment is different: the ramp is tilted,
-  so the fingertip has to climb with the slope. It uses a <strong>2-dimensional action</strong>
-  instead (see below).
+  The action size depends on the task:
 </p>
+
+<ul>
+  <li><strong>Peg and ShapeInsertion:</strong> 2 dimensions (x and y). The fingertip height is held
+      1.5&nbsp;cm above the platform, low on the object, so it slides rather than tips.</li>
+  <li><strong>Incline:</strong> 2 dimensions in the ramp's own coordinates: along the slope and sideways.
+      The height is set from the ramp surface.</li>
+  <li><strong>Edge following:</strong> 3 dimensions. x and y move at up to 4&nbsp;mm per step; z moves at
+      up to 1.5&nbsp;mm per step, so the contact depth can be controlled finely.</li>
+</ul>
 
 <h3>How Does the Robot Actually Move?</h3>
 
-<p>
-  PPO does not directly control the six arm joints. It requests a
-  new fingertip position, and the environment uses inverse kinematics to
-  work out which joint positions are needed to reach it.
-</p>
-
 <ol>
   <li>
-    <strong>PPO produces an action.</strong>
-    The action describes the requested movement of the fingertip.
+    <strong>The agent produces an action.</strong>
+    It is clipped to -1 to 1 and smoothed into a velocity command.
   </li>
   <li>
-    <strong>The target position changes.</strong>
-    The action is scaled and added to the current fingertip position.
+    <strong>The target position moves.</strong>
+    The velocity command is added to the commanded fingertip position, which is kept inside the
+    task's workspace.
+  </li>
+  <li>
+    <strong>The leash is applied.</strong>
+    The command may not run more than 1&nbsp;cm ahead of the measured fingertip. When the fingertip is
+    blocked (pushing against something heavy, or pressing into a surface) the command stops there
+    instead of running away. It is never pulled back towards the measured fingertip, so a slightly
+    sagging arm cannot drag it downwards.
   </li>
   <li>
     <strong>Inverse kinematics solves the arm.</strong>
-    The requested fingertip position is passed to the IK solver.
+    A few iterations of damped least-squares IK turn the commanded fingertip position into joint
+    angles for joints 1 to 6.
   </li>
   <li>
-    <strong>Joint targets are calculated.</strong>
-    The IK solver determines suitable positions for joints 1 to 6.
+    <strong>Feed-forward is added.</strong>
+    The arm's joint servos are stiff spring-dampers. On their own they lag a tenth of a second behind
+    any motion and sag under gravity, so the joint targets get a velocity term and a gravity term added.
   </li>
   <li>
     <strong>MuJoCo advances the simulation.</strong>
-    The joint targets are applied and the simulated robot moves.
+    The joint targets are blended in over 20 physics steps (20&nbsp;ms) and the robot moves.
   </li>
 </ol>
 
@@ -250,200 +350,218 @@ obs, reward, terminated, truncated, info = env.step(action)
 </p>
 
 <p>
-  The environment uses the <code>ee_site</code> as the target and keeps the
-  end-effector orientation fixed:
+  The solver uses the Jacobian of <code>ee_site</code> and takes damped least-squares steps towards
+  the target position, while holding the sensor's orientation fixed:
 </p>
 
-<pre><code>fixed_orientation = [1.0, 0.0, 0.0, 0.0]</code></pre>
+<pre><code>target_orientation = [1.0, 0.0, 0.0, 0.0]
+error  = [target_pos - tip_pos,  0.3 * orientation_error]
+dq     = J.T @ inv(J @ J.T + 0.0005 * I) @ error</code></pre>
+
+<p>
+  Two details keep the arm smooth. First, the solver runs on a separate copy of the simulation
+  data, so it never disturbs the physics. Second, each step starts from the <em>previous joint
+  command</em>, not from the measured joint angles. The measured joints sag a little under gravity
+  and lag during motion, and starting from them made the solution creep and occasionally jump
+  between different arm configurations. Starting from the last command, the arm stays in one
+  configuration and the solver usually converges in one or two iterations.
+</p>
+
+<div class="box">
+  <h4>Why the controller works this way</h4>
+  <p>
+    The first version of the gym passed small fingertip steps to a general-purpose IK solver that
+    started from the measured joints and stopped once it was within 1&nbsp;mm of the target. The steps
+    were smaller than that tolerance, so the solver usually returned the current (sagging) joint angles,
+    and the commanded position was then reset to wherever the fingertip had sagged to. The result was an
+    arm that slowly drifted downwards whatever the agent asked for. Measured on a test arm, the fingertip
+    sank about 4&nbsp;cm in 2 seconds, and asking it to move at full speed gave almost the same motion as
+    asking it to stay still. No reward design can fix that, so the controller was rebuilt first.
+  </p>
+  <p>
+    The new controller holds the fingertip still with zero drift, moves at exactly the commanded speed,
+    tracks the command to within half a millimetre and keeps the sensor's orientation within about 0.1&nbsp;degrees.
+  </p>
+</div>
 
 <h3>The Reset Sequence</h3>
 
 <p>
-  The three pushing environments (Peg, ShapeInsertion and Incline) reset in the same order,
-  so the arm can never sweep an object out of place at the start of an episode:
+  Every reset follows the same order, so the arm never sweeps an object out of place at the start
+  of an episode:
 </p>
 
 <ol>
-  <li>The base class resets the simulation and moves the arm to a default pose.</li>
-  <li>The task randomises its scene (object position, shape, friction and so on).</li>
-  <li>The arm is moved to the task's start pose.</li>
-  <li>The object is placed, then the simulation runs for 50 steps with the arm held still so everything settles.</li>
-  <li>The reward's "previous distance" values are stored, so the first step is not given a false reward.</li>
+  <li>The simulation is reset.</li>
+  <li>The task randomises its scene (object position, shape, block rotation, friction and so on) and
+      places the objects.</li>
+  <li>The arm is <em>teleported</em> to an IK solution for the task's start pose, just clear of the
+      object, and held still for 100 physics steps to settle. Teleporting avoids swinging the arm
+      across the scene.</li>
+  <li>For edge following, peg and shape insertion, the fingertip creeps towards the object
+      (about 1&nbsp;mm every 10&nbsp;ms) until the sensor touches it, then stops. If a light object is nudged
+      away and contact is lost, it tries again with finer steps.</li>
 </ol>
 
 <p>
-  Edge following has no movable object, so it simply randomises the block's rotation and
-  moves the arm to a random point on one of the block's top edges.
+  The result is that these episodes <strong>start with the sensor touching the object</strong>, which
+  is essential in tactile mode: without vision, the agent has no other way to find the object. In our
+  tests 100% of resets began in contact, with the object at rest and upright.
 </p>
 
-<h3>The PPO Control Loop</h3>
-
 <p>
-  Learning in every environment follows the same repeating loop:
+  The incline is different by design. The fingertip is placed somewhere on the lower half of the ramp
+  and the ball is dropped further up, so the episode begins with the ball rolling down towards the
+  fingertip.
 </p>
 
-<ol>
-  <li><strong>Observe:</strong> the environment provides the current observation to PPO.</li>
-  <li><strong>Choose an action:</strong> PPO produces a fingertip movement.</li>
-  <li><strong>Move:</strong> the action changes the desired fingertip position.</li>
-  <li><strong>Solve:</strong> inverse kinematics converts the position into joint targets.</li>
-  <li><strong>Simulate:</strong> MuJoCo advances the robot.</li>
-  <li><strong>Measure:</strong> the environment calculates the new observation and reward.</li>
-  <li><strong>Learn:</strong> PPO uses the experience to improve its future decisions.</li>
-</ol>
-
-<h3>A Note on Progress Rewards</h3>
+<h3>How Rewards Are Built</h3>
 
 <p>
-  The pushing tasks below all reward the <em>change</em> in distance to the goal rather than
-  the distance itself. A reward based on raw distance pays the agent for simply sitting near
-  the goal, so a policy can learn to hover without ever pushing. A reward based on change
-  only pays for real progress, and it goes negative if the agent pushes the object away.
+  All four tasks share the same reward recipe. Each step's reward is roughly between -1 and 1, and is
+  mostly made of <strong>progress</strong>: how much closer the task got to being done during that step.
 </p>
 
-<pre><code>reward = scale * (previous_distance - current_distance)</code></pre>
-
-<h3>The Low-Tip Penalty</h3>
+<pre><code>progress = clip((previous_distance - current_distance) / 0.005, -1, 1)</code></pre>
 
 <p>
-  Edge following, Peg and ShapeInsertion also share a small penalty that applies when the
-  fingertip drops below the height of the thing it is touching. This discourages the agent from
-  pressing down into the surface or catching the object's lower edge, where it would tip it:
+  Dividing by 5&nbsp;mm (one full-speed step) means progress is 1 when the object moves towards the goal
+  as fast as the arm can push it, and negative when it moves away. Alongside it are a few small
+  "closeness" terms that give direction early on, all built from the same smooth function:
 </p>
 
-<pre><code>if tip_z &lt; reference_z:
-    r_low = 5.0 * (tip_z - reference_z)    # negative, grows with depth
-else:
-    r_low = 0</code></pre>
+<pre><code>closeness(d, sigma) = 1 - tanh(|d| / sigma)    # 1 at d = 0, 0.24 at d = sigma, about 0 beyond 3 sigma</code></pre>
 
 <p>
-  The reference height is the closest edge point for edge following, the cylinder's centre for
-  Peg, and the shape's centre for ShapeInsertion. The value is added to the reward for the step.
-  Incline does not use it, because its fingertip height is already set from the ramp surface.
+  Finishing and failing are handled at the end of the episode:
+</p>
+
+<ul>
+  <li><strong>Success:</strong> +100 and the episode ends.</li>
+  <li><strong>Unrecoverable failure</strong> (object tipped over, wrong hole, ball off the ramp, edge lost):
+      -10 and the episode ends.</li>
+</ul>
+
+<p>
+  Every term depends only on what the environment can see right now. There are no hidden stage
+  counters, so the value function always has the information it needs.
+</p>
+
+<h4>Why progress rather than closeness?</h4>
+
+<p>
+  An earlier version paid mainly for closeness: being near the goal, and having the fingertip behind the
+  object. In the peg task, a policy that did nothing at all scored 103 over an episode, because it collected
+  that closeness reward for all 250 steps. A noisy attempt at pushing tipped the cylinder over most of the
+  time and scored 16 to 56. The agent correctly learned that sitting still was the best thing to do, and its
+  success rate stayed at about 5%. Paying for progress fixes this. Doing nothing now earns very little, and
+  a successful push is clearly the best outcome.
 </p>
 
 <hr>
 
 <h2 id="edge">Environment 1: Edge Following</h2>
- <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/gif_rl.gif" width="100%">
+
+<!-- Old GIF (first version of the gym):
+     https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/gif_rl.gif -->
+<figure class="gif-slot">
+  <!-- TODO: add the GIF src -->
+  <img src="" alt="Trained policy following the top edge of a block">
+  <figcaption>Trained PPO policy (privileged observations) following the full edge of a randomly rotated block.</figcaption>
+</figure>
 
 <p>
-  This was the first task in the gym, and it tests whether the arm can follow the edge of a
-  rectangular block using its fingertip.
+  This was the first task in the gym. The arm starts touching the top edge of a rectangular block and
+  has to follow that edge all the way round, anticlockwise when seen from above.
 </p>
 
 <p>
-  The environment randomly rotates the block at the beginning of an episode
-  and selects a starting point on one of the four top edges. This means the
-  robot needs to learn a general strategy for following an edge rather than
-  memorising one fixed position.
+  The block is randomly rotated at the beginning of each episode, and the starting point is chosen at
+  random on one of the four top edges (at least 1.5&nbsp;cm from a corner). The fingertip is placed above
+  that point and lowered until it touches the block. The height at which contact is made is recorded, and
+  the agent is rewarded for keeping that contact depth. Because the block is rotated, the robot has to
+  learn a general way of following an edge rather than memorising one path.
 </p>
 
-<h3>What Does the Robot Observe?</h3>
+<h3>Measuring Position on the Edge</h3>
 
 <p>
-  The observation has a dimension of <strong>213</strong>. The environment obtains it
-  using <code>get_nodes()</code> and then flattens the result into a single array.
-</p>
-
-<pre><code>observation = self.get_nodes().flatten()</code></pre>
-
-<p>
-  The 213 values are the positions of the optical markers of the TacTip. They have already been put
-  into an embedded space to simplify the input, and the coordinates are local
-  in 3D space relative to one another. If tactile events are enabled, the event values
-  are appended to this array.
-</p>
-
-<h3>How Is Reward Enforced?</h3>
-
-<p>
-  A good action should help the fingertip stay close to the edge and
-  make progress along it. The reward is made from four ideas:
+  The top of the block is treated as a loop of four line segments, 0.6&nbsp;m in total. For any fingertip
+  position the environment finds the closest point on that loop and works out:
 </p>
 
 <ul>
-  <li>How close the fingertip is to the edge.</li>
-  <li>Whether the robot is making progress along the edge.</li>
-  <li>Whether sufficient contact is being maintained.</li>
-  <li>Whether the fingertip is staying at the height of the edge.</li>
+  <li><strong>Arc length:</strong> how far round the loop that point is</li>
+  <li><strong>Sideways error:</strong> the distance from the edge, positive outside the block and negative inside</li>
+  <li><strong>Tangent:</strong> the anticlockwise direction of the edge at that point</li>
 </ul>
 
-<h4>Distance from the Edge</h4>
-
 <p>
-  The environment finds the point on the block that is closest to
-  the fingertip and measures the horizontal distance to it:
+  The change in arc length each step is the progress along the edge. It handles the wrap-around at the
+  start of the loop, and the running total tells the environment when a full lap is complete.
 </p>
 
-<pre><code>edge_point = self.closest_edge_point(tip)
-edge_error = np.linalg.norm(
-    tip[:2] - edge_point[:2]
+<h3>Observation and Action</h3>
+
+<p>
+  In privileged mode the observation has <strong>22 dimensions</strong>: proprioception (9) followed by
+</p>
+
+<ul>
+  <li>Block centre relative to the fingertip (2)</li>
+  <li>Sine and cosine of the block's rotation (2)</li>
+  <li>Nearest edge point relative to the fingertip (2)</li>
+  <li>Edge direction to follow (2)</li>
+  <li>Sideways error, height error from the recorded contact depth, distance to the next corner,
+      fraction of the lap completed, and whether the sensor is touching (5)</li>
+</ul>
+
+<p>
+  In tactile mode the agent has to read the edge from the sensor: the markers show where the edge crosses
+  the dome and which side of it the block is on. The action has 3 dimensions, so the agent controls
+  contact depth as well as direction.
+</p>
+
+<h3>Reward and Termination</h3>
+
+<pre><code>on_edge  = closeness(sideways_error, 0.005)      # 5 mm
+depth    = closeness(height_error, 0.003)        # 3 mm
+touching = 1 if the sensor touches the block else 0
+progress = clip(arc_length_change / 0.004, -1, 1)
+
+reward = (
+    0.10 * on_edge
+    + 0.05 * touching
+    + 0.05 * depth
+    + 0.80 * on_edge * touching * progress    # progress only counts on the edge and in contact
 )</code></pre>
 
-<p>
-  The further the fingertip moves away from the edge, the larger the
-  <code>edge_error</code> becomes. This produces a negative reward of
-  <code>-2.0 * edge_error</code>, so staying close to the edge is encouraged.
-</p>
-
-<h4>Progress Along the Edge</h4>
+<ul>
+  <li><strong>Success:</strong> +100 after one full lap.</li>
+  <li><strong>Fail:</strong> -10 if the fingertip ends up more than 2.5&nbsp;cm from the edge, lifts more
+      than 2&nbsp;cm off the block, or slips more than 1.5&nbsp;cm down its side.</li>
+</ul>
 
 <p>
-  The top edges of the block are divided into a sequence of points, 1&nbsp;cm apart. The
-  starting target is the point furthest from the fingertip at the start of the episode.
-  The environment keeps track of which point the robot should reach next, and moves
-  on to the next point when the fingertip gets close enough:
-</p>
-
-<pre><code>if target_error &lt; 0.01:
-    self.current_target += 1</code></pre>
-
-<p>
-  The progress value is the inverse of the horizontal distance from the fingertip to the
-  current target point, so it grows as the fingertip closes in on that point:
-</p>
-
-<pre><code>progress = 1 / target_error</code></pre>
-
-<p>
-  The change in progress from the previous step is rewarded with:
-</p>
-
-<pre><code>delta_progress = progress - self.previous_progress
-+5.0 * delta_progress</code></pre>
-
-<h4>Contact Penalty</h4>
-
-<p>
-  If the measured force is below <code>0.1</code>, a penalty of <code>5</code> is applied.
-  In the current implementation the force is temporarily set to a fixed value of
-  <code>0.2</code>, so the penalty never triggers, and the real contact-force calculation is
-  marked as a future implementation.
-</p>
-
-<pre><code>if force &lt; 0.1:
-    contact_penalty = 5</code></pre>
-
-<h4>Overall Reward</h4>
-
-<pre><code>reward = (
-    -2.0 * edge_error
-    + 5.0 * delta_progress
-    - contact_penalty
-    + r_low                  # low-tip penalty, see above
-)</code></pre>
-
-<p>
-  In simple terms, the robot is rewarded for
-  <strong>staying close to the edge and making progress along it</strong>.
+  Going the wrong way round gives negative progress, so the direction is part of the task.
 </p>
 
 <hr>
 
 <h2 id="peg">Environment 2: Peg</h2>
 
-<!-- <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/peg.gif" width="100%"> -->
+<div class="gif-grid">
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="" alt="Trained policy pushing a cylinder into a hole using privileged observations">
+    <figcaption>Privileged observations: the policy sees the cylinder and the hole.</figcaption>
+  </figure>
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="" alt="Trained policy pushing a cylinder into a hole using only tactile observations">
+    <figcaption>Tactile observations: the policy only feels the cylinder through the TacTip.</figcaption>
+  </figure>
+</div>
 
 <h3>The Task</h3>
 
@@ -455,8 +573,9 @@ edge_error = np.linalg.norm(
 </p>
 
 <p>
-  The cylinder starts at a random position just behind the hole, so the agent has to learn to
-  approach it from the correct side rather than repeat one fixed motion.
+  The cylinder starts at a random position 8 to 12&nbsp;cm from the hole and up to 2&nbsp;cm to either
+  side of it. The fingertip starts touching the cylinder on the side facing away from the hole, at
+  1.5&nbsp;cm above the platform. Pushing that low keeps the cylinder sliding rather than tipping.
 </p>
 
 <h3>The Scene</h3>
@@ -470,69 +589,71 @@ edge_error = np.linalg.norm(
 <h3>Observation and Action</h3>
 
 <p>
-  The observation has <strong>218 dimensions</strong>:
+  In privileged mode the observation has <strong>20 dimensions</strong>: proprioception (8) followed by
 </p>
 
 <ul>
-  <li>The tactile marker values from <code>get_nodes()</code> (213)</li>
   <li>The cylinder position (3)</li>
   <li>The horizontal vector from the cylinder to the hole (2)</li>
+  <li>The horizontal vector from the cylinder to the fingertip (2)</li>
+  <li>How far the cylinder is tilted (2)</li>
+  <li>The cylinder's horizontal velocity (2)</li>
+  <li>Whether the sensor is touching it (1)</li>
 </ul>
 
 <p>
-  The fingertip position is not part of the observation. The agent has to work out where its
-  fingertip is from the tactile signal and the cylinder's position.
-  The action is the same 3-dimensional fingertip movement as before, with Z locked.
+  In tactile mode none of the cylinder values are given. The hole never moves, so the policy can learn
+  where it is, but it has to feel where the cylinder is relative to its fingertip.
+  The action is a 2-dimensional fingertip movement (x and y).
 </p>
 
 <h3>Reward and Termination</h3>
 
-<p>
-  The cylinder must stay upright. If it tips more than about 30 degrees from vertical, or ends up
-  off the platform without being over the hole, the episode ends immediately with a penalty.
-  Otherwise the reward is built from progress:
-</p>
+<pre><code>push_point = cylinder - direction_to_hole * (cylinder_radius + tip_radius)
 
-<pre><code>reward = (
-    10.0 * (previous_goal_dist - goal_dist)   # push the cylinder towards the hole
-    + 1.0 * (previous_tip_dist - tip_dist)    # weak: reach the push point
-    - 0.01                                    # time penalty
-    + r_low                                   # 5 * (tip_z - cyl_z) when the tip is below the cylinder centre
+reward = (
+    0.1 * closeness(tip - push_point, 0.02)    # fingertip behind the cylinder
+    + 0.2 * closeness(goal_dist, 0.08)          # cylinder near the hole
+    + 0.7 * progress(goal_dist)                 # cylinder moved towards the hole this step
 )</code></pre>
 
 <ul>
-  <li><strong>Success:</strong> +100 when the cylinder drops into the hole.</li>
-  <li><strong>Fall:</strong> -50 and the episode ends.</li>
+  <li><strong>Success:</strong> +100 when the cylinder is over the hole and has dropped by 1.5&nbsp;cm.</li>
+  <li><strong>Fail:</strong> -10 if the cylinder tips more than about 30 degrees, is lying on its side, or
+      goes off the platform anywhere other than the hole.</li>
 </ul>
 
 <p>
-  Success is checked before falling. A cylinder tilts as it drops through the hole, and that
-  must not be counted as a fall.
+  Tipping is not counted while the cylinder is over the hole, because it tilts as it drops in.
 </p>
 
 <h4>The Push Point</h4>
 
 <p>
-  The approach term guides the fingertip towards the <em>push point</em>: the spot on the far
-  side of the cylinder from the hole, at the cylinder's mid-height. A fingertip placed there
-  and moved towards the hole pushes the cylinder in. Pushing near the top of the cylinder is the
-  main cause of tipping, which is why the Z axis is locked and why the low-tip penalty
-  keeps the fingertip from dropping below mid-height.
+  The closeness term guides the fingertip towards the <em>push point</em>: the spot on the far
+  side of the cylinder from the hole. A fingertip placed there and moved towards the hole pushes the
+  cylinder straight in. It is recomputed every step, so if the cylinder drifts sideways the push point
+  moves with it and the agent learns to correct.
 </p>
 
 <hr>
 
 <h2 id="shape">Environment 3: ShapeInsertion</h2>
 
-<!-- <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/shape.gif" width="100%"> -->
+<figure class="gif-slot">
+  <!-- TODO: add the GIF src -->
+  <img src="" alt="Trained policy pushing a shape into its matching hole">
+  <figcaption>Trained PPO policy (privileged observations) pushing each of the four shapes into its own hole.</figcaption>
+</figure>
 
 <h3>The Task</h3>
 
 <p>
   ShapeInsertion extends the peg task. The platform now has four holes (a circle, a square, a
   rectangle and a triangle), and each episode the arm is given <strong>one</strong> of the four
-  shapes. It must push that shape to the matching hole <em>and</em> rotate it into the right
-  orientation, because a shape that is the wrong way round will not fit through.
+  shapes. It starts touching the shape and must push it to the matching hole. In tactile mode the agent
+  is not told which shape it has, so it has to identify the shape by touch before it knows which hole
+  to aim for.
 </p>
 
 <h3>Hidden Shapes</h3>
@@ -545,7 +666,8 @@ edge_error = np.linalg.norm(
 <ul>
   <li>Making them fully transparent</li>
   <li>Turning their collisions off</li>
-  <li>Parking them out of the way with gravity compensated, so they do not fall forever</li>
+  <li>Parking them out of the way and putting them back in place after every step. Setting gravity
+      compensation at runtime is not enough: MuJoCo only applies it if the model was built with it.</li>
 </ul>
 
 <p>
@@ -562,7 +684,7 @@ edge_error = np.linalg.norm(
   drift apart. Round and triangular holes are cut from thin strips of box geometry.
 </p>
 
-<h3>Randomisation</h3>
+<h3>Randomisation and Curriculum</h3>
 
 <ul>
   <li>Which shape is shown (and therefore which hole is the goal)</li>
@@ -570,26 +692,41 @@ edge_error = np.linalg.norm(
   <li>The starting rotation (yaw) of the shape</li>
 </ul>
 
+<p>
+  Two arguments control how hard the task is:
+</p>
+
+<pre><code>env = gym.make("TacArm-shape",
+               spawn_yaw=0.1,            # starting rotation range, +/- radians
+               spawn_toward_hole=0.0)    # 0 = start in the middle, 1 = start in line with the right hole
+env.reset(options={"shape": "square"})   # fix a single shape</code></pre>
+
+<p>
+  By default shapes start within 0.1 radians of the hole's orientation, which fits every hole without
+  re-orienting. Setting <code>spawn_yaw</code> to pi means the agent has to rotate the shape by pushing it
+  off-centre, which is much harder with a single point of contact. <code>spawn_toward_hole</code> moves the
+  start position towards the correct hole, turning the task into a straight push. A sensible order is
+  straight pushes first, then central starts, then larger starting rotations.
+</p>
+
 <h3>Observation and Action</h3>
 
 <p>
-  The observation has <strong>225 dimensions</strong>:
+  In privileged mode the observation has <strong>25 dimensions</strong>: proprioception (8) followed by
 </p>
 
 <ul>
-  <li>Tactile marker values from <code>get_nodes()</code> (213)</li>
   <li>Shape position (3)</li>
-  <li>Sine and cosine of the shape's yaw (2)</li>
+  <li>Sine and cosine of (symmetry order &times; yaw), and the yaw error (3)</li>
   <li>Vector from the shape to its target hole (2)</li>
-  <li>Yaw error (1)</li>
+  <li>Vector from the shape to the fingertip (2)</li>
+  <li>Shape velocity (2)</li>
+  <li>Whether the sensor is touching it (1)</li>
   <li>One-hot shape identity (4)</li>
 </ul>
 
 <p>
-  The shape identity and the target vector are essential. Without them the task could not be
-  solved from the observation, because the same shape position needs a different push for each
-  shape. As in Peg, the fingertip position is not part of the observation. The action is the
-  3-dimensional fingertip movement with Z locked.
+  The action is a 2-dimensional fingertip movement (x and y).
 </p>
 
 <h3>Symmetry-Aware Orientation</h3>
@@ -615,51 +752,56 @@ yaw_error = (yaw + period / 2) % period - period / 2</code></pre>
 
 <h3>Reward and Termination</h3>
 
-<pre><code>reward = (
-    10.0 * (previous_goal_dist - goal_dist)   # push towards the correct hole
-    + 1.0 * (previous_yaw_err - yaw_err)      # rotate towards the hole's orientation
-    + 1.0 * (previous_tip_dist - tip_dist)    # weak: reach the push point
-    - 0.01                                    # time penalty
-    + r_low                                   # 5 * (tip_z - shape_z) when the tip is below the shape centre
+<pre><code>near = clip(1 - goal_dist / 0.10, 0, 1)    # 0 more than 10 cm from the hole, 1 at the hole
+
+reward = (
+    0.10 * closeness(tip - push_point, 0.02)
+    + 0.15 * closeness(goal_dist, 0.12)
+    + 0.60 * progress(goal_dist)
+    + 0.15 * near * closeness(yaw_error, 0.15)    # orientation only matters near the hole
 )</code></pre>
 
 <ul>
-  <li><strong>Success:</strong> +100 when the shape drops below the plate surface within 3&nbsp;cm of the <em>correct</em> hole.</li>
-  <li><strong>Fail:</strong> -50 if it drops through the wrong hole or off the edge, or tips over more than 5&nbsp;cm from the target hole. Tipping over the target hole's mouth is allowed, since a shape tilts as it drops in.</li>
+  <li><strong>Success:</strong> +100 when part of the shape is at least 8&nbsp;mm below the plate surface
+      within 3&nbsp;cm of the <em>correct</em> hole.</li>
+  <li><strong>Fail:</strong> -10 if it goes into the wrong hole or off the edge, tips over more than
+      5&nbsp;cm from its hole, or ends up lying on the plate.</li>
 </ul>
 
 <p>
-  Orientation is enforced by the physics itself. A square turned by 45 degrees simply cannot drop
-  through the square hole. A circle could drop through the square hole, which is why a drop
-  through any hole other than the target counts as a failure.
+  Success is measured from the shape's lowest point rather than its centre. With a 2&nbsp;cm thick plate
+  and only 4&nbsp;mm of clearance, a pushed shape tips forward as it reaches the hole and wedges in at an
+  angle instead of dropping straight through. Counting only a fully dropped shape made the task almost
+  impossible. A shape lying flat on the plate never has any part below the surface, so it cannot be
+  mistaken for an insertion.
 </p>
 
-<h3>Curriculum</h3>
-
 <p>
-  A single-point pusher, random rotations and four different targets together make a hard
-  exploration problem. The environment supports a curriculum:
-</p>
-
-<pre><code>env.spawn_yaw = 0.0                       # start with no rotation needed
-env.reset(options={"shape": "square"})    # fix a single shape</code></pre>
-
-<p>
-  A sensible order is to train with a single shape and no rotation, then add random
-  rotation, then add all four shapes. By default <code>spawn_yaw</code> is set to pi, so the
-  shape starts at a random yaw between -pi and pi.
+  Orientation is still enforced by the physics. A square turned by 45 degrees cannot go into the square
+  hole. A circle could go into the square hole, which is why going into any hole other than the target
+  counts as a failure.
 </p>
 
 <hr>
 
 <h2 id="incline">Environment 4: Incline</h2>
 
-<!-- <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/incline.gif" width="100%"> -->
+<figure class="gif-slot">
+  <!-- TODO: add the GIF src -->
+  <img src="" alt="Trained policy stopping a rolling ball and pushing it up a ramp">
+  <figcaption>Trained PPO policy (privileged observations) stopping the ball and pushing it to the top of the ramp.</figcaption>
+</figure>
 
 <h3>The Task</h3>
 
 <p>
-  A ball starts near the bottom of a 15 degree ramp, and the arm has to push it up to the top.
+  The fingertip starts somewhere on the lower half of a 15 degree ramp, and a ball is dropped further up.
+  The ball rolls down towards the fingertip. The agent has to <strong>intercept it</strong> without letting it
+  slip past, then <strong>push it back up to the top</strong>. Pushing a ball uphill with a single rounded
+  fingertip is unstable, so the agent has to keep correcting sideways to stay directly below the ball.
+</p>
+
+<p>
   The twist is that <strong>the friction of the ramp changes every episode</strong>. The same
   push produces very different behaviour depending on the surface:
 </p>
@@ -706,64 +848,64 @@ rolling = 0.008 * f                      # linear, 0 to 0.008</code></pre>
 <h3>Observation and Action</h3>
 
 <p>
-  The action is <strong>2-dimensional</strong>: movement along the slope, and movement sideways.
-  Each component is clipped to the range -1 to 1 and scaled by 5&nbsp;mm, and is added to a
-  commanded fingertip position in slope coordinates:
+  The action is <strong>2-dimensional</strong>: movement along the slope, and movement sideways, both in the
+  ramp's own coordinates. After the same smoothing as the other tasks, each component moves a commanded
+  fingertip position in slope coordinates:
 </p>
 
-<pre><code>cmd_s = clip(cmd_s + action[0] * 0.005, -0.06, L - 0.03)   # along the slope
-cmd_y = clip(cmd_y + action[1] * 0.005, -0.06, 0.06)       # sideways</code></pre>
+<pre><code>cmd_s = clip(cmd_s + velocity_cmd[0] * 0.005, -0.06, L - 0.03)   # along the slope
+cmd_y = clip(cmd_y + velocity_cmd[1] * 0.005, -0.06, 0.06)       # sideways</code></pre>
 
 <p>
   The fingertip height is computed from the ramp surface so it stays level with the ball's
-  centre, which stops it pushing over the top of the ball. Each environment step runs 10 physics
-  steps with the joint targets held.
+  centre, which stops it pushing over the top of the ball.
 </p>
 
 <p>
-  The observation has <strong>222 dimensions</strong>:
+  In privileged mode the observation has <strong>23 dimensions</strong>: proprioception (8) followed by
 </p>
 
 <ul>
-  <li>Tactile marker values from <code>get_nodes()</code> (213)</li>
-  <li>Ball position (3)</li>
-  <li>Ball velocity (3)</li>
-  <li>Ball progress along the ramp, as a fraction of its length (1)</li>
+  <li>Fingertip position in slope coordinates: distance up the slope (as a fraction of its length), sideways, height (3)</li>
+  <li>Ball position in slope coordinates (3)</li>
   <li>Fingertip offset from the ball, along the slope and sideways (2)</li>
+  <li>Ball velocity in slope coordinates (3)</li>
+  <li>Ball spin, multiplied by its radius (3)</li>
+  <li>Whether the sensor is touching the ball (1)</li>
 </ul>
 
 <p>
   An optional extra value gives the policy the true friction level, making the observation
-  <strong>223 dimensions</strong>. This is useful for checking
-  that the task can be learned at all, but it is turned off by default
-  (<code>OBSERVE_FRICTION = False</code>).
+  <strong>24 dimensions</strong>. It is off by default:
 </p>
+
+<pre><code>env = gym.make("TacArm-hill", observe_friction=True)</code></pre>
 
 <h3>Hidden Friction</h3>
 
 <p>
-  With friction hidden, the policy has to work it out from how the ball responds to being
-  pushed. The ball velocity in the observation is what makes this possible. A policy that only
-  sees one frame at a time cannot easily compare the ball's motion across steps, so the hidden
-  version of the task is best trained with frame stacking or a recurrent policy.
+  With friction hidden, the policy has to work it out from how the ball responds to being pushed. In
+  privileged mode the ball's velocity and spin make this possible, and in our tests the policy learned the
+  task without frame stacking. In tactile mode the ball is only felt once it touches the sensor, so frame
+  stacking or a recurrent policy may help there.
 </p>
 
 <h3>Reward and Termination</h3>
 
 <pre><code>reward = (
-    30.0 * (ball_progress - previous_ball_progress)   # up the slope is good, rolling back is bad
-    + 1.0 * (previous_tip_dist - tip_dist)            # weak: stay behind the ball
-    - 0.01                                            # time penalty
+    0.15 * closeness(tip - point_just_below_ball, 0.03)   # stay behind the ball
+    + 0.25 * ball_height                                  # distance up the ramp, 0 to 1
+    + 0.60 * progress(ball_height)                        # + pushing it up, - letting it roll down
 )</code></pre>
 
 <p>
-  Here <code>ball_progress</code> is the ball's distance up the slope in metres, so the progress term
-  pays 30 per metre travelled.
+  At the start of the episode the ball is rolling downhill, so the progress term is negative until it is
+  stopped. This pushes the agent to move up and meet the ball early, rather than waiting for it at the bottom.
 </p>
 
 <ul>
   <li><strong>Success:</strong> +100 when the ball gets within 4&nbsp;cm of the top.</li>
-  <li><strong>Fail:</strong> -50 if the ball rolls off the bottom, falls off the side (more than 10&nbsp;cm sideways), or pops off the surface.</li>
+  <li><strong>Fail:</strong> -10 if the ball rolls off the bottom, goes more than 10&nbsp;cm sideways, or pops off the surface.</li>
 </ul>
 
 <h3>Evaluation</h3>
@@ -777,28 +919,130 @@ env.reset(options={"friction": 1.0})   # grippy</code></pre>
 
 <hr>
 
+<h2 id="training">Training</h2>
+
+<p>
+  The examples folder contains <code>RL_BASE.py</code>, which wraps Stable-Baselines3. Each task has a short
+  script that calls it:
+</p>
+
+<pre><code>from RL_BASE import run, evaluate, visualise
+
+if __name__ == "__main__":          # required: each environment runs in its own process
+    run("TacArm-peg", "peg_v2", "peg_v2", 3_000_000, privileged=True)    # or privileged=False
+    evaluate("TacArm-peg", "peg_v2", n_episodes=50)                      # success rate, no viewer
+    visualise("TacArm-peg", "peg_v2")                                    # MuJoCo viewer</code></pre>
+
+<p>
+  <code>run()</code> creates one environment per process, normalises observations and rewards with
+  <code>VecNormalize</code>, logs to <code>logs/&lt;name&gt;/progress.csv</code>, saves a checkpoint every
+  500,000 steps and records a short video at every 20% of training. At the end it saves three files:
+</p>
+
+<ul>
+  <li><code>&lt;name&gt;.zip</code>: the policy</li>
+  <li><code>&lt;name&gt;_vecnormalize.pkl</code>: the observation statistics. The policy was trained on
+      normalised observations and behaves almost randomly without them, so these are saved
+      <em>after</em> training and loaded by <code>evaluate()</code>, <code>visualise()</code> and the training videos.</li>
+  <li><code>&lt;name&gt;.json</code>: the environment name, its arguments and the algorithm, so the same
+      environment is rebuilt for evaluation.</li>
+</ul>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>PPO setting</th><th>Value</th></tr>
+  <tr><td>Parallel environments</td><td>8</td></tr>
+  <tr><td>Steps per environment per update</td><td>1024 (8192 per update)</td></tr>
+  <tr><td>Minibatch size / epochs</td><td>512 / 10</td></tr>
+  <tr><td>Learning rate</td><td>3e-4</td></tr>
+  <tr><td>Discount / GAE lambda</td><td>0.99 / 0.95</td></tr>
+  <tr><td>Clip range / target KL</td><td>0.2 / 0.03</td></tr>
+  <tr><td>Networks</td><td>Separate policy and value networks, 256 x 256, tanh</td></tr>
+  <tr><td>Initial action noise</td><td>Standard deviation 0.6</td></tr>
+</table>
+</div>
+
+<p>
+  SAC is also available with <code>run(..., algo="SAC")</code>. It usually needs fewer environment steps,
+  which helps when the simulation is slow.
+</p>
+
+<h3>Checking an Environment Before Training</h3>
+
+<p>
+  <code>check_envs.py</code> runs a quick set of checks on each task in a few minutes: whether the arm drifts
+  or lags, whether resets start in contact, and whether a simple hand-written controller using the privileged
+  state can solve the task. If the hand-written controller cannot solve a task, a learned policy will not either,
+  so this is worth running after any change to the scene or the sensor.
+</p>
+
+<h3 id="results">Results</h3>
+
+<p>
+  Success rate over the last 100 training episodes, with PPO:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr>
+    <th>Task</th>
+    <th>Observations</th>
+    <th>Success rate</th>
+  </tr>
+  <tr><td>Edge following (one full lap)</td><td>Privileged</td><td>83% after 70k steps, 100% after 86k</td></tr>
+  <tr><td>Peg</td><td>Privileged</td><td>67% after 45k steps, 92% after 86k, 98% after 287k</td></tr>
+  <tr><td>Incline</td><td>Privileged, friction hidden</td><td>54% after 70k steps, 87% after 135k, 94% after 164k</td></tr>
+  <tr><td>Peg</td><td>Tactile only</td><td>57% after 70k steps, 82% after 400k (still improving)</td></tr>
+  <tr><td>ShapeInsertion (central start)</td><td>Privileged</td><td>27% after 100k steps, 53% after 500k (still improving)</td></tr>
+</table>
+</div>
+
+<p>
+  For comparison, the first version of the incline task stayed at 3 to 5% success over a million steps of
+  training. These runs used a stand-in arm (a Unitree Z1 with a simplified 37-marker TacTip) and a minimal PPO
+  implementation with the same normalisation and loss, so exact numbers on the full TacTip model will differ.
+</p>
+
+<hr>
+
 <h2 id="using">Using the Environments</h2>
 
 <p>
-  Each environment is a Python class that inherits from <code>RobotArmEnv</code>, and can be
-  trained with any algorithm that supports Gymnasium. The tasks are designed to be tackled in
-  roughly this order of difficulty:
+  Each environment can be trained with any algorithm that supports Gymnasium. The tasks are designed to be
+  tackled in roughly this order of difficulty:
 </p>
 
 <ol>
   <li><strong>Edge following:</strong> learn to stay in contact with a surface using touch.</li>
   <li><strong>Peg:</strong> learn to push an object to a goal without tipping it.</li>
-  <li><strong>ShapeInsertion:</strong> add orientation control and a changing goal.</li>
-  <li><strong>Incline:</strong> adapt to a physical property that the agent cannot see directly.</li>
+  <li><strong>Incline:</strong> stop a moving object, then push against gravity with a hidden friction level.</li>
+  <li><strong>ShapeInsertion:</strong> a changing goal, tight clearances and optional re-orientation.</li>
 </ol>
+
+<p>
+  Each task can then be repeated in tactile mode, where the agent has to do the same thing by touch alone.
+</p>
 
 <h3>Adding Your Own Task</h3>
 
 <p>
-  A new task needs three things: a MuJoCo scene file, a class that inherits from
-  <code>RobotArmEnv</code>, and four methods. The reset method places the arm and the objects,
-  <code>_get_obs()</code> builds the observation, <code>_reward()</code> returns the reward
-  for the step, and <code>_done()</code> says whether the episode has ended.
+  A new task needs a MuJoCo scene file and a class that inherits from <code>RobotArmEnv</code>. The base class
+  handles the controller, the observation modes, the marker readout, success and failure bonuses, and episode
+  length. The task fills in a few hooks:
+</p>
+
+<ul>
+  <li><code>_setup_task()</code>: look up the bodies and joints it needs, once</li>
+  <li><code>_reset_task(options)</code>: place the objects and the arm (helpers place the arm by IK and creep into contact)</li>
+  <li><code>_privileged_obs()</code>: the task state for privileged mode</li>
+  <li><code>_reward()</code>: the per-step reward</li>
+  <li><code>_status()</code>: return <code>"success"</code>, <code>"fail"</code> or <code>None</code></li>
+</ul>
+
+<p>
+  Tasks with a different action layout, such as the incline's slope coordinates, can also override
+  <code>_apply_action()</code>. The observation space is sized automatically, so there is no observation
+  dimension to keep in sync by hand.
 </p>
 
 <br><br>
