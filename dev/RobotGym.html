@@ -54,7 +54,7 @@
 		.page-text ul { margin: 0 0 1rem 1.2rem; }
 		.page-text li { line-height: 1.6; }
 
-		/* ---------- Figure 3: training progress, drawn from progress.csv ---------- */
+		/* ---------- Figure 2: training progress, drawn from progress.csv ---------- */
 		.ph-progress .ph-panel + .ph-panel { margin-top: 24px; }
 		.ph-multi { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 24px; }
 		.page-text .ph-multi .ph-ptitle { margin-bottom: 2px; font-weight: normal; }
@@ -216,100 +216,7 @@
 			<figcaption><b>Figure 1.</b> Share of each step’s reward. Balance-first: staying up 20 %; balance 40 % (capture point 15, pelvis tilt 10, height 5, wobble 5, foot contacts 5); pose accuracy 40 % (keypoints 20, joint angles 12, joint speeds 8). Small penalties for jerky actions, high torque and sliding feet come off the total.</figcaption>
 		</figure>
 
-		<p>The key new term is the <em>capture point</em> <a href="#ref-8">[8]</a>: the robot’s centre of mass plus its horizontal speed divided by √(g / h), where h is the height of the centre of mass. It marks where the robot would have to step to come to a stop. If it lies inside the area covered by the feet on the ground, the robot can recover without stepping; if it lies outside, a fall has already started, even though nothing looks wrong yet. To check it really gives early warning, we let the untrained robot fall 118 times and lined the falls up by the moment each one ended:</p>
-
-		<figure class="ph-fig" id="fig-2">
-			<div class="ph-fig-body" data-ew>
-				<div class="ph-panel">
-					<p class="ph-ptitle">Balance scores (0 to 1)</p>
-					<ul class="ph-legend">
-						<li><span class="ph-key line" style="background:#b5391a"></span>Capture point</li>
-						<li><span class="ph-key line" style="background:#0a8f7c"></span>Pelvis tilt</li>
-					</ul>
-<svg class="ph-chart" id="ew-bal" viewBox="0 0 520 210" role="img" aria-labelledby="ew-bal-t">
-<title id="ew-bal-t">Balance scores in the last 1.2 seconds before a fall</title>
-<g class="ph-grid">
-<line x1="42" x2="506" y1="170.0" y2="170.0"/>
-<line x1="42" x2="506" y1="130.5" y2="130.5"/>
-<line x1="42" x2="506" y1="91.0" y2="91.0"/>
-<line x1="42" x2="506" y1="51.5" y2="51.5"/>
-<line x1="42" x2="506" y1="12.0" y2="12.0"/>
-</g><g class="ph-axis">
-<line class="ph-base" x1="42" x2="506" y1="170" y2="170"/>
-<text x="34" y="174.0" text-anchor="end">0</text>
-<text x="34" y="134.5" text-anchor="end">0.25</text>
-<text x="34" y="95.0" text-anchor="end">0.5</text>
-<text x="34" y="55.5" text-anchor="end">0.75</text>
-<text x="34" y="16.0" text-anchor="end">1</text>
-<text x="42.0" y="188" text-anchor="middle">1.2</text>
-<text x="119.3" y="188" text-anchor="middle">1.0</text>
-<text x="196.7" y="188" text-anchor="middle">0.8</text>
-<text x="274.0" y="188" text-anchor="middle">0.6</text>
-<text x="351.3" y="188" text-anchor="middle">0.4</text>
-<text x="428.7" y="188" text-anchor="middle">0.2</text>
-<text x="506.0" y="188" text-anchor="middle">fall</text>
-<text x="274.0" y="206" text-anchor="middle">seconds before the fall</text></g>
-<path class="ph-line" stroke="#b5391a" d="M42.0 12.0 L57.5 12.0 L72.9 12.0 L88.4 12.0 L103.9 12.0 L119.3 12.0 L134.8 12.0 L150.3 12.0 L165.7 12.9 L181.2 22.7 L196.7 49.1 L212.1 82.9 L227.6 117.9 L243.1 146.6 L258.5 162.9 L274.0 168.7 L289.5 169.8 L304.9 170.0 L320.4 170.0 L335.9 170.0 L351.3 170.0 L366.8 170.0 L382.3 170.0 L397.7 170.0 L413.2 170.0 L428.7 170.0 L444.1 170.0 L459.6 170.0 L475.1 170.0 L490.5 170.0 L506.0 170.0"/>
-<path class="ph-line" stroke="#0a8f7c" d="M42.0 18.8 L57.5 20.1 L72.9 21.0 L88.4 23.4 L103.9 26.7 L119.3 27.8 L134.8 31.3 L150.3 34.9 L165.7 39.5 L181.2 45.2 L196.7 51.0 L212.1 58.8 L227.6 66.8 L243.1 75.8 L258.5 87.8 L274.0 101.0 L289.5 113.3 L304.9 127.2 L320.4 140.1 L335.9 150.6 L351.3 156.3 L366.8 162.3 L382.3 166.4 L397.7 168.6 L413.2 169.5 L428.7 169.8 L444.1 170.0 L459.6 170.0 L475.1 170.0 L490.5 170.0 L506.0 170.0"/>
-<circle class="ph-dot" fill="#b5391a" cx="227.6" cy="117.9" r="4"/>
-<text class="ph-annot" x="217.6" y="135.9" text-anchor="end">0.33 at 0.72 s</text>
-<g class="ph-cross" aria-hidden="true"><line x1="0" x2="0" y1="12" y2="170"/></g>
-<rect class="ph-hit" x="42" y="12" width="464" height="158" fill="transparent"/></svg>
-				</div>
-				<div class="ph-panel">
-					<p class="ph-ptitle">Pose error (cm)</p>
-<svg class="ph-chart" id="ew-kp" viewBox="0 0 520 210" role="img" aria-labelledby="ew-kp-t">
-<title id="ew-kp-t">Pose error in the last 1.2 seconds before a fall</title>
-<g class="ph-grid">
-<line x1="42" x2="506" y1="170.0" y2="170.0"/>
-<line x1="42" x2="506" y1="124.9" y2="124.9"/>
-<line x1="42" x2="506" y1="79.7" y2="79.7"/>
-<line x1="42" x2="506" y1="34.6" y2="34.6"/>
-</g><g class="ph-axis">
-<line class="ph-base" x1="42" x2="506" y1="170" y2="170"/>
-<text x="34" y="174.0" text-anchor="end">0</text>
-<text x="34" y="128.9" text-anchor="end">10</text>
-<text x="34" y="83.7" text-anchor="end">20</text>
-<text x="34" y="38.6" text-anchor="end">30</text>
-<text x="42.0" y="188" text-anchor="middle">1.2</text>
-<text x="119.3" y="188" text-anchor="middle">1.0</text>
-<text x="196.7" y="188" text-anchor="middle">0.8</text>
-<text x="274.0" y="188" text-anchor="middle">0.6</text>
-<text x="351.3" y="188" text-anchor="middle">0.4</text>
-<text x="428.7" y="188" text-anchor="middle">0.2</text>
-<text x="506.0" y="188" text-anchor="middle">fall</text>
-<text x="274.0" y="206" text-anchor="middle">seconds before the fall</text></g>
-<path class="ph-line" stroke="#2f4f9f" d="M42.0 163.2 L57.5 162.8 L72.9 162.3 L88.4 161.4 L103.9 160.5 L119.3 160.1 L134.8 159.2 L150.3 158.7 L165.7 157.8 L181.2 156.5 L196.7 155.6 L212.1 154.2 L227.6 151.9 L243.1 150.1 L258.5 148.3 L274.0 146.1 L289.5 142.9 L304.9 139.8 L320.4 135.2 L335.9 130.7 L351.3 126.2 L366.8 120.8 L382.3 114.5 L397.7 107.7 L413.2 98.7 L428.7 90.1 L444.1 79.7 L459.6 68.9 L475.1 55.3 L490.5 38.6 L506.0 19.2"/>
-<circle class="ph-dot" fill="#2f4f9f" cx="227.6" cy="151.9" r="4"/>
-<text class="ph-annot" x="219.6" y="139.9" text-anchor="end">4.0 cm at 0.72 s</text>
-<g class="ph-cross" aria-hidden="true"><line x1="0" x2="0" y1="12" y2="170"/></g>
-<rect class="ph-hit" x="42" y="12" width="464" height="158" fill="transparent"/></svg>
-				</div>
-				<div class="ph-tip" role="presentation"></div>
-			</div>
-			<figcaption><b>Figure 2.</b> Median of 118 falls. About 0.7 s before the fall the capture-point score has already dropped to 0.33, while the pose error is only 4.0 cm and the pelvis-tilt score is still 0.65, so the policy is told about a fall while there is still time to stop it.</figcaption>
-			<details class="ph-details">
-				<summary>Show the numbers</summary>
-				<div class="tablewrap">
-				<table>
-					<thead><tr><th>Seconds before fall</th><th>Capture point score</th><th>Pelvis tilt score</th><th>Capture point inside feet (cm)</th><th>Pose error (cm)</th></tr></thead>
-					<tbody>
-<tr><td>1.20</td><td>1.00</td><td>0.96</td><td>5.9</td><td>1.5</td></tr>
-<tr><td>1.08</td><td>1.00</td><td>0.93</td><td>4.7</td><td>1.9</td></tr>
-<tr><td>0.96</td><td>1.00</td><td>0.88</td><td>3.0</td><td>2.4</td></tr>
-<tr><td>0.84</td><td>0.93</td><td>0.79</td><td>0.9</td><td>3.0</td></tr>
-<tr><td>0.72</td><td>0.33</td><td>0.65</td><td>-2.2</td><td>4.0</td></tr>
-<tr><td>0.60</td><td>0.01</td><td>0.44</td><td>-6.8</td><td>5.3</td></tr>
-<tr><td>0.48</td><td>0.00</td><td>0.19</td><td>-13.5</td><td>7.7</td></tr>
-<tr><td>0.36</td><td>0.00</td><td>0.05</td><td>-22.7</td><td>10.9</td></tr>
-<tr><td>0.24</td><td>0.00</td><td>0.00</td><td>-35.1</td><td>15.8</td></tr>
-<tr><td>0.12</td><td>0.00</td><td>0.00</td><td>-52.4</td><td>22.4</td></tr>
-<tr><td>0.00</td><td>0.00</td><td>0.00</td><td>-71.6</td><td>33.4</td></tr>
-					</tbody>
-				</table>
-				</div>
-			</details>
-		</figure>
+		<p>The key new term is the <em>capture point</em> <a href="#ref-8">[8]</a>: the robot’s centre of mass plus its horizontal speed divided by √(g / h), where h is the height of the centre of mass. It marks where the robot would have to step to come to a stop. If it lies inside the area covered by the feet on the ground, the robot can recover without stepping; if it lies outside, a fall has already started, even though nothing looks wrong yet.</p>
 
 		<h3>Learning setup</h3>
 		<p>Training uses PPO from Stable-Baselines3 <a href="#ref-9">[9]</a> with 16 simulated robots running in parallel.</p>
@@ -349,7 +256,7 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 		<p>Everything a run produces (training log, test scores, videos and model backups) is written to <code>logs/&lt;run&gt;/</code>.</p>
 
 		<h3>Results from stage 1</h3>
-		<p>Stage 1 has finished: <span data-stat="steps_M">60</span> million steps, which took <span data-stat="hours">10.4</span> hours with 16 simulated robots. Figure 3 is drawn straight from that run’s training log, <code>progress.csv</code>. The page loads the file and plots it, and the numbers in this section are read from it too.</p>
+		<p>Stage 1 has finished: <span data-stat="steps_M">60</span> million steps, which took <span data-stat="hours">10.4</span> hours with 16 simulated robots. Figure 2 is drawn straight from that run’s training log, <code>progress.csv</code>. The page loads the file and plots it, and the numbers in this section are read from it too.</p>
 
 		<dl class="facts">
 			<div class="fact"><dt>of each 10 s test episode survived at the end, up from <span data-stat="surv_first">13</span> %</dt><dd><span data-stat="surv_last">89</span> %</dd></div>
@@ -357,7 +264,7 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 			<div class="fact"><dt>average pose error over the 12 keypoints, down from <span data-stat="kp_first">8.8</span> cm</dt><dd><span data-stat="kp_end">5.6</span> cm</dd></div>
 		</dl>
 
-		<figure class="ph-fig ph-progress" id="fig-3" data-progress-csv="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/logs/pose_stage1T1/progress.csv">
+		<figure class="ph-fig ph-progress" id="fig-2" data-progress-csv="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/logs/pose_stage1T1/progress.csv">
 			<div class="ph-fig-body" data-progress>
 				<p class="ph-status" data-role="status" role="status">Loading the training log…</p>
 				<div class="ph-panel">
@@ -380,7 +287,7 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 				</div>
 				<div class="ph-tip" role="presentation"></div>
 			</div>
-			<figcaption><b>Figure 3.</b> Stage 1 training, read from <code>progress.csv</code>. Top: every 5 % of the run the policy replays the same 8 test episodes (2 per motion kind, up to 10 s each); the grey area is the time before that kind joined training. Below: statistics from training itself, smoothed over about 1 % of the run, with lines where one-leg balance and stepping joined. Training numbers depend on which motions were being practised at the time; the tests don’t.</figcaption>
+			<figcaption><b>Figure 2.</b> Stage 1 training, read from <code>progress.csv</code>. Top: every 5 % of the run the policy replays the same 8 test episodes (2 per motion kind, up to 10 s each); the grey area is the time before that kind joined training. Below: statistics from training itself, smoothed over about 1 % of the run, with lines where one-leg balance and stepping joined. Training numbers depend on which motions were being practised at the time; the tests don’t.</figcaption>
 			<p class="ph-source"><span data-role="source">Data: <a href="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/logs/pose_stage1T1/progress.csv"><code>logs/pose_stage1T1/progress.csv</code></a> in the pose-to-biped repository, loaded when you scroll here.</span> <label class="ph-load">Plot another progress.csv<input type="file" accept=".csv,text/csv" data-role="file"></label></p>
 			<details class="ph-details">
 				<summary>Show the numbers</summary>
@@ -449,9 +356,8 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 
 </script>
 <script>
-/* hover and keyboard readouts for Figures 1 and 2; every value is also in the captions and the table */
+/* hover and keyboard readouts for Figure 1; every value is also in the caption */
 (function () {
-	var EW = [{"t": 0.0, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 33.4}, {"t": 0.04, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 29.1}, {"t": 0.08, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 25.4}, {"t": 0.12, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 22.4}, {"t": 0.16, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 20.0}, {"t": 0.2, "r_cp": 0.0, "r_upright": 0.001, "kp_err_cm": 17.7}, {"t": 0.24, "r_cp": 0.0, "r_upright": 0.003, "kp_err_cm": 15.8}, {"t": 0.28, "r_cp": 0.0, "r_upright": 0.009, "kp_err_cm": 13.8}, {"t": 0.32, "r_cp": 0.0, "r_upright": 0.023, "kp_err_cm": 12.3}, {"t": 0.36, "r_cp": 0.0, "r_upright": 0.049, "kp_err_cm": 10.9}, {"t": 0.4, "r_cp": 0.0, "r_upright": 0.087, "kp_err_cm": 9.7}, {"t": 0.44, "r_cp": 0.0, "r_upright": 0.123, "kp_err_cm": 8.7}, {"t": 0.48, "r_cp": 0.0, "r_upright": 0.189, "kp_err_cm": 7.7}, {"t": 0.52, "r_cp": 0.0, "r_upright": 0.271, "kp_err_cm": 6.7}, {"t": 0.56, "r_cp": 0.001, "r_upright": 0.359, "kp_err_cm": 6.0}, {"t": 0.6, "r_cp": 0.008, "r_upright": 0.437, "kp_err_cm": 5.3}, {"t": 0.64, "r_cp": 0.045, "r_upright": 0.52, "kp_err_cm": 4.8}, {"t": 0.68, "r_cp": 0.148, "r_upright": 0.596, "kp_err_cm": 4.4}, {"t": 0.72, "r_cp": 0.33, "r_upright": 0.653, "kp_err_cm": 4.0}, {"t": 0.76, "r_cp": 0.551, "r_upright": 0.704, "kp_err_cm": 3.5}, {"t": 0.8, "r_cp": 0.765, "r_upright": 0.753, "kp_err_cm": 3.2}, {"t": 0.84, "r_cp": 0.932, "r_upright": 0.79, "kp_err_cm": 3.0}, {"t": 0.88, "r_cp": 0.994, "r_upright": 0.826, "kp_err_cm": 2.7}, {"t": 0.92, "r_cp": 1.0, "r_upright": 0.855, "kp_err_cm": 2.5}, {"t": 0.96, "r_cp": 1.0, "r_upright": 0.878, "kp_err_cm": 2.4}, {"t": 1.0, "r_cp": 1.0, "r_upright": 0.9, "kp_err_cm": 2.2}, {"t": 1.04, "r_cp": 1.0, "r_upright": 0.907, "kp_err_cm": 2.1}, {"t": 1.08, "r_cp": 1.0, "r_upright": 0.928, "kp_err_cm": 1.9}, {"t": 1.12, "r_cp": 1.0, "r_upright": 0.943, "kp_err_cm": 1.7}, {"t": 1.16, "r_cp": 1.0, "r_upright": 0.949, "kp_err_cm": 1.6}, {"t": 1.2, "r_cp": 1.0, "r_upright": 0.957, "kp_err_cm": 1.5}];
 	function showTip(tip, zone, x, y, rows) {
 		while (tip.firstChild) tip.removeChild(tip.firstChild);
 		rows.forEach(function (r) {
@@ -480,27 +386,6 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 			seg.addEventListener("pointermove", on); seg.addEventListener("focus", on);
 			seg.addEventListener("pointerleave", function () { tip.classList.remove("on"); });
 			seg.addEventListener("blur", function () { tip.classList.remove("on"); });
-		});
-	});
-	var zone = document.querySelector("[data-ew]");
-	if (!zone) return;
-	var tip = zone.querySelector(".ph-tip"), svgs = zone.querySelectorAll("svg");
-	var ML = 42, PW = 464, W = 520, TMAX = 1.2;
-	function nearest(t) { return EW.reduce(function (a, b) { return Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a; }); }
-	svgs.forEach(function (svg) {
-		svg.querySelector(".ph-hit").addEventListener("pointermove", function (e) {
-			var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
-			var d = nearest(TMAX - (sx - ML) / PW * TMAX), x = ML + (TMAX - d.t) / TMAX * PW;
-			svgs.forEach(function (s) { var c = s.querySelector(".ph-cross"); c.classList.add("on"); c.setAttribute("transform", "translate(" + x + " 0)"); });
-			showTip(tip, zone, e.clientX, e.clientY, [
-				{ value: d.t.toFixed(2) + " s", label: "before the fall" },
-				{ value: d.r_cp.toFixed(2), label: "capture point", color: "#b5391a" },
-				{ value: d.r_upright.toFixed(2), label: "pelvis tilt", color: "#0a8f7c" },
-				{ value: d.kp_err_cm.toFixed(1) + " cm", label: "pose error", color: "#2f4f9f" }]);
-		});
-		svg.querySelector(".ph-hit").addEventListener("pointerleave", function () {
-			tip.classList.remove("on");
-			svgs.forEach(function (s) { s.querySelector(".ph-cross").classList.remove("on"); });
 		});
 	});
 })();
