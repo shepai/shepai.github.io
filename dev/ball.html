@@ -618,13 +618,23 @@ The compact design makes the PCB fit directly onto the wheel. The fabircation ou
 <h4>Testing Rig and Dataset Gathering</h4>
 To investigate the difference between slip ring vs static camera for marker prediction, we constructed a testing rig with an x and y axis. The wheel is attached to a magnetic encoded DC motor. 
 The rig was constructed from aluminium profiles and stepper motors, along with 3D printed parts to hold the wheels on the platform. 
-The rig was controlled via an Arduino Uno connected to the Adafruit motor driver. All powered via a repurposed mains power supply unit, with a voltage regulator between the output and stepper motor controller. 
+The rig was controlled via an Arduino connected to the Adafruit motor driver. All powered via a repurposed mains power supply unit, with a voltage regulator between the output and stepper motor controller. 
+
+The rig code can be found under the <a href="https://github.com/shepai/tactile-ball-robot/tree/main/physical%20robot/Rig">repo</a>.
 
  <div style="text-align: center;">
 <img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/ball_proj/76017.jpg" width="40%">
 </div>
 <br><br>
 
+For initial dataset gathering, we used a RGBD D405 stereoscopic camera, measuring deformation. 
+
+ <div style="text-align: center;">
+<img src="
+https://raw.githubusercontent.com/shepai/tactile-ball-robot/refs/heads/main/assets/rig.gif
+" width="70%">
+</div>
+<br><br>
 
 </section>
 <br><br>
