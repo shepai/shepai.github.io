@@ -53,6 +53,31 @@
 		.ph-soon { margin: 1rem 0 0; padding: 1.25rem; border: 2px dashed #d1d5db; border-radius: 6px; color: var(--muted); text-align: center; }
 		.page-text ul { margin: 0 0 1rem 1.2rem; }
 		.page-text li { line-height: 1.6; }
+
+		/* ---------- Figure 3: training progress, drawn from progress.csv ---------- */
+		.ph-progress .ph-panel + .ph-panel { margin-top: 24px; }
+		.ph-multi { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 24px; }
+		.page-text .ph-multi .ph-ptitle { margin-bottom: 2px; font-weight: normal; }
+		.ph-mini > div { min-height: 150px; }
+		.ph-plot { min-height: 230px; }
+		.ph-progress.is-loading .ph-panel { visibility: hidden; }
+		.ph-progress.is-error .ph-panel { display: none; }
+		.page-text .ph-status { overflow-wrap: anywhere; margin: 0 0 12px; padding: 10px 12px; border-radius: 6px; background: #f3f4f6; font-size: .9rem; color: var(--muted); }
+		.page-text .ph-progress.is-error .ph-status { border-left: 3px solid var(--accent); color: var(--text); }
+		.ph-shade { fill: #0f0f0f; fill-opacity: .05; }
+		.ph-chart .ph-shadelab, .ph-chart .ph-marklab { font-size: 12px; fill: var(--muted); }
+		.ph-mark { stroke: #0f0f0f; stroke-opacity: .35; stroke-width: 1; }
+		.ph-chart .ph-endlab { font-size: 13px; fill: var(--text); }
+		.ph-cross circle { opacity: 0; }
+		.ph-cross.on circle { opacity: 1; }
+		.ph-chart:focus { outline: none; }
+		.ph-chart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+		.page-text .ph-source { margin: 0; padding: 8px 16px 10px; border-top: 1px solid var(--rule); font-size: .8rem; line-height: 1.5; color: var(--muted); }
+		.ph-load { position: relative; margin-left: .3em; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; white-space: nowrap; }
+		.ph-load input { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; }
+		.ph-load:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+		.tablewrap .ph-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+		.ph-details .tcap { margin: 0 16px 6px; }
 	</style>
 </head>
 <body class="backgroundC">
@@ -323,8 +348,80 @@ python train_pose_tracking.py play
 python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 		<p>Everything a run produces (training log, test scores, videos and model backups) is written to <code>logs/&lt;run&gt;/</code>.</p>
 
-		<h3>Results so far</h3>
-		<p>Training is ongoing. In a short early test (8 simulated robots, 400,000 steps), the balance-first version kept the robot up for 1.9 s per episode on average, against 1.4 s for the first version. That is a sign of direction rather than a result, and survival per motion kind from the full runs will be added here.</p>
+		<h3>Results from stage 1</h3>
+		<p>Stage 1 has finished: <span data-stat="steps_M">60</span> million steps, which took <span data-stat="hours">10.4</span> hours with 16 simulated robots. Figure 3 is drawn straight from that run’s training log, <code>progress.csv</code>. The page loads the file and plots it, and the numbers in this section are read from it too.</p>
+
+		<dl class="facts">
+			<div class="fact"><dt>of each 10 s test episode survived at the end, up from <span data-stat="surv_first">13</span> %</dt><dd><span data-stat="surv_last">89</span> %</dd></div>
+			<div class="fact"><dt>of training episodes ending in a fall, down from <span data-stat="fell_first">34</span> %</dt><dd><span data-stat="fell_end">4.5</span> %</dd></div>
+			<div class="fact"><dt>average pose error over the 12 keypoints, down from <span data-stat="kp_first">8.8</span> cm</dt><dd><span data-stat="kp_end">5.6</span> cm</dd></div>
+		</dl>
+
+		<figure class="ph-fig ph-progress" id="fig-3" data-progress-csv="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/progress.csv">
+			<div class="ph-fig-body" data-progress>
+				<p class="ph-status" data-role="status" role="status">Loading the training log…</p>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Test survival by motion kind (% of a 10 s test episode)</p>
+					<div class="ph-multi" data-chart="survival"></div>
+				</div>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Training episodes that ended early (%)</p>
+					<ul class="ph-legend"><li><span class="ph-key line" style="background:#b5391a"></span>Fell</li><li><span class="ph-key line" style="background:#2f4f9f"></span>Lost the pose (more than 30 cm off)</li></ul>
+					<div class="ph-plot" data-chart="early"></div>
+				</div>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Pose error in training (cm)</p>
+					<ul class="ph-legend"><li><span class="ph-key line" style="background:#2f4f9f"></span>All 12 keypoints</li><li><span class="ph-key line" style="background:#0a8f7c"></span>Hands</li><li><span class="ph-key line" style="background:#b5391a"></span>Feet</li></ul>
+					<div class="ph-plot" data-chart="pose"></div>
+				</div>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Capture point inside the feet (cm; below 0, a fall has started)</p>
+					<div class="ph-plot" data-chart="cp"></div>
+				</div>
+				<div class="ph-tip" role="presentation"></div>
+			</div>
+			<figcaption><b>Figure 3.</b> Stage 1 training, read from <code>progress.csv</code>. Top: every 5 % of the run the policy replays the same 8 test episodes (2 per motion kind, up to 10 s each); the grey area is the time before that kind joined training. Below: statistics from training itself, smoothed over about 1 % of the run, with lines where one-leg balance and stepping joined. Training numbers depend on which motions were being practised at the time; the tests don’t.</figcaption>
+			<p class="ph-source"><span data-role="source">Data: <a href="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/progress.csv">progress.csv</a> in the repository’s <code>assets</code> folder.</span> <label class="ph-load">Plot another progress.csv<input type="file" accept=".csv,text/csv" data-role="file"></label></p>
+			<details class="ph-details">
+				<summary>Show the numbers</summary>
+				<p class="tcap">One row per test. Training columns are smoothed the same way as the charts.</p>
+				<div class="tablewrap">
+				<table data-role="table">
+<thead><tr><th colspan="2"></th><th colspan="5">Test survival (%)</th><th>Test</th><th colspan="4">Training, smoothed</th></tr><tr><th class="ph-num">Steps (M)</th><th class="ph-num">Hours</th><th class="ph-num">Arms and waist</th><th class="ph-num">Whole body</th><th class="ph-num">One-leg balance</th><th class="ph-num">Stepping</th><th class="ph-num">All</th><th class="ph-num">Pose error (cm)</th><th class="ph-num">Falls (%)</th><th class="ph-num">Lost the pose (%)</th><th class="ph-num">Capture point (cm)</th><th class="ph-num">Pose error (cm)</th></tr></thead><tbody>
+<tr><td class="ph-num">0.0</td><td class="ph-num">0.0</td><td class="ph-num">14</td><td class="ph-num">12</td><td class="ph-num">13</td><td class="ph-num">15</td><td class="ph-num">13</td><td class="ph-num">7.2</td><td class="ph-num">34.5</td><td class="ph-num">63.9</td><td class="ph-num">−9.6</td><td class="ph-num">8.8</td></tr>
+<tr><td class="ph-num">3.0</td><td class="ph-num">0.4</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">17</td><td class="ph-num">47</td><td class="ph-num">66</td><td class="ph-num">4.5</td><td class="ph-num">17.5</td><td class="ph-num">32.4</td><td class="ph-num">+0.6</td><td class="ph-num">5.9</td></tr>
+<tr><td class="ph-num">6.0</td><td class="ph-num">2.8</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">18</td><td class="ph-num">52</td><td class="ph-num">67</td><td class="ph-num">5.0</td><td class="ph-num">16.0</td><td class="ph-num">30.6</td><td class="ph-num">+1.3</td><td class="ph-num">6.0</td></tr>
+<tr><td class="ph-num">9.0</td><td class="ph-num">3.2</td><td class="ph-num">100</td><td class="ph-num">79</td><td class="ph-num">61</td><td class="ph-num">43</td><td class="ph-num">71</td><td class="ph-num">5.3</td><td class="ph-num">11.6</td><td class="ph-num">31.5</td><td class="ph-num">+2.0</td><td class="ph-num">6.1</td></tr>
+<tr><td class="ph-num">12.0</td><td class="ph-num">3.6</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">47</td><td class="ph-num">74</td><td class="ph-num">80</td><td class="ph-num">5.1</td><td class="ph-num">9.7</td><td class="ph-num">30.7</td><td class="ph-num">+2.3</td><td class="ph-num">5.8</td></tr>
+<tr><td class="ph-num">15.0</td><td class="ph-num">4.0</td><td class="ph-num">100</td><td class="ph-num">74</td><td class="ph-num">59</td><td class="ph-num">71</td><td class="ph-num">76</td><td class="ph-num">5.1</td><td class="ph-num">12.0</td><td class="ph-num">26.0</td><td class="ph-num">+2.6</td><td class="ph-num">5.9</td></tr>
+<tr><td class="ph-num">18.0</td><td class="ph-num">4.4</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">88</td><td class="ph-num">73</td><td class="ph-num">90</td><td class="ph-num">4.8</td><td class="ph-num">9.1</td><td class="ph-num">27.2</td><td class="ph-num">+2.9</td><td class="ph-num">6.0</td></tr>
+<tr><td class="ph-num">21.0</td><td class="ph-num">4.9</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">57</td><td class="ph-num">83</td><td class="ph-num">85</td><td class="ph-num">4.9</td><td class="ph-num">8.1</td><td class="ph-num">24.7</td><td class="ph-num">+3.4</td><td class="ph-num">5.7</td></tr>
+<tr><td class="ph-num">24.0</td><td class="ph-num">5.2</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">37</td><td class="ph-num">48</td><td class="ph-num">71</td><td class="ph-num">4.9</td><td class="ph-num">7.3</td><td class="ph-num">21.6</td><td class="ph-num">+3.8</td><td class="ph-num">5.7</td></tr>
+<tr><td class="ph-num">27.0</td><td class="ph-num">5.7</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">87</td><td class="ph-num">84</td><td class="ph-num">93</td><td class="ph-num">4.9</td><td class="ph-num">6.6</td><td class="ph-num">23.2</td><td class="ph-num">+3.8</td><td class="ph-num">5.7</td></tr>
+<tr><td class="ph-num">30.0</td><td class="ph-num">6.1</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">91</td><td class="ph-num">73</td><td class="ph-num">91</td><td class="ph-num">4.7</td><td class="ph-num">4.0</td><td class="ph-num">24.6</td><td class="ph-num">+4.4</td><td class="ph-num">5.6</td></tr>
+<tr><td class="ph-num">33.0</td><td class="ph-num">6.5</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">47</td><td class="ph-num">84</td><td class="ph-num">83</td><td class="ph-num">5.0</td><td class="ph-num">4.0</td><td class="ph-num">22.6</td><td class="ph-num">+4.3</td><td class="ph-num">5.5</td></tr>
+<tr><td class="ph-num">36.0</td><td class="ph-num">6.9</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">47</td><td class="ph-num">81</td><td class="ph-num">82</td><td class="ph-num">5.1</td><td class="ph-num">3.7</td><td class="ph-num">22.5</td><td class="ph-num">+4.5</td><td class="ph-num">5.5</td></tr>
+<tr><td class="ph-num">39.0</td><td class="ph-num">7.3</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">47</td><td class="ph-num">83</td><td class="ph-num">83</td><td class="ph-num">5.3</td><td class="ph-num">3.0</td><td class="ph-num">22.3</td><td class="ph-num">+4.6</td><td class="ph-num">5.6</td></tr>
+<tr><td class="ph-num">42.0</td><td class="ph-num">7.7</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">90</td><td class="ph-num">94</td><td class="ph-num">96</td><td class="ph-num">4.8</td><td class="ph-num">2.3</td><td class="ph-num">19.5</td><td class="ph-num">+4.8</td><td class="ph-num">5.5</td></tr>
+<tr><td class="ph-num">45.0</td><td class="ph-num">8.1</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">81</td><td class="ph-num">85</td><td class="ph-num">92</td><td class="ph-num">4.3</td><td class="ph-num">2.2</td><td class="ph-num">19.4</td><td class="ph-num">+4.9</td><td class="ph-num">5.2</td></tr>
+<tr><td class="ph-num">48.0</td><td class="ph-num">8.5</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">90</td><td class="ph-num">96</td><td class="ph-num">96</td><td class="ph-num">4.5</td><td class="ph-num">6.1</td><td class="ph-num">25.2</td><td class="ph-num">+3.9</td><td class="ph-num">5.6</td></tr>
+<tr><td class="ph-num">51.0</td><td class="ph-num">9.0</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">83</td><td class="ph-num">100</td><td class="ph-num">96</td><td class="ph-num">4.3</td><td class="ph-num">6.5</td><td class="ph-num">21.4</td><td class="ph-num">+4.0</td><td class="ph-num">5.6</td></tr>
+<tr><td class="ph-num">54.0</td><td class="ph-num">9.5</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">89</td><td class="ph-num">100</td><td class="ph-num">97</td><td class="ph-num">4.5</td><td class="ph-num">3.5</td><td class="ph-num">20.6</td><td class="ph-num">+4.3</td><td class="ph-num">5.7</td></tr>
+<tr><td class="ph-num">57.0</td><td class="ph-num">10.0</td><td class="ph-num">100</td><td class="ph-num">100</td><td class="ph-num">90</td><td class="ph-num">100</td><td class="ph-num">98</td><td class="ph-num">4.6</td><td class="ph-num">5.0</td><td class="ph-num">17.1</td><td class="ph-num">+4.5</td><td class="ph-num">5.8</td></tr>
+<tr><td class="ph-num">60.0</td><td class="ph-num">10.4</td><td class="ph-num">100</td><td class="ph-num">61</td><td class="ph-num">93</td><td class="ph-num">100</td><td class="ph-num">89</td><td class="ph-num">5.0</td><td class="ph-num">4.5</td><td class="ph-num">15.8</td><td class="ph-num">+4.6</td><td class="ph-num">5.6</td></tr>
+</tbody>
+				</table>
+				</div>
+			</details>
+		</figure>
+
+		<p><b>Feet-planted motions came first.</b> At the start the robot stayed up for <span data-stat="surv_first">13</span> % of a test episode. One-leg balance joined training at <span data-stat="unlock_balance_M">1.9</span> million steps, as soon as both feet-planted kinds reached 80 % survival in training, and by the second test, at 3 million steps, the robot completed every arm-and-waist and whole-body test episode.</p>
+		<p><b>Balancing on one leg took longest.</b> Its test score rose from <span data-stat="surv_first_balance">13</span> % to <span data-stat="surv_last_balance">93</span> %, with big swings on the way. Each test has only two episodes per motion kind, so a single early end moves that kind’s score by up to 50 points.</p>
+		<p><b>Stepping was partly learned before it was trained.</b> Stepping motions only joined training at <span data-stat="unlock_step_M">46.0</span> million steps, once one-leg balance passed 80 % survival. From 12 million steps on, their test score was already above 70 % in all but one test, probably because lifting a foot and putting it back down is also part of the one-leg motions. From 51 million steps on, the robot completed every stepping test episode.</p>
+		<p><b>Falls became rare.</b> In the first training update, <span data-stat="early_first">98</span> % of episodes ended early: <span data-stat="fell_first">34</span> % with a fall and the rest by drifting more than 30 cm from the pose. By the end, <span data-stat="fell_end">4.5</span> % ended with a fall and <span data-stat="lost_end">16</span> % by losing the pose, so most of what is left to fix is accuracy rather than balance. The capture point tells the same story: on average it started <span data-stat="cp_first">−9.6</span> cm from the edge of the feet, outside them, and finished at <span data-stat="cp_end">+4.6</span> cm, inside.</p>
+		<p><b>Feet are the hardest to place.</b> The pose error over all 12 keypoints fell from <span data-stat="kp_first">8.8</span> to <span data-stat="kp_end">5.6</span> cm in training. The feet end furthest off, at <span data-stat="foot_end">9.7</span> cm against <span data-stat="hand_end">6.2</span> cm for the hands, probably because they move furthest in the one-leg and stepping motions.</p>
+		<p><b>The last test wasn’t the best.</b> The best test score was <span data-stat="surv_best">98</span> %, at <span data-stat="surv_best_M">57.0</span> million steps. The final test dropped to <span data-stat="surv_last">89</span> % because whole-body survival fell to <span data-stat="surv_last_whole">61</span> %; with two episodes per kind, that can come from a single episode ending early.</p>
+		<p>Next is stage 2: 40 million more steps with pushes, varied floor friction and sensor noise.</p>
 
 		<h2>Real-time pose</h2>
 		<!-- To be written. Possible sections:
@@ -408,5 +505,520 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 	});
 })();
 </script>
+<script>
+/* Training progress: loads a Stable-Baselines3 progress.csv and draws it.
+   The CSV address is the figure's data-progress-csv attribute. Numbers in the text sit in
+   <span data-stat="..."> and are refilled from the same file, so text and charts always agree. */
+(function () {
+  "use strict";
+  var CFG = {"prefix": "ph", "colors": {"alive": "#0a8f7c", "balance": "#b5391a", "pose": "#2f4f9f"}, "charW": 7.2, "numClass": "ph-num"};
+  var P = CFG.prefix, C = CFG.colors, NS = "http://www.w3.org/2000/svg";
+  var fig = document.querySelector("[data-progress-csv]");
+  if (!fig) return;
+  var body = fig.querySelector("[data-progress]");
+  var tip = body.querySelector("." + P + "-tip");
+  var statusEl = fig.querySelector('[data-role="status"]');
+  var sourceEl = fig.querySelector('[data-role="source"]');
+  var tableEl = fig.querySelector('[data-role="table"]');
+  var fileEl = fig.querySelector('[data-role="file"]');
 
+  var KIND_ORDER = ["upper", "whole", "balance", "step"];
+  var KIND_LABEL = { upper: "Arms and waist", whole: "Whole body", balance: "One-leg balance", step: "Stepping" };
+  var TRAIN = {
+    early: [{ col: "track/end_fell", name: "fell", color: C.balance, k: 100, unit: " %" },
+            { col: "track/end_lost", name: "lost the pose", color: C.pose, k: 100, unit: " %" }],
+    pose: [{ col: "track/kp_err_cm", name: "all 12 keypoints", color: C.pose, k: 1, unit: " cm" },
+           { col: "track/hand_err_cm", name: "hands", color: C.alive, k: 1, unit: " cm" },
+           { col: "track/foot_err_cm", name: "feet", color: C.balance, k: 1, unit: " cm" }],
+    cp: [{ col: "track/cp_margin_cm", name: "capture point inside the feet", color: C.balance, k: 1, unit: " cm", signed: true }]
+  };
+  var D = null, charts = [], keyPos = null, lastWidth = 0;
+
+  /* ---------------- formatting ---------------- */
+  function label(k) { return KIND_LABEL[k] || (k.charAt(0).toUpperCase() + k.slice(1)); }
+  function minus(s) { return s.replace(/^-/, "−"); }
+  function num(v, d) { return minus(v.toFixed(d)); }
+  function signed(v, d) { var s = v.toFixed(d); return (+s > 0 ? "+" : "") + minus(s); }
+  function fmtSeries(s, v) {
+    if (isNaN(v)) return "–";
+    if (s.unit === " %") return (v < 9.95 ? num(v, 1) : String(Math.round(v))) + " %";
+    return (s.signed ? signed(v, 1) : num(v, 1)) + s.unit;
+  }
+  function fmtStat(key, v) {
+    if (key === "steps_M") return Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : num(v, 1);
+    if (/_M$/.test(key) || key === "hours" || /^test_len/.test(key)) return num(v, 1);
+    if (key === "tests") return String(v);
+    if (/^surv/.test(key)) return String(Math.round(v));
+    if (/^(early|fell|lost)_/.test(key)) return v < 9.95 ? num(v, 1) : String(Math.round(v));
+    if (/^cp_/.test(key)) return signed(v, 1);
+    return num(v, 1);
+  }
+  function fmtM(t) { return num(t / 1e6, 1); }
+
+  /* ---------------- CSV ---------------- */
+  function splitLine(line) {
+    if (line.indexOf('"') < 0) return line.split(",");
+    var out = [], cur = "", q = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line.charAt(i);
+      if (q) {
+        if (ch === '"') { if (line.charAt(i + 1) === '"') { cur += '"'; i++; } else q = false; } else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ",") { out.push(cur); cur = ""; }
+      else cur += ch;
+    }
+    out.push(cur);
+    return out;
+  }
+  function parseCSV(text) {
+    var lines = text.split(/\r?\n/).filter(function (l) { return l.trim().length; });
+    if (lines.length < 2) throw new Error("the file has no data rows");
+    var head = splitLine(lines[0]).map(function (h) { return h.trim(); });
+    var n = lines.length - 1, cols = {};
+    head.forEach(function (h) { if (h) cols[h] = new Float64Array(n); });
+    for (var r = 0; r < n; r++) {
+      var f = splitLine(lines[r + 1]);
+      for (var c = 0; c < head.length; c++) {
+        if (!head[c]) continue;
+        var s = f[c] === undefined ? "" : f[c].trim();
+        cols[head[c]][r] = s === "" ? NaN : Number(s);
+      }
+    }
+    return { n: n, cols: cols };
+  }
+  function firstValid(a) { for (var i = 0; i < a.length; i++) if (!isNaN(a[i])) return i; return -1; }
+  function lastValid(a) { for (var i = a.length - 1; i >= 0; i--) if (!isNaN(a[i])) return i; return -1; }
+
+  /* exponential moving average with TensorBoard's start-up correction; span = about 1 % of the rows */
+  function ema(a, w) {
+    var out = new Float64Array(a.length), acc = 0, k = 0, cur = NaN;
+    for (var i = 0; i < a.length; i++) {
+      if (!isNaN(a[i])) { k++; acc = acc * w + (1 - w) * a[i]; cur = acc / (1 - Math.pow(w, k)); }
+      out[i] = cur;
+    }
+    return out;
+  }
+
+  function prepare(raw) {
+    var c = raw.cols, n = raw.n, T = c["time/total_timesteps"];
+    if (!T) throw new Error("there is no time/total_timesteps column, so it doesn’t look like a Stable-Baselines3 progress.csv");
+    var d = { n: n, c: c, T: T, Tmax: 0, sm: {}, evalIdx: [], kinds: [], unlock: {}, drawIdx: [] };
+    for (var i = 0; i < n; i++) if (T[i] > d.Tmax) d.Tmax = T[i];
+    if (!(d.Tmax > 0)) throw new Error("time/total_timesteps is empty");
+    var w = 1 - 1 / Math.max(1, Math.round(n / 100));
+    Object.keys(TRAIN).forEach(function (key) {
+      TRAIN[key].forEach(function (s) { if (c[s.col]) d.sm[s.col] = ema(c[s.col], w); });
+    });
+    if (c["track/fall_rate"]) d.sm["track/fall_rate"] = ema(c["track/fall_rate"], w);
+    var es = c["eval/survival"];
+    if (es) for (i = 0; i < n; i++) if (!isNaN(es[i]) && !isNaN(T[i])) d.evalIdx.push(i);
+    var found = Object.keys(c).filter(function (h) { return h.indexOf("eval/survival_") === 0; })
+                              .map(function (h) { return h.slice(14); });
+    d.kinds = KIND_ORDER.filter(function (k) { return found.indexOf(k) >= 0; })
+                        .concat(found.filter(function (k) { return KIND_ORDER.indexOf(k) < 0; }));
+    d.kinds.forEach(function (k) {                    // when the curriculum first gave this kind a weight
+      var wc = c["curriculum/weight_" + k], f;
+      if (!wc || (f = firstValid(wc)) < 0 || wc[f] > 0) return;
+      d.unlock[k] = Infinity;
+      for (var j = f; j < n; j++) if (wc[j] > 0) { d.unlock[k] = T[j]; break; }
+    });
+    var step = Math.max(1, Math.floor(n / 500));
+    for (i = 0; i < n; i += step) if (!isNaN(T[i])) d.drawIdx.push(i);
+    if (d.drawIdx[d.drawIdx.length - 1] !== n - 1) d.drawIdx.push(n - 1);
+    d.evalT = d.evalIdx.map(function (j) { return T[j]; });
+    return d;
+  }
+
+  function computeStats(d) {
+    var c = d.c, S = {}, L = d.n - 1;
+    S.steps_M = d.Tmax / 1e6;
+    if (c["time/time_elapsed"] && lastValid(c["time/time_elapsed"]) >= 0) S.hours = c["time/time_elapsed"][lastValid(c["time/time_elapsed"])] / 3600;
+    if (d.evalIdx.length) {
+      var es = c["eval/survival"], i0 = d.evalIdx[0], i1 = d.evalIdx[d.evalIdx.length - 1], best = i0;
+      d.evalIdx.forEach(function (i) { if (es[i] > es[best]) best = i; });
+      S.tests = d.evalIdx.length;
+      S.surv_first = 100 * es[i0]; S.surv_last = 100 * es[i1];
+      S.surv_best = 100 * es[best]; S.surv_best_M = d.T[best] / 1e6;
+      d.kinds.forEach(function (k) {
+        var a = c["eval/survival_" + k];
+        S["surv_first_" + k] = 100 * a[i0]; S["surv_last_" + k] = 100 * a[i1];
+      });
+      if (c["eval/kp_err_cm"]) { S.test_kp_first = c["eval/kp_err_cm"][i0]; S.test_kp_last = c["eval/kp_err_cm"][i1]; }
+      if (c["eval/ep_len_s"]) { S.test_len_first = c["eval/ep_len_s"][i0]; S.test_len_last = c["eval/ep_len_s"][i1]; }
+    }
+    Object.keys(d.unlock).forEach(function (k) { if (isFinite(d.unlock[k])) S["unlock_" + k + "_M"] = d.unlock[k] / 1e6; });
+    [["early", "track/fall_rate", 100], ["fell", "track/end_fell", 100], ["lost", "track/end_lost", 100],
+     ["cp", "track/cp_margin_cm", 1], ["kp", "track/kp_err_cm", 1], ["hand", "track/hand_err_cm", 1],
+     ["foot", "track/foot_err_cm", 1]].forEach(function (m) {
+      var a = c[m[1]], f;
+      if (!a || (f = firstValid(a)) < 0) return;
+      S[m[0] + "_first"] = m[2] * a[f];
+      S[m[0] + "_end"] = m[2] * d.sm[m[1]][L];
+    });
+    return S;
+  }
+  function fillStats(S) {
+    document.querySelectorAll("[data-stat]").forEach(function (e) {
+      var k = e.getAttribute("data-stat");
+      if (Object.prototype.hasOwnProperty.call(S, k) && isFinite(S[k])) e.textContent = fmtStat(k, S[k]);
+    });
+    window.progressStats = S;
+  }
+
+  /* ---------------- drawing ---------------- */
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var a in attrs) if (Object.prototype.hasOwnProperty.call(attrs, a)) e.setAttribute(a, attrs[a]);
+    if (text !== undefined) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+  function niceStep(range, target) {
+    var raw = range / Math.max(1, target), p = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), m = raw / p;
+    return (m <= 1.01 ? 1 : m <= 2.02 ? 2 : m <= 2.52 ? 2.5 : m <= 5.05 ? 5 : 10) * p;   // 1 % slack: 60.006 M still gets 20 M steps
+  }
+  function ticks(lo, hi, step) {
+    var out = [];
+    for (var v = Math.ceil(lo / step - 1e-9) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(9));
+    return out;
+  }
+  function tickText(v) { return minus(Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : String(+v.toFixed(2))); }
+  function nearest(xs, t) {
+    var lo = 0, hi = xs.length - 1;
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (xs[mid] < t) lo = mid; else hi = mid; }
+    return Math.abs(xs[hi] - t) < Math.abs(xs[lo] - t) ? hi : lo;
+  }
+  function extent(arrs) {
+    var lo = Infinity, hi = -Infinity;
+    arrs.forEach(function (a) { for (var i = 0; i < a.length; i++) if (!isNaN(a[i])) { if (a[i] < lo) lo = a[i]; if (a[i] > hi) hi = a[i]; } });
+    return [lo, hi];
+  }
+
+  function drawChart(host, o) {
+    clear(host);
+    var W = Math.max(220, Math.floor(host.clientWidth)), H = o.h, cw = CFG.charW;
+    var yt = ticks(o.yLo, o.yHi, o.yStep), yLab = yt.map(o.yFmt);
+    var ML = 12 + cw * Math.max.apply(null, yLab.map(function (s) { return s.length; }));
+    var MR = o.endLabels ? 14 + cw * 7 : 14, MB = o.xTitle ? 46 : 28;
+    var PW = W - ML - MR;
+    function X(t) { return ML + t / D.Tmax * PW; }
+    var rows = [[], []], placed = [];                    // curriculum labels: first row, else a second row, else none
+    (o.marks || []).forEach(function (mk) {
+      var x = X(mk.t), w = cw * mk.label.length, start = x + w + 4 <= ML + PW;
+      var a = start ? x - 2 : x - w + 2, b = a + w;
+      for (var r = 0; r < 2; r++) {
+        if (!rows[r].some(function (q) { return a < q[1] + 8 && b > q[0] - 8; })) {
+          rows[r].push([a, b]); placed.push({ x: x, row: r, start: start, label: mk.label }); return;
+        }
+      }
+      placed.push({ x: x, row: -1 });
+    });
+    var nRows = rows[1].length ? 2 : rows[0].length ? 1 : 0;
+    var MT = 10 + (nRows ? 4 : 0) + 15 * nRows, H2 = H + 15 * Math.max(0, nRows - 1), PH = H2 - MT - MB;
+    H = H2;
+    function Y(v) { return MT + (o.yHi - v) / (o.yHi - o.yLo) * PH; }
+    var svg = el("svg", { "class": P + "-chart", width: W, height: H, viewBox: "0 0 " + W + " " + H,
+                          role: "img", tabindex: "0", "aria-label": o.aria }, host);
+
+    if (o.shade) {                                       // motions the curriculum had not unlocked yet
+      var sx = X(Math.min(o.shade.to, D.Tmax));
+      el("rect", { "class": P + "-shade", x: ML, y: MT, width: Math.max(0, sx - ML), height: PH }, svg);
+      if (sx - ML > cw * o.shade.label.length + 14)
+        el("text", { "class": P + "-shadelab", x: ML + 7, y: MT + 15 }, svg, o.shade.label);
+    }
+    var g = el("g", { "class": P + "-grid" }, svg);
+    yt.forEach(function (v) { el("line", { x1: ML, x2: ML + PW, y1: Y(v).toFixed(1), y2: Y(v).toFixed(1) }, g); });
+    var ax = el("g", { "class": P + "-axis" }, svg);
+    var base = (o.yLo < 0 && o.yHi > 0) ? Y(0) : MT + PH;
+    el("line", { "class": P + "-base", x1: ML, x2: ML + PW, y1: base.toFixed(1), y2: base.toFixed(1) }, ax);
+    yt.forEach(function (v, i) { el("text", { x: ML - 8, y: (Y(v) + 4.5).toFixed(1), "text-anchor": "end" }, ax, yLab[i]); });
+    var xm = D.Tmax / 1e6;
+    ticks(0, xm, niceStep(xm, Math.max(2, Math.min(8, Math.floor(PW / 45))))).forEach(function (m) {
+      el("text", { x: X(m * 1e6).toFixed(1), y: MT + PH + 18, "text-anchor": "middle" }, ax, tickText(m));
+    });
+    if (o.xTitle) el("text", { x: (ML + PW / 2).toFixed(1), y: H - 8, "text-anchor": "middle" }, ax, o.xTitle);
+
+    placed.forEach(function (mk) {                       // when the curriculum added a motion kind
+      var top = mk.row < 0 ? MT : MT - 4 - 15 * (nRows - mk.row) + 2;
+      el("line", { "class": P + "-mark", x1: mk.x.toFixed(1), x2: mk.x.toFixed(1), y1: top, y2: MT + PH }, svg);
+      if (mk.row >= 0) el("text", { "class": P + "-marklab", x: (mk.x + (mk.start ? 4 : -4)).toFixed(1), y: top + 10,
+                                    "text-anchor": mk.start ? "start" : "end" }, svg, mk.label);
+    });
+
+    o.series.forEach(function (s) {
+      var d = "", pen = false;
+      for (var j = 0; j < o.xs.length; j++) {
+        var v = s.ys[j];
+        if (isNaN(v)) { pen = false; continue; }
+        d += (pen ? "L" : "M") + X(o.xs[j]).toFixed(1) + " " + Y(v).toFixed(1);
+        pen = true;
+      }
+      el("path", { "class": P + "-line", stroke: s.color, d: d }, svg);
+    });
+
+    if (o.endLabels) {                                   // value at the end of each line, if they don't collide
+      var ends = o.series.map(function (s) {
+        var j = lastValid(s.ys);
+        return j < 0 ? null : { j: j, y: Y(s.ys[j]), s: s };
+      }).filter(Boolean);
+      var ys = ends.map(function (e) { return e.y; }).sort(function (a, b) { return a - b; });
+      var ok = ys.every(function (y, i) { return i === 0 || y - ys[i - 1] >= 15; });
+      ends.forEach(function (e) {
+        el("circle", { "class": P + "-dot", r: 4, cx: X(o.xs[e.j]).toFixed(1), cy: e.y.toFixed(1), fill: e.s.color }, svg);
+        if (ok) el("text", { "class": P + "-endlab", x: (X(o.xs[e.j]) + 9).toFixed(1), y: (e.y + 4.5).toFixed(1) }, svg,
+                   o.endFmt(e.s, e.s.ys[e.j]));
+      });
+    }
+
+    var cross = el("g", { "class": P + "-cross", "aria-hidden": "true" }, svg);
+    el("line", { x1: 0, x2: 0, y1: MT, y2: MT + PH }, cross);
+    var dots = o.series.map(function (s) { return el("circle", { "class": P + "-dot", r: 4, cx: 0, cy: -99, fill: s.color }, cross); });
+    var hit = el("rect", { "class": P + "-hit", x: ML, y: MT, width: PW, height: PH, fill: "transparent" }, svg);
+    var ch = { svg: svg, o: o, X: X, Y: Y, W: W, MT: MT, cross: cross, dots: dots };
+
+    hit.addEventListener("pointermove", function (e) {
+      var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
+      setCursor((sx - ML) / PW * D.Tmax, ch, e.clientX, e.clientY);
+    });
+    hit.addEventListener("pointerleave", hideCursor);
+    svg.addEventListener("focus", function () { keyMove(ch, 0); });
+    svg.addEventListener("blur", hideCursor);
+    svg.addEventListener("keydown", function (e) {
+      var m = { ArrowRight: 1, ArrowLeft: -1, Home: -1e6, End: 1e6 }[e.key];
+      if (m === undefined) return;
+      e.preventDefault();
+      keyMove(ch, m);
+    });
+    return ch;
+  }
+
+  /* keyboard: step through the test points (or 5 % of the run when there are none) */
+  function keyStops() {
+    if (D.evalT.length) return D.evalT;
+    var out = []; for (var i = 0; i <= 20; i++) out.push(D.Tmax * i / 20); return out;
+  }
+  function keyMove(ch, by) {
+    var stops = keyStops();
+    keyPos = keyPos === null ? stops.length - 1 : Math.max(0, Math.min(stops.length - 1, keyPos + by));
+    var r = ch.svg.getBoundingClientRect(), t = stops[keyPos];
+    setCursor(t, ch, r.left + ch.X(t) * r.width / ch.W, r.top + ch.MT + 10);
+  }
+
+  function setCursor(t, src, cx, cy) {
+    t = Math.max(0, Math.min(D.Tmax, t));
+    charts.forEach(function (ch) {
+      var j = nearest(ch.o.xs, t), x = ch.X(ch.o.xs[j]);
+      ch.cross.classList.add("on");
+      ch.cross.setAttribute("transform", "translate(" + x.toFixed(1) + " 0)");
+      ch.dots.forEach(function (dot, si) {
+        var v = ch.o.series[si].ys[j];
+        dot.setAttribute("cy", isNaN(v) ? -99 : ch.Y(v).toFixed(1));
+      });
+      if (ch === src) showTip(ch.o.tip(j), cx, cy);
+    });
+  }
+  function hideCursor() {
+    charts.forEach(function (ch) { ch.cross.classList.remove("on"); });
+    tip.classList.remove("on");
+  }
+  function showTip(rows, x, y) {
+    clear(tip);
+    rows.forEach(function (r) {
+      var row = document.createElement("div"); row.className = "row";
+      if (r.color) { var k = document.createElement("i"); k.style.background = r.color; row.appendChild(k); }
+      var b = document.createElement("b"); b.textContent = r.value; row.appendChild(b);
+      if (r.label) { var l = document.createElement("span"); l.className = "lab"; l.textContent = r.label; row.appendChild(l); }
+      tip.appendChild(row);
+    });
+    var zr = body.getBoundingClientRect();
+    tip.classList.add("on");
+    var w = tip.offsetWidth, h = tip.offsetHeight, left = x - zr.left + 14;
+    if (left + w > zr.width - 4) left = x - zr.left - w - 14;
+    tip.style.left = Math.max(4, left) + "px";
+    tip.style.top = Math.max(4, Math.min(zr.height - h - 4, y - zr.top - 10)) + "px";
+  }
+  function stepRow(t, i) {
+    var el2 = D.c["time/time_elapsed"], hrs = el2 && !isNaN(el2[i]) ? " · " + num(el2[i] / 3600, 1) + " h in" : "";
+    return { value: fmtM(t) + " M steps", label: hrs };
+  }
+
+  function render() {
+    if (!D) return;
+    hideCursor();
+    charts = [];
+    lastWidth = body.clientWidth;
+
+    var host = body.querySelector('[data-chart="survival"]');
+    if (host) {
+      var panel = host.closest("." + P + "-panel");
+      panel.hidden = !D.evalIdx.length;
+      clear(host);
+      var boxes = D.kinds.map(function (k) {
+        var cell = document.createElement("div"); cell.className = P + "-mini"; host.appendChild(cell);
+        var title = document.createElement("p"); title.className = P + "-ptitle"; title.textContent = label(k); cell.appendChild(title);
+        var box = document.createElement("div"); cell.appendChild(box);
+        return box;
+      });
+      D.kinds.forEach(function (k, ki) {
+        var box = boxes[ki];
+        var col = D.c["eval/survival_" + k];
+        var ys = D.evalIdx.map(function (i) { return 100 * col[i]; });
+        var un = D.unlock[k], first = ys[0], lastV = ys[ys.length - 1];
+        charts.push(drawChart(box, {
+          h: 150, xs: D.evalT, series: [{ ys: ys, color: C.alive, name: label(k) }],
+          yLo: 0, yHi: 100, yStep: 50, yFmt: tickText, endLabels: true,
+          endFmt: function (s, v) { return Math.round(v) + " %"; },
+          shade: un !== undefined ? { to: un, label: isFinite(un) ? "not trained yet" : "not trained in this run" } : null,
+          aria: label(k) + ": the robot stayed up for " + Math.round(first) + " % of the test episode at the start and " +
+                Math.round(lastV) + " % at " + fmtM(D.Tmax) + " million steps.",
+          tip: function (j) {
+            var i = D.evalIdx[j], rows = [stepRow(D.evalT[j], i)];
+            D.kinds.forEach(function (kk) {
+              var v = D.c["eval/survival_" + kk][i];
+              rows.push({ value: isNaN(v) ? "–" : Math.round(100 * v) + " %", label: label(kk).toLowerCase() + (kk === k ? " ◂" : "") });
+            });
+            rows.push({ value: Math.round(100 * D.c["eval/survival"][i]) + " %", label: "all kinds" });
+            return rows;
+          }
+        }));
+      });
+    }
+
+    var marks = Object.keys(D.unlock).filter(function (k) { return isFinite(D.unlock[k]) && D.unlock[k] > 0; })
+      .sort(function (a, b) { return D.unlock[a] - D.unlock[b]; })
+      .map(function (k) { return { t: D.unlock[k], label: "+ " + label(k).toLowerCase() }; });
+    ["early", "pose", "cp"].forEach(function (key) {
+      var h2 = body.querySelector('[data-chart="' + key + '"]');
+      if (!h2) return;
+      var specs = TRAIN[key].filter(function (s) { return D.sm[s.col]; });
+      h2.closest("." + P + "-panel").hidden = !specs.length;
+      if (!specs.length) return;
+      var xs = D.drawIdx.map(function (i) { return D.T[i]; });
+      var series = specs.map(function (s) {
+        return { ys: D.drawIdx.map(function (i) { return s.k * D.sm[s.col][i]; }), color: s.color, name: s.name, s: s };
+      });
+      var ex = extent(series.map(function (s) { return s.ys; })), lo, hi, step;
+      if (key === "early") { lo = 0; hi = 100; step = 25; }
+      else {
+        lo = Math.min(0, ex[0]); hi = Math.max(0, ex[1]);
+        step = niceStep(hi - lo, 4);
+        lo = Math.floor(lo / step + 1e-9) * step; hi = Math.ceil(hi / step - 1e-9) * step;
+      }
+      charts.push(drawChart(h2, {
+        h: 230, xs: xs, series: series, yLo: lo, yHi: hi, yStep: step,
+        yFmt: key === "cp" ? function (v) { return (v > 0 ? "+" : "") + tickText(v); } : tickText,
+        endLabels: true, endFmt: function (s, v) { return fmtSeries(s.s, v); },
+        marks: marks, xTitle: "training steps (millions)",
+        aria: series.map(function (s) {
+          return s.name + ": " + fmtSeries(s.s, s.ys[0]) + " at the start, " + fmtSeries(s.s, s.ys[s.ys.length - 1]) + " at the end";
+        }).join("; ") + ".",
+        tip: function (j) {
+          var i = D.drawIdx[j];
+          return [stepRow(D.T[i], i)].concat(series.map(function (s) {
+            return { value: fmtSeries(s.s, s.ys[j]), label: s.name, color: s.color };
+          }));
+        }
+      }));
+    });
+  }
+
+  function buildTable() {
+    if (!tableEl) return;
+    clear(tableEl);
+    var c = D.c, hasEval = D.evalIdx.length > 0, rowsIdx = hasEval ? D.evalIdx : D.drawIdx.filter(function (_, j) { return j % 25 === 0; });
+    var train = [["track/end_fell", "Falls (%)", 100], ["track/end_lost", "Lost the pose (%)", 100],
+                 ["track/cp_margin_cm", "Capture point (cm)", 1], ["track/kp_err_cm", "Pose error (cm)", 1]]
+                .filter(function (t) { return D.sm[t[0]]; });
+    var thead = document.createElement("thead"), r1 = document.createElement("tr"), r2 = document.createElement("tr");
+    function th(row, text, span, cls) {
+      var e = document.createElement("th"); e.textContent = text;
+      if (span > 1) e.colSpan = span;
+      if (cls) e.className = cls;
+      row.appendChild(e);
+    }
+    th(r1, "", 2);
+    if (hasEval) th(r1, "Test survival (%)", D.kinds.length + 1);
+    if (hasEval && c["eval/kp_err_cm"]) th(r1, "Test", 1);
+    if (train.length) th(r1, "Training, smoothed", train.length);
+    th(r2, "Steps (M)", 1, CFG.numClass); th(r2, "Hours", 1, CFG.numClass);
+    if (hasEval) {
+      D.kinds.forEach(function (k) { th(r2, label(k), 1, CFG.numClass); });
+      th(r2, "All", 1, CFG.numClass);
+      if (c["eval/kp_err_cm"]) th(r2, "Pose error (cm)", 1, CFG.numClass);
+    }
+    train.forEach(function (t) { th(r2, t[1], 1, CFG.numClass); });
+    thead.appendChild(r1); thead.appendChild(r2); tableEl.appendChild(thead);
+    var tb = document.createElement("tbody");
+    rowsIdx.forEach(function (i) {
+      var tr = document.createElement("tr");
+      function td(text) { var e = document.createElement("td"); e.textContent = text; if (CFG.numClass) e.className = CFG.numClass; tr.appendChild(e); }
+      td(fmtM(D.T[i]));
+      var el2 = c["time/time_elapsed"]; td(el2 && !isNaN(el2[i]) ? num(el2[i] / 3600, 1) : "–");
+      if (hasEval) {
+        D.kinds.forEach(function (k) { var v = c["eval/survival_" + k][i]; td(isNaN(v) ? "–" : String(Math.round(100 * v))); });
+        td(String(Math.round(100 * c["eval/survival"][i])));
+        if (c["eval/kp_err_cm"]) td(isNaN(c["eval/kp_err_cm"][i]) ? "–" : num(c["eval/kp_err_cm"][i], 1));
+      }
+      train.forEach(function (t) {
+        var v = t[2] * D.sm[t[0]][i];
+        td(isNaN(v) ? "–" : t[0] === "track/cp_margin_cm" ? signed(v, 1) : num(v, 1));
+      });
+      tb.appendChild(tr);
+    });
+    tableEl.appendChild(tb);
+  }
+
+  /* ---------------- loading ---------------- */
+  function setStatus(msg, isError) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.hidden = !msg;
+    fig.classList.toggle("is-error", !!isError);
+  }
+  function use(text, sourceNote) {
+    D = prepare(parseCSV(text));
+    fig.classList.remove("is-loading");
+    setStatus("");
+    render();
+    buildTable();
+    fillStats(computeStats(D));
+    if (sourceNote && sourceEl) sourceEl.textContent = sourceNote;
+  }
+  function load() {
+    var url = fig.getAttribute("data-progress-csv");
+    fetch(url, { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(function (t) { use(t); })
+      .catch(function (e) {
+        fig.classList.remove("is-loading");
+        setStatus("Couldn’t load the training log (" + url + "): " + e.message +
+                  ". The numbers in the text are from the stage 1 run.", true);
+      });
+  }
+  if (fileEl) fileEl.addEventListener("change", function () {
+    var f = fileEl.files && fileEl.files[0];
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try { use(String(rd.result), "Showing " + f.name + ", read in your browser (nothing is uploaded)."); }
+      catch (e) { setStatus("Couldn’t read " + f.name + ": " + e.message, true); }
+    };
+    rd.readAsText(f);
+  });
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(function () {
+      if (D && Math.abs(body.clientWidth - lastWidth) > 1) requestAnimationFrame(render);
+    }).observe(body);
+  } else window.addEventListener("resize", function () { if (D) render(); });
+
+  fig.classList.add("is-loading");
+  if ("IntersectionObserver" in window) {           // fetch only when the figure gets near the screen
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); load(); }
+    }, { rootMargin: "800px 0px" });
+    io.observe(fig);
+  } else load();
+})();
+</script>
 </html>
