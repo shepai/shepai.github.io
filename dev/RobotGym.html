@@ -4,9 +4,56 @@
 	<title>SHEP AI</title>
 	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Pose to Humanoid: training a simulated Unitree G1 humanoid with reinforcement learning to copy a person's pose while keeping its balance.">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+	<style>
+		/* ---------- only used on this page; colours and type follow style.css ---------- */
+		.main.ph-page { display: block; box-sizing: border-box; }   /* like .main.tutorial: code blocks scroll instead of widening the page */
+		.ph-fig { margin: 1.75rem 0; padding: 0; border: 1px solid var(--rule); border-radius: 6px; background: #fff; overflow: hidden; }
+		.ph-fig-body { position: relative; padding: 16px 16px 12px; }
+		.ph-fig figcaption { padding: 10px 16px 12px; border-top: 1px solid var(--rule); font-size: .9rem; line-height: 1.5; color: var(--muted); }
+		.ph-fig figcaption b { color: var(--text); }
+		.ph-gif { display: block; width: 100%; height: auto; border-radius: 4px; background: #f3f4f6; }
+		.ph-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 12px; padding: 0; list-style: none; font-size: .85rem; color: var(--text); }
+		.ph-legend li { display: flex; align-items: center; gap: 7px; margin: 0; color: var(--text); }
+		.ph-key { flex: none; width: 12px; height: 12px; border-radius: 3px; }
+		.ph-key.line { width: 18px; height: 2px; border-radius: 1px; }
+		.ph-segrows { display: flex; flex-direction: column; gap: 12px; }
+		.ph-segrow { display: grid; grid-template-columns: minmax(84px, 120px) minmax(0, 1fr); gap: 6px 12px; align-items: center; }
+		.ph-rowlab { font-size: .85rem; color: var(--text); }
+		.ph-segbar { display: flex; gap: 2px; height: 28px; min-width: 0; }
+		.ph-seg { min-width: 0; display: flex; align-items: center; padding-left: 8px; border-radius: 4px; color: #fff; font-size: .8rem; font-weight: bold; white-space: nowrap; overflow: hidden; }
+		.ph-seg:hover, .ph-seg:focus-visible { filter: brightness(1.12); }
+		.ph-panel + .ph-panel { margin-top: 14px; }
+		.page-text .ph-ptitle { margin: 0 0 6px; font-size: .9rem; font-weight: bold; color: var(--text); }
+		.ph-chart { display: block; width: 100%; height: auto; overflow: visible; }
+		.ph-chart text { font-family: Arial, Helvetica, sans-serif; font-size: 13.5px; fill: var(--muted); }
+		.ph-chart .ph-annot { fill: var(--ink); font-size: 14.5px; }
+		.ph-grid line { stroke: #e5e7eb; stroke-width: 1; }
+		.ph-base { stroke: #9ca3af; stroke-width: 1; }
+		.ph-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+		.ph-dot { stroke: #fff; stroke-width: 2; }
+		.ph-cross line { stroke: var(--ink); stroke-width: 1; opacity: 0; }
+		.ph-cross.on line { opacity: .45; }
+		.ph-hit { cursor: crosshair; }
+		.ph-tip { position: absolute; z-index: 2; pointer-events: none; min-width: 150px; padding: 7px 10px; border-radius: 6px; background: #0f0f0f; color: #f3f4f6; font-size: .8rem; line-height: 1.5; opacity: 0; transition: opacity .1s; }
+		.ph-tip.on { opacity: 1; }
+		.ph-tip .row { display: flex; align-items: center; gap: 8px; }
+		.ph-tip .row i { flex: none; width: 12px; height: 2px; }
+		.ph-tip b { color: #fff; }
+		.ph-tip .lab { color: #c7ccd3; }
+		.ph-details summary { padding: 10px 16px; border-top: 1px solid var(--rule); cursor: pointer; font-size: .85rem; color: var(--muted); }
+		.ph-details .tablewrap { margin: 0 16px 12px; }
+		.ph-code { margin: 1rem 0 1.5rem; padding: 14px 16px; overflow-x: auto; border-radius: 6px; background: #1e2327; color: #e6edf3; font-family: Consolas, Menlo, monospace; font-size: 13px; line-height: 1.6; white-space: pre; }
+		.ph-code .c { color: #8b949e; }
+		.page-text code { font-family: Consolas, Menlo, monospace; font-size: .92em; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; }
+		.ph-code code { background: none; padding: 0; font-size: 1em; }
+		.ph-soon { margin: 1rem 0 0; padding: 1.25rem; border: 2px dashed #d1d5db; border-radius: 6px; color: var(--muted); text-align: center; }
+		.page-text ul { margin: 0 0 1rem 1.2rem; }
+		.page-text li { line-height: 1.6; }
+	</style>
 </head>
 <body class="backgroundC">
 <div class="topnav">
@@ -28,16 +75,338 @@
 <script src="https://shepai.github.io/search.js">
 
 </script>
+ <script src="../code/JS_Package.js">
 
+ </script>
 </div>
 	<!-- the main content -->
-	<div class="main">
+	<div class="main page-text ph-page">
 
+		<h1>Pose to Humanoid</h1>
+		
+		<p class="lead">Teaching a simulated Unitree G1 humanoid to copy a person’s pose while keeping its balance, as the first step towards driving a robot with a live body tracker.</p>
+
+		<div class="button-row">
+			<a class="link-button" href="https://github.com/shepai/pose-to-biped"><i class="fa fa-github" aria-hidden="true"></i>Code on GitHub</a>
+			<a class="link-button" href="https://open3dhumanoid.github.io/index.html"><i class="fa fa-cogs" aria-hidden="true"></i>OpenG1 printable humanoid</a>
+		</div>
+    
+		<dl class="facts">
+			<div class="fact"><dt>joints in the G1 model</dt><dd>29</dd></div>
+			<div class="fact"><dt>joints driven by the policy</dt><dd>23</dd></div>
+			<div class="fact"><dt>of reference motion (120 clips)</dt><dd>43 min</dd></div>
+		</dl>
+
+		<figure class="ph-fig">
+			<div class="ph-fig-body"><img class="ph-gif" src="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/following.gif" alt="Animation of the simulated Unitree G1 humanoid moving in the MuJoCo simulator" loading="lazy"></div>
+			<figcaption>The simulated G1 in MuJoCo.</figcaption>
+		</figure>
+
+		<div id="table-of-contents">
+    <h2>Contents</h2>
+</div>
+
+		<h2>Overview</h2>
+		<p>The aim is teleoperation without a controller. A person moves, a camera-based body tracker turns their movement into the positions of their hands and feet (and, where it can, elbows, knees, hips and shoulders), and a humanoid robot copies them without falling over. This page covers the first half: the simulated robot and how it is trained to copy poses. The second half, connecting a real-time pose tracker, is still being built.</p>
+		<p>All of the learning happens in simulation, because a robot learning to balance falls over thousands of times. We use reinforcement learning: a small neural network, the <em>policy</em>, looks at the robot 50 times a second and decides where every joint should move next. After each step a <em>reward</em> scores how well that went, and the learning algorithm, PPO <a href="#ref-1">[1]</a>, nudges the network towards whatever earned more reward.</p>
+
+		<h2>The humanoid</h2>
+		<p>The robot is the Unitree G1, simulated in MuJoCo <a href="#ref-2">[2]</a> from Unitree’s 29-joint model file, <code>g1_29dof.xml</code> <a href="#ref-3">[3]</a>. The same proportions are used by <a href="https://open3dhumanoid.github.io/index.html">OpenG1</a>, an open-source 3D-printable humanoid, so what is learned here is meant to carry over to it.</p>
+		<div class="tablewrap">
+		<table>
+			<thead><tr><th>Body part</th><th>Joints</th><th>Mass (kg)</th><th>Torque limits (N·m)</th></tr></thead>
+			<tbody>
+				<tr><td>Legs</td><td>12: hip pitch, roll and yaw, knee, ankle pitch and roll, on each side</td><td>14.37</td><td>hips 88, knees 139, ankles 50</td></tr>
+				<tr><td>Waist, torso and head</td><td>3: waist yaw, roll and pitch</td><td>9.89</td><td>yaw 88, roll and pitch 50</td></tr>
+				<tr><td>Arms</td><td>14: shoulder pitch, roll and yaw, elbow, wrist roll, pitch and yaw, on each side</td><td>7.04</td><td>25 (wrist pitch and yaw 5)</td></tr>
+				<tr><td>Pelvis</td><td>none (free-floating base)</td><td>3.81</td><td>—</td></tr>
+				<tr class="this"><td>Total</td><td>29</td><td>35.11</td><td></td></tr>
+			</tbody>
+		</table>
+		</div>
+		<p class="tcap">Masses and limits as given in <code>g1_29dof.xml</code>.</p>
+
+		<h3>How the robot is controlled</h3>
+		<p>The policy doesn’t command torques directly. Every 20 ms it outputs a target angle for each joint, and a PD controller running at 500 Hz turns the gap between target and actual angle into a motor torque. The controller uses the stiffness from Unitree’s own G1 configuration <a href="#ref-3">[3]</a>: 100 to 150 N·m per radian at the hips and knees, 40 at the ankles. The wrists are held still for now, so the policy drives 23 of the 29 joints.</p>
+
+		<h2>Training process</h2>
+
+		<h3>First attempt: borrowed legs</h3>
+		<p>Unitree publishes a pretrained walking policy for the G1 <a href="#ref-3">[3]</a>. The first plan was to let it run the legs, holding the robot still, and train a second policy for the waist and arms to reach hand targets. It never learned: across a 1.5 million step run, episodes ended after about 45 of their 500 steps, so the robot fell within a second every time.</p>
+		<p>The cause wasn’t the learning. Running the walking policy on its own showed it couldn’t keep the 29-joint robot standing either:</p>
+		<div class="tablewrap">
+		<table>
+			<thead><tr><th>Setup</th><th>Stays up for</th></tr></thead>
+			<tbody>
+				<tr><td>12-joint G1 model (what the walking policy was trained on)</td><td>10 s (full episode)</td></tr>
+				<tr><td>29-joint model, arms perfectly still</td><td>1.6 s</td></tr>
+				<tr><td>29-joint model, arms exploring randomly</td><td>0.4 to 1.3 s</td></tr>
+				<tr class="this"><td>29-joint model with joint armature restored</td><td>10 s, even with random arm motion</td></tr>
+			</tbody>
+		</table>
+		</div>
+		<p>Unitree’s 29-joint model sets no armature on any joint, while the 12-joint model the walking policy learned on uses 0.01 kg·m². Armature is the motor’s rotor inertia as felt at the joint, the rotor inertia multiplied by the gear ratio squared <a href="#ref-4">[4]</a>. It is small, but a gearbox makes it matter, and a controller tuned with it behaves very differently without it. Putting it back fixed standing outright. The environment now uses per-motor values from BeyondMimic’s G1 configuration <a href="#ref-5">[5]</a>.</p>
+		<div class="callout"><p><b>Lesson:</b> a reward can’t fix a simulation that is wrong about the hardware. Every motor property and link mass in the model has to match the real robot before a policy trained on it can work there.</p></div>
+
+		<h3>One policy for the whole body</h3>
+		<p>A walking policy only knows how to step; it can’t hold a foot where you ask. So we replaced it with a single policy that drives all 23 joints, following the motion-imitation approach of DeepMimic <a href="#ref-6">[6]</a> and H2O <a href="#ref-7">[7]</a>.</p>
+		<ul>
+			<li><b>Targets:</b> 12 keypoints (hands, feet, elbows, knees, shoulders and hips), measured relative to the robot’s pelvis and the direction it faces, so the same numbers can later come straight from a body tracker.</li>
+			<li><b>What the policy sees:</b> the IMU (rotation rate and tilt), joint angles and speeds, its last action, the target keypoints, how far its own keypoints are from them, and the reference joint angles.</li>
+			<li><b>What it outputs:</b> a small correction added to the reference joint angles. On top of that, a gravity feed-forward term adds the torque needed to hold the reference pose up. Without it, the untrained robot’s pose error after 0.2 s is 4.7 cm; with it, 1.4 cm.</li>
+			<li><b>Episodes:</b> each one starts at a random moment of a random reference clip, with the robot already in that pose. It ends early if the robot falls (pelvis tilted past 45° or 25 cm too low) or drifts more than 30 cm from the pose on average.</li>
+		</ul>
+
+		<h3>Reference motions</h3>
+		<p>The policy needs lots of poses that are physically possible. A generator builds them with whole-body inverse kinematics, keeping the centre of mass over the feet on the ground, checking that limbs don’t collide and limiting joint speed to 3 rad/s. The library has 120 clips, 43 minutes in all, in four kinds:</p>
+		<div class="tablewrap">
+		<table>
+			<thead><tr><th>Kind</th><th>What happens</th><th>Feet</th></tr></thead>
+			<tbody>
+				<tr><td>upper</td><td>Arm and waist movements</td><td>both planted</td></tr>
+				<tr><td>whole</td><td>Squats, leans, twists and weight shifts, with arm movements</td><td>both planted</td></tr>
+				<tr><td>balance</td><td>Knee raises and foot reaches on one leg</td><td>one lifted, then put back</td></tr>
+				<tr><td>step</td><td>Steps to new spots and turns</td><td>one lifted, then placed somewhere new</td></tr>
+			</tbody>
+		</table>
+		</div>
+		<p>Recorded human movement can be added too. A retargeting step solves inverse kinematics to turn tracker keypoints into a full robot pose in about 2 ms per frame. With all 12 keypoints it reproduces them to within a few millimetres; with only hands and feet, the elbows and knees have to be guessed and end up about 8 cm off on average.</p>
+
+		<h3>Reward: balance first</h3>
+		<p>The first whole-body training run learned to match poses, then fell later in its episodes. Three quarters of its reward was pose accuracy, the balance terms only reacted once a fall had started, and PPO was set to care about roughly the next 2 seconds. A robot on the floor copies nothing, so the reward was rebuilt around balance:</p>
+
+		<figure class="ph-fig" id="fig-1">
+			<div class="ph-fig-body" data-tipzone>
+				<ul class="ph-legend" aria-hidden="true">
+					<li><span class="ph-key" style="background:#0a8f7c"></span>Staying up</li>
+					<li><span class="ph-key" style="background:#b5391a"></span>Balance</li>
+					<li><span class="ph-key" style="background:#2f4f9f"></span>Pose accuracy</li>
+				</ul>
+				<div class="ph-segrows">
+<div class="ph-segrow"><span class="ph-rowlab">First version</span><div class="ph-segbar"><span class="ph-seg" style="flex:5 1 0;background:#0a8f7c" tabindex="0" data-name="Staying up" data-row="First version" data-value="5% of the reward" aria-label="First version: Staying up 5%"></span><span class="ph-seg" style="flex:20 1 0;background:#b5391a" tabindex="0" data-name="Balance" data-row="First version" data-value="20% of the reward" aria-label="First version: Balance 20%">20%</span><span class="ph-seg" style="flex:75 1 0;background:#2f4f9f" tabindex="0" data-name="Pose accuracy" data-row="First version" data-value="75% of the reward" aria-label="First version: Pose accuracy 75%">75%</span></div></div>
+<div class="ph-segrow"><span class="ph-rowlab">Balance-first</span><div class="ph-segbar"><span class="ph-seg" style="flex:20 1 0;background:#0a8f7c" tabindex="0" data-name="Staying up" data-row="Balance-first" data-value="20% of the reward" aria-label="Balance-first: Staying up 20%">20%</span><span class="ph-seg" style="flex:40 1 0;background:#b5391a" tabindex="0" data-name="Balance" data-row="Balance-first" data-value="40% of the reward" aria-label="Balance-first: Balance 40%">40%</span><span class="ph-seg" style="flex:40 1 0;background:#2f4f9f" tabindex="0" data-name="Pose accuracy" data-row="Balance-first" data-value="40% of the reward" aria-label="Balance-first: Pose accuracy 40%">40%</span></div></div>
+				</div>
+				<div class="ph-tip" role="presentation"></div>
+			</div>
+			<figcaption><b>Figure 1.</b> Share of each step’s reward. Balance-first: staying up 20 %; balance 40 % (capture point 15, pelvis tilt 10, height 5, wobble 5, foot contacts 5); pose accuracy 40 % (keypoints 20, joint angles 12, joint speeds 8). Small penalties for jerky actions, high torque and sliding feet come off the total.</figcaption>
+		</figure>
+
+		<p>The key new term is the <em>capture point</em> <a href="#ref-8">[8]</a>: the robot’s centre of mass plus its horizontal speed divided by √(g / h), where h is the height of the centre of mass. It marks where the robot would have to step to come to a stop. If it lies inside the area covered by the feet on the ground, the robot can recover without stepping; if it lies outside, a fall has already started, even though nothing looks wrong yet. To check it really gives early warning, we let the untrained robot fall 118 times and lined the falls up by the moment each one ended:</p>
+
+		<figure class="ph-fig" id="fig-2">
+			<div class="ph-fig-body" data-ew>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Balance scores (0 to 1)</p>
+					<ul class="ph-legend">
+						<li><span class="ph-key line" style="background:#b5391a"></span>Capture point</li>
+						<li><span class="ph-key line" style="background:#0a8f7c"></span>Pelvis tilt</li>
+					</ul>
+<svg class="ph-chart" id="ew-bal" viewBox="0 0 520 210" role="img" aria-labelledby="ew-bal-t">
+<title id="ew-bal-t">Balance scores in the last 1.2 seconds before a fall</title>
+<g class="ph-grid">
+<line x1="42" x2="506" y1="170.0" y2="170.0"/>
+<line x1="42" x2="506" y1="130.5" y2="130.5"/>
+<line x1="42" x2="506" y1="91.0" y2="91.0"/>
+<line x1="42" x2="506" y1="51.5" y2="51.5"/>
+<line x1="42" x2="506" y1="12.0" y2="12.0"/>
+</g><g class="ph-axis">
+<line class="ph-base" x1="42" x2="506" y1="170" y2="170"/>
+<text x="34" y="174.0" text-anchor="end">0</text>
+<text x="34" y="134.5" text-anchor="end">0.25</text>
+<text x="34" y="95.0" text-anchor="end">0.5</text>
+<text x="34" y="55.5" text-anchor="end">0.75</text>
+<text x="34" y="16.0" text-anchor="end">1</text>
+<text x="42.0" y="188" text-anchor="middle">1.2</text>
+<text x="119.3" y="188" text-anchor="middle">1.0</text>
+<text x="196.7" y="188" text-anchor="middle">0.8</text>
+<text x="274.0" y="188" text-anchor="middle">0.6</text>
+<text x="351.3" y="188" text-anchor="middle">0.4</text>
+<text x="428.7" y="188" text-anchor="middle">0.2</text>
+<text x="506.0" y="188" text-anchor="middle">fall</text>
+<text x="274.0" y="206" text-anchor="middle">seconds before the fall</text></g>
+<path class="ph-line" stroke="#b5391a" d="M42.0 12.0 L57.5 12.0 L72.9 12.0 L88.4 12.0 L103.9 12.0 L119.3 12.0 L134.8 12.0 L150.3 12.0 L165.7 12.9 L181.2 22.7 L196.7 49.1 L212.1 82.9 L227.6 117.9 L243.1 146.6 L258.5 162.9 L274.0 168.7 L289.5 169.8 L304.9 170.0 L320.4 170.0 L335.9 170.0 L351.3 170.0 L366.8 170.0 L382.3 170.0 L397.7 170.0 L413.2 170.0 L428.7 170.0 L444.1 170.0 L459.6 170.0 L475.1 170.0 L490.5 170.0 L506.0 170.0"/>
+<path class="ph-line" stroke="#0a8f7c" d="M42.0 18.8 L57.5 20.1 L72.9 21.0 L88.4 23.4 L103.9 26.7 L119.3 27.8 L134.8 31.3 L150.3 34.9 L165.7 39.5 L181.2 45.2 L196.7 51.0 L212.1 58.8 L227.6 66.8 L243.1 75.8 L258.5 87.8 L274.0 101.0 L289.5 113.3 L304.9 127.2 L320.4 140.1 L335.9 150.6 L351.3 156.3 L366.8 162.3 L382.3 166.4 L397.7 168.6 L413.2 169.5 L428.7 169.8 L444.1 170.0 L459.6 170.0 L475.1 170.0 L490.5 170.0 L506.0 170.0"/>
+<circle class="ph-dot" fill="#b5391a" cx="227.6" cy="117.9" r="4"/>
+<text class="ph-annot" x="217.6" y="135.9" text-anchor="end">0.33 at 0.72 s</text>
+<g class="ph-cross" aria-hidden="true"><line x1="0" x2="0" y1="12" y2="170"/></g>
+<rect class="ph-hit" x="42" y="12" width="464" height="158" fill="transparent"/></svg>
+				</div>
+				<div class="ph-panel">
+					<p class="ph-ptitle">Pose error (cm)</p>
+<svg class="ph-chart" id="ew-kp" viewBox="0 0 520 210" role="img" aria-labelledby="ew-kp-t">
+<title id="ew-kp-t">Pose error in the last 1.2 seconds before a fall</title>
+<g class="ph-grid">
+<line x1="42" x2="506" y1="170.0" y2="170.0"/>
+<line x1="42" x2="506" y1="124.9" y2="124.9"/>
+<line x1="42" x2="506" y1="79.7" y2="79.7"/>
+<line x1="42" x2="506" y1="34.6" y2="34.6"/>
+</g><g class="ph-axis">
+<line class="ph-base" x1="42" x2="506" y1="170" y2="170"/>
+<text x="34" y="174.0" text-anchor="end">0</text>
+<text x="34" y="128.9" text-anchor="end">10</text>
+<text x="34" y="83.7" text-anchor="end">20</text>
+<text x="34" y="38.6" text-anchor="end">30</text>
+<text x="42.0" y="188" text-anchor="middle">1.2</text>
+<text x="119.3" y="188" text-anchor="middle">1.0</text>
+<text x="196.7" y="188" text-anchor="middle">0.8</text>
+<text x="274.0" y="188" text-anchor="middle">0.6</text>
+<text x="351.3" y="188" text-anchor="middle">0.4</text>
+<text x="428.7" y="188" text-anchor="middle">0.2</text>
+<text x="506.0" y="188" text-anchor="middle">fall</text>
+<text x="274.0" y="206" text-anchor="middle">seconds before the fall</text></g>
+<path class="ph-line" stroke="#2f4f9f" d="M42.0 163.2 L57.5 162.8 L72.9 162.3 L88.4 161.4 L103.9 160.5 L119.3 160.1 L134.8 159.2 L150.3 158.7 L165.7 157.8 L181.2 156.5 L196.7 155.6 L212.1 154.2 L227.6 151.9 L243.1 150.1 L258.5 148.3 L274.0 146.1 L289.5 142.9 L304.9 139.8 L320.4 135.2 L335.9 130.7 L351.3 126.2 L366.8 120.8 L382.3 114.5 L397.7 107.7 L413.2 98.7 L428.7 90.1 L444.1 79.7 L459.6 68.9 L475.1 55.3 L490.5 38.6 L506.0 19.2"/>
+<circle class="ph-dot" fill="#2f4f9f" cx="227.6" cy="151.9" r="4"/>
+<text class="ph-annot" x="219.6" y="139.9" text-anchor="end">4.0 cm at 0.72 s</text>
+<g class="ph-cross" aria-hidden="true"><line x1="0" x2="0" y1="12" y2="170"/></g>
+<rect class="ph-hit" x="42" y="12" width="464" height="158" fill="transparent"/></svg>
+				</div>
+				<div class="ph-tip" role="presentation"></div>
+			</div>
+			<figcaption><b>Figure 2.</b> Median of 118 falls. About 0.7 s before the fall the capture-point score has already dropped to 0.33, while the pose error is only 4.0 cm and the pelvis-tilt score is still 0.65, so the policy is told about a fall while there is still time to stop it.</figcaption>
+			<details class="ph-details">
+				<summary>Show the numbers</summary>
+				<div class="tablewrap">
+				<table>
+					<thead><tr><th>Seconds before fall</th><th>Capture point score</th><th>Pelvis tilt score</th><th>Capture point inside feet (cm)</th><th>Pose error (cm)</th></tr></thead>
+					<tbody>
+<tr><td>1.20</td><td>1.00</td><td>0.96</td><td>5.9</td><td>1.5</td></tr>
+<tr><td>1.08</td><td>1.00</td><td>0.93</td><td>4.7</td><td>1.9</td></tr>
+<tr><td>0.96</td><td>1.00</td><td>0.88</td><td>3.0</td><td>2.4</td></tr>
+<tr><td>0.84</td><td>0.93</td><td>0.79</td><td>0.9</td><td>3.0</td></tr>
+<tr><td>0.72</td><td>0.33</td><td>0.65</td><td>-2.2</td><td>4.0</td></tr>
+<tr><td>0.60</td><td>0.01</td><td>0.44</td><td>-6.8</td><td>5.3</td></tr>
+<tr><td>0.48</td><td>0.00</td><td>0.19</td><td>-13.5</td><td>7.7</td></tr>
+<tr><td>0.36</td><td>0.00</td><td>0.05</td><td>-22.7</td><td>10.9</td></tr>
+<tr><td>0.24</td><td>0.00</td><td>0.00</td><td>-35.1</td><td>15.8</td></tr>
+<tr><td>0.12</td><td>0.00</td><td>0.00</td><td>-52.4</td><td>22.4</td></tr>
+<tr><td>0.00</td><td>0.00</td><td>0.00</td><td>-71.6</td><td>33.4</td></tr>
+					</tbody>
+				</table>
+				</div>
+			</details>
+		</figure>
+
+		<h3>Learning setup</h3>
+		<p>Training uses PPO from Stable-Baselines3 <a href="#ref-9">[9]</a> with 16 simulated robots running in parallel.</p>
+		<div class="tablewrap">
+		<table>
+			<thead><tr><th>Setting</th><th>Value</th></tr></thead>
+			<tbody>
+				<tr><td>Steps per update</td><td>8,192 (16 robots × 512 steps)</td></tr>
+				<tr><td>Minibatch size, epochs</td><td>2,048, 5</td></tr>
+				<tr><td>Discount γ</td><td>0.995, so it looks about 4 s ahead (was 0.99, about 2 s)</td></tr>
+				<tr><td>GAE λ, clip range</td><td>0.95, 0.2</td></tr>
+				<tr><td>Target KL</td><td>0.03: stops an update that would change the policy too much</td></tr>
+				<tr><td>Learning rate</td><td>2 × 10⁻⁴ falling to 3 × 10⁻⁵ (stage 1)</td></tr>
+				<tr><td>Networks</td><td>separate actor and critic, 512-256-128, ELU</td></tr>
+				<tr><td>Critic’s extra inputs</td><td>19 values only the simulator knows: true velocity, centre of mass, capture-point margin, foot contacts, friction and pushes. The actor sees only what the real robot can measure.</td></tr>
+				<tr><td>Curriculum</td><td>feet-planted motions first; one-leg balancing unlocks at 80 % survival, then stepping</td></tr>
+			</tbody>
+		</table>
+		</div>
+		<p>Training runs in two stages: 60 million steps on the motion library, then 40 million more with random pushes on the pelvis (up to 60 N), floor friction varied between 0.6 and 1.3 times normal, and sensor noise, so the policy doesn’t rely on a perfect simulation.</p>
+
+		<h3>Watching it learn</h3>
+		<p>Every 5 % of a run, the current policy replays the same fixed test episodes for each kind of motion and records a video; every 10 % a backup of the model is saved. The most useful number is survival per motion kind: the fraction of each test episode the robot stays up. Any backup can be turned into a GIF like the one at the top of this page.</p>
+
+		<h3>Running it</h3>
+		<p>From the training scripts folder of the <a href="https://github.com/shepai/pose-to-biped">repository</a>:</p>
+<pre class="ph-code"><code><span class="c"># check video recording works (picks EGL automatically over SSH)</span>
+python train_pose_tracking.py video
+
+<span class="c"># stage 1, then stage 2 with pushes, friction and noise</span>
+python train_pose_tracking.py train
+python train_pose_tracking.py train2
+
+<span class="c"># watch the result, or make a GIF of every checkpoint</span>
+python train_pose_tracking.py play
+python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
+		<p>Everything a run produces (training log, test scores, videos and model backups) is written to <code>logs/&lt;run&gt;/</code>.</p>
+
+		<h3>Results so far</h3>
+		<p>Training is ongoing. In a short early test (8 simulated robots, 400,000 steps), the balance-first version kept the robot up for 1.9 s per episode on average, against 1.4 s for the first version. That is a sign of direction rather than a result, and survival per motion kind from the full runs will be added here.</p>
+
+		<h2>Real-time pose</h2>
+		<!-- To be written. Possible sections:
+		     <h3>Body tracking</h3>
+		     <h3>From camera coordinates to the robot's frame</h3>
+		     <h3>Retargeting live</h3>
+		     <h3>Running the policy in real time</h3> -->
+		<p class="ph-soon">Coming soon: connecting a live body tracker to the trained policy.</p>
+
+		<h2>References</h2>
+		<ol class="refs">
+			<li id="ref-1"><span>[1]</span><span>Schulman, J., Wolski, F., Dhariwal, P., Radford, A. and Klimov, O. (2017) Proximal policy optimization algorithms. <em>arXiv preprint</em> arXiv:1707.06347.<br><a class="link" href="https://arxiv.org/abs/1707.06347">https://arxiv.org/abs/1707.06347</a></span></li>
+			<li id="ref-2"><span>[2]</span><span>Todorov, E., Erez, T. and Tassa, Y. (2012) MuJoCo: a physics engine for model-based control. <em>IEEE/RSJ International Conference on Intelligent Robots and Systems</em>.<br><a class="link" href="https://github.com/google-deepmind/mujoco">https://github.com/google-deepmind/mujoco</a></span></li>
+			<li id="ref-3"><span>[3]</span><span>Unitree Robotics. <em>unitree_rl_gym</em>: G1 robot models, training configuration and pretrained policy.<br><a class="link" href="https://github.com/unitreerobotics/unitree_rl_gym">https://github.com/unitreerobotics/unitree_rl_gym</a></span></li>
+			<li id="ref-4"><span>[4]</span><span>Humanoid.guide. Gear ratio in humanoid joints: how one number trades torque, speed and reflected inertia.<br><a class="link" href="https://humanoid.guide/?p=19933">https://humanoid.guide/?p=19933</a></span></li>
+			<li id="ref-5"><span>[5]</span><span>HybridRobotics. <em>whole_body_tracking</em> (BeyondMimic): G1 robot configuration.<br><a class="link" href="https://github.com/HybridRobotics/whole_body_tracking/blob/9db915838b17785c6fec90c91fe80b95b147e1bd/source/whole_body_tracking/whole_body_tracking/robots/g1.py">github.com/HybridRobotics/whole_body_tracking</a></span></li>
+			<li id="ref-6"><span>[6]</span><span>Peng, X. B., Abbeel, P., Levine, S. and van de Panne, M. (2018) DeepMimic: example-guided deep reinforcement learning of physics-based character skills. <em>ACM Transactions on Graphics</em>, 37(4).<br><a class="link" href="https://arxiv.org/abs/1804.02717">https://arxiv.org/abs/1804.02717</a></span></li>
+			<li id="ref-7"><span>[7]</span><span>He, T., Luo, Z., Xiao, W., Zhang, C., Kitani, K., Liu, C. and Shi, G. (2024) Learning human-to-humanoid real-time whole-body teleoperation. <em>arXiv preprint</em> arXiv:2403.04436.<br><a class="link" href="https://arxiv.org/abs/2403.04436">https://arxiv.org/abs/2403.04436</a></span></li>
+			<li id="ref-8"><span>[8]</span><span>Pratt, J., Carff, J., Drakunov, S. and Goswami, A. (2006) Capture point: a step toward humanoid push recovery. <em>IEEE-RAS International Conference on Humanoid Robots</em>.<br><a class="link" href="https://portfolio.erau.edu/en/publications/capture-point-a-step-toward-humanoid-push-recovery/">portfolio.erau.edu/en/publications/capture-point-a-step-toward-humanoid-push-recovery</a></span></li>
+			<li id="ref-9"><span>[9]</span><span>Raffin, A., Hill, A., Gleave, A., Kanervisto, A., Ernestus, M. and Dormann, N. (2021) Stable-Baselines3: reliable reinforcement learning implementations. <em>Journal of Machine Learning Research</em>, 22(268), 1–8.<br><a class="link" href="https://jmlr.org/papers/v22/20-1364.html">https://jmlr.org/papers/v22/20-1364.html</a></span></li>
+		</ol>
 	</div>
 </body>
+<script src="https://shepai.github.io/code/JS_Package.js">
+
+</script>
 <script>
-
-
+/* hover and keyboard readouts for Figures 1 and 2; every value is also in the captions and the table */
+(function () {
+	var EW = [{"t": 0.0, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 33.4}, {"t": 0.04, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 29.1}, {"t": 0.08, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 25.4}, {"t": 0.12, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 22.4}, {"t": 0.16, "r_cp": 0.0, "r_upright": 0.0, "kp_err_cm": 20.0}, {"t": 0.2, "r_cp": 0.0, "r_upright": 0.001, "kp_err_cm": 17.7}, {"t": 0.24, "r_cp": 0.0, "r_upright": 0.003, "kp_err_cm": 15.8}, {"t": 0.28, "r_cp": 0.0, "r_upright": 0.009, "kp_err_cm": 13.8}, {"t": 0.32, "r_cp": 0.0, "r_upright": 0.023, "kp_err_cm": 12.3}, {"t": 0.36, "r_cp": 0.0, "r_upright": 0.049, "kp_err_cm": 10.9}, {"t": 0.4, "r_cp": 0.0, "r_upright": 0.087, "kp_err_cm": 9.7}, {"t": 0.44, "r_cp": 0.0, "r_upright": 0.123, "kp_err_cm": 8.7}, {"t": 0.48, "r_cp": 0.0, "r_upright": 0.189, "kp_err_cm": 7.7}, {"t": 0.52, "r_cp": 0.0, "r_upright": 0.271, "kp_err_cm": 6.7}, {"t": 0.56, "r_cp": 0.001, "r_upright": 0.359, "kp_err_cm": 6.0}, {"t": 0.6, "r_cp": 0.008, "r_upright": 0.437, "kp_err_cm": 5.3}, {"t": 0.64, "r_cp": 0.045, "r_upright": 0.52, "kp_err_cm": 4.8}, {"t": 0.68, "r_cp": 0.148, "r_upright": 0.596, "kp_err_cm": 4.4}, {"t": 0.72, "r_cp": 0.33, "r_upright": 0.653, "kp_err_cm": 4.0}, {"t": 0.76, "r_cp": 0.551, "r_upright": 0.704, "kp_err_cm": 3.5}, {"t": 0.8, "r_cp": 0.765, "r_upright": 0.753, "kp_err_cm": 3.2}, {"t": 0.84, "r_cp": 0.932, "r_upright": 0.79, "kp_err_cm": 3.0}, {"t": 0.88, "r_cp": 0.994, "r_upright": 0.826, "kp_err_cm": 2.7}, {"t": 0.92, "r_cp": 1.0, "r_upright": 0.855, "kp_err_cm": 2.5}, {"t": 0.96, "r_cp": 1.0, "r_upright": 0.878, "kp_err_cm": 2.4}, {"t": 1.0, "r_cp": 1.0, "r_upright": 0.9, "kp_err_cm": 2.2}, {"t": 1.04, "r_cp": 1.0, "r_upright": 0.907, "kp_err_cm": 2.1}, {"t": 1.08, "r_cp": 1.0, "r_upright": 0.928, "kp_err_cm": 1.9}, {"t": 1.12, "r_cp": 1.0, "r_upright": 0.943, "kp_err_cm": 1.7}, {"t": 1.16, "r_cp": 1.0, "r_upright": 0.949, "kp_err_cm": 1.6}, {"t": 1.2, "r_cp": 1.0, "r_upright": 0.957, "kp_err_cm": 1.5}];
+	function showTip(tip, zone, x, y, rows) {
+		while (tip.firstChild) tip.removeChild(tip.firstChild);
+		rows.forEach(function (r) {
+			var row = document.createElement("div"); row.className = "row";
+			if (r.color) { var k = document.createElement("i"); k.style.background = r.color; row.appendChild(k); }
+			var b = document.createElement("b"); b.textContent = r.value; row.appendChild(b);
+			if (r.label) { var l = document.createElement("span"); l.className = "lab"; l.textContent = r.label; row.appendChild(l); }
+			tip.appendChild(row);
+		});
+		var zr = zone.getBoundingClientRect();
+		tip.classList.add("on");
+		var w = tip.offsetWidth, left = x - zr.left + 14;
+		if (left + w > zr.width - 4) left = x - zr.left - w - 14;
+		tip.style.left = Math.max(4, left) + "px";
+		tip.style.top = Math.max(4, y - zr.top - 10) + "px";
+	}
+	document.querySelectorAll("[data-tipzone]").forEach(function (zone) {
+		var tip = zone.querySelector(".ph-tip");
+		zone.querySelectorAll(".ph-seg").forEach(function (seg) {
+			function on(e) {
+				var r = seg.getBoundingClientRect();
+				var x = e && e.clientX ? e.clientX : r.left + r.width / 2, y = e && e.clientY ? e.clientY : r.top;
+				showTip(tip, zone, x, y, [{ value: seg.dataset.value, color: seg.style.background },
+				                          { value: seg.dataset.name, label: "· " + seg.dataset.row.toLowerCase() }]);
+			}
+			seg.addEventListener("pointermove", on); seg.addEventListener("focus", on);
+			seg.addEventListener("pointerleave", function () { tip.classList.remove("on"); });
+			seg.addEventListener("blur", function () { tip.classList.remove("on"); });
+		});
+	});
+	var zone = document.querySelector("[data-ew]");
+	if (!zone) return;
+	var tip = zone.querySelector(".ph-tip"), svgs = zone.querySelectorAll("svg");
+	var ML = 42, PW = 464, W = 520, TMAX = 1.2;
+	function nearest(t) { return EW.reduce(function (a, b) { return Math.abs(b.t - t) < Math.abs(a.t - t) ? b : a; }); }
+	svgs.forEach(function (svg) {
+		svg.querySelector(".ph-hit").addEventListener("pointermove", function (e) {
+			var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * W / r.width;
+			var d = nearest(TMAX - (sx - ML) / PW * TMAX), x = ML + (TMAX - d.t) / TMAX * PW;
+			svgs.forEach(function (s) { var c = s.querySelector(".ph-cross"); c.classList.add("on"); c.setAttribute("transform", "translate(" + x + " 0)"); });
+			showTip(tip, zone, e.clientX, e.clientY, [
+				{ value: d.t.toFixed(2) + " s", label: "before the fall" },
+				{ value: d.r_cp.toFixed(2), label: "capture point", color: "#b5391a" },
+				{ value: d.r_upright.toFixed(2), label: "pelvis tilt", color: "#0a8f7c" },
+				{ value: d.kp_err_cm.toFixed(1) + " cm", label: "pose error", color: "#2f4f9f" }]);
+		});
+		svg.querySelector(".ph-hit").addEventListener("pointerleave", function () {
+			tip.classList.remove("on");
+			svgs.forEach(function (s) { s.querySelector(".ph-cross").classList.remove("on"); });
+		});
+	});
+})();
 </script>
 
 </html>
