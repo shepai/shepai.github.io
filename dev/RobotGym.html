@@ -357,7 +357,7 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 			<div class="fact"><dt>average pose error over the 12 keypoints, down from <span data-stat="kp_first">8.8</span> cm</dt><dd><span data-stat="kp_end">5.6</span> cm</dd></div>
 		</dl>
 
-		<figure class="ph-fig ph-progress" id="fig-3" data-progress-csv="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/progress.csv">
+		<figure class="ph-fig ph-progress" id="fig-3" data-progress-csv="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/logs/pose_stage1T1/progress.csv">
 			<div class="ph-fig-body" data-progress>
 				<p class="ph-status" data-role="status" role="status">Loading the training log…</p>
 				<div class="ph-panel">
@@ -381,7 +381,7 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 				<div class="ph-tip" role="presentation"></div>
 			</div>
 			<figcaption><b>Figure 3.</b> Stage 1 training, read from <code>progress.csv</code>. Top: every 5 % of the run the policy replays the same 8 test episodes (2 per motion kind, up to 10 s each); the grey area is the time before that kind joined training. Below: statistics from training itself, smoothed over about 1 % of the run, with lines where one-leg balance and stepping joined. Training numbers depend on which motions were being practised at the time; the tests don’t.</figcaption>
-			<p class="ph-source"><span data-role="source">Data: <a href="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/progress.csv">progress.csv</a> in the repository’s <code>assets</code> folder.</span> <label class="ph-load">Plot another progress.csv<input type="file" accept=".csv,text/csv" data-role="file"></label></p>
+			<p class="ph-source"><span data-role="source">Data: <a href="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/logs/pose_stage1T1/progress.csv"><code>logs/pose_stage1T1/progress.csv</code></a> in the pose-to-biped repository, loaded when you scroll here.</span> <label class="ph-load">Plot another progress.csv<input type="file" accept=".csv,text/csv" data-role="file"></label></p>
 			<details class="ph-details">
 				<summary>Show the numbers</summary>
 				<p class="tcap">One row per test. Training columns are smoothed the same way as the charts.</p>
