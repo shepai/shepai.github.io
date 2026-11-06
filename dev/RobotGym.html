@@ -4,7 +4,7 @@
 	<title>SHEP AI</title>
 	<link rel="stylesheet" type="text/css" href="https://shepai.github.io/style.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Pose to Humanoid: training a simulated Unitree G1 humanoid with reinforcement learning to copy a person's pose while keeping its balance.">
+	<meta name="description" content="Pose to Humanoid: training a simulated Unitree G1 humanoid with reinforcement learning to copy a person's pose while keeping its balance, then driving it live from a webcam.">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="https://shepai.github.io/assets/test1.ico" type="favicon/ico">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
@@ -78,6 +78,24 @@
 		.ph-load:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 		.tablewrap .ph-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 		.ph-details .tcap { margin: 0 16px 6px; }
+
+		/* ---------- Figure 4: camera to robot, one step per row ---------- */
+		.ph-pipe { counter-reset: ph-step; }
+		.page-text .ph-lanelab { margin: 0 0 8px; font-size: .85rem; line-height: 1.5; color: var(--muted); }
+		.page-text .ph-lanelab b { color: var(--text); }
+		.page-text .ph-lanelab.next { margin-top: 26px; position: relative; }
+		.page-text .ph-lanelab.next::before { content: "↓"; position: absolute; left: 13px; top: -22px; font-size: 14px; line-height: 1; color: #9ca3af; }
+		.ph-flow { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+		.page-text .ph-flow li { position: relative; display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 2px 12px; align-items: baseline; margin: 0; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 6px; background: #f9fafb; counter-increment: ph-step; font-size: .85rem; line-height: 1.45; color: var(--muted); }
+		.ph-flow li b { color: var(--text); }
+		.ph-flow li b::before { content: counter(ph-step) "  "; white-space: pre; font-weight: normal; color: var(--muted); }
+		.ph-flow li + li::before { content: "↓"; position: absolute; left: 13px; top: -15px; font-size: 13px; line-height: 1; color: #9ca3af; }
+		.page-text .ph-flow li.learned { border-color: var(--ink); background: #fff; }
+		.ph-tag { margin-left: 4px; padding: 0 6px; border-radius: 3px; background: var(--accent); color: #fff; font-size: .72rem; font-style: normal; font-weight: bold; white-space: nowrap; }
+		@media (max-width: 480px) {
+			.page-text .ph-flow li { grid-template-columns: minmax(0, 1fr); }
+		}
+		.tablewrap td.ph-state { white-space: nowrap; font-weight: bold; }
 	</style>
 </head>
 <body class="backgroundC">
@@ -132,7 +150,7 @@
 </div>
 
 		<h2>Overview</h2>
-		<p>The aim is teleoperation without a controller. A person moves, a camera-based body tracker turns their movement into the positions of their hands and feet (and, where it can, elbows, knees, hips and shoulders), and a humanoid robot copies them without falling over. This page covers the first half: the simulated robot and how it is trained to copy poses. The second half, connecting a real-time pose tracker, is still being built.</p>
+		<p>The aim is teleoperation without a controller. A person moves, a camera-based body tracker turns their movement into the positions of their hands and feet (and, where it can, elbows, knees, hips and shoulders), and a humanoid robot copies them without falling over. The first part of this page covers the simulated robot and how it is trained to copy poses. The second part connects it to a webcam, so the simulated robot copies a person in real time.</p>
 		<p>All of the learning happens in simulation, because a robot learning to balance falls over thousands of times. We use reinforcement learning: a small neural network, the <em>policy</em>, looks at the robot 50 times a second and decides where every joint should move next. After each step a <em>reward</em> scores how well that went, and the learning algorithm, PPO <a href="#ref-1">[1]</a>, nudges the network towards whatever earned more reward.</p>
 
 		<h2>The humanoid</h2>
@@ -182,7 +200,7 @@
 			<li><b>Episodes:</b> each one starts at a random moment of a random reference clip, with the robot already in that pose. It ends early if the robot falls (pelvis tilted past 45° or 25 cm too low) or drifts more than 30 cm from the pose on average.</li>
 		</ul>
 
-		<h3>Reference motions</h3>
+		<h3 id="reference-motions">Reference motions</h3>
 		<p>The policy needs lots of poses that are physically possible. A generator builds them with whole-body inverse kinematics, keeping the centre of mass over the feet on the ground, checking that limbs don’t collide and limiting joint speed to 3 rad/s. The library has 120 clips, 43 minutes in all, in four kinds:</p>
 		<div class="tablewrap">
 		<table>
@@ -252,7 +270,7 @@ python train_pose_tracking.py train2
 
 <span class="c"># watch the result, or make a GIF of every checkpoint</span>
 python train_pose_tracking.py play
-python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
+python gif_maker.py "logs/pose_stage1/checkpoints/*M"</code></pre>
 		<p>Everything a run produces (training log, test scores, videos and model backups) is written to <code>logs/&lt;run&gt;/</code>.</p>
 
 		<h3>Results from stage 1</h3>
@@ -331,12 +349,99 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 		<p>Next is stage 2: 40 million more steps with pushes, varied floor friction and sensor noise.</p>
 
 		<h2>Real-time pose</h2>
-		<!-- To be written. Possible sections:
-		     <h3>Body tracking</h3>
-		     <h3>From camera coordinates to the robot's frame</h3>
-		     <h3>Retargeting live</h3>
-		     <h3>Running the policy in real time</h3> -->
-		<p class="ph-soon">Coming soon: connecting a live body tracker to the trained policy.</p>
+		<p>The stage 1 policy now copies a person in front of an ordinary webcam, and it wasn’t retrained to do so. Everything between the camera and the policy is there to give it the inputs it had in training: 12 keypoints measured from the pelvis in the direction it faces, at the robot’s size, and reference joint angles that change no faster than the training motions did.</p>
+
+		<figure class="ph-fig" id="fig-3">
+			<div class="ph-fig-body"><img class="ph-gif" src="https://raw.githubusercontent.com/shepai/pose-to-biped/refs/heads/main/assets/live_demo.gif" alt="Recording of the webcam demo: on the left, the camera image of a person with MediaPipe's skeleton drawn on them, raising and lowering their arms; on the right, the simulated G1 making the same movements" loading="lazy"></div>
+			<figcaption><b>Figure 3.</b> The webcam demo, <code>live_pose.py</code>, cut from a 27 s recording. Left: the camera image with MediaPipe’s landmarks. Right: the simulated G1, driven by the stage 1 policy. The status line shows the state, how many times the robot has been reset and has fallen, the pose error, which limbs are being copied, the camera’s frame rate and how fast the simulation is running compared with real time.</figcaption>
+		</figure>
+
+		<p>Figure 4 shows the whole chain. It runs at two rates. Each new camera frame goes through MediaPipe, which runs in a thread of its own, and is turned into a target pose for the robot. Separately, the policy runs 50 times a second, as in training, always heading for the newest target.</p>
+
+		<figure class="ph-fig" id="fig-4">
+			<div class="ph-fig-body ph-pipe">
+				<p class="ph-lanelab"><b>Once per camera frame</b>, as fast as MediaPipe can go (8 to 11 frames a second in the demo recording)</p>
+				<ol class="ph-flow">
+					<li><b>Webcam</b><span>One colour image.</span></li>
+					<li><b>MediaPipe Pose</b><span>33 body landmarks in metres, centred between the hips, each with a visibility score.</span></li>
+					<li><b>Robot’s frame</b><span>Levelled, turned to face forward, given the robot’s limb lengths and stood on the floor: 12 keypoints.</span></li>
+					<li><b>One-Euro filter</b><span>Removes jitter without holding back fast movements.</span></li>
+					<li><b>Inverse kinematics</b><span>12 keypoints to a full robot pose: pelvis position and orientation, 29 joint angles. About 2 ms.</span></li>
+				</ol>
+				<p class="ph-lanelab next"><b>Every 20 ms</b> (50 Hz), as in training, using the newest target</p>
+				<ol class="ph-flow">
+					<li><b>Live reference</b><span>Moves towards the target, at most 3 rad/s per joint, like the training motions.</span></li>
+					<li class="learned"><b>Trained policy</b><span>Unchanged from training: a target angle for each of the 23 joints. <em class="ph-tag">learned</em></span></li>
+					<li><b>PD controller</b><span>500 times a second, turns each target angle into a motor torque.</span></li>
+					<li><b>Simulated G1</b><span>MuJoCo.</span></li>
+				</ol>
+			</div>
+			<figcaption><b>Figure 4.</b> From camera to robot. Only step 7 was learned; the rest is fixed code. Steps 3 to 6 exist so that the policy sees the same kind of input it was trained on.</figcaption>
+		</figure>
+
+		<h3>Body tracking</h3>
+		<p>MediaPipe Pose <a href="#ref-10">[10]</a>, <a href="#ref-11">[11]</a> finds one person in each image and gives 33 landmarks: points on the face, shoulders, elbows, wrists, hands, hips, knees, ankles and feet. Each landmark comes twice: as a position in the image, used to draw the skeleton, and as a 3-D <em>world landmark</em> in metres, with the origin halfway between the hips. Only the world landmarks are used for the robot. Each landmark also has a visibility score from 0 to 1, the likelihood that it is in the image and not hidden, and a limb is only copied if its landmarks score at least 0.5.</p>
+		<p>MediaPipe runs on the CPU. It has three model sizes that trade accuracy for speed, and <code>live_pose.py</code> uses the middle one unless told otherwise.</p>
+
+		<h3>From camera coordinates to the robot’s frame</h3>
+		<p>The policy’s targets are in the robot’s <em>heading frame</em>: x forward, y left, z up, with the origin on the floor under the pelvis. MediaPipe’s world landmarks are in the camera’s frame (x right, y down, z away from the camera), centred on the hips and at the person’s size. Five corrections close the gap:</p>
+		<ul>
+			<li><b>Levelling.</b> A webcam on a desk or a laptop lid is rarely level, so an upright person looks tilted, and the robot would lean to copy them. When someone is first found, “up” is taken as the direction from the middle of their hips to the middle of their shoulders, averaged over 8 frames, and every later frame is rotated so that this direction points straight up. The correction is capped at 30°, so someone who arrives bending over doesn’t tip the whole picture. Pressing <code>c</code> redoes it.</li>
+			<li><b>Heading.</b> Forward is worked out from the line between the hips (or between the shoulders, if the hips are unclear), so the person can stand at an angle to the camera. As in training, everything is measured relative to where the pelvis faces, so turning on the spot isn’t copied.</li>
+			<li><b>Proportions.</b> Every limb keeps the person’s direction but takes the robot’s length: upper arm, forearm, thigh and shin. Any adult then maps onto the 1.3 m G1 with targets it can reach. The shoulders and hips are the robot’s own, turned with the person’s torso and pelvis.</li>
+			<li><b>Missing limbs.</b> An arm is copied only if its shoulder, elbow and wrist are all visible, and a leg only if its hip, knee and ankle are. Any other limb stays in the robot’s default pose, carried along by the torso or the pelvis. Someone sitting at a desk with only their upper body in view can still drive the arms and waist while the robot stands.</li>
+			<li><b>Floor.</b> The world landmarks are centred on the hips, so they say nothing about where the floor is. The whole pose is moved up or down until the lower foot is on the floor. A foot target even a centimetre or two above the floor asks the policy to lift that foot, which means shifting its weight onto the other one, and landmark noise produces exactly that. So a foot that comes within 3 cm of the floor counts as planted and is put exactly on it, and it stays planted until it rises more than 5 cm. The gap between the two thresholds stops a foot hovering around 3 cm from flickering between planted and lifted.</li>
+		</ul>
+
+		<h3>Smoothing</h3>
+		<p>Even when a person stands still, the landmarks jitter from frame to frame, and the policy would chase every wobble. Each keypoint therefore goes through a One-Euro filter <a href="#ref-12">[12]</a>, a low-pass filter whose cut-off frequency rises with the keypoint’s speed. A still keypoint is smoothed heavily (a 1.5 Hz cut-off), and the smoothing relaxes as it speeds up (3.5 Hz at 1 m/s), so a fast arm swing isn’t held back much. MediaPipe’s own landmark smoothing is switched on as well.</p>
+
+		<h3>Retargeting live</h3>
+		<p>The policy also sees reference joint angles, so the 12 keypoints are turned into a full robot pose by the same whole-body inverse kinematics used for recorded motions (see <a href="#reference-motions">Reference motions</a>). It weights the feet most (20), then the hands (10), the hips (5), and the elbows, knees and shoulders (3). It also holds a foot that is near the floor flat, prefers an upright pelvis and keeps the wrists still, as the policy does. Each frame starts from the previous frame’s solution and runs 12 iterations, about 2 ms, which also keeps one frame’s pose consistent with the next.</p>
+
+		<h3>Running the policy in real time</h3>
+		<p>The control loop runs a live version of the training environment. In training, the reference pose came from a motion clip; here it is one endless “clip” that is always the current target. Every 20 ms the reference moves part of the way towards the newest target (with a time constant of 0.08 s), each joint is limited to 3 rad/s, the same limit as the training motions, and the resulting joint speeds are passed on as the reference speeds the policy observes. A camera giving 10 frames a second therefore still produces a smooth 50 Hz reference, and a glitch in the landmarks can’t make the reference move faster than anything the policy saw in training.</p>
+		<p>Observations, actions and rewards are exactly those of the training environment, so the trained network and its saved observation statistics load unchanged. Two things differ. Episodes never time out, and only a fall ends one: in training an episode also ended when the robot drifted more than 30 cm from the pose, but live, a pose the robot can’t reach is followed as well as it can be.</p>
+		<p>The PD controller runs at 500 Hz inside the simulation, as before. If the computer can’t keep up, the simulation slows down rather than skipping steps, and the status line shows by how much. In the demo recording it ran at 0.4 to 0.7 times real time, with MediaPipe, the simulation and the drawing sharing the CPU.</p>
+
+		<h3>Finding and losing the person</h3>
+		<p>A small state machine decides what the robot does as people come and go:</p>
+		<div class="tablewrap">
+		<table>
+			<thead><tr><th>State</th><th>Starts when</th><th>What the robot does</th></tr></thead>
+			<tbody>
+				<tr><td class="ph-state">Waiting</td><td>The program starts, or the person has been gone for 2 s</td><td>Stands, easing back to standing if it was copying someone</td></tr>
+				<tr><td class="ph-state">Tracking</td><td>A torso (both shoulders, and both hips at least roughly) has been seen in 8 frames in a row</td><td>Is reset straight into the person’s pose, then follows them. The camera is levelled from those 8 frames.</td></tr>
+				<tr><td class="ph-state">Holding</td><td>The torso is lost while tracking</td><td>Holds the last pose. If the person is back within 2 s, tracking carries on without a reset.</td></tr>
+				<tr><td class="ph-state">After a fall</td><td>The robot falls</td><td>Is reset into the person’s current pose, or to standing if nobody is there</td></tr>
+			</tbody>
+		</table>
+		</div>
+		<p>Putting the robot straight into the person’s pose, instead of letting it make its own way there from standing, matches training, where every episode starts with the robot already in the reference pose.</p>
+
+		<h3>Recording motions to learn from</h3>
+		<p>The same steps turn a person’s movement into training data. <code>record_motion.py</code> records with nobody at the keyboard: whenever every landmark it needs is visible, the frames go into the current recording, and when the person is lost for more than 0.15 s the recording ends. A recording that lasted at least 2 s is cleaned and saved; a shorter one is treated as noise. Only body landmarks and robot poses are saved, never images.</p>
+		<p>Recordings don’t have to be processed in real time, so they are cleaned more thoroughly than the live stream:</p>
+		<ul>
+			<li>Frames missing a needed landmark are dropped. So are glitches, where MediaPipe misplaces a landmark for a frame or two: a landmark more than 8 cm off the straight line between the frames either side of it (or twice the recording’s typical amount, if that is larger), or keypoints moving faster than 6 m/s.</li>
+			<li>A clip never spans a gap of more than 0.15 s, so it never jumps from one pose to another.</li>
+			<li>Each piece is resampled to 50 Hz and smoothed with a Gaussian filter run over the whole piece, which, unlike the live filter, adds no delay.</li>
+			<li>After inverse kinematics, frames the robot can’t reach (more than 6 cm off) or where a joint would move faster than 12 rad/s split the clip again, and pieces shorter than 2 s are dropped.</li>
+		</ul>
+		<p>Camera tilt is corrected from the person’s average posture over the whole session, so nobody has to stand still to calibrate. <code>finetune.py</code> then carries on training a trained policy on the recordings, mixed with the synthetic library so it keeps what it already knows: 60 % of episodes start on a recorded clip and the rest are spread evenly over the four synthetic kinds, at stage 2’s smaller learning rate. Its tests include the recorded clips, so the training log shows how well the policy follows them next to the synthetic kinds.</p>
+
+		<h3>Trying it</h3>
+		<p>From the root of the <a href="https://github.com/shepai/pose-to-biped">repository</a>, after installing it as described in its README:</p>
+<pre class="ph-code"><code><span class="c"># MediaPipe, for the webcam</span>
+pip install "mediapipe==0.10.14"
+
+<span class="c"># the stage 1 policy copies you (press v to record a video)</span>
+python examples/RL/live_pose.py
+
+<span class="c"># record your own motions, then keep training on them</span>
+python examples/RL/record_motion.py --name lab_day1
+python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
+    --name pose_human1 --motions src/G1_tele/assets/motions/human/lab_day1</code></pre>
 
 		<h2>References</h2>
 		<ol class="refs">
@@ -349,6 +454,9 @@ python gif_maker.py "logs/pose_stage1/checkpoints/*.zip"</code></pre>
 			<li id="ref-7"><span>[7]</span><span>He, T., Luo, Z., Xiao, W., Zhang, C., Kitani, K., Liu, C. and Shi, G. (2024) Learning human-to-humanoid real-time whole-body teleoperation. <em>arXiv preprint</em> arXiv:2403.04436.<br><a class="link" href="https://arxiv.org/abs/2403.04436">https://arxiv.org/abs/2403.04436</a></span></li>
 			<li id="ref-8"><span>[8]</span><span>Pratt, J., Carff, J., Drakunov, S. and Goswami, A. (2006) Capture point: a step toward humanoid push recovery. <em>IEEE-RAS International Conference on Humanoid Robots</em>.<br><a class="link" href="https://portfolio.erau.edu/en/publications/capture-point-a-step-toward-humanoid-push-recovery/">portfolio.erau.edu/en/publications/capture-point-a-step-toward-humanoid-push-recovery</a></span></li>
 			<li id="ref-9"><span>[9]</span><span>Raffin, A., Hill, A., Gleave, A., Kanervisto, A., Ernestus, M. and Dormann, N. (2021) Stable-Baselines3: reliable reinforcement learning implementations. <em>Journal of Machine Learning Research</em>, 22(268), 1–8.<br><a class="link" href="https://jmlr.org/papers/v22/20-1364.html">https://jmlr.org/papers/v22/20-1364.html</a></span></li>
+			<li id="ref-10"><span>[10]</span><span>Bazarevsky, V., Grishchenko, I., Raveendran, K., Zhu, T., Zhang, F. and Grundmann, M. (2020) BlazePose: on-device real-time body pose tracking. <em>arXiv preprint</em> arXiv:2006.10204.<br><a class="link" href="https://arxiv.org/abs/2006.10204">https://arxiv.org/abs/2006.10204</a></span></li>
+			<li id="ref-11"><span>[11]</span><span>Google. MediaPipe Pose landmarker: pose landmark detection guide.<br><a class="link" href="https://developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker">developers.google.com/edge/mediapipe/solutions/vision/pose_landmarker</a></span></li>
+			<li id="ref-12"><span>[12]</span><span>Casiez, G., Roussel, N. and Vogel, D. (2012) 1€ filter: a simple speed-based low-pass filter for noisy input in interactive systems. <em>Proceedings of the ACM Conference on Human Factors in Computing Systems (CHI ’12)</em>, 2527–2530.<br><a class="link" href="https://cristal.univ-lille.fr/~casiez/1euro/">https://cristal.univ-lille.fr/~casiez/1euro/</a></span></li>
 		</ol>
 	</div>
 </body>
