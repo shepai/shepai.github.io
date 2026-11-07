@@ -162,7 +162,7 @@
 </div>
 
 		<h2>Overview</h2>
-		<p>The aim is teleoperation without a controller. A person moves, a camera-based body tracker turns their movement into the positions of their hands and feet (and, where it can, elbows, knees, hips and shoulders), and a humanoid robot copies them without falling over. The first part of this page covers the simulated robot and how it is trained to copy poses. The second part connects it to a webcam, so the simulated robot copies a person in real time. The third teaches the same policy to walk and turn as well, so it can follow a person around the room instead of copying them on the spot.</p>
+		<p>The aim is teleoperation without a controller. A person moves, a camera-based body tracker turns their movement into the positions of their hands and feet (and, where it can, elbows, knees, hips and shoulders), and a humanoid robot copies them without falling over. The first part of this page covers the simulated robot and how it is trained to copy poses. The second part connects it to a webcam, so the simulated robot copies a person in real time. The third adds a training stage meant to teach the same policy to walk and turn as well, so it could follow a person around the room instead of copying them on the spot. That stage hasn&#x2019;t been trained yet.</p>
 		<p>All of the learning happens in simulation, because a robot learning to balance falls over thousands of times. We use reinforcement learning: a small neural network, the <em>policy</em>, looks at the robot 50 times a second and decides where every joint should move next. After each step a <em>reward</em> scores how well that went, and the learning algorithm, PPO <a href="#ref-1">[1]</a>, nudges the network towards whatever earned more reward.</p>
 
 		<h2>The humanoid</h2>
@@ -456,22 +456,22 @@ python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
     --name pose_human1 --motions src/G1_tele/assets/motions/human/lab_day1</code></pre>
 
 		<h2 id="walking-and-turning">Walking and turning</h2>
-		<p>The stage 1 policy copies a pose wherever it stands, but it never goes anywhere: someone who walks across the room or turns round is copied on the spot. This part teaches the same policy to walk and turn as well, while it keeps its balance and keeps copying the pose. The code is in the repository; results will be added here once the walking stage has been trained.</p>
+		<p>The stage 1 policy copies a pose wherever it stands, but it never goes anywhere: someone who walks across the room or turns round is copied on the spot. This part describes a training stage meant to teach the same policy to walk and turn as well, while it keeps its balance and keeps copying the pose. The code is in the repository, but the stage hasn&#x2019;t been trained yet, so there are no results for it here: everything below describes how it is set up, not how well it works.</p>
 
 		<h3>Why the first policy stays put</h3>
 		<p>Nothing in stage 1 asks the robot to move:</p>
 		<ul>
 			<li><b>The targets travel with the robot.</b> The reference&#x2019;s keypoints are measured from the reference&#x2019;s pelvis and the robot&#x2019;s from its own. A reference that walks a metre forwards or turns 90&#xb0; gives exactly the same targets whether the robot follows it or stands still, so the reward can&#x2019;t tell the two apart.</li>
-			<li><b>The policy isn&#x2019;t told where the reference is going.</b> It sees keypoints, pelvis height, tilt and joint angles, all measured locally, so walking forwards and stepping on the spot look the same.</li>
-			<li><b>The slip penalty works against walking.</b> It measured how fast a planted foot moves relative to the pelvis. When walking, the pelvis passes over the planted foot at walking speed, so the penalty punished walking itself.</li>
-			<li><b>None of the motions walk.</b> The <code>step</code> clips are single steps, and recorded human motion is converted to the person&#x2019;s heading frame, which removes where they went.</li>
+			<li><b>The policy isn&#x2019;t told where the reference is going.</b> It sees the IMU, its own joints and the reference pose, with every position measured from a pelvis. Nothing it observes says how fast the reference is travelling or where it has got to.</li>
+			<li><b>The slip penalty works against walking.</b> It measures how fast a planted foot moves relative to the pelvis. When walking, the pelvis passes over the planted foot at walking speed, so this penalty would count walking itself as slipping.</li>
+			<li><b>The motions hardly travel.</b> In the stage 1 <code>step</code> clips the pelvis gets at most 0.51 m from where it started (0.20 m in the median clip) and turns at most 41&#xb0;, one placed foot at a time. Recorded human motion is converted to the person&#x2019;s heading frame, which removes where they went.</li>
 		</ul>
 
 		<h3>What the policy is now asked to do</h3>
 		<p>The environment is the same one, with <code>locomotion=True</code>:</p>
 		<ul>
 			<li><b>Six more observations:</b> how fast the reference root is moving (forwards and sideways, in the direction it faces) and turning, and where it is relative to the robot (two numbers for position, one for heading).</li>
-			<li><b>Following the motion is rewarded</b> (Figure 5). Matching the reference&#x2019;s speed and turning rate carries most of the new weight, and smaller terms for position and heading correct slow drift. Speed is the main signal rather than position because a webcam&#x2019;s estimate of where someone stands is noisy, especially in depth, while their speed is smoother. ExBody <a href="#ref-14">[14]</a> splits the problem in a similar way: its legs follow a velocity while its upper body copies a pose.</li>
+			<li><b>Following the motion is rewarded</b> (Figure 5). Matching the reference&#x2019;s speed and turning rate carries most of the new weight (0.14 of 0.20); smaller terms for position and heading are there to correct drift. Speed is the main signal so that the robot isn&#x2019;t pushed hard towards an exact spot that a webcam only estimates. ExBody <a href="#ref-14">[14]</a> splits the problem in a similar way: its legs follow a velocity while its upper body copies a pose.</li>
 			<li><b>Foot slip is measured in the world</b>, and only while the robot&#x2019;s foot is actually on the ground.</li>
 			<li><b>Falling behind ends the episode.</b> An episode now also ends when the robot is more than 0.5 m or about 45&#xb0; from the reference root.</li>
 		</ul>
@@ -493,15 +493,15 @@ python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
 			<figcaption><b>Figure 5.</b> Share of each step&#x2019;s reward in stage 1 and in the walking stage. Walking: staying up 20 %; balance 34 % (capture point 12, pelvis tilt 8, height 4, wobble 4, foot contacts 6); pose accuracy 26 % (keypoints 15, joint angles 7, joint speeds 4); following the motion 20 % (speed 9, turning rate 5, position 4, heading 2). The same small penalties come off the total, with foot slip now measured in the world.</figcaption>
 		</figure>
 
-		<p>The last of those changes should matter most. Staying up, balance and pose accuracy are 80 % of each step&#x2019;s reward, and a robot that stands still on a walking clip keeps most of it. Standing still would be a safe, well-paid strategy, and a policy that finds walking risky would settle on it. Ending the episode when the robot falls behind takes that option away, because every reward after the end is lost: a robot that stands still while the reference walks off at 0.3 m/s is stopped in under two seconds. With <code>locomotion=False</code> the environment gives exactly the observations and rewards it did before, so stage 1 policies keep working.</p>
+		<p>Why the last change is there: staying up, balance and pose accuracy are 80 % of each step&#x2019;s reward, and none of those terms depends on following the reference&#x2019;s path. Without an ending, a policy could keep earning them on a walking clip while staying where it is. With it, nothing more is earned once the robot falls behind: at 0.3 m/s, a reference walking away from a robot that stands still is 0.5 m ahead after 1.7 s. Whether this is enough to make the policy walk will only be known after training. With <code>locomotion=False</code> the environment is unchanged: a step-by-step comparison with the previous version gave identical observations and rewards, so stage 1 policies keep working.</p>
 
 		<h3>Walking motions</h3>
 		<p>The reference motions now include walking, made by a second generator (<code>gait.py</code>) in four steps:</p>
 		<ol>
 			<li><b>A command:</b> a speed forwards and sideways and a turning rate, changing every 2 to 5 s, sometimes to a stop, and smoothed by acceleration limits. Integrating it gives the path the body should follow.</li>
-			<li><b>Footsteps:</b> while the command isn&#x2019;t zero, or until the feet are square under the body again, each foot lands where the body will be half a step later, half a stance width to the side. A step never reaches further than a leg can, and never crosses the other foot.</li>
-			<li><b>Balance:</b> the zero-moment point, the point on the floor where the ground&#x2019;s push on the feet effectively acts, has to stay under the foot on the ground or the robot tips. It is planned on the stance foot during single support and moved to the next foot during double support, and preview control of a linear inverted pendulum <a href="#ref-13">[13]</a> turns that plan into a path for the centre of mass. The walk is dynamically balanced rather than just slow.</li>
-			<li><b>Whole-body inverse kinematics</b> puts the feet, the centre of mass and the pelvis where they were planned in every frame. The swing foot travels on a smooth arc 5 to 8 cm high, and the waist and arms are set directly.</li>
+			<li><b>Footsteps:</b> while the command isn&#x2019;t zero, or until the feet are square under the body again, each foot lands where the body will be when it is next over that foot, half a stance width to the side. Each step is limited to 0.28 m forwards and 0.18 m back of the other foot, with the feet 0.17 to 0.36 m apart sideways, so they never cross.</li>
+			<li><b>Balance:</b> the zero-moment point, the point on the floor where the ground&#x2019;s push on the feet effectively acts, has to stay under the foot on the ground or the robot tips. It is planned on the stance foot during single support and moved to the next foot during double support, and preview control of a linear inverted pendulum <a href="#ref-13">[13]</a> turns that plan into a path for the centre of mass. That model accounts for the body&#x2019;s acceleration, not only for where its weight is, but it treats the robot as a single point mass: the swinging leg and the arms are left out.</li>
+			<li><b>Whole-body inverse kinematics</b> puts the feet, the centre of mass and the pelvis where they were planned in every frame; a clip is thrown away if a foot ends up more than 1 cm off or the centre of mass more than 2 cm off. The swing foot travels on a smooth arc 5 to 8 cm high, and the waist and arms are set directly.</li>
 		</ol>
 
 		<figure class="ph-fig" id="fig-6">
@@ -512,53 +512,54 @@ python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
 					<li><span class="ph-key line" style="background:var(--ink)"></span>Centre of mass</li>
 				</ul>
 				<div class="ph-stepswrap">
-<svg class="ph-steps" viewBox="0 0 2910 857" role="img" aria-labelledby="fig6-title" preserveAspectRatio="xMidYMid meet">
+<svg class="ph-steps" viewBox="0 0 3062 938" role="img" aria-labelledby="fig6-title" preserveAspectRatio="xMidYMid meet">
 <title id="fig6-title">Top view of 8 seconds of a generated walk: footprints alternate left and right while the centre of mass weaves from one stance foot towards the next.</title>
-<line class="g" x1="258" y1="0" x2="258" y2="857"/>
-<line class="g" x1="758" y1="0" x2="758" y2="857"/>
-<line class="g" x1="1258" y1="0" x2="1258" y2="857"/>
-<line class="g" x1="1758" y1="0" x2="1758" y2="857"/>
-<line class="g" x1="2258" y1="0" x2="2258" y2="857"/>
-<line class="g" x1="2758" y1="0" x2="2758" y2="857"/>
-<rect class="fp" x="120" y="326" width="200" height="75" rx="28" transform="rotate(-17.9 220 364)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, standing at the start</title></rect>
-<rect class="fp" x="196" y="560" width="200" height="75" rx="28" transform="rotate(-17.9 296 597)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, standing at the start</title></rect>
-<rect class="fp" x="349" y="265" width="200" height="75" rx="28" transform="rotate(-13.1 449 302)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 1.2 s</title></rect>
-<rect class="fp" x="602" y="463" width="200" height="75" rx="28" transform="rotate(-9.9 702 501)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 1.8 s</title></rect>
-<rect class="fp" x="773" y="190" width="200" height="75" rx="28" transform="rotate(-6.8 873 228)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 2.3 s</title></rect>
-<rect class="fp" x="1003" y="415" width="200" height="75" rx="28" transform="rotate(-3.6 1103 453)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 2.9 s</title></rect>
-<rect class="fp" x="1203" y="162" width="200" height="75" rx="28" transform="rotate(-0.5 1303 200)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 3.5 s</title></rect>
-<rect class="fp" x="1407" y="412" width="200" height="75" rx="28" transform="rotate(2.7 1507 449)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 4.1 s</title></rect>
-<rect class="fp" x="1633" y="182" width="200" height="75" rx="28" transform="rotate(5.9 1733 220)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 4.7 s</title></rect>
-<rect class="fp" x="1778" y="445" width="200" height="75" rx="28" transform="rotate(6.3 1878 483)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 5.2 s</title></rect>
-<rect class="fp" x="1967" y="219" width="200" height="75" rx="28" transform="rotate(6.3 2067 257)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 5.8 s</title></rect>
-<rect class="fp" x="2102" y="481" width="200" height="75" rx="28" transform="rotate(6.3 2202 519)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 6.4 s</title></rect>
-<rect class="fp" x="2291" y="255" width="200" height="75" rx="28" transform="rotate(6.3 2391 293)" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7"><title>Left foot, planted at 7.0 s</title></rect>
-<rect class="fp" x="2426" y="517" width="200" height="75" rx="28" transform="rotate(6.3 2526 555)" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7"><title>Right foot, planted at 7.6 s</title></rect>
-<path class="com" d="M258,480 L258,482 L260,484 L261,487 L262,490 L264,492 L265,494 L266,497 L268,499 L269,502 L271,505 L273,509 L276,513 L279,518 L282,524 L285,529 L289,534 L293,538 L296,542 L300,544 L304,545 L308,544 L312,543 L317,540 L322,535 L328,529 L335,522 L343,513 L351,502 L361,488 L373,472 L386,455 L399,437 L411,421 L423,408 L434,398 L444,390 L455,384 L466,379 L477,377 L489,376 L501,377 L515,380 L531,384 L548,391 L568,399 L588,408 L607,416 L625,423 L641,428 L655,431 L668,432 L681,432 L693,431 L705,427 L717,422 L729,415 L742,406 L756,395 L771,381 L787,366 L802,351 L817,337 L831,326 L844,318 L856,311 L867,307 L879,304 L891,303 L903,304 L915,306 L929,311 L944,317 L961,326 L980,336 L999,347 L1017,358 L1034,366 L1050,373 L1064,378 L1077,381 L1089,382 L1101,382 L1113,380 L1126,376 L1139,370 L1153,363 L1168,353 L1184,341 L1202,328 L1219,315 L1235,303 L1250,294 L1264,286 L1277,281 L1289,278 L1300,276 L1312,277 L1324,279 L1336,283 L1350,289 L1364,297 L1380,307 L1397,319 L1415,333 L1432,345 L1448,356 L1462,364 L1475,370 L1488,374 L1500,377 L1512,378 L1524,377 L1537,375 L1550,371 L1565,365 L1581,357 L1598,347 L1617,335 L1635,324 L1652,314 L1667,306 L1681,300 L1694,296 L1705,294 L1716,294 L1727,295 L1737,298 L1748,303 L1759,310 L1770,319 L1783,331 L1796,344 L1810,359 L1823,372 L1835,384 L1846,393 L1857,400 L1867,405 L1876,408 L1886,410 L1896,409 L1906,407 L1917,404 L1929,398 L1942,390 L1956,381 L1972,370 L1987,359 L2001,349 L2014,341 L2026,336 L2037,332 L2047,330 L2056,330 L2065,331 L2075,334 L2084,339 L2094,346 L2104,355 L2116,367 L2128,380 L2141,395 L2153,408 L2164,420 L2175,429 L2184,436 L2194,441 L2203,444 L2212,446 L2222,445 L2232,443 L2242,440 L2254,434 L2267,426 L2281,417 L2296,406 L2312,395 L2326,385 L2339,377 L2350,372 L2361,368 L2371,366 L2380,366 L2389,367 L2399,370 L2408,375 L2418,382 L2428,391 L2440,403 L2452,416 L2464,431 L2477,444 L2488,456 L2498,465 L2508,472 L2517,477 L2527,480 L2536,482 L2545,481"/>
-<circle class="com-end" cx="258" cy="480" r="22"/>
-<text class="lab" x="218" y="254" text-anchor="start">start, standing</text>
-<text class="lab" x="2610" y="502" text-anchor="start">8 s</text>
-<line class="sb" x1="2350" y1="817" x2="2850" y2="817"/><text class="lab" x="2600" y="795" text-anchor="middle">0.5 m</text>
+<line class="g" x1="346" y1="0" x2="346" y2="938"/>
+<line class="g" x1="846" y1="0" x2="846" y2="938"/>
+<line class="g" x1="1346" y1="0" x2="1346" y2="938"/>
+<line class="g" x1="1846" y1="0" x2="1846" y2="938"/>
+<line class="g" x1="2346" y1="0" x2="2346" y2="938"/>
+<line class="g" x1="2846" y1="0" x2="2846" y2="938"/>
+<polygon class="fp" points="235,444 399,397 380,340 220,397" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, standing at the start</title></polygon>
+<polygon class="fp" points="311,678 474,630 456,573 296,630" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, standing at the start</title></polygon>
+<polygon class="fp" points="460,377 627,343 614,285 449,328" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 1.2 s</title></polygon>
+<polygon class="fp" points="712,571 880,546 870,487 703,522" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 1.8 s</title></polygon>
+<polygon class="fp" points="880,293 1050,278 1043,218 874,243" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 2.3 s</title></polygon>
+<polygon class="fp" points="1109,514 1279,508 1275,448 1105,464" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 2.9 s</title></polygon>
+<polygon class="fp" points="1307,256 1477,260 1476,200 1307,206" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 3.5 s</title></polygon>
+<polygon class="fp" points="1510,501 1679,514 1682,454 1512,451" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 4.1 s</title></polygon>
+<polygon class="fp" points="1735,267 1904,289 1910,229 1740,217" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 4.7 s</title></polygon>
+<polygon class="fp" points="1880,529 2048,553 2055,493 1885,479" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 5.2 s</title></polygon>
+<polygon class="fp" points="2069,303 2237,327 2244,267 2074,253" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 5.8 s</title></polygon>
+<polygon class="fp" points="2203,565 2372,589 2378,529 2209,515" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 6.4 s</title></polygon>
+<polygon class="fp" points="2392,339 2561,363 2567,303 2398,289" fill="#b5391a" fill-opacity=".18" stroke="#b5391a" stroke-width="7" stroke-linejoin="round"><title>Left foot, planted at 7.0 s</title></polygon>
+<polygon class="fp" points="2527,601 2696,625 2702,565 2533,551" fill="#2f4f9f" fill-opacity=".18" stroke="#2f4f9f" stroke-width="7" stroke-linejoin="round"><title>Right foot, planted at 7.6 s</title></polygon>
+<path class="com" d="M346,511 L347,512 L348,515 L350,518 L351,520 L352,523 L354,525 L355,527 L356,530 L358,533 L360,536 L362,540 L364,544 L367,549 L370,554 L374,560 L377,564 L381,569 L385,572 L389,574 L393,575 L397,575 L401,573 L406,570 L411,566 L417,560 L424,553 L431,543 L440,532 L450,519 L462,503 L474,485 L487,468 L500,452 L511,439 L522,429 L533,420 L543,414 L554,410 L565,407 L577,407 L590,408 L604,410 L619,415 L637,421 L656,430 L676,439 L696,447 L713,454 L729,458 L744,462 L757,463 L769,463 L781,461 L793,458 L805,453 L817,446 L830,437 L844,426 L859,412 L875,397 L891,382 L906,368 L920,357 L932,348 L944,342 L956,337 L967,335 L979,334 L991,334 L1004,337 L1018,341 L1033,348 L1050,356 L1068,367 L1087,378 L1106,388 L1123,397 L1138,404 L1152,408 L1165,411 L1178,413 L1190,412 L1202,410 L1214,407 L1227,401 L1241,394 L1256,384 L1273,372 L1290,359 L1308,345 L1324,334 L1339,324 L1352,317 L1365,312 L1377,309 L1389,307 L1401,307 L1413,310 L1425,314 L1438,319 L1452,327 L1468,338 L1485,350 L1503,363 L1520,376 L1536,386 L1551,394 L1564,401 L1577,405 L1589,408 L1601,409 L1613,408 L1626,406 L1639,402 L1653,396 L1669,388 L1687,378 L1705,366 L1724,355 L1741,345 L1756,337 L1770,331 L1782,327 L1794,325 L1805,325 L1816,326 L1826,329 L1837,334 L1848,341 L1859,350 L1871,361 L1885,375 L1898,389 L1912,403 L1924,414 L1935,423 L1945,430 L1955,435 L1965,439 L1975,440 L1984,440 L1995,438 L2006,434 L2017,429 L2030,421 L2045,412 L2060,400 L2076,389 L2090,380 L2103,372 L2115,366 L2125,363 L2135,361 L2145,361 L2154,362 L2163,365 L2173,370 L2183,377 L2193,386 L2204,398 L2217,411 L2229,426 L2241,439 L2253,450 L2263,460 L2273,467 L2282,472 L2291,475 L2301,476 L2310,476 L2320,474 L2331,470 L2342,465 L2355,457 L2369,448 L2385,436 L2400,425 L2414,416 L2427,408 L2439,402 L2449,399 L2459,397 L2469,396 L2478,398 L2487,401 L2497,406 L2506,413 L2517,422 L2528,434 L2540,447 L2553,461 L2565,475 L2576,486 L2587,496 L2597,502 L2606,508 L2615,511 L2624,512 L2634,512"/>
+<circle class="com-end" cx="346" cy="511" r="22"/>
+<text class="lab" x="306" y="280" text-anchor="start">start, standing</text>
+<text class="lab" x="2699" y="533" text-anchor="start">8 s</text>
+<line class="sb" x1="2502" y1="898" x2="3002" y2="898"/><text class="lab" x="2752" y="876" text-anchor="middle">0.5 m</text>
 </svg>
 				</div>
 			</div>
-			<figcaption><b>Figure 6.</b> Eight seconds of a generated walk, seen from above and rotated so it goes from left to right: clip <code>walk_001</code> of <code>locomotion.npz</code>. Outlines show where each foot was planted (approximate size; hover for when), and the line is the centre of mass, computed from the robot model for every frame. The robot starts standing, shifts its weight onto one foot and walks off, and the centre of mass sways towards each stance foot in turn rather than travelling in a straight line.</figcaption>
+			<figcaption><b>Figure 6.</b> Eight seconds of a generated walk, seen from above and rotated so it goes from left to right: clip <code>walk_001</code> of <code>locomotion.npz</code>. Outlines show where each foot was planted, joining the four contact points of the G1 model&#x2019;s foot (hover for when), and the line is the centre of mass, computed from the robot model for every frame. The robot starts standing, shifts its weight onto one foot and walks off, and the centre of mass sways towards each stance foot in turn rather than travelling in a straight line.</figcaption>
 		</figure>
 
-		<p>There are 30 clips of 20 s of each new kind, 30 minutes in all. Steps take about 0.6 s, and the joints mostly stay under 3 rad/s, with brief peaks of about 5.</p>
+		<p>There are 30 clips of 20 s of each new kind, 30 minutes in all. Measured from the clips: a step (one foot landing to the other landing) takes 0.56 to 0.68 s in 80 % of cases, every joint moves slower than 3 rad/s in 96 % of frames, and the fastest joint speed anywhere is 5.3 rad/s.</p>
 		<div class="tablewrap">
 		<table>
-			<thead><tr><th>Kind</th><th>What happens</th><th>Fastest</th></tr></thead>
+			<thead><tr><th>Kind</th><th>What happens</th><th>Fastest in the clips</th></tr></thead>
 			<tbody>
-				<tr><td>turn</td><td>Turning on the spot, left and right, with stops; arms near rest</td><td>0.6 rad/s</td></tr>
-				<tr><td>walk</td><td>Walking forwards, backwards and sideways, starting and stopping; arms near rest</td><td>0.4 m/s</td></tr>
-				<tr><td>loco</td><td>Walking and turning at once, with side steps, while the arms and waist move</td><td>0.35 m/s, 0.6 rad/s</td></tr>
+				<tr><td>turn</td><td>Turning on the spot, left and right, with stops; small arm and waist movements</td><td>0.60 rad/s</td></tr>
+				<tr><td>walk</td><td>Walking forwards, backwards and sideways, starting and stopping; small arm and waist movements</td><td>0.43 m/s</td></tr>
+				<tr><td>loco</td><td>Walking and turning at once, with side steps, while the arms and waist move</td><td>0.41 m/s, 0.60 rad/s</td></tr>
 			</tbody>
 		</table>
 		</div>
+		<p class="tcap">Speeds are of the pelvis, averaged over 1 s so the sway within each step doesn&#x2019;t count.</p>
 
 		<h3>The curriculum: balance, pose, then motion</h3>
-		<p>The kinds join training in this order, each once the robot survives at least 80 % of its episodes on every kind so far, the same rule as stage 1. Survival now includes staying on course, so a kind can&#x2019;t be passed by standing still.</p>
+		<p>The kinds join training in this order, each once the robot survives at least 80 % of its episodes on every kind so far, the same rule as stage 1. Survival now includes staying on course, so an episode in which the robot stands still on a walking clip ends early and counts as a failure.</p>
 		<div class="tablewrap">
 		<table>
 			<thead><tr><th>Order</th><th>Kinds</th><th>What the robot learns</th></tr></thead>
@@ -573,10 +574,10 @@ python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
 		</table>
 		</div>
 		<p class="tcap">Highlighted: the new kinds. Recorded poses without walking (kind <code>human</code>) are mixed in from the start.</p>
-		<p>Starting from a trained stage 1 policy, everything up to <code>turn</code> is unlocked at once, since the policy already handles the first four kinds; training starts with turning on the spot. Each kind gets a share of episodes rather than of minutes of motion, so a few minutes of recordings still get their turn, and kinds where the robot still falls get more practice.</p>
+		<p>Starting from a trained stage 1 policy, everything up to <code>turn</code> is unlocked at once, since stage 1 already trained it on the first four kinds; the first new kind is turning on the spot. Each kind gets a share of episodes rather than of minutes of motion, so a few minutes of recordings still get their turn, and kinds where the robot still falls get more practice.</p>
 
 		<h3>Starting from the trained policy</h3>
-		<p>Six more observations mean six more inputs to the network, so a stage 1 policy can&#x2019;t be loaded as it is. Instead its network is widened: the new inputs get zero weights, so at the start it acts exactly as before, and training teaches it to use them. Its observation statistics are kept, the new inputs&#x2019; statistics are measured from a short run, and any action noise below 0.15 is raised to it, to leave room to explore.</p>
+		<p>Six more observations mean six more inputs to the network, so a stage 1 policy can&#x2019;t be loaded as it is. Instead its network is widened: the new inputs get zero weights, so at the start it acts exactly as before (checked on the stage 1 policy: identical actions), and training is meant to teach it to use them. Its observation statistics are kept, the new inputs&#x2019; statistics are measured from a short run, and any action noise below 0.15 is raised to it, to leave room to explore.</p>
 		<div class="tablewrap">
 		<table>
 			<thead><tr><th>Stage</th><th>Starts from</th><th>Steps</th><th>Learning rate</th></tr></thead>
@@ -592,18 +593,19 @@ python examples/RL/finetune.py --from logs/pose_stage1T1/pose_stage1T1 \
 		<h3>Following a walking person</h3>
 		<p><code>live_pose.py</code> recognises a walking policy from its number of inputs. The robot then also follows where the person stands and which way they face, measured from where they were when the camera first found them: walking towards the camera while facing it is walking forwards, and a step to the person&#x2019;s left is a step to the robot&#x2019;s left.</p>
 		<ul>
-			<li><b>Where the person is.</b> MediaPipe&#x2019;s world landmarks are centred on the hips, so they don&#x2019;t say where the person stands, but the image landmarks do, in two dimensions. Assuming a pinhole camera with a known field of view, the program finds the shift that puts the metric skeleton (world landmarks plus that shift) onto the image landmarks: two linear equations per landmark and three unknowns, solved by least squares. Depth comes from the person&#x2019;s apparent size and is the noisiest part.</li>
+			<li><b>Where the person is.</b> MediaPipe&#x2019;s world landmarks are centred on the hips, so they don&#x2019;t say where the person stands, but the image landmarks do, in two dimensions. Assuming a pinhole camera with a known field of view, the program finds the shift that puts the metric skeleton (world landmarks plus that shift) onto the image landmarks: two linear equations per landmark and three unknowns, solved by least squares. Depth comes from the person&#x2019;s apparent size, so any error in the skeleton&#x2019;s scale becomes an error in distance.</li>
 			<li><b>Which way they face.</b> The heading already worked out from the hips is kept instead of removed.</li>
-			<li><b>Smoothing and limits.</b> Position and heading go through their own One-Euro filters <a href="#ref-12">[12]</a>, set to smooth more than the pose. The reference then moves at most 0.6 m/s and turns at most 1 rad/s, about the fastest the training clips go, and its joints at most 5 rad/s.</li>
-			<li><b>A leash instead of an ending.</b> Live, falling behind doesn&#x2019;t end anything. If the robot is more than 0.35 m or about 30&#xb0; behind, the reference is pulled back towards it, so the policy never sees a bigger error than it was trained with, and the person&#x2019;s next movements are copied from wherever the robot is.</li>
-			<li><b>What one camera can&#x2019;t do.</b> Turning works up to about side-on. With their back to the camera, MediaPipe often swaps a person&#x2019;s left and right, so a heading that jumps by more than 1 rad (57&#xb0;) between frames is treated as a bad frame and skipped. The whole body has to stay in view, which keeps the walking area to a few metres.</li>
+			<li><b>Smoothing and limits.</b> Position and heading go through their own One-Euro filters <a href="#ref-12">[12]</a>, set to smooth more than the pose. The reference then moves at most 0.6 m/s and turns at most 1 rad/s (the training clips reach 0.43 m/s and 0.60 rad/s), and its joints at most 5 rad/s.</li>
+			<li><b>A leash instead of an ending.</b> Live, falling behind doesn&#x2019;t end anything. If the robot is more than 0.35 m or about 30&#xb0; behind, the reference is pulled back towards it. That keeps the errors the policy sees inside the range it is trained on (episodes there end at 0.5 m or about 45&#xb0;), and the person&#x2019;s next movements are copied from wherever the robot is.</li>
+			<li><b>Bad frames.</b> A heading that jumps by more than 1 rad (57&#xb0;) between camera frames, which is what a mix-up of the person&#x2019;s left and right would look like, is treated as a bad frame and skipped. The whole body has to stay in view, so walking is limited to the area the camera sees.</li>
+			<li><b>Not yet tested with a real camera.</b> This part has only been run with a simulated person seen by a simulated webcam, not with MediaPipe on real video, so how accurate the position is, and how far a person can turn away from the camera before tracking fails, aren&#x2019;t known yet.</li>
 		</ul>
 
 		<h3>More walking data</h3>
 		<ul>
 			<li><b>Your own walking.</b> <code>record_motion.py --walk</code> keeps where the person walked, using the same position estimate. The path is smoothed over 0.12 s, and a position or heading that jumps (faster than 3 m/s or 6 rad/s) counts as a glitch. Recordings now also save the image landmarks, so any new recording can be cleaned again later with its walking included. These clips (kind <code>human_walk</code>) join the curriculum after the synthetic walking.</li>
-			<li><b>Motion capture.</b> Unitree publish the LAFAN1 motion-capture dataset <a href="#ref-15">[15]</a> retargeted to the G1 <a href="#ref-16">[16]</a>. <code>import_lafan.py</code> converts its walking for training: it reorders the joints and quaternions, resamples from 30 to 50 frames a second (optionally slowed down), puts the feet on this model&#x2019;s floor and cuts long takes into pieces of up to 30 s. Human walking is faster than the synthetic clips and the retargeting ignores physics, so these clips (kind <code>lafan</code>) come last. The dataset&#x2019;s licence (CC BY-NC-ND 4.0) allows training on it but not redistributing it.</li>
-			<li><b>A fix along the way.</b> The inverse kinematics held a foot flat while it was within 6 cm of the floor and let go at once above that, so the ankle snapped to a new angle as a walking foot lifted. The cleaning step rejected those frames as moving too fast and split walking recordings into short pieces. The hold now fades out over the next 4 cm.</li>
+			<li><b>Motion capture.</b> Unitree publish the LAFAN1 motion-capture dataset <a href="#ref-15">[15]</a> retargeted to the G1 <a href="#ref-16">[16]</a>. <code>import_lafan.py</code> converts its walking for training: it reorders the joints and quaternions, resamples from 30 to 50 frames a second (optionally slowed down), puts the feet on this model&#x2019;s floor and cuts long takes into pieces of up to 30 s. Its speeds aren&#x2019;t limited to the synthetic clips&#x2019; gentle range and the retargeting ignores physics, so these clips (kind <code>lafan</code>) come last. The dataset&#x2019;s licence (CC BY-NC-ND 4.0) allows training on it but not redistributing it.</li>
+			<li><b>A fix along the way.</b> The inverse kinematics held a foot flat while it was within 6 cm of the floor and let go at once above that, so the ankle snapped to a new angle as a walking foot lifted. In tests with a simulated walking person, the cleaning step rejected those frames as moving too fast and split the recordings into short pieces. The hold now fades out over the next 4 cm.</li>
 		</ul>
 
 		<h3>Trying the walking stage</h3>
@@ -614,7 +616,7 @@ python examples/RL/make_motions.py loco
 python examples/RL/train_locomotion.py --from logs/pose_stage1T1/pose_stage1T1 \
     --name loco1 --dry-run
 
-<span class="c"># train (40 million steps by default), then watch it walk</span>
+<span class="c"># train (40 million steps by default), then watch the result</span>
 python examples/RL/train_locomotion.py --from logs/pose_stage1T1/pose_stage1T1 --name loco1
 python examples/RL/train_locomotion.py play logs/loco1/loco1 --kind walk
 
