@@ -62,13 +62,16 @@
         The gym contains four tasks built on one shared robot arm: edge following,
         peg pushing, shape insertion and incline pushing. Each task tests a different
         part of contact-rich manipulation, and they share the same arm, controller and
-        Gym interface, so a method can be compared across all of them.
+        Gym interface, so a method can be compared across all of them. A fifth task moves the
+        sensor from the hand to the feet: a <strong>quadruped with a TacTip on each foot</strong>
+        learns to keep walking steadily while the ground under it changes from grippy to icy,
+        hard to soft, and flat to rough.
     </p>
     <p>
-        Every task can be run in two observation modes. In <strong>privileged</strong> mode the policy
-        sees the true state of the scene (where the object is, where the goal is). In
-        <strong>tactile</strong> mode it only sees the TacTip markers and its own arm, which is the
-        setting a real robot would face. Training in privileged mode first is a quick way to check that a
+        Every task lets you choose what the policy observes. <strong>Privileged</strong> input is the
+        true state of the scene (where the object is, where the goal is). <strong>Tactile</strong> input
+        is the TacTip markers, which is what a real robot would actually have. <strong>Vision</strong>
+        is a small camera image. Training with privileged input first is a quick way to check that a
         task, reward and controller work before moving to the harder tactile version.
     </p>
  <div id="table-of-contents">
@@ -88,11 +91,13 @@
     <ul>
         <li>Gym-style API for reinforcement learning compatibility</li>
         <li>Simulated tactile observations based on TacTip sensor physics</li>
-        <li>Switch between privileged state and tactile-only observations with one argument</li>
+        <li>Choose the policy's inputs with one argument: privileged state, tactile markers, a camera image, or any mix</li>
         <li>A smooth Cartesian controller: no drift, no IK jumps, and the fingertip moves at the speed it is asked to</li>
         <li>Peg, shape and edge episodes start with the sensor already touching the object</li>
         <li>Rewards that pay for progress, so agents learn to finish the task rather than hover near it</li>
         <li>Randomised starts, shapes and surface friction, so policies cannot memorise a single scene</li>
+        <li>A quadruped (Unitree Go2) with four TacTip feet, walking over ground whose friction, softness, bounce and roughness change from patch to patch</li>
+        <li>One TacTip model reused on any robot: tools to cut it out of a scene and attach renamed copies wherever they are needed</li>
         <li>Useful for sim-to-real tactile robotics research</li>
     </ul>
 
@@ -103,6 +108,7 @@
         <li>Learning contact-rich policies for soft robotics</li>
         <li>Comparing state-based and tactile-based control strategies</li>
         <li>Learning to cope with hidden physical properties such as friction</li>
+        <li>Legged locomotion that feels the ground: stable walking on surfaces that change underfoot</li>
     </ul>
 
     <h3>Environment Structure</h3>
@@ -115,6 +121,7 @@ import gymnasium as gym
 import tactip_mujoco_gym                            # registers the TacArm-* environments
 
 env = gym.make("TacArm-peg")                        # privileged observations (default)
+# env = gym.make("TacQuad-walk", obs_modes={"tactile": True})   # the quadruped, feeling with its feet
 obs, info = env.reset()
 action = policy(obs)
 obs, reward, terminated, truncated, info = env.step(action)
@@ -142,10 +149,11 @@ obs, reward, terminated, truncated, info = env.step(action)
 <h2 id="environments">The Environments at a Glance</h2>
 
 <p>
-  Every environment inherits from a common <code>RobotArmEnv</code> class, which itself builds
+  The four arm environments inherit from a common <code>RobotArmEnv</code> class, which itself builds
   on <code>TactileGymEnv</code>. The base class owns the arm, the controller, the observation
   modes and the reset logic. Each task then supplies its own scene, task state, reward and
-  termination rule.
+  termination rule. The quadruped builds directly on <code>TactileGymEnv</code>, so it shares the
+  same observation inputs (see <a href="#quadruped">Environment 5</a>).
 </p>
 
 <div class="table-wrap">
@@ -190,18 +198,27 @@ obs, reward, terminated, truncated, info = env.step(action)
     <td>300 steps (6&nbsp;s)</td>
     <td>Ball within 4&nbsp;cm of the top</td>
   </tr>
+  <tr>
+    <td><strong>Quadruped walking</strong><br><code>TacQuad-walk</code></td>
+    <td>Follow a velocity command across ground whose friction, softness, bounce and roughness change from tile to tile</td>
+    <td>110 / 1,749</td>
+    <td>12: joint targets</td>
+    <td>1000 steps (20&nbsp;s)</td>
+    <td>Stays up for the whole episode</td>
+  </tr>
 </table>
 </div>
 
 <p>
-  The tactile sizes are for the 71-marker TacTip (213 marker values). The policy runs at 50&nbsp;Hz:
-  each environment step is 20 MuJoCo steps of 1&nbsp;ms.
+  The tactile sizes are for the 71-marker TacTip (213 marker values per sensor; the quadruped has four).
+  Every task runs its policy at 50&nbsp;Hz: each arm step is 20 MuJoCo steps of 1&nbsp;ms, and each
+  quadruped step is 10 steps of 2&nbsp;ms.
 </p>
 
 <h2 id="observations">Observation Modes</h2>
 
 <p>
-  Both modes start with the same short <strong>proprioception</strong> block, because a real robot
+  Every observation starts with the same short <strong>proprioception</strong> block, because a real robot
   always knows where its own arm is:
 </p>
 
@@ -214,7 +231,7 @@ obs, reward, terminated, truncated, info = env.step(action)
 </ul>
 
 <p>
-  What follows depends on the mode:
+  After it come the inputs you select:
 </p>
 
 <div class="table-wrap">
@@ -236,17 +253,32 @@ obs, reward, terminated, truncated, info = env.step(action)
         marker since the previous step (3 per marker, in mm)</td>
     <td>Learning from touch alone: the object and the goal are never given directly</td>
   </tr>
+  <tr>
+    <td><strong>Vision</strong></td>
+    <td>A 64&nbsp;&times;&nbsp;64 colour image from <code>handcam</code>, a camera on the sensor mount
+        (the quadruped uses <code>headcam</code> on its trunk). Grey and depth images are also available</td>
+    <td>Visuo-tactile learning: seeing the scene and feeling the contact</td>
+  </tr>
 </table>
 </div>
 
 <p>
-  The mode can be chosen when the environment is made, or switched afterwards. Either way the
-  observation space is rebuilt from a real observation, so its size can never get out of step with
-  what <code>step()</code> returns:
+  The inputs are chosen with a dictionary when the environment is made, or changed afterwards. Keys that are
+  left out are off. Either way the observation space is rebuilt from a real observation, so its size can
+  never get out of step with what <code>step()</code> returns:
 </p>
 
-<pre><code>env = gym.make("TacArm-peg", privileged=False)     # tactile from the start (use this for training)
-env.unwrapped.set_privileged(True)                 # or switch later; rebuilds env.observation_space</code></pre>
+<pre><code>env = gym.make("TacArm-peg", obs_modes={"tactile": True})          # touch only
+env = gym.make("TacArm-peg", obs_modes={"tactile": True, "vision": True},
+               obs_format="dict")                                   # each input under its own key
+env.unwrapped.set_obs_modes(vision=False)                           # switch later; rebuilds the space</code></pre>
+
+<p>
+  With the default <code>obs_format="flat"</code>, the selected inputs are joined into one vector (the image is
+  flattened and scaled to 0 to 1). With <code>obs_format="dict"</code> each input keeps its own entry, and the
+  image stays an image, ready for a convolutional encoder. The default is privileged input only, and the older
+  <code>privileged=False</code> argument still works: it means tactile only.
+</p>
 
 <p>
   The marker reading comes from <code>get_nodes()</code>, which returns every <code>s_c*</code>
@@ -919,6 +951,250 @@ env.reset(options={"friction": 1.0})   # grippy</code></pre>
 
 <hr>
 
+<h2 id="quadruped">Environment 5: Quadruped with TacTip Feet</h2>
+
+<div class="gif-grid">
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="" alt="Blind quadruped policy walking across tiles of changing ground">
+    <figcaption>Blind policy (joints and IMU only) walking over tiles of changing friction and softness.</figcaption>
+  </figure>
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="" alt="Quadruped policy with tactile feet walking across tiles of changing ground">
+    <figcaption>Tactile policy: the same robot, also feeling the ground through four TacTip feet.</figcaption>
+  </figure>
+</div>
+
+<h3>The Task</h3>
+
+<p>
+  <code>TacQuad-walk</code> moves the TacTip from a fingertip to the feet. A Unitree Go2 quadruped has its
+  four feet replaced by TacTips and has to follow a velocity command (forward, sideways and turning) across a
+  field of 2&nbsp;m tiles. Every tile has its own friction, softness and bounce, and some are rough, so the
+  feel of the ground keeps changing mid-stride. The goal is a walk that stays steady <em>whatever the ground
+  feels like</em>, and the question the environment is built to answer is whether feeling the ground helps.
+</p>
+
+<pre><code>env = gym.make("TacQuad-walk", obs_modes={"tactile": True})
+obs, info = env.reset(options={"feel": {"friction": 0.15}})   # optionally: every tile icy</code></pre>
+
+<h3>One Sensor File, Four Sensors</h3>
+
+<p>
+  Putting four copies of the same sensor on one robot sounds simple, but MuJoCo's <code>&lt;include&gt;</code>
+  pastes XML text, so including the sensor four times gives four bodies called <code>core</code>, four joints
+  called <code>pin0_slide</code> and so on, and MuJoCo refuses the duplicates. Copying the sensor file to
+  <code>sensor1</code>, <code>sensor2</code> and <code>sensor3</code> by hand works, but then every weld, tendon
+  and contact exclusion has to be renamed to match.
+</p>
+
+<p>
+  MuJoCo's model editing API (<code>MjSpec</code>, MuJoCo 3.2 or later) does this properly. A body can be
+  attached with a <strong>prefix</strong>, and every body, joint, geom, site, equality constraint and tendon in
+  the copy is renamed, along with the references between them (<code>FL_core</code>, <code>FL_pin0_slide</code>,
+  <code>FL_s_c0</code>, ...). The gym's <code>sensor_tools</code> module uses this in two steps:
+</p>
+
+<ol>
+  <li>
+    <strong>Extract the sensor once.</strong> The sensor is found from its marker sites, not from a body name.
+    Everything attached to the arm link that carries the markers is kept: the mount, the skin, the pins, and the
+    welds and tendons between them, even when they belong to separate bodies. The link's own joint and arm geometry
+    are dropped. The tip direction is found by fitting a sphere to the markers, so an angled mount does not confuse it.
+<pre><code>python -m tactip_mujoco_gym.sensor_tools extract assets/tactip_arm.xml --out assets/sensor/tactip.xml
+python -m tactip_mujoco_gym.sensor_tools tree assets/tactip_arm.xml      # where the markers are</code></pre>
+  </li>
+  <li>
+    <strong>Attach as many copies as needed.</strong> <code>attach_sensor</code> places the tip at a chosen
+    point, points it in a chosen direction, can stiffen the skin, and stops the sensor colliding with the link
+    it is mounted on:
+<pre><code>spec = mujoco.MjSpec.from_file("go2.xml")
+for leg in ("FL", "FR", "RL", "RR"):
+    attach_sensor(spec, spec.body(f"{leg}_calf"), "tactip.xml", prefix=f"{leg}_",
+                  tip_at=foot_point, axis_to=down)
+model = spec.compile()</code></pre>
+  </li>
+</ol>
+
+<p>
+  The quadruped environment does all of this itself every time it is built, so <code>go2.xml</code> is never edited.
+  To look at the result, or to use it elsewhere:
+</p>
+
+<pre><code>python -m tactip_mujoco_gym.envs.tactip_quadruped --view       # MuJoCo viewer, standing pose
+python -m tactip_mujoco_gym.envs.tactip_quadruped --save go2_tactip.xml
+python -m tactip_mujoco_gym.envs.tactip_quadruped --snippet    # the &lt;attach&gt; XML, to edit go2.xml by hand instead</code></pre>
+
+<h3>The Robot</h3>
+
+<ul>
+  <li><strong>Model:</strong> the Go2 from MuJoCo Menagerie or Unitree's own <code>unitree_mujoco</code> repository
+      (15.4&nbsp;kg, 12 joints), placed anywhere under the package's <code>assets/</code> folder.</li>
+  <li><strong>Feet:</strong> each foot sphere is replaced by a TacTip. The tip points straight down when the robot
+      stands, and sits exactly where the old foot touched the ground, so the standing height does not change. The
+      shins slope by about 50 degrees, so the sensor sits at an angle on them.</li>
+  <li><strong>Control:</strong> the action is 12 joint targets around the standing pose. The joints are
+      position-controlled inside MuJoCo (stiffness 30&nbsp;Nm/rad, damping 0.8), which is implicit and therefore
+      stable at the 2&nbsp;ms time step.</li>
+  <li><strong>Time step:</strong> 2&nbsp;ms, set by the TacTip's pin springs rather than the robot.</li>
+</ul>
+
+<h3>The Ground</h3>
+
+<p>
+  The arena is 8&nbsp;&times;&nbsp;8 tiles of 2&nbsp;m. At every reset each tile draws its own feel:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Property</th><th>Easiest (level 0)</th><th>Hardest (level 1)</th><th>What the robot feels</th></tr>
+  <tr><td>Friction</td><td>0.6 to 1.2</td><td>0.15 (ice) to 1.3</td><td>Feet slip, so the skin shears</td></tr>
+  <tr><td>Softness</td><td>Hard</td><td>Up to foam the feet sink about 2.5&nbsp;cm into</td><td>Sinking, with less skin deformation</td></tr>
+  <tr><td>Bounce</td><td>Damping ratio 0.8 to 1.2</td><td>0.3 (springy) to 1.5 (dead)</td><td>Rebound at touchdown</td></tr>
+  <tr><td>Roughness</td><td>All flat</td><td>Up to 60% of tiles rough: 5&nbsp;cm bumps and 10&nbsp;cm mounds and dips</td><td>Point loads on the dome</td></tr>
+</table>
+</div>
+
+<p>
+  The difficulty follows a <strong>curriculum</strong>. Each environment starts at level 0, goes up by 0.05
+  after an episode where the robot stays up and tracks its command well, and comes down by 0.05 after a fall.
+  Tiles near the start are always flat, and the tile colour shows its feel: blue is slippery, red-brown is
+  grippy, and paler is softer.
+</p>
+
+<p>
+  Two details keep the simulation honest and fast. Flat tiles are boxes and rough tiles are heightfields, because
+  the TacTip's pins collide with a box several times faster. Rough tiles are also kept fairly hard: in a heightfield
+  made of 5&nbsp;cm cells, a foot that sinks too deep can be pushed out sideways through a cell wall instead of up.
+</p>
+
+<h3>Feet: TacTip, Proxy or Rigid</h3>
+
+<p>
+  Four TacTips add about 150 bodies to the simulation, so the environment offers two cheaper feet with the same
+  legs:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th><code>feet=</code></th><th>What it is</th><th>Tactile input</th><th>Speed (one core)</th></tr>
+  <tr><td><code>"tactip"</code></td><td>Four full TacTips</td><td>Yes</td><td>About 150 steps/s</td></tr>
+  <tr><td><code>"proxy"</code></td><td>One sphere per foot with the TacTip's size, reach and mass</td><td>No</td><td>About 900 steps/s</td></tr>
+  <tr><td><code>"rigid"</code></td><td>The Go2's own feet</td><td>No</td><td>About 1,000 steps/s</td></tr>
+</table>
+</div>
+
+<p>
+  The speeds were measured with the 37-marker stand-in TacTip; the full sensor will be slower. Proxy feet are the
+  fast way to tune the reward and training settings, and to train a privileged teacher.
+</p>
+
+<h3>Observation and Action</h3>
+
+<p>
+  The inputs work exactly as for the arm: proprioception is always included, and <code>obs_modes</code> adds the rest.
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Input</th><th>Size</th><th>Contents</th></tr>
+  <tr><td>Proprioception</td><td>45</td><td>Trunk angular velocity, gravity direction in the trunk's frame, the velocity command, joint angles relative to standing, joint velocities, previous action</td></tr>
+  <tr><td><code>privileged</code></td><td>65</td><td>Trunk velocity and height, the force on each foot, the friction and softness under each foot, foot heights, and a 9&nbsp;&times;&nbsp;5 grid of ground heights around the robot</td></tr>
+  <tr><td><code>tactile</code></td><td>1,704</td><td>Every marker of all four TacTips, in each foot's own frame: displacement from rest and change since the last step, in mm (4 feet &times; 71 markers &times; 6)</td></tr>
+  <tr><td><code>vision</code></td><td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;3</td><td><code>headcam</code>, on the front of the trunk, looking ahead and 30 degrees down</td></tr>
+</table>
+</div>
+
+<p>
+  The command is a forward speed between -0.5 and 1.0&nbsp;m/s, a sideways speed of up to 0.4&nbsp;m/s and a turn rate
+  of up to 1&nbsp;rad/s. A new one is drawn every 4 to 8 seconds, and one command in ten is "stand still".
+</p>
+
+<h3>Reward and Termination</h3>
+
+<p>
+  The reward follows legged_gym, the standard recipe for learned quadruped walking. Every term is scaled by the
+  0.02&nbsp;s step, and each step's total is clipped at zero:
+</p>
+
+<pre><code>reward = 0.02 * (
+    1.0  * exp(-|v_cmd - v|^2 / 0.25)            # follow the commanded velocity
+  + 0.5  * exp(-(turn_cmd - turn)^2 / 0.25)      # and turn rate
+  + 1.0  * feet_air_time                          # take proper steps (0.25 s swings)
+  - 2.0  * v_z^2 - 0.05 * |roll_pitch_rate|^2     # no bouncing or rocking
+  - 2.0  * tilt^2 - 10 * (height - target)^2
+  - 2e-4 * |torque|^2 - 2.5e-7 * |joint_acc|^2 - 0.01 * |action_change|^2
+  - 1.0  * shin_contacts - 10 * joint_limit_overshoot
+  - 0.05 * foot_slip - 0.5 * fidgeting_when_told_to_stand
+)
+reward = max(reward, 0)</code></pre>
+
+<ul>
+  <li><strong>Success:</strong> staying up for the whole 20&nbsp;s episode.</li>
+  <li><strong>Fail:</strong> the trunk touches the ground, or the robot tilts more than 60 degrees.</li>
+</ul>
+
+<p>
+  The stability terms (tilt, rocking, bouncing, slip) are what "a steady walk" means in numbers. A walk that
+  tracks the command well earns up to about 30 per episode, while standing still earns about 4.
+</p>
+
+<h3>Fitting the Sensor to the Robot</h3>
+
+<p>
+  A TacTip skin tuned for the gentle pressure of a fingertip simply bottoms out under a 15&nbsp;kg robot.
+  <code>sensor_stiffness</code> (default 10) multiplies the skin's stiffness, damping and inertia together. That lets
+  it carry more load while keeping the same damping and the same smallest time step. <code>check_quadruped.py</code>
+  shows whether the setting is right:
+</p>
+
+<ul>
+  <li>whether the robot stands for 3&nbsp;s on hard, icy, soft, bouncy and rough ground, and how far it sinks</li>
+  <li>how far the markers move while standing, and how many loaded pins are at the end of their travel</li>
+  <li>a simple open-loop trot, to show the legs can step and that the marker signal follows the foot force</li>
+</ul>
+
+<p>
+  <code>demo_quadruped.py</code> runs the environment live in the viewer (R resets, P changes the gait, L changes the
+  ground level) and can record a video instead.
+</p>
+
+<h3>Does Touch Help? The Experiment</h3>
+
+<p>
+  <code>quadruped_walk.py</code> trains with PPO settings suited to walking: 16 environments, 1024 steps each per update,
+  minibatches of 4096, 5 epochs, 512-256-128 ELU networks and a little entropy. Afterwards it tests the policy on hard,
+  icy, soft, bouncy and rough ground. The four runs that answer the question are:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Feet</th><th>Inputs</th><th>Role</th></tr>
+  <tr><td>Proxy</td><td>Privileged</td><td>Upper bound: the policy is told what the ground is</td></tr>
+  <tr><td>Proxy</td><td>Proprioception only</td><td>Blind walking, fast to train</td></tr>
+  <tr><td>TacTip</td><td>Proprioception only</td><td>Blind, on the same soft feet as the tactile policy</td></tr>
+  <tr><td>TacTip</td><td>Tactile</td><td>Feeling the ground</td></tr>
+</table>
+</div>
+
+<p>
+  The last two share the same body and physics, so the gap between them is what the tactile input is worth.
+</p>
+
+<div class="box">
+  <h4>Status</h4>
+  <p>
+    The environment has been checked with a stand-in TacTip. The robot stands on every kind of ground. With a
+    simple open-loop trot, the TacTip marker signal tracks the force on the foot (correlation about 0.9): almost
+    nothing in the air, about 1.8&nbsp;mm in stance. A short training run on proxy feet raised the episode return
+    from 2.7 to 6.4 in 400k steps, above what standing still earns. Full training runs, and the comparison above,
+    are next.
+  </p>
+</div>
+
+<hr>
+
 <h2 id="training">Training</h2>
 
 <p>
@@ -929,7 +1205,7 @@ env.reset(options={"friction": 1.0})   # grippy</code></pre>
 <pre><code>from RL_BASE import run, evaluate, visualise
 
 if __name__ == "__main__":          # required: each environment runs in its own process
-    run("TacArm-peg", "peg_v2", "peg_v2", 3_000_000, privileged=True)    # or privileged=False
+    run("TacArm-peg", "peg_v2", "peg_v2", 3_000_000, obs_modes={"privileged": True})   # or {"tactile": True}
     evaluate("TacArm-peg", "peg_v2", n_episodes=50)                      # success rate, no viewer
     visualise("TacArm-peg", "peg_v2")                                    # MuJoCo viewer</code></pre>
 
@@ -1017,6 +1293,7 @@ if __name__ == "__main__":          # required: each environment runs in its own
   <li><strong>Peg:</strong> learn to push an object to a goal without tipping it.</li>
   <li><strong>Incline:</strong> stop a moving object, then push against gravity with a hidden friction level.</li>
   <li><strong>ShapeInsertion:</strong> a changing goal, tight clearances and optional re-orientation.</li>
+  <li><strong>Quadruped walking:</strong> a whole-body task, where touch has to be used on the move, on ground that keeps changing.</li>
 </ol>
 
 <p>
