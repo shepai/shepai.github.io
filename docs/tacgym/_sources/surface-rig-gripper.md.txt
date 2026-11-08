@@ -1,0 +1,6 @@
+<!-- Generated from README.md: edit the README, not this file. -->
+
+```{include} ../README.md
+:start-after: <!-- docs:new-robots -->
+:end-before: <!-- docs:tests -->
+```

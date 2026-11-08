@@ -1,0 +1,26 @@
+# Sensors
+
+Readouts (what an input is computed from), sensor hardware (the MuJoCo model mounted on a
+robot) and the tools that extract, inspect and attach sensor models.
+
+## Readouts
+
+```{automodule} tactip_mujoco_gym.sensors.base
+```
+
+```{automodule} tactip_mujoco_gym.sensors.tactip
+```
+
+```{automodule} tactip_mujoco_gym.sensors.camera
+```
+
+```{automodule} tactip_mujoco_gym.sensors.taxels
+```
+
+## Hardware
+
+```{automodule} tactip_mujoco_gym.sensors.models
+```
+
+```{automodule} tactip_mujoco_gym.sensor_tools
+```

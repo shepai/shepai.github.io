@@ -1,0 +1,11 @@
+<!-- Generated from README.md: edit the README, not this file. -->
+
+```{include} ../README.md
+:start-after: <!-- docs:training -->
+:end-before: <!-- docs:visuotactile -->
+```
+
+```{include} ../README.md
+:start-after: <!-- docs:training-tips -->
+:end-before: <!-- docs:own-task -->
+```

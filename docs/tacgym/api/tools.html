@@ -1,0 +1,547 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="Surfaces and textures" href="surfaces.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>Experiments and training - TacTip-gym 0.4.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">TacTip-gym 0.4.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">TacTip-gym 0.4.0</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensors.html">Sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfaces.html">Surfaces and textures</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Experiments and training</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/blob/main/docs/api/tools.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/edit/main/docs/api/tools.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="experiments-and-training">
+<h1>Experiments and training<a class="headerlink" href="#experiments-and-training" title="Link to this heading">¶</a></h1>
+<p>.. py:module:: tactip_mujoco_gym.experiment</p>
+<p>Experiment configs: one YAML / JSON file says what is being tested - the task, the robot’s
+options, the sensor hardware, the readouts, which inputs the policy gets, how they are fused,
+and how to train - so a comparison is a set of files (or variants in one file), not edits to
+code.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       python -m tactip_mujoco_gym train configs/peg_sensing.yaml               # every variant
+       python -m tactip_mujoco_gym train configs/peg_sensing.yaml --variant tactile
+       python -m tactip_mujoco_gym train configs/peg_sensing.yaml --dry-run     # show, don't run
+       python -m tactip_mujoco_gym evaluate configs/peg_sensing.yaml --variant tactile
+
+   Keys (all optional except env):
+
+       name           model / log name (default: &lt;env&gt;_&lt;inputs&gt;); variants append _&lt;variant&gt;
+       description    free text
+       env            task id (python -m tactip_mujoco_gym list)
+       env_kwargs     task / robot options, e.g. {start_touching: false} or {feet: proxy}
+       sensor_xml     sensor hardware: a registered name ("tactip"), a standalone MJCF file
+       sensor_stiffness   skin stiffness multiplier
+       sensors        readouts: {key: spec}; a spec is a registered name, "module:Class", or
+                      {type: ..., &lt;arguments&gt;}; {width: 96} without a type tweaks the default;
+                      null removes it
+       obs_modes      inputs the policy gets: [tactile, vision] (proprioception always included)
+       obs_format     flat | dict
+       overrides      {CONSTANT: value} for the env's class constants
+       policy         {encoders: null | scratch | &lt;checkpoint&gt;, freeze_encoders: true}
+       train          {algo: PPO, steps: 3000000, n_envs: 8, seed: 0, algo_kwargs: {...},
+                       record_video: true, video_every_percent: 5, video_seconds: 7,
+                       checkpoint_every: 500000}
+       evaluate       {episodes: 50, deterministic: true, seed: 1000}
+       imports        modules to import first (e.g. the module that registers your readout)
+       variants       {name: {&lt;any keys above&gt;}} merged over the base (dicts merge, the rest
+                      replaces), one run each
+
+   In Python:
+
+       from tactip_mujoco_gym.experiment import load_config, make_env, train
+       cfg = load_config("configs/peg_sensing.yaml")
+       env = make_env(cfg, variant="tactile")
+</pre></div>
+</div>
+<p>.. py:function:: modes_dict(obs_modes)
+:module: tactip_mujoco_gym.experiment</p>
+<p>obs_modes as {name: bool} (it may be given as a list or “tactile+vision”).</p>
+<p>.. py:function:: load_config(source)
+:module: tactip_mujoco_gym.experiment</p>
+<p>A config dict from a .yaml / .yml / .json file, or a dict (copied). Checked for
+unknown keys, so a typo fails here rather than being silently ignored.</p>
+<p>.. py:function:: variants(cfg, only=None)
+:module: tactip_mujoco_gym.experiment</p>
+<p>[(variant name or None, resolved config)]: one entry per variant (or just the base
+config if it has none); <code class="docutils literal notranslate"><span class="pre">only</span></code> picks some by name.</p>
+<p>.. py:function:: resolve(cfg, variant=None)
+:module: tactip_mujoco_gym.experiment</p>
+<p>The single config for <code class="docutils literal notranslate"><span class="pre">variant</span></code> (or the base config if it has no variants).</p>
+<p>.. py:function:: env_kwargs(cfg)
+:module: tactip_mujoco_gym.experiment</p>
+<p>Keyword arguments for gym.make: env_kwargs + sensor_xml / sensors / … + obs_modes /
+obs_format.</p>
+<p>.. py:function:: run_arguments(cfg, variant=None)
+:module: tactip_mujoco_gym.experiment</p>
+<p>The RL_BASE.run(…) call for a resolved config, as (args, kwargs).</p>
+<p>.. py:function:: make_env(cfg, variant=None, **extra)
+:module: tactip_mujoco_gym.experiment</p>
+<p>gym.make for a config (and variant); extra keyword arguments override.</p>
+<p>.. py:function:: train(cfg, variant=None, dry_run=False, steps=None)
+:module: tactip_mujoco_gym.experiment</p>
+<p>Train every selected variant (all of them by default) with RL_BASE.run.</p>
+<p>.. py:module:: tactip_mujoco_gym.RL_BASE</p>
+<p>Training / evaluation helpers for every task (Stable-Baselines3). Config files drive these
+through experiment.py (python -m tactip_mujoco_gym train <config>).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS)                     # privileged obs, PPO
+       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS,
+           obs_modes={"vision": True, "tactile": True, "privileged": False})   # pick the inputs
+       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS, obs_modes=["tactile"],
+           env_kwargs={"sensor_xml": "my_sensor.xml", "sensors": {"tactile": {"clip": 10}}})
+       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS, obs_format="dict")  # one key per input (fusion)
+       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS, obs_modes={"vision": True, "tactile": True},
+           encoders="encoders/vt.pt")       # pretrained encoders + MLP (see train_encoders.py)
+       run(ENV_NAME, MODEL_NAME, LOG_NAME, STEPS, algo="SAC")         # more sample-efficient
+       evaluate(ENV_NAME, MODEL_NAME)                                 # success rate, no viewer
+       visualise(ENV_NAME, MODEL_NAME)                                # MuJoCo viewer
+
+   What run() saves (both in logs/&lt;LOG_NAME&gt;/ and models/):
+       &lt;MODEL_NAME&gt;.zip                  the policy
+       &lt;MODEL_NAME&gt;_vecnormalize.pkl     observation statistics - the policy is useless without them
+       &lt;MODEL_NAME&gt;.json                 env name / kwargs / algo, so evaluate() and visualise()
+                                         rebuild exactly the same environment
+</pre></div>
+</div>
+<p>.. py:function:: env_id(env_name)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>‘module:EnvId’ makes gym.make import the package inside SubprocVecEnv workers too.</p>
+<p>.. py:function:: policy_for(obs_space, own_encoders=False, encoded_keys=None)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>MlpPolicy for a flat vector. For a dict: MultiInputPolicy (SB3 runs a CNN on image keys
+and an MLP on the rest, then concatenates the features), with images kept out of
+VecNormalize; with own_encoders, the encoded inputs (encoded_keys, default tactile and
+vision) are also left to the encoders.
+Returns (policy name, keys to normalise or None, has images).</p>
+<p>.. py:function:: jsonable(value)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>env_kwargs as plain JSON (readout instances become their spec dicts), so the saved
+<model>.json rebuilds the same environment.</p>
+<p>.. py:function:: load_policy(env_name, model_name, model_dir=’models’, env_kwargs=None, algo=None)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>Returns (model, raw gym env, obs-normaliser function, config).</p>
+<p>.. py:class:: TrainingVideoCallback(*args, **kwargs)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~stable_baselines3.common.callbacks.BaseCallback</span></code></p>
+<p>Records a short video of the current policy every <code class="docutils literal notranslate"><span class="pre">every_percent</span></code> of training.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Uses the training VecNormalize statistics to normalise observations - without that the
+   videos show a policy fed un-normalised inputs, i.e. near-random behaviour, even when
+   training is going well.
+</pre></div>
+</div>
+<p>.. py:class:: TerrainLogger(*args, **kwargs)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~stable_baselines3.common.callbacks.BaseCallback</span></code></p>
+<p>Episode averages of the curriculum level, falls and each reward term.</p>
+<p>.. py:function:: evaluate_grounds(model_name, n_episodes=5, command=(0.6, 0.0, 0.0), seconds=10.0, grounds=None, env_name=’TacQuad-walk’, model_dir=’models’)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>Walk straight on each ground: how often it stays up and how well it holds the speed.</p>
+<p>.. py:function:: run(env_name, model_name, log_name, total_timesteps, n_envs=None, record_video=True, video_every_percent=5, video_seconds=7, obs_modes=None, privileged=None, obs_format=’flat’, algo=’PPO’, seed=0, env_kwargs=None, algo_kwargs=None, checkpoint_every=500000, encoders=None, freeze_encoders=True, callbacks=None)
+:module: tactip_mujoco_gym.RL_BASE</p>
+<p>obs_modes  : {“vision”: bool, “tactile”: bool, “privileged”: bool}; missing keys = False.
+Proprioception is always included. Default: privileged only.
+privileged : earlier shortcut (True = privileged only, False = tactile only); ignored
+when obs_modes is given
+obs_format : “flat” (one long vector, MlpPolicy) or “dict” (one key per input,
+MultiInputPolicy: CNN on the camera image, MLP on the rest)
+env_kwargs : extra constructor args, e.g. {“spawn_yaw”: 0.5} for TacArm-shape
+encoders   : path to a checkpoint from train_encoders.py -&gt; VisuoTactilePolicy: pretrained
+tactile / vision encoders, then the MLP heads (implies obs_format=”dict”).
+“scratch” = the same networks without pretraining (baseline).
+freeze_encoders : keep the pretrained encoder weights fixed during RL (default True)
+callbacks  : extra SB3 callbacks (e.g. logging task-specific info, see quadruped_walk.py)</p>
+<p>.. py:module:: tactip_mujoco_gym.vt_encoders</p>
+<p>Visuo-tactile encoders, and the policy that uses them.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       TactileEncoder         MLP on the tactip marker vector (displacement + change, in mm).
+                              Carries its own input normalisation, fitted on the training data
+                              and saved with the weights, so VecNormalize must leave "tactile" alone.
+       VisionEncoder          small CNN on the hand-camera image: float, channels first, [0, 1]
+                              (exactly what SB3 hands a policy for a uint8 image observation).
+       VisuoTactileExtractor  SB3 features extractor for dict observations: tactile -&gt; TactileEncoder,
+                              vision -&gt; VisionEncoder, everything else (proprio, privileged, events)
+                              passed straight through; the results are concatenated. Which keys
+                              get which encoder is `encoder_keys` ({key: "mlp" | "cnn"}): RL_BASE
+                              takes it from the env (env.obs_modalities), so a readout you add
+                              (e.g. "tactile_image", or your own sensor) gets an encoder too.
+       VisuoTactilePolicy     PPO policy = VisuoTactileExtractor + MLP actor and critic heads.
+
+   Pretrained weights come from train_encoders.py. Pass encoder_path=None for the same networks
+   trained from scratch (a useful baseline).
+
+   Note: SB3's PPO policies re-initialise every Linear / Conv2d layer of the features extractor
+   (orthogonal init) after building it, which would silently erase pretrained weights.
+   VisuoTactilePolicy reloads them after SB3 has finished building, so use it (not
+   "MultiInputPolicy" + extractor kwargs) with PPO. SAC does not re-initialise, so there the
+   extractor can be passed through policy_kwargs (see sac_policy_kwargs).
+</pre></div>
+</div>
+<p>.. py:class:: TactileEncoder(in_dim, latent_dim=64, hidden=256)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~torch.nn.modules.module.Module</span></code></p>
+<p>.. py:method:: TactileEncoder.forward(x)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Define the computation performed at every call.
+
+  ::
+
+      Should be overridden by all subclasses.
+
+      .. note::
+          Although the recipe for forward pass needs to be defined within
+          this function, one should call the :class:`Module` instance afterwards
+          instead of this since the former takes care of running the
+          registered hooks while the latter silently ignores them.
+</pre></div>
+</div>
+<p>.. py:class:: VisionEncoder(in_shape, latent_dim=64, channels=(32, 64, 64, 64), hidden=256)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~torch.nn.modules.module.Module</span></code></p>
+<p>.. py:method:: VisionEncoder.forward(x)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Define the computation performed at every call.
+
+  ::
+
+      Should be overridden by all subclasses.
+
+      .. note::
+          Although the recipe for forward pass needs to be defined within
+          this function, one should call the :class:`Module` instance afterwards
+          instead of this since the former takes care of running the
+          registered hooks while the latter silently ignores them.
+</pre></div>
+</div>
+<p>.. py:function:: build_encoders(config, tactile_dim=None, vision_shape=None)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Encoders from a config dict (DEFAULT_CONFIG keys). Returns (tactile or None, vision or None).</p>
+<p>.. py:function:: load_checkpoint(path)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Checkpoint written by train_encoders.py (plain tensors, lists and numbers only).</p>
+<p>.. py:function:: image_space_chw(space)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>(C, H, W) shape of an image Box, and whether the observation arrives channels-last.
+SB3 already transposes uint8 images to channels-first before the policy sees them; float
+images (depth) are not transposed, so the extractor does it.</p>
+<p>.. py:class:: VisuoTactileExtractor(observation_space, encoder_path=None, encoder_config=None, freeze=True, encoder_keys=None)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~stable_baselines3.common.torch_layers.BaseFeaturesExtractor</span></code></p>
+<p>One encoder per observation key, outputs concatenated (late fusion). The MLP heads of
+the policy (net_arch) sit on top of this.</p>
+<p>.. py:method:: VisuoTactileExtractor.load_pretrained()
+:module: tactip_mujoco_gym.vt_encoders</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Copy the pretrained encoder weights in (again) and freeze them if requested.
+  Safe to call more than once; VisuoTactilePolicy calls it after SB3's weight init.
+</pre></div>
+</div>
+<p>.. py:method:: VisuoTactileExtractor.forward(observations)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Define the computation performed at every call.
+
+  ::
+
+      Should be overridden by all subclasses.
+
+      .. note::
+          Although the recipe for forward pass needs to be defined within
+          this function, one should call the :class:`Module` instance afterwards
+          instead of this since the former takes care of running the
+          registered hooks while the latter silently ignores them.
+</pre></div>
+</div>
+<p>.. py:class:: VisuoTactilePolicy(observation_space, action_space, lr_schedule, encoder_path=None, encoder_config=None, freeze_encoders=True, encoder_keys=None, **kwargs)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~stable_baselines3.common.policies.MultiInputActorCriticPolicy</span></code></p>
+<p>PPO / A2C policy: VisuoTactileExtractor, then MLP actor and critic heads (net_arch).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   PPO(VisuoTactilePolicy, env, policy_kwargs=dict(encoder_path="encoders/vt.pt"))
+</pre></div>
+</div>
+<p>.. py:function:: ppo_policy_kwargs(encoder_path=None, freeze=True, encoder_keys=None)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>policy_kwargs for PPO(VisuoTactilePolicy, …). encoder_path=None: train from scratch.
+encoder_keys: {observation key: “mlp” | “cnn”} (default: tactile -&gt; mlp, vision -&gt; cnn).</p>
+<p>.. py:function:: sac_policy_kwargs(encoder_path=None, freeze=True, encoder_keys=None)
+:module: tactip_mujoco_gym.vt_encoders</p>
+<p>policy_kwargs for SAC(“MultiInputPolicy”, …): SAC does not re-initialise extractors.</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="surfaces.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Surfaces and textures</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Dexter Shepherd
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ad52b534"></script>
+    </body>
+</html>

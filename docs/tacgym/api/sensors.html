@@ -1,0 +1,872 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Surfaces and textures" href="surfaces.html"><link rel="prev" title="Environments" href="environments.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>Sensors - TacTip-gym 0.4.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">TacTip-gym 0.4.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">TacTip-gym 0.4.0</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfaces.html">Surfaces and textures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Experiments and training</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/blob/main/docs/api/sensors.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/edit/main/docs/api/sensors.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="sensors">
+<h1>Sensors<a class="headerlink" href="#sensors" title="Link to this heading">¶</a></h1>
+<p>Readouts (what an input is computed from), sensor hardware (the MuJoCo model mounted on a
+robot) and the tools that extract, inspect and attach sensor models.</p>
+<section id="readouts">
+<h2>Readouts<a class="headerlink" href="#readouts" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.sensors.base</p>
+<p>Sensor readouts: the base class, mounts, and the registry.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   A *readout* turns simulator state into one observation input ("tactile", "vision", ...). It
+   is separate from the sensor *hardware* (the MuJoCo bodies mounted on the robot, see
+   sensors/models.py), so the same hardware can be read in several ways (TacTip markers, the
+   camera inside the TacTip) and your own readout can be added without touching any env.
+
+   Life cycle, driven by the environment (every hook gets the env, so `env.model`, `env.data`,
+   `env.sensor_mounts` and the env's constants are all available):
+
+       bind(env)               once, after the model is compiled: look up ids. Raise
+                               SensorUnavailable(reason) if this model can't support the readout
+                               (e.g. no marker sites); the env only complains if it is selected.
+       calibrate(env, data)    record a rest / reference state (the sensor in free space)
+       on_select(env, active)  the input was switched on or off (obs_modes)
+       reset(env)              start of every episode, after the scene and robot are placed
+       physics_step(env)       after every physics step, only while active and if substeps=True
+       env_step(env)           after the physics of every env step
+       observe(env)            -&gt; np.ndarray, the observation (called once per env step)
+       flatten(value)          how the value goes into the flat ("flat" obs_format) vector
+       space(value)            the gymnasium space for the value (default: from its dtype)
+       close()                 release renderers etc.
+
+   Register a readout so environments and config files can name it:
+
+       from tactip_mujoco_gym.sensors import Sensor, register_sensor
+
+       @register_sensor("wrist_force")
+       class WristForce(Sensor):
+           key = "force"                       # default observation key
+           def __init__(self, scale=10.0):
+               self.scale = scale              # store constructor args under the same name
+           def bind(self, env): ...
+           def observe(self, env): ...
+
+       env = gym.make("TacArm-peg", sensors={"force": "wrist_force"}, obs_modes=["force"])
+
+   Readouts can also be named as "package.module:ClassName", or registered by an installed
+   package through the "tactip_mujoco_gym.sensors" entry-point group.
+</pre></div>
+</div>
+<p>.. py:exception:: SensorUnavailable
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>The model doesn’t have what this readout needs (raised by Sensor.bind).</p>
+<p>.. py:class:: Mount(name, prefix, body, frame)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>One place on the robot where a copy of the sensor hardware sits.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   name    "tip" (arm), "FL" / "FR" / "RL" / "RR" (quadruped feet), "left" / "right" (hands)
+   prefix  prefix of every element name in this copy of the sensor ("" for the arm's built-in
+           TacTip, "FL_" for the quadruped's front-left foot, ...). A readout finds its sites
+           and cameras as prefix + name, e.g. "FL_s_c0" or "left_sensor_cam".
+   body    id of the copy's root body (its subtree is the sensor)
+   frame   ("site", id) or ("body", id): the default frame readings are expressed in
+</pre></div>
+</div>
+<p>.. py:function:: frame_pose(data, frame)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>(position, 3x3 rotation) of a (“site”, id) or (“body”, id) frame.</p>
+<p>.. py:function:: subtree_bodies(model, root)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Ids of <code class="docutils literal notranslate"><span class="pre">root</span></code> and every body below it.</p>
+<p>.. py:function:: subtree_geoms(model, root, colliding=True)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Geom ids in the subtree of body <code class="docutils literal notranslate"><span class="pre">root</span></code> (only those that can collide, by default).</p>
+<p>.. py:class:: Sensor()
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for a readout. Subclasses set <code class="docutils literal notranslate"><span class="pre">key</span></code> and implement at least bind/observe.</p>
+<p>.. py:method:: Sensor.bind(env)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Look up model ids. Raise SensorUnavailable(reason) if it can't work in this model.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.calibrate(env, data)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Record the rest state from `data` (the sensor untouched).
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.on_select(env, active)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  The input was switched on (active=True) or off.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.reset(env)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Start of an episode.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.physics_step(env)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  After every physics step (only while active, and only if substeps=True).
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.env_step(env)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  After the physics of every env step.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.flatten(value)
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Value as part of the flat observation vector.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.close()
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Release renderers or other resources.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.spec()
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  A JSON-able description that make_sensor() turns back into this readout:
+  {"type": registered name or "module:Class", &lt;constructor arguments&gt;}. Constructor
+  arguments are read back from attributes of the same name; override this if yours
+  are stored differently.
+</pre></div>
+</div>
+<p>.. py:method:: Sensor.unbound_copy()
+:module: tactip_mujoco_gym.sensors.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  A fresh copy for a new environment (instances passed in are used as templates, so
+  several envs in one process never share a readout's state).
+</pre></div>
+</div>
+<p>.. py:function:: register_sensor(name, cls=None, overwrite=False)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Register a Sensor subclass under <code class="docutils literal notranslate"><span class="pre">name</span></code>. Works as a decorator or a plain call:</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   @register_sensor("my_sensor")
+   class MySensor(Sensor): ...
+
+   register_sensor("my_sensor", MySensor)
+</pre></div>
+</div>
+<p>.. py:function:: sensor_class(name)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Readout class for a registered name or a “package.module:ClassName” path.</p>
+<p>.. py:function:: sensor_type_name(cls)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>The registered name of a built-in readout, else the class’s “module:Class” import
+path (which works in a fresh process, e.g. when a saved model is loaded, without the
+module that registered it having been imported).</p>
+<p>.. py:function:: make_sensor(spec, default=None)
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>Build a readout from any of:
+a Sensor instance           copied (instances are templates: every env gets its own)
+a Sensor subclass           instantiated with no arguments
+“name” / “module:Class”     instantiated with no arguments
+{“type”: …, **kwargs}     instantiated with kwargs; “type” may be left out when
+<code class="docutils literal notranslate"><span class="pre">default</span></code> (a type for the same slot) is given, which is
+how {“width”: 96} tweaks a default camera</p>
+<p>.. py:function:: list_sensors()
+:module: tactip_mujoco_gym.sensors.base</p>
+<p>{name: first line of the class docstring} for every registered readout.</p>
+<p>.. py:module:: tactip_mujoco_gym.sensors.tactip</p>
+<p>TacTip readouts: the marker (pin) displacements, and the camera inside the sensor.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Both work on every robot, on every mounted copy of the sensor (the arm's one TacTip, the
+   quadruped's four feet, the humanoid's two hands): they find their sites / cameras by each
+   mount's name prefix, so any sensor hardware that uses the same names works too.
+</pre></div>
+</div>
+<p>.. py:class:: TacTipMarkers(marker_prefix=None, frame_site=None, scale=None, clip=None, velocity=True)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.sensors.base.Sensor</span></code></p>
+<p>TacTip marker displacement from rest and its change since the last step (mm), all mounts.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   marker_prefix  sites read as markers: every site named &lt;mount prefix&gt;&lt;marker_prefix&gt;*
+                  (default: env.MARKER_PREFIX, "s_c")
+   frame_site     readings are in this site's frame on each mount, &lt;prefix&gt;&lt;frame_site&gt;
+                  (default: env.SENSOR_SITE, "ee_site"); the mount's own frame if missing
+   scale          metres per output unit (default: env.MARKER_SCALE, 1e-3 = mm)
+   clip           outputs are clipped to +-clip (default: env.MARKER_CLIP, 20)
+   velocity       also output the change since the previous step (default True)
+
+   Output: [displacement (n_markers x 3), change (n_markers x 3)], markers grouped by mount.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.bind(env)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Look up model ids. Raise SensorUnavailable(reason) if it can't work in this model.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.nodes(data)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Marker positions in their mount's frame, (n_markers, 3), metres.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.calibrate(env, data)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Record the rest state from `data` (the sensor untouched).
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.reset(env)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Start of an episode.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.on_select(env, active)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  The input was switched on (active=True) or off.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.env_step(env)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  After the physics of every env step.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipMarkers.displacement(env)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Current marker displacement from rest in metres: (n_mounts, markers per mount, 3)
+  when every mount has the same marker count, else a list with one array per mount.
+</pre></div>
+</div>
+<p>.. py:class:: TacTipCamera(camera=None, width=None, height=None, mode=’rgb’, groups=(2,))
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.sensors.base.Sensor</span></code></p>
+<p>Image from the camera inside each TacTip (looking at the pins), uint8 (H, W, 3 x mounts).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   camera   camera name on each mount, &lt;prefix&gt;&lt;camera&gt; (default: env.SENSOR_CAM, "sensor_cam")
+   width, height   image size (default: env.TACTILE_IMAGE_WIDTH / _HEIGHT, 64 x 64)
+   mode     "rgb" or "gray"
+   groups   geom / site groups drawn (default (2,): the pins, not the scene outside)
+
+   With several mounts (feet, hands) the images are stacked along the channel axis.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipCamera.bind(env)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Look up model ids. Raise SensorUnavailable(reason) if it can't work in this model.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipCamera.flatten(value)
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Value as part of the flat observation vector.
+</pre></div>
+</div>
+<p>.. py:method:: TacTipCamera.close()
+:module: tactip_mujoco_gym.sensors.tactip</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Release renderers or other resources.
+</pre></div>
+</div>
+<p>.. py:module:: tactip_mujoco_gym.sensors.camera</p>
+<p>Camera readout: an image from any MuJoCo camera in the model (the arm’s hand camera, the
+quadruped’s and the humanoid’s head cameras, or one you add).</p>
+<p>.. py:class:: Camera(camera=None, width=None, height=None, mode=None, max_depth=None, shadows=None, antialias=None)
+:module: tactip_mujoco_gym.sensors.camera</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.sensors.base.Sensor</span></code></p>
+<p>Image from a MuJoCo camera: uint8 (H, W, 3) rgb / (H, W, 1) gray, or float32 depth (m).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   camera      camera name (default: env.VISION_CAMERA, e.g. "handcam" / "headcam")
+   width, height   image size (default: env.VISION_WIDTH / VISION_HEIGHT, 64 x 64). Keep it
+               small: in the flat format every pixel is an input (SB3's default CNN in the
+               dict format needs at least 36)
+   mode        "rgb", "gray" or "depth" (default: env.VISION_MODE)
+   max_depth   depth is divided by this in the flat format (default: env.VISION_MAX_DEPTH)
+   shadows, antialias   render shadows / reflections and multisampling (default off: most
+               of the render time for little information at 64 px)
+
+   Every argument left as None takes the env's class constant, so tasks that override
+   VISION_CAMERA etc. keep working. Uses its own renderer, separate from any viewing one.
+</pre></div>
+</div>
+<p>.. py:method:: Camera.bind(env)
+:module: tactip_mujoco_gym.sensors.camera</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Look up model ids. Raise SensorUnavailable(reason) if it can't work in this model.
+</pre></div>
+</div>
+<p>.. py:method:: Camera.flatten(value)
+:module: tactip_mujoco_gym.sensors.camera</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Value as part of the flat observation vector.
+</pre></div>
+</div>
+<p>.. py:method:: Camera.close()
+:module: tactip_mujoco_gym.sensors.camera</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Release renderers or other resources.
+</pre></div>
+</div>
+<p>.. py:module:: tactip_mujoco_gym.sensors.taxels</p>
+<p>Event-based readout of the touch-sensor grids (“taxels”, tx_* sensors) that
+assets/scripts/add_events.py lays over the objects and surfaces of a scene.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   A taxel emits an event when its force has changed by at least `threshold` newtons since the
+   last event on that taxel (or since reset); the reference level is then set to the current
+   force, like a neuromorphic sensor. A steady load produces no events.
+
+   While the input is off and every MuJoCo sensor in the model is a taxel, MuJoCo's sensor
+   evaluation is switched off entirely (thousands of touch sensors are a big part of the step
+   cost: ~3.4x faster physics in the peg scene).
+</pre></div>
+</div>
+<p>.. py:class:: TaxelEvents(prefix=None, threshold=None, clip=5.0)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.sensors.base.Sensor</span></code></p>
+<p>Signed event count per taxel (tx_* touch sensors) since the previous env step.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   prefix     sensor-name prefix of the taxels (default: env.TAXEL_PREFIX, "tx_")
+   threshold  force change (N) that fires an event (default: env.EVENT_THRESHOLD, 0.02)
+   clip       counts are clipped to +-clip (default 5)
+
+   Taxels are sampled after every physics step, not just every env step.
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.bind(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Look up model ids. Raise SensorUnavailable(reason) if it can't work in this model.
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.on_select(env, active)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  The input was switched on (active=True) or off.
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.reset(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Take the current forces as the baseline and drop stored events.
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.physics_step(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  After every physics step (only while active, and only if substeps=True).
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.events()
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Events since the last call, as an (N, 3) array: [taxel_index, polarity, time].
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.forces(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Current normal force on every taxel (n_taxels,).
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.positions(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  World position of every taxel (n_taxels, 3).
+</pre></div>
+</div>
+<p>.. py:method:: TaxelEvents.bodies(env)
+:module: tactip_mujoco_gym.sensors.taxels</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Name of the body each taxel is on.
+</pre></div>
+</div>
+</section>
+<section id="hardware">
+<h2>Hardware<a class="headerlink" href="#hardware" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.sensors.models</p>
+<p>Sensor hardware: the MuJoCo model of the sensor that is mounted on the robot.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Every robot takes `sensor_xml=` (a registered name, a path to a standalone MJCF file, or an
+   MjSpec). The file holds just the sensor, with its root body first in &lt;worldbody&gt;:
+
+       &lt;mujoco&gt;
+         &lt;asset&gt; ... meshes / materials the sensor uses ... &lt;/asset&gt;
+         &lt;worldbody&gt;
+           &lt;body name="my_sensor"&gt; ... &lt;/body&gt;
+         &lt;/worldbody&gt;
+         &lt;tendon&gt; / &lt;equality&gt; / &lt;contact&gt; ... anything between its parts ...
+       &lt;/mujoco&gt;
+
+   It is attached with a name prefix per mount (FL_, left_, ...; see sensor_tools.attach_sensor),
+   turned so its tip points the way the original TacTip's did and moved so the tips coincide.
+   The tip is found, in order of preference, from:
+       1. a site named "sensor_tip" in the file: its position is the tip, its z axis points out
+          of the sensing surface   &lt;site name="sensor_tip" pos="0 0 0.03" zaxis="0 0 1"/&gt;
+       2. TacTip-style marker sites (s_c*): a dome is fitted to them
+   so a sensor without markers needs the "sensor_tip" site.
+
+       register_sensor_model("my_gelsight", "path/to/gelsight.xml")
+       gym.make("TacArm-peg", sensor_xml="my_gelsight")
+
+   "tactip" is the default: assets/sensor/tactip.xml if present. Otherwise the TacTip is
+   extracted from assets/tactip_arm.xml, written to that file (if it loads back into the same
+   model; delete the file to extract again after changing the sensor in tactip_arm.xml), and
+   read from there from then on. `python -m tactip_mujoco_gym.sensor_tools extract ...` writes
+   it by hand.
+</pre></div>
+</div>
+<p>.. py:function:: register_sensor_model(name, source, description=’’)
+:module: tactip_mujoco_gym.sensors.models</p>
+<p>source: path to a standalone sensor MJCF, or a callable returning an MjSpec / path.</p>
+<p>.. py:function:: default_tactip(source=(‘assets’, ‘tactip_arm.xml’), root=’auto’, standalone=(‘assets’, ‘sensor’, ‘tactip.xml’), verbose=True)
+:module: tactip_mujoco_gym.sensors.models</p>
+<p>The TacTip as a standalone MjSpec: <code class="docutils literal notranslate"><span class="pre">standalone</span></code> if that file exists, else extracted
+from the <code class="docutils literal notranslate"><span class="pre">source</span></code> scene and written to <code class="docutils literal notranslate"><span class="pre">standalone</span></code> (cached per process). Reading the
+file avoids extracting in every process, and MuJoCo’s attach notices with it.</p>
+<p>.. py:function:: resolve_sensor_model(model=None, **default_kwargs)
+:module: tactip_mujoco_gym.sensors.models</p>
+<p>MjSpec for <code class="docutils literal notranslate"><span class="pre">model</span></code>: None or “tactip” -&gt; the default TacTip (default_kwargs are passed
+to default_tactip), a registered name, a path to an MJCF file, or an MjSpec (copied).</p>
+<p>.. py:function:: model_label(model)
+:module: tactip_mujoco_gym.sensors.models</p>
+<p>Short text for logs.</p>
+<p>.. py:module:: tactip_mujoco_gym.sensor_tools</p>
+<p>Reuse one TacTip model on any robot: extract it once, attach as many prefixed copies as needed.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Why not &lt;include&gt; it several times? &lt;include&gt; pastes the XML text, so every copy has the same
+   names (core, pin0_slide, s_c0, ...) and MuJoCo refuses duplicates. Copying the file to
+   sensor1/2/3 by hand works, but every equality, tendon and exclude has to be renamed in step.
+   MuJoCo's model editing API (MjSpec, MuJoCo &gt;= 3.2) does the renaming for you: attaching a
+   body subtree with a prefix renames every body, joint, geom, site, camera, equality, tendon and
+   the references between them (FL_core, FL_pin0_slide, FL_s_c0, ...).
+
+   1. Extract the sensor from your arm scene into a standalone file (once):
+
+          python -m tactip_mujoco_gym.sensor_tools extract \
+              src/tactip_mujoco_gym/assets/tactip_arm.xml \
+              --out src/tactip_mujoco_gym/assets/sensor/tactip.xml
+
+      The sensor is found from its marker sites (s_c*): everything attached to the arm link
+      that carries them (link06) is kept - mount, skin, pins, cameras you choose to keep - plus
+      the equality constraints and tendons between those parts and the meshes / materials they
+      use. The link's own joint and arm geometry are dropped; what is left of it becomes the
+      sensor's root body, "tactip". `--body NAME` keeps just one body's subtree instead.
+      `python -m tactip_mujoco_gym.sensor_tools tree &lt;scene&gt;` shows where the markers are.
+
+   2. Attach copies in Python:
+
+          spec = mujoco.MjSpec.from_file("go2.xml")
+          for leg in ("FL", "FR", "RL", "RR"):
+              attach_sensor(spec, spec.body(f"{leg}_calf"), "tactip.xml", prefix=f"{leg}_",
+                            tip_at=[0, 0, -0.235], axis_to=[0, 0, -1])   # tip there, pointing down
+          model = spec.compile()
+
+      or in XML (MuJoCo &gt;= 3.2), without Python:
+
+          &lt;asset&gt; &lt;model name="tactip" file="sensor/tactip.xml"/&gt; &lt;/asset&gt;
+          ...
+          &lt;body name="FL_calf" ...&gt;
+            &lt;attach model="tactip" body="tactip" prefix="FL_"/&gt;
+          &lt;/body&gt;
+
+      Python is the more flexible route: attach_sensor also points the sensor where you want,
+      can stiffen it, and stops it colliding with the link it is mounted on.
+</pre></div>
+</div>
+<p>.. py:function:: match_options(target, source)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Copy <code class="docutils literal notranslate"><span class="pre">source</span></code>’s simulation options (timestep, integrator, …) into <code class="docutils literal notranslate"><span class="pre">target</span></code>. Called
+on a sensor spec before it is attached to a robot: the robot’s options win anyway, but
+MuJoCo prints an “Attach conflict” warning (from C, in every process) for each one that
+differs. Fields this MuJoCo version doesn’t have are skipped.</p>
+<p>.. py:function:: compile_spec(spec)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>spec.compile() without MuJoCo’s expected attach notices (every other warning shows).</p>
+<p>.. py:function:: locate_sensor(scene_xml, marker_prefix=’s_c’)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Where the sensor is in a scene. Returns (mode, body name, report):
+(“link”, L)     the markers hang off actuated link L (e.g. link06): the sensor is
+everything attached to L
+(“subtree”, B)  no actuated link above them: the sensor is the whole tree B (a
+top-level body) that holds the markers</p>
+<p>.. py:function:: extract_sensor(scene_xml, root_body=’auto’, out_xml=None, keep_cameras=(‘sensor_cam’,), marker_prefix=’s_c’)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Return an MjSpec holding only the sensor, placed at the origin, and write it to out_xml
+if given. root_body=”auto” finds the sensor from its markers (see locate_sensor);
+a body name keeps just that body’s subtree. Mesh / texture paths are rewritten relative to
+out_xml, so the file works from wherever it is saved.</p>
+<p>.. py:function:: describe(scene_xml, marker_prefix=’s_c’)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Print where the sensor is and what extract will keep.</p>
+<p>.. py:function:: save_spec(spec, out_xml)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Write an MjSpec as an MJCF file that loads from where it is saved: asset file paths
+are made relative to out_xml (the spec’s own relative paths are resolved first).</p>
+<p>.. py:function:: sensor_info(sensor, marker_prefix=’s_c’, sensor_site=’ee_site’, axis=None)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Geometry of a standalone sensor at rest, in its root body’s frame:
+axis    tip direction: the z axis of a “sensor_tip” site if the sensor has one, else
+from the centre of a sphere fitted to the markers (the dome) through their
+centroid; or the <code class="docutils literal notranslate"><span class="pre">axis</span></code> given
+centre  that dome centre (the tip itself for a sensor with a “sensor_tip” site)
+tip     the “sensor_tip” site, else the furthest point of the collision geometry along
+the axis, on the axis line
+reach   distance from the root origin to the tip along the axis (m)
+radius  sideways extent of the tip end (dome + skin) from the axis (m)
+n_markers, mass, timestep, has_site (whether sensor_site exists), root</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   A sensor without TacTip markers needs a "sensor_tip" site (or `axis`) so it can be
+   mounted: &lt;site name="sensor_tip" pos="0 0 0.03" zaxis="0 0 1"/&gt;.
+</pre></div>
+</div>
+<p>.. py:function:: model_sensor_info(m, d, rid, marker_prefix=’s_c’, sensor_site=’ee_site’, axis=None, within=None, skip_root_geoms=False)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>sensor_info on a compiled model, in body <code class="docutils literal notranslate"><span class="pre">rid</span></code>’s frame. With within=True only the
+markers and geoms in rid’s subtree count, and with skip_root_geoms rid’s own geoms don’t
+(so rid = the arm link of a TacTip written into a scene measures it as extract_sensor
+would, without extracting it).</p>
+<p>.. py:function:: mount_pose(info, tip_at, tip_dir, spin=0.0)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Position and quat for the sensor’s root body so that its tip sits at <code class="docutils literal notranslate"><span class="pre">tip_at</span></code> and
+points along <code class="docutils literal notranslate"><span class="pre">tip_dir</span></code> (both in the parent body’s frame), turned by <code class="docutils literal notranslate"><span class="pre">spin</span></code> radians about
+that direction.</p>
+<p>.. py:function:: quat_between(a, b)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Shortest rotation taking unit vector a to unit vector b, as a MuJoCo quat (w, x, y, z).</p>
+<p>.. py:function:: set_coef(obj, name, value)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Set a spec joint’s / tendon’s stiffness or damping to a linear value (no higher-order
+terms).</p>
+<p>.. py:function:: scale_coef(obj, name, k)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Multiply a spec joint’s / tendon’s stiffness or damping (every term) by k.</p>
+<p>.. py:function:: attach_sensor(spec, parent, sensor, prefix, pos=(0, 0, 0), quat=None, axis=None, axis_to=None, tip_at=None, stiffness_scale=1.0, exclude_parent=True)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Attach a prefixed copy of a standalone sensor to body <code class="docutils literal notranslate"><span class="pre">parent</span></code> of <code class="docutils literal notranslate"><span class="pre">spec</span></code>.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       pos              where the sensor's root body origin goes, in the parent's frame
+       quat             its orientation in the parent's frame, or
+       axis_to          a direction in the parent's frame for the sensor tip to point along
+                        (the tip axis is measured from the markers unless `axis` is given)
+       tip_at           with axis_to: put the tip of the sensor at this point (parent frame)
+                        instead of placing the root body at `pos`
+       stiffness_scale  multiplies stiffness, damping and armature of the sensor's joints and
+                        tendons. Scaling all three keeps the natural frequency (so the time
+                        step it needs) and the damping ratio unchanged, but carries
+                        stiffness_scale x the load at the same deflection: a skin tuned for a
+                        few newtons of finger pressure saturates under a robot's weight.
+       exclude_parent   no contacts between the sensor and the link it is mounted on
+
+   Returns the attached root body. Its elements are all named prefix + original name.
+</pre></div>
+</div>
+<p>.. py:function:: expand_includes(xml_path)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Parse an MJCF file with every <include> expanded in place, following MuJoCo’s rules:
+file paths are relative to the main file’s directory, and the included file’s top-level
+element is dropped (its children take the include’s place). Returns the root Element.</p>
+<p>.. py:function:: remove_bodies(root, body_names)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Delete the named bodies (with their subtrees) from an expanded MJCF tree, then every
+tendon, actuator, equality, sensor, contact pair / exclude and skin that refers to
+anything deleted (repeatedly, so a sensor on a deleted tendon goes too). Keyframes are
+dropped if any joint or actuator went (their qpos / ctrl lengths no longer match).
+Returns {kind: set of deleted names}.</p>
+<p>.. py:function:: scene_without_bodies(scene_xml, body_names)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>The scene as one MJCF string with the named bodies (and everything referring to them)
+taken out; mesh / texture directories made absolute so it loads from a string.
+Returns (xml string, {kind: deleted names}).</p>
+<p>.. py:function:: child_bodies(scene_xml, parent)
+:module: tactip_mujoco_gym.sensor_tools</p>
+<p>Names of the bodies directly inside body <code class="docutils literal notranslate"><span class="pre">parent</span></code> of a scene (includes expanded).</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="surfaces.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Surfaces and textures</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="environments.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Environments</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Dexter Shepherd
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Sensors</a><ul>
+<li><a class="reference internal" href="#readouts">Readouts</a></li>
+<li><a class="reference internal" href="#hardware">Hardware</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ad52b534"></script>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+# Surfaces and textures
+
+The 3D Printable Tactile Dataset's textures, the wave surfaces of `TacArm-surface`, and the
+heightfield helpers.
+
+```{automodule} tactip_mujoco_gym.textures
+```

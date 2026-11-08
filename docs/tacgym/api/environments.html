@@ -1,0 +1,1016 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Sensors" href="sensors.html"><link rel="prev" title="&lt;no title&gt;" href="../layout.html">
+
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>Environments - TacTip-gym 0.4.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">TacTip-gym 0.4.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">TacTip-gym 0.4.0</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensors.html">Sensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="surfaces.html">Surfaces and textures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Experiments and training</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/blob/main/docs/api/environments.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/shepai/TacTip-gym/edit/main/docs/api/environments.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="environments">
+<h1>Environments<a class="headerlink" href="#environments" title="Link to this heading">¶</a></h1>
+<p>The task catalogue, the shared base classes and every robot. Each task is created with
+<code class="docutils literal notranslate"><span class="pre">gym.make(&lt;task</span> <span class="pre">id&gt;,</span> <span class="pre">...)</span></code>; the classes below are what it builds.</p>
+<p>.. py:module:: tactip_mujoco_gym.envs</p>
+<p>The task catalogue. Every task is a Gymnasium environment:</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("TacArm-peg", obs_modes=["tactile"])          # after import tactip_mujoco_gym
+       env = gym.make("tactip_mujoco_gym:TacArm-peg", ...)          # imports the package itself
+
+   `python -m tactip_mujoco_gym list` prints this table; `... describe &lt;task&gt;` builds the task
+   and shows every input it offers. Keyword arguments every robot accepts:
+
+       obs_modes     inputs the policy gets: {"tactile": True, ...}, ["tactile", "vision"] or
+                     "tactile+vision" (proprioception is always included)
+       obs_format    "flat" (one vector) or "dict" (one key per input, for fusion networks)
+       sensors       {key: readout spec}: change, add or remove sensor readouts
+       sensor_xml    the sensor hardware mounted on the robot (default: the TacTip)
+       overrides     {"CONSTANT": value}: any of the env's class constants, for this instance
+       max_steps     episode length
+   plus the task's own options below.
+</pre></div>
+</div>
+<p>.. py:function:: list_tasks()
+:module: tactip_mujoco_gym.envs</p>
+<p>{task id: summary} for every registered task.</p>
+<section id="base-classes">
+<h2>Base classes<a class="headerlink" href="#base-classes" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.envs.base</p>
+<p>Shared MuJoCo + Gymnasium plumbing for the tactip environments.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   TactileGymEnv  - loads the model and owns the observation pipeline: which inputs are
+                    selected (obs_modes), the sensor readouts that compute them (sensors), the
+                    places on the robot the sensor hardware is mounted (sensor_mounts) and the
+                    flat / dict observation format. The original constructor signature
+                    (xml_subpath, obs_dim, action_dim) and the legacy reset/step/_get_obs are kept
+                    so RandomTac behaves exactly as before.
+   TaxelMixin     - adds the event-based tx_* taxel input ("events") and its API.
+
+   Observation inputs
+   ------------------
+   Proprioception (the robot's own state) is always included. On top of it, any combination of
+
+       task inputs   computed by the task itself: "privileged" (true task state: object pose,
+                     goal vector, ...) and, for the humanoid, "object"
+       sensor inputs computed by readouts (sensors/), one per key. Defaults on every robot:
+                     "tactile"        TacTip marker displacements and their change (all mounts)
+                     "tactile_image"  the camera inside each TacTip
+                     "vision"         the robot's camera (VISION_CAMERA)
+                     arm only: "events" (taxel events on the objects)
+
+       gym.make("TacArm-peg", obs_modes={"vision": True, "tactile": True})   # missing keys = off
+       gym.make("TacArm-peg", obs_modes=["vision", "tactile"])               # same, as a list
+       gym.make("TacArm-peg", obs_modes=["tactile"], sensors={"tactile": {"clip": 10}})
+       gym.make("TacArm-peg", obs_modes=["force"], sensors={"force": MyForceReadout()})
+       env.unwrapped.set_obs_modes({"tactile": True})     # a dict / list is a full selection
+       env.unwrapped.set_obs_modes(vision=True)           # keywords change only those keys
+
+   sensors={key: spec} replaces a default readout, tweaks it ({"width": 96} keeps the type),
+   adds a new key, or removes one (None). Specs: a registered name, "module:Class", a dict
+   {"type": ..., **kwargs} or a Sensor instance (copied per env). See sensors/base.py.
+
+   The selected parts are concatenated into one flat vector (obs_format="flat", default), in the
+   order proprio, task inputs, sensor inputs, or kept under their own keys (obs_format="dict"),
+   ready for a fusion network (SB3: MultiInputPolicy, or vt_encoders.VisuoTactilePolicy).
+
+   Every change rebuilds env.observation_space, so call these before wrapping the env in a
+   VecEnv / VecNormalize, or pass obs_modes=... through env_kwargs (see RL_BASE.run).
+   The earlier privileged=True/False argument and set_privileged() still work:
+   True = privileged only, False = tactile only.
+
+   overrides={"NAME": value} sets any of the env's UPPER_CASE class constants on this instance
+   (e.g. {"TIP_R": 0.03, "VISION_WIDTH": 96}), for config files and sensor swaps.
+</pre></div>
+</div>
+<p>.. py:class:: TactileGymEnv(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~gymnasium.Env</span></code></p>
+<p>Shared MuJoCo + Gym logic for all tactile environments.</p>
+<p>.. py:property:: TactileGymEnv.input_names
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Every input that can be selected with obs_modes (proprioception is always on).
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.describe_inputs()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  {input: (available, where it comes from or why it is unavailable)}
+</pre></div>
+</div>
+<p>.. py:property:: TactileGymEnv.obs_modalities
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  {observation key: encoder kind ("mlp" / "cnn")} for the selected sensor inputs
+  that want one (used by RL_BASE.run with encoders=...).
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.resolve_obs_modes(obs_modes=None, privileged=None)
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  obs_modes (missing keys = False) &gt; legacy privileged flag &gt; default (privileged).
+  obs_modes may be a dict {name: bool}, a list of names, or "tactile+vision".
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.set_obs_modes(obs_modes=None, **flags)
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Choose which inputs make up the observation (proprioception is always included).
+
+  ::
+
+      env.set_obs_modes({"vision": True, "tactile": True})   # full selection, others off
+      env.set_obs_modes(["vision", "tactile"])               # the same
+      env.set_obs_modes(privileged=False)                    # change just these keys
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.set_obs_format(obs_format=’flat’)
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  "flat": one long vector. "dict": one key per selected input (for fusion networks).
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.set_privileged(privileged=True)
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Earlier API, kept for existing scripts: True = privileged state only,
+  False = tactile markers only. Vision is left as it is.
+</pre></div>
+</div>
+<p>.. py:property:: TactileGymEnv.events
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Whether the taxel "events" input is on.
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.get_vision()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Image of the "vision" input, shape (H, W, C): uint8 rgb / gray, float32 depth (m).
+  Uses its own small renderer, separate from any viewing / video renderer.
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.get_nodes()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Marker positions in their mount's sensor frame (ee_site), shape (n_markers, 3).
+</pre></div>
+</div>
+<p>.. py:method:: TactileGymEnv.get_tactile_image()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  The inside-the-sensor camera image (geom group 2 only), float32 in [0, 1].
+</pre></div>
+</div>
+<p>.. py:class:: TaxelMixin(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.TactileGymEnv</span></code></p>
+<p>Event-based readout of the touch-sensor grid made by add_events.py (tx_* sensors), as the
+“events” input (readout: sensors/taxels.py).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   A taxel emits an event when its force has changed by at least EVENT_THRESHOLD newtons since
+   the last event on that taxel (or since reset); the reference level is then set to the
+   current force, like a neuromorphic sensor. A steady load produces no events.
+
+       env.unwrapped.set_event(True)     # = set_obs_modes(events=True): one value per taxel,
+                                         # the signed event count since the previous step
+       env.unwrapped.get_events()        # raw events, rows of [taxel_index, polarity, time]
+
+   While events are off and every sensor in the model is a taxel, MuJoCo's sensor evaluation
+   is switched off entirely (thousands of touch sensors are a big part of the step cost).
+</pre></div>
+</div>
+<p>.. py:method:: TaxelMixin.get_events()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Events since the last call, as an (N, 3) array: [taxel_index, polarity, time].
+</pre></div>
+</div>
+<p>.. py:method:: TaxelMixin.get_taxel_forces()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Current normal force on every taxel (n_taxels,).
+</pre></div>
+</div>
+<p>.. py:method:: TaxelMixin.taxel_positions()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  World position of every taxel (n_taxels, 3). Moves with the object each step.
+</pre></div>
+</div>
+<p>.. py:method:: TaxelMixin.taxel_bodies()
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Name of the body each taxel is on, as a list of strings.
+</pre></div>
+</div>
+<p>.. py:class:: HeightfieldMixin()
+:module: tactip_mujoco_gym.envs.base</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>For tasks that rewrite heightfields at reset (texture blocks, wave surfaces): keeps
+every renderer’s copy of them current. Put it before the env class in the bases, list the
+heightfields in _hfield_ids() and call _hfields_changed() after writing to them.</p>
+<p>.. py:method:: HeightfieldMixin.sync_renderer(renderer)
+:module: tactip_mujoco_gym.envs.base</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Upload the heightfields to a mujoco.Renderer (or passive viewer handle) if they
+  changed since it last drew.
+</pre></div>
+</div>
+</section>
+<section id="arm-unitree-z1">
+<h2>Arm (Unitree Z1)<a class="headerlink" href="#arm-unitree-z1" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Tactip arm tasks.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       TacArm-hill   Incline         intercept a ball rolling down a ramp, then push it to the top
+       TacArm-peg    Peg             start touching a cylinder, push it into the hole
+       TacArm-shape  ShapeInsertion  start touching a shape, identify it, push it into its own hole
+       TacArm-edge   Edge            start touching the top edge of a block, follow it round (CCW)
+
+   Every task accepts:
+       obs_modes={"vision": bool, "tactile": bool, "privileged": bool, ...} or a list of names
+                 (see base.py; default: privileged only; missing keys count as False). Inputs:
+                 privileged, tactile, tactile_image, vision, events, plus any added by `sensors`
+       obs_format="flat" | "dict"     one long vector (default) or one key per input
+       sensors={key: spec}            change / add / remove readouts (see base.py, sensors/)
+       sensor_xml=None                sensor hardware on the arm: None = the TacTip written into
+                                      the scene; a registered name ("tactip"), a standalone MJCF
+                                      file or an MjSpec swaps it (see sensors/models.py)
+       sensor_stiffness=1.0           scales the sensor's joint / tendon stiffness and damping
+       overrides={"TIP_R": 0.03}      set class constants on this instance
+       events=True/False              append tx_* taxel events (= "events" in obs_modes)
+       privileged=True/False          earlier shortcut: privileged only / tactile only
+
+   Swapping the sensor: the built-in TacTip (every body under SENSOR_PARENT, with its tendons,
+   equalities and contact excludes) is cut out of the scene and the chosen sensor is attached to
+   SENSOR_LINK, turned and moved so its tip is where the TacTip's tip was. The arm's ee_site
+   (the point the controller moves) and hand camera stay where they are. Constants that depend
+   on the sensor's shape (TIP_R, PUSH_Z, Incline.TIP_H) may need `overrides`; check_envs.py
+   reports them for a new sensor.
+
+   Control (shared by all tasks)
+   -----------------------------
+   action in [-1, 1]  -&gt;  low-pass filtered velocity command (ACTION_SMOOTHING)
+       -&gt; Cartesian tip displacement (ACTION_SCALE metres per step at full command)
+       -&gt; commanded tip target, which may not run more than LEASH ahead of the measured tip
+          (no wind-up when blocked) but is never dragged back to it (no gravity-sag ratchet)
+       -&gt; differential IK (damped least squares) warm-started from the previous *command*,
+          never from the measured joints, so the arm can't drift or flip IK branches
+       -&gt; joint targets with velocity + gravity feed-forward, interpolated over FRAME_SKIP steps.
+
+   Rewards
+   -------
+   Per step, roughly in [-1, 1]: mostly *progress* made this step (object toward its hole, ball up
+   the slope, distance along the edge) plus small closeness terms. All terms depend only on the
+   state (no hidden stage counters). Paying for progress rather than proximity matters: with a
+   static closeness reward, doing nothing out-scored noisy attempts and PPO learned to sit still.
+   Success adds R_SUCCESS and ends the episode; unrecoverable failure adds R_FAIL and ends it.
+</pre></div>
+</div>
+<p>.. py:class:: RobotArmEnv(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.TaxelMixin</span></code></p>
+<p>.. py:attribute:: RobotArmEnv.TARGET_QUAT
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([1., 0., 0., 0.])</p>
+<p>.. py:attribute:: RobotArmEnv.HOME_TIP
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.35, 0.  , 0.2 ])</p>
+<p>.. py:attribute:: RobotArmEnv.WS_LO
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([ 0.1 , -0.4 ,  0.03])</p>
+<p>.. py:attribute:: RobotArmEnv.WS_HI
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.65, 0.4 , 0.4 ])</p>
+<p>.. py:method:: RobotArmEnv.get_camera(mode=’rgb’, camera=None, width=None, height=None)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Render an image from a MuJoCo camera attached to the robot.
+
+  ::
+
+      Args:
+          mode: "rgb" or "depth"
+          camera: Camera name (defaults to CAMERA_NAME)
+          width: Image width (defaults to CAMERA_WIDTH)
+          height: Image height (defaults to CAMERA_HEIGHT)
+
+      Returns:
+          rgb:   uint8 array, shape (H, W, 3)
+          depth: float32 array, shape (H, W), depth in metres
+</pre></div>
+</div>
+<p>.. py:method:: RobotArmEnv.close()
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Release the camera renderer, then the base class renderers.
+</pre></div>
+</div>
+<p>.. py:class:: Peg(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.robot_arm._PushTask</span></code></p>
+<p>.. py:attribute:: Peg.HOLE_XY
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.45, 0.  ])</p>
+<p>.. py:attribute:: Peg.WS_LO
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([ 0.2  , -0.2  ,  0.055])</p>
+<p>.. py:attribute:: Peg.WS_HI
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.55, 0.2 , 0.25])</p>
+<p>.. py:class:: ShapeInsertion(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.robot_arm._PushTask</span></code></p>
+<p>.. py:attribute:: ShapeInsertion.WS_LO
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([ 0.15 , -0.25 ,  0.055])</p>
+<p>.. py:attribute:: ShapeInsertion.WS_HI
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.62, 0.25, 0.25])</p>
+<p>.. py:class:: Incline(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.robot_arm.RobotArmEnv</span></code></p>
+<p>.. py:attribute:: Incline.WS_LO
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([ 0.15, -0.15,  0.  ])</p>
+<p>.. py:attribute:: Incline.WS_HI
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.65, 0.15, 0.3 ])</p>
+<p>.. py:class:: Edge(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.robot_arm</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.robot_arm.RobotArmEnv</span></code></p>
+<p>.. py:attribute:: Edge.ACTION_SCALE
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.004 , 0.004 , 0.0015])</p>
+<p>.. py:attribute:: Edge.WS_LO
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.12, 0.12, 0.08])</p>
+<p>.. py:attribute:: Edge.WS_HI
+:module: tactip_mujoco_gym.envs.robot_arm
+:value: array([0.48, 0.48, 0.2 ])</p>
+<p>.. py:module:: tactip_mujoco_gym.envs.surface_follow</p>
+<p>TacArm-surface: slide the sensor along a wavy strip, keeping it pressed in by the same depth
+and (by default) square to the surface.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("TacArm-surface", obs_modes=["tactile"])
+       env = gym.make("TacArm-surface", wave="chirp", texture="patches")
+
+   The strip (STRIP_LENGTH x STRIP_WIDTH, a heightfield) is redrawn every episode:
+
+       wave     "uniform"  one sine: the same amplitude and wavelength all along
+                "chirp"    wavelength and amplitude change steadily along the strip
+                "multi"    two or three sines added (an irregular profile)
+                "flat", "random" (default: one of the three waves), or a list to draw from
+       texture  None (default, smooth), a dataset texture 1..20 all along (a uniform texture),
+                "random" (one of TEXTURES all along), "patches" (a different one every
+                TEXTURE_PATCH metres: a non-uniform texture), or a list to draw one from.
+                Textures are the 3D Printable Tactile Dataset's at the printed scale
+                (see textures.py; TEXTURE_SCALE scales their relief).
+
+   The waves vary along the strip only, so square to the surface means pitching the sensor.
+   The depth and the surface normal are measured from the wave (the surface the task asks to
+   follow); a texture is relief on it that the sensor feels but doesn't have to trace.
+
+   Control: the tip advances along the strip by itself (SPEED per step). Actions in [-1, 1]:
+       follow_normal=True  (2) depth (tip up / down), pitch rate of the sensor
+       follow_normal=False (1) depth only; the sensor stays vertical
+   The depth to keep is set at the start: the sensor is lowered onto the flat start of the strip
+   and pressed in by PRESS.
+
+   Reward per step: closeness to that depth (W_DEPTH), sensor axis along the surface normal
+   (W_NORMAL, follow_normal only), and progress along the strip while touching it (W_PROG).
+   Success: reach the end of the strip. Fail: lift off by LOST_UP or press in LOST_DOWN deeper.
+
+   privileged input: depth error (cm), sensor pitch, the pitch square to the surface, their
+   difference, angle to the normal, the surface height 1, 2 and 4 cm ahead (cm, relative to
+   under the tip), progress along the strip, touching.
+</pre></div>
+</div>
+<p>.. py:class:: SurfaceFollow(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.surface_follow</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.HeightfieldMixin</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.robot_arm.RobotArmEnv</span></code></p>
+<p>.. py:attribute:: SurfaceFollow.WS_LO
+:module: tactip_mujoco_gym.envs.surface_follow
+:value: array([ 0.15, -0.1 ,  0.04])</p>
+<p>.. py:attribute:: SurfaceFollow.WS_HI
+:module: tactip_mujoco_gym.envs.surface_follow
+:value: array([0.6 , 0.1 , 0.25])</p>
+<p>.. py:method:: SurfaceFollow.get_camera(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.surface_follow</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Render an image from a MuJoCo camera attached to the robot.
+
+  ::
+
+      Args:
+          mode: "rgb" or "depth"
+          camera: Camera name (defaults to CAMERA_NAME)
+          width: Image width (defaults to CAMERA_WIDTH)
+          height: Image height (defaults to CAMERA_HEIGHT)
+
+      Returns:
+          rgb:   uint8 array, shape (H, W, 3)
+          depth: float32 array, shape (H, W), depth in metres
+</pre></div>
+</div>
+</section>
+<section id="quadruped-unitree-go2">
+<h2>Quadruped (Unitree Go2)<a class="headerlink" href="#quadruped-unitree-go2" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<p>TacQuad: a Unitree Go2 (MuJoCo Menagerie) with a TacTip on every foot, learning to walk
+stably on ground whose feel changes from tile to tile: friction, softness, bounce and bumps.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("tactip_mujoco_gym:TacQuad-walk", obs_modes={"tactile": True})
+
+   The model is built in code (MjSpec) every time the env is made, so go2.xml itself is never
+   edited: the Go2 (assets/go2/go2.xml, or any go2.xml found under assets/), its foot spheres
+   replaced by four prefixed copies of assets/sensor/tactip.xml (FL_, FR_, RL_, RR_; see
+   sensor_tools.py), position-controlled joints, a head camera and a grid of heightfield tiles.
+   Works with the MuJoCo Menagerie Go2 and the one in Unitree's unitree_mujoco repo.
+
+   See the robot with its TacTip feet, or write it out as a standalone XML:
+       python -m tactip_mujoco_gym.envs.tactip_quadruped --view
+       python -m tactip_mujoco_gym.envs.tactip_quadruped --save go2_tactip.xml
+
+   Observation inputs (obs_modes), as in the arm tasks; proprioception is always included:
+       proprio     base angular velocity, gravity in the base frame, velocity command,
+                   joint positions (minus the standing pose), joint velocities, previous action
+       privileged  base linear velocity, base height, foot contact forces, friction and softness
+                   under each foot, foot heights, a grid of terrain heights around the robot
+       tactile     marker displacements of all four TacTips (mm) and their change since last step
+       tactile_image  the cameras inside the four TacTips, stacked along the channels
+       vision      the head camera (VISION_CAMERA = "headcam")
+       + any readout added with sensors={...}; the four feet are env.sensor_mounts (FL, FR, RL, RR)
+
+   Action: 12 joint targets, a in [-1, 1] -&gt; standing pose + ACTION_SCALE * a, PD at KP / KD.
+   Task:   follow a velocity command (forward, sideways, turn), resampled every few seconds;
+           episodes end when the trunk touches the ground or the robot tips past 60 degrees.
+   Terrain: N_TILES x N_TILES tiles of TILE metres. Every reset draws, per tile, a friction, a
+           softness (contact time constant + impedance) and a damping ratio, and decides whether
+           the tile is flat or rough (bumps and mounds). `terrain_level` (0..1) scales how
+           extreme they get, and with curriculum=True it rises when the robot copes and falls
+           when it doesn't. Tile colour shows the feel: blue = slippery, red-brown = grippy,
+           paler = softer. Flat tiles are boxes and rough tiles heightfields (the TacTip pins
+           collide with a box several times faster).
+
+   Feet:   "tactip" four TacTips (slow: ~150 bodies of sensor); "proxy" one sphere per foot
+           with the TacTip's size, reach and mass (same leg geometry, much faster: train a
+           privileged teacher on it); "rigid" the Go2's own feet.
+</pre></div>
+</div>
+<p>.. py:class:: TacQuadruped(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.TactileGymEnv</span></code></p>
+<p>.. py:attribute:: TacQuadruped.DEFAULT_POSE
+:module: tactip_mujoco_gym.envs.tactip_quadruped
+:value: array([ 0. ,  0.9, -1.8,  0. ,  0.9, -1.8,  0. ,  0.9, -1.8,  0. ,  0.9,        -1.8])</p>
+<p>.. py:attribute:: TacQuadruped.ACTION_SCALE
+:module: tactip_mujoco_gym.envs.tactip_quadruped
+:value: array([0.35, 0.6 , 0.6 , 0.35, 0.6 , 0.6 , 0.35, 0.6 , 0.6 , 0.35, 0.6 ,        0.6 ])</p>
+<p>.. py:method:: TacQuadruped.find_robot(robot_xml=None)
+:module: tactip_mujoco_gym.envs.tactip_quadruped
+:classmethod:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  robot_xml if given, else assets/go2/go2.xml, else the first go2.xml under assets/.
+</pre></div>
+</div>
+<p>.. py:method:: TacQuadruped.terrain_height(x, y)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Ground height at world (x, y) (arrays allowed), bilinear in the heightfield.
+</pre></div>
+</div>
+<p>.. py:method:: TacQuadruped.set_terrain_level(level, curriculum=False)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Fix the terrain difficulty (0..1) from the next reset on.
+</pre></div>
+</div>
+<p>.. py:method:: TacQuadruped.sync_renderer(renderer)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Upload the current heightfields to a mujoco.Renderer (or passive viewer) if they
+  changed since it last drew; call before rendering after a reset.
+</pre></div>
+</div>
+<p>.. py:method:: TacQuadruped.get_foot_nodes()
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Marker displacement from rest per foot, (4, markers_per_foot, 3) in metres.
+</pre></div>
+</div>
+<p>.. py:function:: robot_spec(feet=’tactip’, sensor_stiffness=10.0, sensor_xml=None, robot_xml=None)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<p>The Go2 with its TacTip (or proxy / rigid) feet on a plain floor, without the RL
+terrain: for looking at, or for use outside this env. Returns (MjSpec, standing qpos).</p>
+<p>.. py:function:: print_snippet(sensor_xml=None)
+:module: tactip_mujoco_gym.envs.tactip_quadruped</p>
+<p>The <attach> XML that puts the sensor on each Go2 foot, for editing go2.xml by hand
+(MuJoCo &gt;= 3.2). The env doesn’t need this: it attaches the sensors itself.</p>
+</section>
+<section id="humanoid-rb-y1-and-gripper">
+<h2>Humanoid (RB-Y1) and gripper<a class="headerlink" href="#humanoid-rb-y1-and-gripper" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>TacHumanoid: a wheeled humanoid (Rainbow Robotics RB-Y1, MuJoCo Menagerie) whose two hands
+are TacTips. It picks up an object by squeezing it between the two sensors, carries it to a
+target on the table and puts it down.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("tactip_mujoco_gym:TacHumanoid-pick", obs_modes={"tactile": True})
+
+   Objects (one per episode, drawn from OBJECT_NAMES): five soft ones (cube, brick, ball, egg,
+   cylinder: a core covered in spring-loaded pads that dent where they are pressed) and five rigid
+   ones (box, cylinder, sphere, capsule, prism). Every episode randomises the object's stiffness
+   (soft: foam .. firm rubber; rigid: rigid), mass, surface friction, position and yaw, and where
+   the target is. Gripping too lightly lets heavy or slippery objects slide out; squeezing too
+   hard crushes soft ones.
+
+   Robot: the base drives like a differential-drive platform (forward speed + turn rate); the
+   6-joint torso and the head hold a fixed pose leaning over the table. Each TacTip is mounted
+   like a palm, on the side of the wrist, so the forearms come down from above while the two
+   sensors face each other; each tip is moved in Cartesian space by inverse kinematics.
+
+   Actions (action_mode):
+       "bimanual"     (default, 7) base forward speed, turn rate, grasp centre x, y, z (robot
+                      frame, velocity), grasp width (velocity: negative closes the hands),
+                      grasp yaw (turn rate of the line between the hands, up to +-0.8 rad)
+       "independent"  (9) base forward speed, turn rate, left tip x y z, right tip x y z, grasp
+                      yaw
+
+   Observation inputs (obs_modes), as in the other tasks; proprioception is always included:
+       proprio     both tips in the robot frame, how far each lags its command, the smoothed
+                   action, base speed and turn rate, the target relative to the robot, and
+                   whether the object has been lifted yet
+       object      what a camera-based object tracker would give: the object's position
+                   (relative to the hands and to the target), velocity, orientation, size, shape
+                   and height above the table
+       privileged  "object" plus what touch has to work out: stiffness, mass, friction, how
+                   squashed it is and the grip force on each hand
+       tactile     both TacTips' markers: displacement from rest and change since last step (mm)
+       tactile_image  the cameras inside the two TacTips, stacked along the channels
+       vision      "headcam" on the head, looking down at the table
+       + any readout added with sensors={...}; the hands are env.sensor_mounts (left, right)
+
+   Episode: 20 s at 50 Hz. Success: the object, after being lifted, rests within 5 cm of the
+   target with both hands off it for 0.2 s. Fail: it falls off the table, or a soft object is
+   squashed flat (a pad pushed in all the way) for 0.06 s.
+</pre></div>
+</div>
+<p>.. py:function:: soft_pads(shape, dims)
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>Pads covering a soft object: (centre, normal, tangent, geom type, geom size) each, in
+the object’s frame. The pad’s outer surface sits on the object’s surface.</p>
+<p>.. py:function:: soft_core(shape, dims)
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>The core’s geom: the object shrunk by a pad’s thickness and travel (a backstop for a
+fully squashed pad).</p>
+<p>.. py:function:: soft_layout(name)
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>Everything that turns the shared soft body into this object: per pad its position,
+orientation, geom type, size and bounds, and the core’s geom (in the object frame).</p>
+<p>.. py:class:: TacHumanoidPick(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.TactileGymEnv</span></code></p>
+<p>.. py:attribute:: TacHumanoidPick.TORSO_POSE
+:module: tactip_mujoco_gym.envs.tactip_humanoid
+:value: array([0. , 0.4, 0. , 0. , 0. , 0. ])</p>
+<p>.. py:attribute:: TacHumanoidPick.HEAD_POSE
+:module: tactip_mujoco_gym.envs.tactip_humanoid
+:value: array([0., 0.])</p>
+<p>.. py:attribute:: TacHumanoidPick.WS_LO
+:module: tactip_mujoco_gym.envs.tactip_humanoid
+:value: array([ 0.45, -0.1 ,  0.73])</p>
+<p>.. py:attribute:: TacHumanoidPick.WS_HI
+:module: tactip_mujoco_gym.envs.tactip_humanoid
+:value: array([0.72, 0.1 , 0.92])</p>
+<p>.. py:attribute:: TacHumanoidPick.START_CENTRE
+:module: tactip_mujoco_gym.envs.tactip_humanoid
+:value: array([0.55, 0.  , 0.84])</p>
+<p>.. py:method:: TacHumanoidPick.get_hand_nodes()
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Marker displacement from rest per hand (left, right), (2, markers, 3) in metres.
+</pre></div>
+</div>
+<p>.. py:class:: ScriptedPicker(env, safety=1.8)
+:module: tactip_mujoco_gym.envs.tactip_humanoid</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Bimanual squeeze grasp written by hand, using the simulator’s state (any observation
+mode): drive up if the object is out of reach, square up to its faces, approach, close
+until the grip force suits its weight and friction, lift, carry (driving if the target is
+out of reach), lower, release. For checks, demos and warm-starting a learned policy.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       picker = ScriptedPicker(env)          # after env.reset(); make a new one per episode
+       obs, r, term, trunc, info = env.step(picker())
+</pre></div>
+</div>
+<p>.. py:module:: tactip_mujoco_gym.envs.tactip_gripper</p>
+<p>TacGripper: a parallel-jaw gripper whose two fingers are TacTips, on a Cartesian gantry over
+a table. The task is the humanoid’s (TacHumanoid-pick): squeeze-grasp a soft or rigid object,
+carry it to a target on the table, put it down. Objects, randomisation, curriculum, reward,
+success and failure are all shared with it (see tactip_humanoid.py); only the robot differs.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("TacGripper-pick", obs_modes=["tactile", "object"])
+
+   Robot: the gripper hangs from a gantry that moves it in x, y, z and turns it about the
+   vertical (stiff position servos, gravity compensated). Its two fingers slide toward each
+   other, each a position servo with a force limit (FINGER_FORCE) so a closed command squeezes.
+   The TacTips face each other with their tips on the grasp line; the frame around them is
+   sized from the mounted sensor, so a different sensor_xml gets a gripper that fits it.
+
+   Actions (5, in [-1, 1], low-pass filtered): grasp centre x, y, z (velocity, world frame),
+   grasp width (velocity: negative closes), grasp yaw (turn rate, up to +-GRASP_YAW_MAX).
+   The width command may sit at most SQUEEZE_MAX inside the measured gap between the tips,
+   which bounds the grip force.
+
+   Observation inputs (obs_modes); proprioception is always included:
+       proprio     both tips (world), how far each lags its command, the filtered action, the
+                   target, grasp yaw, whether the object has been lifted
+       object, privileged, tactile, tactile_image as on TacHumanoid-pick; vision: "overhead"
+   reset(options=...): "object", "stiffness", "mass", "friction", "yaw", "level".
+   ScriptedPicker (tactip_humanoid.py) drives this gripper too.
+</pre></div>
+</div>
+<p>.. py:function:: sensor_extent(sensor, info)
+:module: tactip_mujoco_gym.envs.tactip_gripper</p>
+<p>(depth, lateral) of a standalone sensor: how far its colliding geometry reaches back
+from the tip along the axis, and out from the axis (m).</p>
+<p>.. py:class:: TacGripperPick(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.tactip_gripper</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.tactip_humanoid.TacHumanoidPick</span></code></p>
+<p>.. py:attribute:: TacGripperPick.HOME
+:module: tactip_mujoco_gym.envs.tactip_gripper
+:value: array([0.7 , 0.  , 0.87])</p>
+<p>.. py:attribute:: TacGripperPick.WS_LO
+:module: tactip_mujoco_gym.envs.tactip_gripper
+:value: array([ 0.45, -0.35,  0.73])</p>
+<p>.. py:attribute:: TacGripperPick.WS_HI
+:module: tactip_mujoco_gym.envs.tactip_gripper
+:value: array([0.95, 0.35, 0.97])</p>
+<p>.. py:attribute:: TacGripperPick.START_CENTRE
+:module: tactip_mujoco_gym.envs.tactip_gripper
+:value: array([0.7 , 0.  , 0.87])</p>
+</section>
+<section id="cartesian-rig">
+<h2>Cartesian rig<a class="headerlink" href="#cartesian-rig" title="Link to this heading">¶</a></h2>
+<p>.. py:module:: tactip_mujoco_gym.envs.tactile_rig</p>
+<p>TacRig: the sensor on a Cartesian test rig (a desktop-CNC frame with the sensor where the
+spindle would be, after github.com/shepai/Rig-controller), over a texture block of the 3D
+Printable Tactile Dataset in its 3D-printed holder.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>       env = gym.make("TacRig-texture", obs_modes=["tactile"])           # identify the texture
+       env = gym.make("TacRig-v0", textures=[1, 2, 3])                   # the rig, no task
+       data = press_grid(gym.make("TacRig-v0"))                          # the paper's protocol
+
+   The rig: the sensor rides on three stepper-driven axes, x (front-back), y (left-right, the
+   gantry carriage) and z (up-down), each a stiff position servo with a force limit (a stepper
+   stalls). The block sits in the holder's pocket on the plate; the plate can be tilted (the
+   rig's a axis) by a set angle per episode: reset option "tilt" (rad) or TILT_RANGE. On the
+   real rig the plate carries the x travel; here the sensor does, which is the same motion
+   relative to the block (MuJoCo heightfields have to be static, and the block is one).
+
+   Blocks (textures.py): the six dataset textures by default (textures=[1..20] or STL files),
+   29.3 x 30 mm (BLOCK_MM), 7 mm tall, from the generator's equations as a heightfield
+   (TEXTURE_RES_MM between nodes). PRINT_BLUR_MM / PRINT_NOISE_MM imitate a printer's
+   smoothing and roughness (drawn per episode). The holder is the dataset's
+   Holder_textures.stl, measured: a 31.1 x 30 mm pocket 5.8 mm deep, so a block stands about
+   1.2 mm proud of the rim.
+
+   Actions in [-1, 1] (low-pass filtered, ACTION_SMOOTHING): sensor velocity along x, y, z
+   (AXIS_SPEED at full command). TacRig-texture adds a decision: see TacRigTexture.
+
+   Observation inputs (obs_modes); proprioception is always included:
+       proprio        axis positions (scaled to their travel), command lead over each axis,
+                      the filtered action
+       force          the plate's force sensor: normal force between sensor and block / holder
+                      (N / F_REF)
+       privileged     which texture (one-hot), the tip over the block (cm from its centre), the
+                      tip's height above the surface under it (cm, negative = pressed in), tilt
+       tactile, tactile_image, vision ("rigcam"), + readouts added with sensors={...}
+   reset(options=...): "texture" (an entry of env.textures), "start" (x, y in mm from the
+   block centre), "tilt" (rad).
+</pre></div>
+</div>
+<p>.. py:class:: TacRig(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.tactile_rig</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.HeightfieldMixin</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.base.TactileGymEnv</span></code></p>
+<p>.. py:method:: TacRig.press_to(force, max_travel=0.02, settle_steps=10, slow=0.25)
+:module: tactip_mujoco_gym.envs.tactile_rig</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Lower the sensor until the plate reads `force` newtons (or it has gone max_travel
+  down), slowing to `slow` x speed once touching, then hold still for settle_steps.
+  Returns the last observation.
+</pre></div>
+</div>
+<p>.. py:class:: TacRigTexture(*args, **kwargs)
+:module: tactip_mujoco_gym.envs.tactile_rig</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~tactip_mujoco_gym.envs.tactile_rig.TacRig</span></code></p>
+<p>Identify the block by touch. Actions: sensor velocity x, y, z; then “decide” (&gt; 0
+answers, once DECIDE_AFTER steps have passed, and ends the episode); then one score per
+texture in env.textures (the answer is the highest).</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Reward per step: -STEP_COST, +W_TOUCH while the plate reads between F_TOUCH and F_MAX,
+   -W_FORCE per newton above F_MAX. Answering: R_CORRECT or R_WRONG; no answer by the end
+   of the episode counts as wrong. info["guess"]: the index answered.
+</pre></div>
+</div>
+<p>.. py:function:: press_grid(env, textures=None, points=5, span_mm=(5.0, 5.0), centre_mm=(0.0, 0.0), repeats=2, force=1.9, readout=’tactile’, tilt=0.0, max_travel=0.02, settle_steps=10, verbose=True)
+:module: tactip_mujoco_gym.envs.tactile_rig</p>
+<p>The dataset paper’s data collection on the simulated rig: for every texture, press the
+sensor onto a points x points grid (span_mm wide, centred centre_mm from the block
+centre) until the plate reads <code class="docutils literal notranslate"><span class="pre">force</span></code> newtons (the paper: 1.9 N, a 5 x 5 grid over
+5 x 5 mm, two presses per point), and record the <code class="docutils literal notranslate"><span class="pre">readout</span></code> input there.</p>
+<p>::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>   Switches the env to obs_format="dict" with only `readout` selected. Returns a dict:
+   X (samples, ...), y (index into textures), textures, pos (mm), force (N, as recorded).
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="sensors.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Sensors</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../layout.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">&lt;no title&gt;</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Dexter Shepherd
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Environments</a><ul>
+<li><a class="reference internal" href="#base-classes">Base classes</a></li>
+<li><a class="reference internal" href="#arm-unitree-z1">Arm (Unitree Z1)</a></li>
+<li><a class="reference internal" href="#quadruped-unitree-go2">Quadruped (Unitree Go2)</a></li>
+<li><a class="reference internal" href="#humanoid-rb-y1-and-gripper">Humanoid (RB-Y1) and gripper</a></li>
+<li><a class="reference internal" href="#cartesian-rig">Cartesian rig</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=ad52b534"></script>
+    </body>
+</html>

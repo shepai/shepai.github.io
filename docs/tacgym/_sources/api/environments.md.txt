@@ -1,0 +1,38 @@
+# Environments
+
+The task catalogue, the shared base classes and every robot. Each task is created with
+`gym.make(<task id>, ...)`; the classes below are what it builds.
+
+```{automodule} tactip_mujoco_gym.envs
+```
+
+## Base classes
+
+```{automodule} tactip_mujoco_gym.envs.base
+```
+
+## Arm (Unitree Z1)
+
+```{automodule} tactip_mujoco_gym.envs.robot_arm
+```
+
+```{automodule} tactip_mujoco_gym.envs.surface_follow
+```
+
+## Quadruped (Unitree Go2)
+
+```{automodule} tactip_mujoco_gym.envs.tactip_quadruped
+```
+
+## Humanoid (RB-Y1) and gripper
+
+```{automodule} tactip_mujoco_gym.envs.tactip_humanoid
+```
+
+```{automodule} tactip_mujoco_gym.envs.tactip_gripper
+```
+
+## Cartesian rig
+
+```{automodule} tactip_mujoco_gym.envs.tactile_rig
+```

@@ -1,0 +1,6 @@
+<!-- Generated from README.md: edit the README, not this file. -->
+
+```{include} ../README.md
+:start-after: <!-- docs:sensor-hardware -->
+:end-before: <!-- docs:experiments -->
+```

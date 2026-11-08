@@ -1,0 +1,65 @@
+<!-- The introduction is README.md's, up to its table of contents. -->
+
+```{include} ../README.md
+:end-before: <!-- docs:contents -->
+```
+
+```{toctree}
+:caption: Getting started
+:maxdepth: 2
+
+installation
+quickstart
+```
+
+```{toctree}
+:caption: Tasks and robots
+:maxdepth: 2
+
+tasks
+arm-tasks
+quadruped-humanoid
+surface-rig-gripper
+```
+
+```{toctree}
+:caption: Sensing
+:maxdepth: 2
+
+sensing
+sensor-hardware
+custom-sensors
+taxels
+visuotactile
+```
+
+```{toctree}
+:caption: Experiments and training
+:maxdepth: 2
+
+experiments
+training
+```
+
+```{toctree}
+:caption: Developing
+:maxdepth: 2
+
+own-task
+tests
+layout
+```
+
+```{toctree}
+:caption: API reference
+:maxdepth: 2
+
+api/environments
+api/sensors
+api/surfaces
+api/tools
+```
+
+```{include} ../README.md
+:start-after: <!-- docs:links -->
+```

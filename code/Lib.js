@@ -23,7 +23,7 @@ const projects = [
         title: "TacTip Gym",
         description: "Gym environment for attaching soft-bodied TacTip simulations.",
         image: "https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/examplearm.png",
-        link: "dev/tactip-gym.html"
+        link: "docs/tacgym/index.html"
     },
 
     {
