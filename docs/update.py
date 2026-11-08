@@ -5,7 +5,7 @@ from pathlib import Path
 DOCS_DIR = Path("C:/Users/dexte/Documents/GitHub/shepai.github.io/docs/tacgym/")
 
 # GitHub Pages static directory
-GITHUB_STATIC = "https://shepai.github.io/TacTip-gym/_static/"
+GITHUB_STATIC = "https://shepai.github.io/docs/tacgym/_static/"
 
 def fix_html_paths():
     html_files = list(DOCS_DIR.rglob("*.html"))
