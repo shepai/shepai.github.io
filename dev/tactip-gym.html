@@ -53,26 +53,29 @@
  <img src="https://raw.githubusercontent.com/shepai/tactip-gym/refs/heads/main/assets/armgif.gif" width="100%">
 
     <p>
-        <strong>TacTip-gym</strong> is a reinforcement learning environment designed for training and evaluating
-        agents using <em>vision-based tactile sensing</em> with the TacTip sensor.
-        It extends standard RL frameworks such as <code>OpenAI Gym</code> / <code>Gymnasium</code>
-        to support tactile perception tasks in robotics.
+        <strong>TacTip-gym</strong> is a reinforcement learning benchmark for testing <em>tactile</em>,
+        <em>visual-tactile</em> and <em>visual</em> sensing on robots. It simulates the TacTip, a soft optical
+        tactile sensor, in MuJoCo, and builds standard <code>Gymnasium</code> environments around it.
     </p>
     <p>
-        The gym contains four tasks built on one shared robot arm: edge following,
-        peg pushing, shape insertion and incline pushing. Each task tests a different
-        part of contact-rich manipulation, and they share the same arm, controller and
-        Gym interface, so a method can be compared across all of them. A fifth task moves the
-        sensor from the hand to the feet: a <strong>quadruped with a TacTip on each foot</strong>
-        learns to keep walking steadily while the ground under it changes from grippy to icy,
-        hard to soft, and flat to rough.
+        The gym has six tasks on three robots. Four share one <strong>robot arm</strong> with the TacTip as its
+        fingertip: edge following, peg pushing, shape insertion and incline pushing. Each tests a different part
+        of contact-rich manipulation, with the same arm, controller and Gym interface, so a method can be compared
+        across all of them. A <strong>quadruped with a TacTip on each foot</strong> learns to keep walking
+        steadily while the ground under it changes from grippy to icy, hard to soft, and flat to rough. A
+        <strong>wheeled humanoid with two TacTip palms</strong> picks up soft and rigid objects by squeezing them,
+        carries them to a target and puts them down, gripping firmly enough to hold heavy, slippery objects
+        without crushing soft ones.
     </p>
     <p>
-        Every task lets you choose what the policy observes. <strong>Privileged</strong> input is the
-        true state of the scene (where the object is, where the goal is). <strong>Tactile</strong> input
-        is the TacTip markers, which is what a real robot would actually have. <strong>Vision</strong>
-        is a small camera image. Training with privileged input first is a quick way to check that a
-        task, reward and controller work before moving to the harder tactile version.
+        The package is built so that a researcher changes <strong>what is being tested</strong> through
+        configuration rather than code. The task, the sensor mounted on the robot, how that sensor is read, which
+        inputs the policy gets and how they are fused are all chosen independently, and your own simulated sensor
+        plugs in alongside the built-in ones. <strong>Privileged</strong> input is the true state of the scene
+        (where the object is, where the goal is). <strong>Tactile</strong> input is the TacTip markers, which is
+        what a real robot would actually have. The <strong>tactile image</strong> is what the camera inside the
+        TacTip sees. <strong>Vision</strong> is a small camera image. Training with privileged input first is a quick
+        way to check that a task, reward and controller work before moving to the harder sensing versions.
     </p>
  <div id="table-of-contents">
     <h2>Contents</h2>
@@ -91,13 +94,19 @@
     <ul>
         <li>Gym-style API for reinforcement learning compatibility</li>
         <li>Simulated tactile observations based on TacTip sensor physics</li>
-        <li>Choose the policy's inputs with one argument: privileged state, tactile markers, a camera image, or any mix</li>
+        <li>Choose the policy's inputs with one argument: privileged state, tactile markers, the TacTip's own camera image, a robot camera, taxel events, or any mix</li>
+        <li>Swap the sensor hardware on any robot with <code>sensor_xml=</code>, and change or add the way it is read with <code>sensors=</code></li>
+        <li>Plug in your own simulated sensor: a stand-alone MuJoCo file plus a short readout class, and it works on all three robots</li>
+        <li>Flat vectors for MLPs, or one key per input for fusion networks, with optional pretrained visuo-tactile encoders</li>
+        <li>Experiment config files: one YAML file describes a run, and variants turn it into a set of comparisons</li>
         <li>A smooth Cartesian controller: no drift, no IK jumps, and the fingertip moves at the speed it is asked to</li>
         <li>Peg, shape and edge episodes start with the sensor already touching the object</li>
         <li>Rewards that pay for progress, so agents learn to finish the task rather than hover near it</li>
         <li>Randomised starts, shapes and surface friction, so policies cannot memorise a single scene</li>
         <li>A quadruped (Unitree Go2) with four TacTip feet, walking over ground whose friction, softness, bounce and roughness change from patch to patch</li>
+        <li>A wheeled humanoid (Rainbow Robotics RB-Y1) with two TacTip palms, picking up ten soft and rigid objects of random weight, friction and stiffness</li>
         <li>One TacTip model reused on any robot: tools to cut it out of a scene and attach renamed copies wherever they are needed</li>
+        <li>A command line to list the tasks and sensors, inspect a task's inputs, and train or evaluate from a config file</li>
         <li>Useful for sim-to-real tactile robotics research</li>
     </ul>
 
@@ -106,9 +115,11 @@
         <li>Edge and surface following with tactile feedback</li>
         <li>Object manipulation using touch perception</li>
         <li>Learning contact-rich policies for soft robotics</li>
-        <li>Comparing state-based and tactile-based control strategies</li>
+        <li>Comparing state-based, tactile, visual-tactile and visual control strategies on the same task</li>
+        <li>Benchmarking a new simulated tactile sensor against the TacTip, on the same tasks and rewards</li>
         <li>Learning to cope with hidden physical properties such as friction</li>
         <li>Legged locomotion that feels the ground: stable walking on surfaces that change underfoot</li>
+        <li>Bimanual grasping by touch: gripping hard enough, but not too hard, for objects whose weight and softness are unknown</li>
     </ul>
 
     <h3>Environment Structure</h3>
@@ -118,14 +129,23 @@
 
     <pre><code>
 import gymnasium as gym
-import tactip_mujoco_gym                            # registers the TacArm-* environments
+import tactip_mujoco_gym                            # registers the tasks
 
 env = gym.make("TacArm-peg")                        # privileged observations (default)
-# env = gym.make("TacQuad-walk", obs_modes={"tactile": True})   # the quadruped, feeling with its feet
+# env = gym.make("TacArm-peg", obs_modes=["tactile", "vision"], obs_format="dict")
+# env = gym.make("TacQuad-walk", obs_modes=["tactile"])            # the quadruped, feeling with its feet
+# env = gym.make("TacHumanoid-pick", obs_modes=["object", "tactile"])
 obs, info = env.reset()
 action = policy(obs)
 obs, reward, terminated, truncated, info = env.step(action)
     </code></pre>
+
+    <p>
+        From the command line:
+    </p>
+
+<pre><code>python -m tactip_mujoco_gym list                    # tasks, sensor readouts and sensor models
+python -m tactip_mujoco_gym describe TacArm-peg     # a task's inputs, whether each is available, shapes</code></pre>
 
     <h3>Why TacTip-gym?</h3>
     <p>
@@ -146,14 +166,47 @@ obs, reward, terminated, truncated, info = env.step(action)
         </p>
     </div>
 
+<h2 id="pipeline">Choosing What Is Being Tested</h2>
+
+<p>
+  A comparison should change one thing at a time. Each part of the pipeline is therefore its own choice, with a
+  default that matches how the benchmark has been run so far:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>You choose</th><th>How</th><th>Default</th></tr>
+  <tr><td>The task and robot</td><td>The Gym id: <code>TacArm-peg</code>, <code>TacQuad-walk</code>, <code>TacHumanoid-pick</code>, ...</td><td></td></tr>
+  <tr><td>The sensor hardware on the robot</td><td><code>sensor_xml=</code> a registered name or a stand-alone MuJoCo file</td><td>The TacTip</td></tr>
+  <tr><td>How the sensor is read</td><td><code>sensors={key: readout}</code>: change, add or remove inputs</td><td>Markers, in-sensor camera, robot camera, taxel events</td></tr>
+  <tr><td>What the policy gets</td><td><code>obs_modes=["tactile", "vision", ...]</code></td><td>Privileged state only</td></tr>
+  <tr><td>How the inputs are fused</td><td><code>obs_format="flat"</code> or <code>"dict"</code>, and pretrained <code>encoders=</code></td><td>One flat vector</td></tr>
+  <tr><td>Task constants</td><td><code>overrides={"TIP_R": 0.03}</code>: geometry, gains, reward weights</td><td>The class constants</td></tr>
+  <tr><td>All of the above, plus training</td><td>One YAML or JSON experiment file, with variants</td><td></td></tr>
+</table>
+</div>
+
+<pre><code>env = gym.make("TacArm-peg",
+               sensor_xml="examples/custom_sensor/rigid_pad.xml",   # a different sensor on the arm
+               sensors={"contact": "examples.custom_sensor.pad_contact:PadContact"},
+               obs_modes=["contact"],                               # read as contact force
+               overrides={"TIP_R": 0.02})                           # the pad's radius</code></pre>
+
+<p>
+  Every setting is checked when the environment is made: an unknown input, or one the mounted sensor cannot
+  provide (a sensor without markers has no <code>tactile</code> input), fails with an explanation instead of
+  quietly changing the experiment.
+</p>
+
 <h2 id="environments">The Environments at a Glance</h2>
 
 <p>
   The four arm environments inherit from a common <code>RobotArmEnv</code> class, which itself builds
-  on <code>TactileGymEnv</code>. The base class owns the arm, the controller, the observation
-  modes and the reset logic. Each task then supplies its own scene, task state, reward and
-  termination rule. The quadruped builds directly on <code>TactileGymEnv</code>, so it shares the
-  same observation inputs (see <a href="#quadruped">Environment 5</a>).
+  on <code>TactileGymEnv</code>. The base class owns the arm, the controller, the sensor mounting,
+  the observation inputs and the reset logic. Each task then supplies its own scene, task state,
+  reward and termination rule. The quadruped and the humanoid build directly on
+  <code>TactileGymEnv</code>, so all six tasks share the same inputs, readouts and sensor options
+  (see <a href="#quadruped">Environment 5</a> and <a href="#humanoid">Environment 6</a>).
 </p>
 
 <div class="table-wrap">
@@ -206,20 +259,29 @@ obs, reward, terminated, truncated, info = env.step(action)
     <td>1000 steps (20&nbsp;s)</td>
     <td>Stays up for the whole episode</td>
   </tr>
+  <tr>
+    <td><strong>Humanoid pick and place</strong><br><code>TacHumanoid-pick</code></td>
+    <td>Squeeze-grasp a soft or rigid object between two TacTip palms, carry it to a target on the table and put it down</td>
+    <td>61 / 878</td>
+    <td>7 (bimanual) or 9 (independent)</td>
+    <td>1000 steps (20&nbsp;s)</td>
+    <td>Object lifted, then resting on the target with both hands off it</td>
+  </tr>
 </table>
 </div>
 
 <p>
-  The tactile sizes are for the 71-marker TacTip (213 marker values per sensor; the quadruped has four).
-  Every task runs its policy at 50&nbsp;Hz: each arm step is 20 MuJoCo steps of 1&nbsp;ms, and each
-  quadruped step is 10 steps of 2&nbsp;ms.
+  The tactile sizes are for the 71-marker TacTip (426 values per sensor: displacement and change for
+  every marker; the quadruped has four sensors and the humanoid two). The humanoid sizes are for the
+  bimanual action layout. Every task runs its policy at 50&nbsp;Hz: each arm step is 20 MuJoCo steps of
+  1&nbsp;ms, and each quadruped and humanoid step is 10 steps of 2&nbsp;ms.
 </p>
 
-<h2 id="observations">Observation Modes</h2>
+<h2 id="observations">Observation Inputs</h2>
 
 <p>
-  Every observation starts with the same short <strong>proprioception</strong> block, because a real robot
-  always knows where its own arm is:
+  Every observation starts with a short <strong>proprioception</strong> block, because a real robot always knows
+  its own state. On the arm it is:
 </p>
 
 <ul>
@@ -231,71 +293,283 @@ obs, reward, terminated, truncated, info = env.step(action)
 </ul>
 
 <p>
+  The quadruped's is its IMU, joints, command and last action, and the humanoid's is its hands, base and target.
   After it come the inputs you select:
 </p>
 
 <div class="table-wrap">
 <table class="env-table">
   <tr>
-    <th>Mode</th>
-    <th>After the proprioception block</th>
-    <th>Use it for</th>
+    <th>Input</th>
+    <th>Comes from</th>
+    <th>Contents</th>
+    <th>Size: arm / quadruped / humanoid</th>
   </tr>
   <tr>
-    <td><strong>Privileged</strong> (default)</td>
+    <td><strong><code>privileged</code></strong> (default)</td>
+    <td>The task</td>
     <td>The task state: object position, vector to the goal, object velocity, whether the sensor is
-        touching, and so on (listed per environment below)</td>
-    <td>Checking that a task, reward and controller can be learned at all, and as an upper bound for tactile policies</td>
+        touching, ground properties, and so on (listed per environment below). Use it to check that a task,
+        reward and controller can be learned at all, and as an upper bound for the sensing policies</td>
+    <td>12 to 17 / 65 / 35</td>
   </tr>
   <tr>
-    <td><strong>Tactile</strong></td>
+    <td><strong><code>object</code></strong></td>
+    <td>The task (humanoid)</td>
+    <td>What a camera-based object tracker would give: position, velocity, orientation, size and shape</td>
+    <td>&ndash; / &ndash; / 29</td>
+  </tr>
+  <tr>
+    <td><strong><code>tactile</code></strong></td>
+    <td>Readout <code>tactip_markers</code></td>
     <td>Marker displacement from the untouched sensor (3 per marker, in mm), then the change in each
-        marker since the previous step (3 per marker, in mm)</td>
-    <td>Learning from touch alone: the object and the goal are never given directly</td>
+        marker since the previous step (3 per marker, in mm), for every mounted sensor. Learning from
+        touch alone: the object and the goal are never given directly</td>
+    <td>426 / 1,704 / 852</td>
   </tr>
   <tr>
-    <td><strong>Vision</strong></td>
-    <td>A 64&nbsp;&times;&nbsp;64 colour image from <code>handcam</code>, a camera on the sensor mount
-        (the quadruped uses <code>headcam</code> on its trunk). Grey and depth images are also available</td>
-    <td>Visuo-tactile learning: seeing the scene and feeling the contact</td>
+    <td><strong><code>tactile_image</code></strong></td>
+    <td>Readout <code>tactip_camera</code></td>
+    <td>What the camera inside each TacTip sees: the pins against a dark background, as a real TacTip's
+        camera does. With several sensors the images are stacked along the colour channels</td>
+    <td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;3 / 64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;12 / 64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;6</td>
+  </tr>
+  <tr>
+    <td><strong><code>vision</code></strong></td>
+    <td>Readout <code>camera</code></td>
+    <td>A 64&nbsp;&times;&nbsp;64 colour image from <code>handcam</code>, a camera on the sensor mount (the
+        quadruped and humanoid use <code>headcam</code>). Grey and depth images are also available</td>
+    <td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;3</td>
+  </tr>
+  <tr>
+    <td><strong><code>events</code></strong></td>
+    <td>Readout <code>taxel_events</code></td>
+    <td>Event counts from the grids of touch sensors (taxels) on the arm scenes' objects</td>
+    <td>One per taxel / &ndash; / &ndash;</td>
+  </tr>
+  <tr>
+    <td>Your own</td>
+    <td>Your readout</td>
+    <td>Anything you add with <code>sensors=</code> (see <a href="#custom">Adding Your Own Sensor</a>)</td>
+    <td></td>
   </tr>
 </table>
 </div>
 
 <p>
-  The inputs are chosen with a dictionary when the environment is made, or changed afterwards. Keys that are
-  left out are off. Either way the observation space is rebuilt from a real observation, so its size can
-  never get out of step with what <code>step()</code> returns:
+  The inputs are chosen when the environment is made, or changed afterwards. Either way the observation
+  space is rebuilt from a real observation, so its size can never get out of step with what
+  <code>step()</code> returns. <code>python -m tactip_mujoco_gym describe &lt;task&gt;</code> lists the inputs
+  a task offers and whether each one is available with the current sensor.
 </p>
 
-<pre><code>env = gym.make("TacArm-peg", obs_modes={"tactile": True})          # touch only
-env = gym.make("TacArm-peg", obs_modes={"tactile": True, "vision": True},
-               obs_format="dict")                                   # each input under its own key
-env.unwrapped.set_obs_modes(vision=False)                           # switch later; rebuilds the space</code></pre>
+<pre><code>env = gym.make("TacArm-peg", obs_modes=["tactile"])                     # touch only
+env = gym.make("TacArm-peg", obs_modes=["tactile", "vision"],
+               obs_format="dict")                                     # each input under its own key
+env = gym.make("TacArm-peg", obs_modes=["tactile_image"], obs_format="dict")   # visual tactile
+env.unwrapped.set_obs_modes(vision=False)                             # switch later; rebuilds the space</code></pre>
 
 <p>
-  With the default <code>obs_format="flat"</code>, the selected inputs are joined into one vector (the image is
-  flattened and scaled to 0 to 1). With <code>obs_format="dict"</code> each input keeps its own entry, and the
-  image stays an image, ready for a convolutional encoder. The default is privileged input only, and the older
+  <code>obs_modes</code> can also be a dictionary (<code>{"tactile": True}</code>, keys left out are off) or a
+  string (<code>"tactile+vision"</code>). The default is privileged input only, and the older
   <code>privileged=False</code> argument still works: it means tactile only.
 </p>
 
-<p>
-  The marker reading comes from <code>get_nodes()</code>, which returns every <code>s_c*</code>
-  marker site in the sensor's own frame. The untouched marker positions are recorded once when
-  the environment is built, with the arm held in free space, and every tactile observation is
-  measured against them. Values are reported in millimetres so they are already of order one.
-</p>
+<h3>Formats and Fusion</h3>
 
 <p>
-  Tactile events from the <code>tx_*</code> taxels on the objects can still be added in either mode.
-  They are appended as one value per taxel: the signed number of events since the previous step.
+  With the default <code>obs_format="flat"</code>, the selected inputs are joined into one vector, in the order
+  proprioception, task inputs, sensor inputs (images are flattened and scaled to 0 to 1). With
+  <code>obs_format="dict"</code> each input keeps its own entry, and images stay images, ready for a convolutional
+  encoder. Training offers four ways to fuse them:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Setting</th><th>What fuses the inputs</th></tr>
+  <tr><td><code>obs_format="flat"</code></td><td>One MLP on the whole vector (early fusion)</td></tr>
+  <tr><td><code>obs_format="dict"</code></td><td>Stable-Baselines3's <code>MultiInputPolicy</code>: a small CNN on each image input and an MLP on the rest, then joined</td></tr>
+  <tr><td><code>encoders="encoders/peg_vt.pt"</code></td><td>Pretrained encoders per input, then an MLP (late fusion; see <a href="#training">Training</a>)</td></tr>
+  <tr><td><code>encoders="scratch"</code></td><td>The same networks without pretraining</td></tr>
+</table>
+</div>
+
+<h3>Readouts</h3>
+
+<p>
+  Each sensor input is computed by a <strong>readout</strong>: a small class that turns the simulation into an
+  observation. The marker and camera readouts work on every robot and on every mounted sensor (the arm's one TacTip,
+  the quadruped's four feet, the humanoid's two hands); the taxel readout works wherever a scene has taxels.
+  <code>sensors=</code> changes them per environment:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Readout</th><th>Default input</th><th>Arguments (all optional)</th></tr>
+  <tr><td><code>tactip_markers</code></td><td><code>tactile</code></td><td><code>marker_prefix</code>, <code>frame_site</code>, <code>scale</code> (mm), <code>clip</code> (20), <code>velocity</code> (on)</td></tr>
+  <tr><td><code>tactip_camera</code></td><td><code>tactile_image</code></td><td><code>camera</code>, <code>width</code>, <code>height</code> (64), <code>mode</code> (rgb or gray)</td></tr>
+  <tr><td><code>camera</code></td><td><code>vision</code></td><td><code>camera</code>, <code>width</code>, <code>height</code> (64), <code>mode</code> (rgb, gray or depth), <code>max_depth</code>, <code>shadows</code>, <code>antialias</code></td></tr>
+  <tr><td><code>taxel_events</code></td><td><code>events</code></td><td><code>prefix</code>, <code>threshold</code> (0.02&nbsp;N), <code>clip</code> (5)</td></tr>
+</table>
+</div>
+
+<pre><code>gym.make("TacArm-peg", sensors={"tactile": {"clip": 10}})               # tweak a default readout
+gym.make("TacArm-peg", sensors={"vision": {"width": 96, "mode": "depth"}})
+gym.make("TacArm-peg", sensors={"wrist": {"type": "camera", "camera": "my_cam"}},
+         obs_modes=["tactile", "wrist"])                                # a second camera as a new input
+gym.make("TacArm-peg", sensors={"force": "my_package.sensors:WristForce"},
+         obs_modes=["force"])                                           # your own readout
+gym.make("TacArm-peg", sensors={"tactile_image": None})                 # remove an input</code></pre>
+
+<p>
+  The marker readout returns every <code>s_c*</code> marker site in each sensor's own frame. The untouched
+  marker positions are recorded once when the environment is built, with the sensor in free space, and every
+  tactile observation is measured against them. Values are reported in millimetres so they are already of order one.
+</p>
+
+<h3>Taxel Events</h3>
+
+<p>
+  Any object or plane in the arm scenes can also be covered in a dense grid of touch sensors (taxels). As the
+  <code>events</code> input they give one value per taxel: the signed number of events since the previous step,
+  where an event fires whenever a taxel's force changes by more than a threshold, like a neuromorphic sensor.
   While events are switched off, MuJoCo's sensor evaluation is disabled entirely, because computing
   thousands of unused touch sensors was a large part of the simulation cost.
 </p>
 
-<pre><code>env.unwrapped.set_event(True)      # append taxel events to the observation
-events = env.unwrapped.get_events()   # raw events: [taxel_index, polarity, time]</code></pre>
+<pre><code>env = gym.make("TacArm-peg", obs_modes=["tactile", "events"])    # an input like any other
+events = env.unwrapped.get_events()       # raw events: [taxel_index, polarity, time]</code></pre>
+
+<h2 id="hardware">Sensor Hardware</h2>
+
+<p>
+  <code>sensor_xml=</code> chooses the sensor mounted on the robot: a registered name (<code>"tactip"</code>, the
+  default), or a stand-alone MuJoCo file holding just the sensor. Every element is renamed when it is attached, so
+  the same file can be mounted several times:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Robot</th><th>Where the sensor goes</th><th>Mounts</th></tr>
+  <tr><td>Arm</td><td>The fingertip. The TacTip is written into the scene files, which load exactly as before by default. With another sensor, the built-in TacTip and everything that refers to it are cut out of the scene, and the new sensor is attached so that its tip sits where the TacTip's tip was. The point the controller moves stays where it is</td><td>1: <code>tip</code></td></tr>
+  <tr><td>Quadruped</td><td>Every foot, with the tip where the original foot touched the ground</td><td>4: <code>FL</code> <code>FR</code> <code>RL</code> <code>RR</code></td></tr>
+  <tr><td>Humanoid</td><td>Each palm, on the side of the wrist, so the two face each other</td><td>2: <code>left</code> <code>right</code></td></tr>
+</table>
+</div>
+
+<pre><code>gym.make("TacArm-peg", sensor_xml="my_sensor.xml", obs_modes=["privileged"])
+gym.make("TacQuad-walk", sensor_xml="my_tactip_variant.xml", obs_modes=["tactile"])
+gym.make("TacArm-peg", sensor_stiffness=3.0, obs_modes=["tactile"])       # the TacTip with a stiffer skin</code></pre>
+
+<p>
+  To place a sensor, the gym needs to know where its tip is and which way it faces. A TacTip-style sensor gives
+  this through its markers: a sphere is fitted to them. A sensor without markers marks its tip with a site called
+  <code>sensor_tip</code>, whose z axis points out of the sensing surface:
+</p>
+
+<pre><code>&lt;site name="sensor_tip" pos="0 0 0.024" zaxis="0 0 1"/&gt;</code></pre>
+
+<p>
+  Constants that depend on the sensor's shape (such as the push height and the fingertip radius) can be changed with
+  <code>overrides</code>, and <code>check_envs.py --sensor-xml my_sensor.xml</code> measures the new sensor and
+  checks that the hand-written controller still solves each arm task with it.
+  <code>sensor_xml="tactip"</code> rebuilds the arm with the stand-alone TacTip attached in code, which matches the
+  built-in one: a good first check that sensor swapping works on your machine.
+</p>
+
+<h2 id="custom">Adding Your Own Sensor</h2>
+
+<p>
+  A simulated sensor is two independent parts, and you can supply either or both:
+</p>
+
+<ol>
+  <li><strong>Hardware:</strong> a stand-alone MuJoCo file with the sensor's bodies (and a <code>sensor_tip</code>
+      site if it has no TacTip markers). Mount it with <code>sensor_xml=</code>.</li>
+  <li><strong>A readout:</strong> a short class that turns the simulation into an observation. Add it with
+      <code>sensors=</code>.</li>
+</ol>
+
+<p>
+  The repository's <code>examples/custom_sensor/</code> folder does both: <code>rigid_pad.xml</code> is a rigid pad
+  with no markers, and <code>pad_contact.py</code> reads the net contact force and contact point on each mounted copy.
+  The readout looks like this:
+</p>
+
+<pre><code>import numpy as np
+from tactip_mujoco_gym.sensors import Sensor, SensorUnavailable, register_sensor, subtree_geoms
+
+@register_sensor("pad_contact")
+class PadContact(Sensor):
+    """Net contact force on each mounted sensor, and where it acts."""
+    key = "contact"          # default observation key
+    encoder = "mlp"          # the fusion policy gives it an MLP encoder (None = pass straight through)
+
+    def __init__(self, tip_site="sensor_tip", force_scale=1.0):
+        self.tip_site = tip_site
+        self.force_scale = force_scale
+
+    def bind(self, env):                         # once, after the model is compiled
+        for mount in env.sensor_mounts:          # one per copy of the hardware
+            if subtree_geoms(env.model, mount.body).size == 0:
+                raise SensorUnavailable("no colliding geoms on the sensor")
+            ...
+
+    def observe(self, env):                      # once per environment step
+        ...
+        return np.array(..., dtype=np.float32)</code></pre>
+
+<pre><code>env = gym.make("TacArm-peg", sensor_xml="examples/custom_sensor/rigid_pad.xml",
+               sensors={"contact": PadContact()}, obs_modes=["contact"])</code></pre>
+
+<p>
+  A readout can also hook into the rest of the life cycle: a rest calibration with the sensor untouched, the start
+  of each episode, every physics step (for event-style sensors) and every environment step. Everything it needs is
+  on the environment: the MuJoCo model and data, the mounted copies of the sensor (each with its name prefix, root
+  body and reference frame) and the task constants. Readouts can be named in config files as
+  <code>"package.module:ClassName"</code>, and a separate Python package can register them through an entry point,
+  so a sensor can be shared without changing the gym.
+</p>
+
+<h2 id="configs">Experiment Configs</h2>
+
+<p>
+  One YAML file says what is being tested: the task, robot options, sensor hardware, readouts, inputs, fusion and
+  training settings. <strong>Variants</strong> turn one file into a set of comparisons, each merged over the base:
+</p>
+
+<pre><code># configs/peg_sensing.yaml (shortened)
+name: peg
+env: TacArm-peg
+env_kwargs: {start_touching: true}
+train: {algo: PPO, steps: 3000000}
+variants:
+  privileged:    {obs_modes: [privileged]}
+  tactile:       {obs_modes: [tactile]}
+  tactile_image: {obs_modes: [tactile_image], obs_format: dict}
+  vision:        {obs_modes: [vision], obs_format: dict}
+  visuotactile:  {obs_modes: [tactile, vision], obs_format: dict}</code></pre>
+
+<pre><code>python -m tactip_mujoco_gym train configs/peg_sensing.yaml                 # every variant in turn
+python -m tactip_mujoco_gym train configs/peg_sensing.yaml --variant tactile
+python -m tactip_mujoco_gym train configs/peg_sensing.yaml --dry-run       # print the runs only
+python -m tactip_mujoco_gym evaluate configs/peg_sensing.yaml --episodes 50</code></pre>
+
+<p>
+  Unknown keys are an error, so a typo fails straight away instead of being silently ignored. The repository comes
+  with example configs:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>File</th><th>Compares</th></tr>
+  <tr><td><code>peg_sensing.yaml</code></td><td>Every sensing input on the peg task, including frozen pretrained encoders</td></tr>
+  <tr><td><code>sensor_hardware.yaml</code></td><td>The built-in TacTip, the same TacTip attached in code, a stiffer skin, and the custom pad</td></tr>
+  <tr><td><code>edge_tactile.yaml</code></td><td>A single run with a tweaked readout</td></tr>
+  <tr><td><code>quadruped_touch.yaml</code></td><td>Privileged teacher, blind and touch, on proxy and TacTip feet</td></tr>
+  <tr><td><code>humanoid_touch.yaml</code></td><td>Object tracker, tracker plus touch, and camera plus touch</td></tr>
+</table>
+</div>
 
 <h2 id="shared">Shared Robot and Controller</h2>
 
@@ -961,7 +1235,7 @@ env.reset(options={"friction": 1.0})   # grippy</code></pre>
   </figure>
   <figure class="gif-slot">
     <!-- TODO: add the GIF src -->
-    <img src="" alt="Quadruped policy with tactile feet walking across tiles of changing ground">
+    <img src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/quad.gif" alt="Quadruped policy with tactile feet walking across tiles of changing ground">
     <figcaption>Tactile policy: the same robot, also feeling the ground through four TacTip feet.</figcaption>
   </figure>
 </div>
@@ -976,7 +1250,7 @@ env.reset(options={"friction": 1.0})   # grippy</code></pre>
   feels like</em>, and the question the environment is built to answer is whether feeling the ground helps.
 </p>
 
-<pre><code>env = gym.make("TacQuad-walk", obs_modes={"tactile": True})
+<pre><code>env = gym.make("TacQuad-walk", obs_modes=["tactile"])
 obs, info = env.reset(options={"feel": {"friction": 0.15}})   # optionally: every tile icy</code></pre>
 
 <h3>One Sensor File, Four Sensors</h3>
@@ -1004,6 +1278,8 @@ obs, info = env.reset(options={"feel": {"friction": 0.15}})   # optionally: ever
     are dropped. The tip direction is found by fitting a sphere to the markers, so an angled mount does not confuse it.
 <pre><code>python -m tactip_mujoco_gym.sensor_tools extract assets/tactip_arm.xml --out assets/sensor/tactip.xml
 python -m tactip_mujoco_gym.sensor_tools tree assets/tactip_arm.xml      # where the markers are</code></pre>
+    The gym also does this by itself the first time the file is needed, and keeps the file only if it loads back
+    into exactly the same model; after that every process just reads it.
   </li>
   <li>
     <strong>Attach as many copies as needed.</strong> <code>attach_sensor</code> places the tip at a chosen
@@ -1019,7 +1295,9 @@ model = spec.compile()</code></pre>
 
 <p>
   The quadruped environment does all of this itself every time it is built, so <code>go2.xml</code> is never edited.
-  To look at the result, or to use it elsewhere:
+  The same two steps put the TacTip on the humanoid's hands and, with <code>sensor_xml=</code>, any other sensor on
+  any of the three robots. Attaching also gives the sensor the robot's simulation settings (time step, integrator),
+  which MuJoCo would keep anyway. To look at the result, or to use it elsewhere:
 </p>
 
 <pre><code>python -m tactip_mujoco_gym.envs.tactip_quadruped --view       # MuJoCo viewer, standing pose
@@ -1102,6 +1380,7 @@ python -m tactip_mujoco_gym.envs.tactip_quadruped --snippet    # the &lt;attach&
   <tr><td>Proprioception</td><td>45</td><td>Trunk angular velocity, gravity direction in the trunk's frame, the velocity command, joint angles relative to standing, joint velocities, previous action</td></tr>
   <tr><td><code>privileged</code></td><td>65</td><td>Trunk velocity and height, the force on each foot, the friction and softness under each foot, foot heights, and a 9&nbsp;&times;&nbsp;5 grid of ground heights around the robot</td></tr>
   <tr><td><code>tactile</code></td><td>1,704</td><td>Every marker of all four TacTips, in each foot's own frame: displacement from rest and change since the last step, in mm (4 feet &times; 71 markers &times; 6)</td></tr>
+  <tr><td><code>tactile_image</code></td><td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;12</td><td>The cameras inside the four TacTips, stacked along the colour channels</td></tr>
   <tr><td><code>vision</code></td><td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;3</td><td><code>headcam</code>, on the front of the trunk, looking ahead and 30 degrees down</td></tr>
 </table>
 </div>
@@ -1156,8 +1435,8 @@ reward = max(reward, 0)</code></pre>
 </ul>
 
 <p>
-  <code>demo_quadruped.py</code> runs the environment live in the viewer (R resets, P changes the gait, L changes the
-  ground level) and can record a video instead.
+  <code>examples/demos/quadruped_demo.py</code> runs the environment live in the viewer (R resets, P changes the gait,
+  L changes the ground level), can play back a trained policy, and can record a video instead.
 </p>
 
 <h3>Does Touch Help? The Experiment</h3>
@@ -1195,24 +1474,160 @@ reward = max(reward, 0)</code></pre>
 
 <hr>
 
+<h2 id="humanoid">Environment 6: Humanoid with TacTip Hands</h2>
+
+<div class="gif-grid">
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="" alt="Scripted humanoid squeezing a soft object between its TacTip hands and carrying it to the target">
+    <figcaption>The scripted picker: squeeze, lift, carry and put down.</figcaption>
+  </figure>
+  <figure class="gif-slot">
+    <!-- TODO: add the GIF src -->
+    <img src="https://raw.githubusercontent.com/shepai/TacTip-gym/refs/heads/main/assets/humanoid.gif" alt="Trained humanoid policy picking up an object using touch">
+    <figcaption>Trained policy: sees where the object is and feels the grip through two TacTips.</figcaption>
+  </figure>
+</div>
+
+<h3>The Task</h3>
+
+<p>
+
+  <code>TacHumanoid-pick</code> puts two TacTips on a wheeled humanoid, the Rainbow Robotics RB-Y1 from MuJoCo
+  Menagerie. Each sensor is mounted like a palm, on the side of the wrist, so the forearms come down from above with
+  the two sensors facing each other. The robot picks up an object by <strong>squeezing it between the two
+  sensors</strong>, carries it to a target on the table and puts it down. How hard to squeeze is the hard part:
+  too lightly and a heavy or slippery object slides out, too hard and a soft one is crushed.
+</p>
+
+<pre><code>env = gym.make("TacHumanoid-pick", obs_modes=["object", "tactile"])
+obs, info = env.reset(options={"object": "soft_ball", "level": 0.5})   # optionally fix the object and difficulty</code></pre>
+
+<h3>The Objects</h3>
+
+<p>
+  Each episode uses one of ten objects. Five are <strong>soft</strong> (a cube, a brick, a ball, an egg and a
+  cylinder): a light core covered in spring-loaded pads that each slide inwards along the surface, so pressing a
+  TacTip into the object dents it where it is pressed. Five are <strong>rigid</strong> (a box, a cylinder, a
+  sphere, a capsule and a prism). Every episode also randomises the object's properties, over a range set by the
+  difficulty level:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Property</th><th>Easiest (level 0)</th><th>Hardest (level 1)</th></tr>
+  <tr><td>Mass</td><td>0.05 to 0.3&nbsp;kg</td><td>0.05 to 1.0&nbsp;kg</td></tr>
+  <tr><td>Surface friction</td><td>0.7 to 1.2</td><td>0.25 to 1.2</td></tr>
+  <tr><td>Stiffness (soft objects)</td><td>800 to 4,000&nbsp;N/m per pad</td><td>200 (foam) to 4,000&nbsp;N/m per pad</td></tr>
+  <tr><td>Rotation from square to the hands</td><td>&plusmn;0.3&nbsp;rad</td><td>&plusmn;0.8&nbsp;rad</td></tr>
+  <tr><td>Target</td><td>0.10 to 0.18&nbsp;m away, within 0.15&nbsp;rad of straight ahead</td><td>0.12 to 0.60&nbsp;m away, up to 0.75&nbsp;rad to the side (the base has to turn)</td></tr>
+</table>
+</div>
+
+<p>
+  Soft objects are always stiff enough for their weight and friction that a grip firm enough to hold them does not
+  have to squash them flat. Without a fixed <code>level</code>, a curriculum starts each environment at 0 and raises
+  it by 0.02 after a success and lowers it by 0.04 after a miss.
+</p>
+
+<h3>The Robot and Actions</h3>
+
+<p>
+  The base drives like a differential-drive platform (forward speed and turn rate). The torso and head hold a fixed
+  pose leaning over the table, and each fingertip is moved in Cartesian space by inverse kinematics, as on the arm.
+  Two action layouts are available:
+</p>
+
+<ul>
+  <li><strong><code>"bimanual"</code></strong> (default, 7): base speed and turn rate, the grasp centre (x, y, z),
+      the grasp width (negative closes the hands) and the grasp yaw.</li>
+  <li><strong><code>"independent"</code></strong> (9): base speed and turn rate, each hand's x, y, z, and the grasp yaw.</li>
+</ul>
+
+<h3>Observation Inputs</h3>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Input</th><th>Size</th><th>Contents</th></tr>
+  <tr><td>Proprioception</td><td>26 (28 independent)</td><td>Both fingertips in the robot's frame, how far each lags its command, the smoothed action, base speed and turn rate, the target relative to the robot, and whether the object has been lifted yet</td></tr>
+  <tr><td><code>object</code></td><td>29</td><td>What a camera-based object tracker would give: the object's position relative to the hands and the target, velocity, orientation, size, shape and height</td></tr>
+  <tr><td><code>privileged</code></td><td>6 (plus <code>object</code>)</td><td>What touch has to work out: stiffness, mass, friction, how squashed it is, and the grip force on each hand</td></tr>
+  <tr><td><code>tactile</code></td><td>852</td><td>Both TacTips' markers: displacement from rest and change since the last step, in mm</td></tr>
+  <tr><td><code>tactile_image</code></td><td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;6</td><td>The cameras inside the two TacTips</td></tr>
+  <tr><td><code>vision</code></td><td>64&nbsp;&times;&nbsp;64&nbsp;&times;&nbsp;3</td><td><code>headcam</code>, on the head, looking down at the table</td></tr>
+</table>
+</div>
+
+<h3>Reward and Termination</h3>
+
+<p>
+  The reward pays for progress through the stages of the task, measured by a single score:
+</p>
+
+<pre><code>score = 0.10 * reach + 0.15 * grip + 0.25 * lift + 0.35 * carry + 0.15 * place
+
+reward = (
+    20 * (score - previous_score)     # progress through reach, grip, lift, carry, place
+    + 0.02 * score
+    - crushing - slipping in the grip - pressing on the table - bumping the table
+    - 0.01 * |action_change|^2
+)</code></pre>
+
+<ul>
+  <li><strong>Success:</strong> +100 when the object, after being lifted, rests within 5&nbsp;cm of the target with both
+      hands off it for 0.2&nbsp;s.</li>
+  <li><strong>Fail:</strong> -10 if it falls off the table, or a soft object is squashed flat (a pad pushed in all the
+      way) for 0.06&nbsp;s.</li>
+</ul>
+
+<h3>Warm Start and the Experiment</h3>
+
+<p>
+  Pick-and-place is a long sequence (reach, squeeze, lift, carry, put down, let go), which plain PPO rarely finds from
+  scratch. <code>ScriptedPicker</code> solves the task by hand from the simulator's state, and
+  <code>humanoid_pick.py</code> uses it as a warm start: it records 600 scripted episodes before training, fits the
+  policy and value function to them, and then keeps a fading behaviour-cloning term during PPO so the warm start is
+  not worn away. The demos are cached, so later runs load them. The comparison it is built for:
+</p>
+
+<div class="table-wrap">
+<table class="env-table">
+  <tr><th>Inputs</th><th>What it tells you</th></tr>
+  <tr><td><code>privileged</code></td><td>Teacher: knows each object's mass, friction and stiffness, and the grip force</td></tr>
+  <tr><td><code>object</code></td><td>Sees where the object is but feels nothing: grips blind</td></tr>
+  <tr><td><code>object</code> + <code>tactile</code></td><td>Sees and feels: does touch let it grip each object firmly enough without crushing it?</td></tr>
+  <tr><td><code>vision</code> + <code>tactile</code></td><td>Head camera and touch, no state at all (the hardest)</td></tr>
+</table>
+</div>
+
+<p>
+  The gap between the second and third rows is what touch is worth. <code>examples/demos/demo_humanoid.py</code> shows
+  the scripted picker or a trained policy in the viewer (R resets, P changes the policy, O the object, L the level),
+  and <code>check_humanoid.py</code> checks the environment before training.
+</p>
+
+<hr>
+
 <h2 id="training">Training</h2>
 
 <p>
-  The examples folder contains <code>RL_BASE.py</code>, which wraps Stable-Baselines3. Each task has a short
-  script that calls it:
+  The package's <code>RL_BASE.py</code> wraps Stable-Baselines3. The experiment configs above use it, and so does
+  the short script for each task in <code>examples/RL tasks/</code>:
 </p>
 
-<pre><code>from RL_BASE import run, evaluate, visualise
+<pre><code>from tactip_mujoco_gym.RL_BASE import run, evaluate, visualise
 
 if __name__ == "__main__":          # required: each environment runs in its own process
-    run("TacArm-peg", "peg_v2", "peg_v2", 3_000_000, obs_modes={"privileged": True})   # or {"tactile": True}
-    evaluate("TacArm-peg", "peg_v2", n_episodes=50)                      # success rate, no viewer
-    visualise("TacArm-peg", "peg_v2")                                    # MuJoCo viewer</code></pre>
+    run("TacArm-peg", "peg_v3", "peg_v3", 3_000_000, obs_modes=["tactile"])   # or ["privileged"]
+    evaluate("TacArm-peg", "peg_v3", n_episodes=50)                      # success rate, no viewer
+    visualise("TacArm-peg", "peg_v3")                                    # MuJoCo viewer</code></pre>
 
 <p>
+  Any environment argument goes in <code>env_kwargs</code>, including the sensor:
+  <code>run(..., env_kwargs={"sensor_xml": "my_sensor.xml", "sensors": {"tactile": {"clip": 10}}})</code>.
   <code>run()</code> creates one environment per process, normalises observations and rewards with
   <code>VecNormalize</code>, logs to <code>logs/&lt;name&gt;/progress.csv</code>, saves a checkpoint every
-  500,000 steps and records a short video at every 20% of training. At the end it saves three files:
+  500,000 steps and records a short video every 5% of training. At the end it saves three files:
 </p>
 
 <ul>
@@ -1220,8 +1635,9 @@ if __name__ == "__main__":          # required: each environment runs in its own
   <li><code>&lt;name&gt;_vecnormalize.pkl</code>: the observation statistics. The policy was trained on
       normalised observations and behaves almost randomly without them, so these are saved
       <em>after</em> training and loaded by <code>evaluate()</code>, <code>visualise()</code> and the training videos.</li>
-  <li><code>&lt;name&gt;.json</code>: the environment name, its arguments and the algorithm, so the same
-      environment is rebuilt for evaluation.</li>
+  <li><code>&lt;name&gt;.json</code>: the environment name, its arguments (including the sensor hardware and
+      readouts) and the algorithm, so the same environment is rebuilt for evaluation. It is checked before training
+      starts, so an argument that cannot be saved fails straight away rather than after hours of training.</li>
 </ul>
 
 <div class="table-wrap">
@@ -1240,16 +1656,48 @@ if __name__ == "__main__":          # required: each environment runs in its own
 
 <p>
   SAC is also available with <code>run(..., algo="SAC")</code>. It usually needs fewer environment steps,
-  which helps when the simulation is slow.
+  which helps when the simulation is slow. The quadruped and humanoid scripts use their own PPO settings, suited to
+  long whole-body tasks.
 </p>
+
+<h3>Visuo-Tactile Pipeline</h3>
+
+<p>
+  Learning from camera images and tactile markers with RL alone is slow: on the peg task, the tactile-only policy
+  needed several times more steps than the privileged one. The pipeline in <code>examples/RL tasks/</code> uses the
+  simulator's privileged state as free labels to pretrain the encoders first:
+</p>
+
+<ol>
+  <li><code>collect_dataset.py</code> runs the tasks with every input switched on, driven by the hand-written
+      controller or a trained privileged policy, and saves the observations with the privileged state.</li>
+  <li><code>train_encoders.py</code> trains a tactile encoder (an MLP on the markers) and a vision encoder (a small
+      CNN) to predict the privileged state, and reports how much of it touch and sight can each recover.</li>
+  <li>Training with <code>encoders="encoders/peg_vt.pt"</code> runs each input through its encoder and fuses the
+      results. The encoders can be frozen, fine-tuned, or replaced with untrained copies
+      (<code>encoders="scratch"</code>) for comparison, and any other input whose readout asks for an encoder gets
+      one trained from scratch.</li>
+</ol>
 
 <h3>Checking an Environment Before Training</h3>
 
 <p>
-  <code>check_envs.py</code> runs a quick set of checks on each task in a few minutes: whether the arm drifts
+  <code>check_envs.py</code> runs a quick set of checks on each arm task in a few minutes: whether the arm drifts
   or lags, whether resets start in contact, and whether a simple hand-written controller using the privileged
   state can solve the task. If the hand-written controller cannot solve a task, a learned policy will not either,
-  so this is worth running after any change to the scene or the sensor.
+  so this is worth running after any change to the scene or the sensor:
+</p>
+
+<pre><code>python -m tactip_mujoco_gym.check_envs TacArm-peg
+python -m tactip_mujoco_gym.check_envs TacArm-peg --sensor-xml my_sensor.xml   # with your sensor
+python -m tactip_mujoco_gym.check_quadruped
+python -m tactip_mujoco_gym.check_humanoid</code></pre>
+
+<p>
+  The package also has a <code>pytest</code> suite. It checks each readout and the sensor mounting on small models
+  built in the test, that the arm scenes stay valid with their TacTip cut out, that a TacTip attached in code sits
+  exactly where the built-in one does, that every task builds and steps (the arm also with a custom sensor), that
+  no MuJoCo attach warnings are printed, and that the example configs resolve.
 </p>
 
 <h3 id="results">Results</h3>
@@ -1294,18 +1742,21 @@ if __name__ == "__main__":          # required: each environment runs in its own
   <li><strong>Incline:</strong> stop a moving object, then push against gravity with a hidden friction level.</li>
   <li><strong>ShapeInsertion:</strong> a changing goal, tight clearances and optional re-orientation.</li>
   <li><strong>Quadruped walking:</strong> a whole-body task, where touch has to be used on the move, on ground that keeps changing.</li>
+  <li><strong>Humanoid pick and place:</strong> two hands, a mobile base and a long sequence, where touch decides how hard to grip.</li>
 </ol>
 
 <p>
-  Each task can then be repeated in tactile mode, where the agent has to do the same thing by touch alone.
+  Each task can then be repeated with the other inputs (touch alone, the TacTip's camera image, vision, or vision
+  and touch together) and with other sensors, keeping the task, reward and training budget the same so that only
+  the sensing changes.
 </p>
 
 <h3>Adding Your Own Task</h3>
 
 <p>
-  A new task needs a MuJoCo scene file and a class that inherits from <code>RobotArmEnv</code>. The base class
-  handles the controller, the observation modes, the marker readout, success and failure bonuses, and episode
-  length. The task fills in a few hooks:
+  A new arm task needs a MuJoCo scene file and a class that inherits from <code>RobotArmEnv</code>. The base class
+  handles the controller, the sensor mounting and readouts, the observation inputs and formats, success and failure
+  bonuses, and episode length. The task fills in a few hooks:
 </p>
 
 <ul>
@@ -1319,7 +1770,14 @@ if __name__ == "__main__":          # required: each environment runs in its own
 <p>
   Tasks with a different action layout, such as the incline's slope coordinates, can also override
   <code>_apply_action()</code>. The observation space is sized automatically, so there is no observation
-  dimension to keep in sync by hand.
+  dimension to keep in sync by hand. Adding the task to the catalogue in <code>envs/__init__.py</code> registers
+  it with Gymnasium and lists it in <code>python -m tactip_mujoco_gym list</code>.
+</p>
+
+<p>
+  A new robot builds on <code>TactileGymEnv</code> the way the quadruped and humanoid do: it attaches the sensor at
+  each mount and tells the base class where those mounts are. Every readout, including your own, then works on it
+  unchanged.
 </p>
 
 <br><br>
