@@ -38,6 +38,18 @@ const SITE_DATA = {
       ]
     },
     {
+      "year": 2026,
+      "type": "Conference Paper",
+      "title": "Evaluating Temporal Context for Multitask Aircraft Sound Classification with ADS-B Aligned Field Recordings",
+      "authors": "Isherwood G., Shepherd D.",
+      "venue": "IEEE (ICMLA)",
+      "links": [
+        {
+          "url": "https://ieeexplore.ieee.org/abstract/document/11760889/"
+        }
+      ]
+    },
+    {
       "year": 2025,
       "type": "Dataset",
       "title": "3D Printable Tactile Dataset",
