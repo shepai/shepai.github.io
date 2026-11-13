@@ -41,13 +41,52 @@
     <h2>Contents</h2>
 </div>
 		<h2 class="headerText">Rig Construction</h2>
-		A 3 degrees of freedom rig (x-axis, y-axis, z-axis), of dimensions 300mm by 300mm by 150mm, was constructed to move a sensor around a 3D environment. This rig was used to gather texture data by stroking the sensor along 1.5mm straight lines in 100 different directions along evenly spaced radii of a semicircle centred on the original touching point. The sensor moved across fixed-down samples from the texture set. Recordings were gathered at various contact forces, using touching point forces of 0.0785 – 0.0824N, 1.9031 – 1.9228N, 3.0039 – 3.0235N and 4.336 – 4.367N. The dataset consists of 3000 items gathered over 15 textures. Each dataset item contains multiple sensor readings concatenated over the time that the sensor is in contact with the surface (approximately 10 seconds).
+		To gather tactile data that is repeatable and well labelled, we built a Cartesian test rig that moves a sensor over a sample in a controlled way. The same rig drives every sensor in this work, so differences between datasets come from the sensors and textures rather than from how they were touched. The rig occupies roughly 300 mm by 300 mm by 150 mm and has three linear axes plus a tilt axis.
 		<br>
         <div align="center"align="center">
             <img class="imageCircle2" width="100px" height="100px" src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/development/rig.png">
         </div>
         <br>
+
+		<h3 class="headerText">Hardware</h3>
+		Each axis is driven by a stepper motor:
+		<br><br>
+		<div align="center">
+		<table border="1" style="border-collapse: collapse; text-align: center;">
+		  <caption><strong>Table:</strong> The rig's axes.</caption>
+		  <thead>
+			<tr><th>Axis</th><th>What moves</th></tr>
+		  </thead>
+		  <tbody>
+			<tr><td>x</td><td>the plate holding the sample, back and forth</td></tr>
+			<tr><td>y</td><td>the main body, left and right</td></tr>
+			<tr><td>z</td><td>the sensor, up and down onto the sample</td></tr>
+			<tr><td>a (tilt)</td><td>the angle of the plate</td></tr>
+		  </tbody>
+		</table>
+		</div>
+		<br>
+		A Raspberry Pi Pico runs the motors through two Adafruit stepper motor boards on an I2C bus. Limit switches on the axes let the rig home itself: each axis is driven until its switch is pressed, giving a fixed reference position to count steps from. This also clears any steps a motor may have missed. A force-sensing pad from our <a href="https://github.com/shepai/TactileSensor">tactile sensor work</a> can sit on top of the plate, recording the force on the sample as an extra label gathered automatically during each recording.
+
+		<h3 class="headerText">Control software</h3>
+		The Pico runs a small listener program (in MicroPython or CircuitPython; an Arduino version also exists) that waits for commands from a PC over a serial connection. On the PC, a Python library sends moves in motor steps, reads the limit switches and reads the force pad. Experiments are short Python scripts: move to a point, lower the sensor, stroke, lift and record. Because each move is an exact number of steps from home, a script can be re-run and the sensor follows the same path again. The code is open so others can build the rig and gather their own datasets.
+
+		<h3 class="headerText">Data collection</h3>
+		This rig was used to gather texture data by stroking the sensor along 1.5mm straight lines in 100 different directions along evenly spaced radii of a semicircle centred on the original touching point. The sensor moved across fixed-down samples from the texture set. Recordings were gathered at various contact forces, using touching point forces of 0.0785 – 0.0824N, 1.9031 – 1.9228N, 3.0039 – 3.0235N and 4.336 – 4.367N. The dataset consists of 3000 items gathered over 15 textures. Each dataset item contains multiple sensor readings concatenated over the time that the sensor is in contact with the surface (approximately 10 seconds).
+		<br><br>
 		Moving the sensor across varying vectors shows the sensor's ability to classify the different textures with linear stroking movements, this is the most common way of gathering textural datasets. We also investigated how the sensor-classifier pairs performed on sensations they were not trained on. To do this, we collected a non-linear movement dataset by moving the sensor in circular movements of increasing radii (1cm, 1.75cm, 2.5cm) while increasing the contact force by approximately 17 grams on each iteration. We refer to this as the non-linear dataset. 
+
+		<h3 class="headerText">Linking the rig to simulation (ongoing work)</h3>
+		We are now pairing the physical rig with a simulated copy of it in <a href="https://github.com/shepai/TacTip-gym">TacTip-gym</a>, our MuJoCo simulator of a soft-bodied TacTip. The simulated rig has the same axes and holds the same 3D-printed texture blocks as the real one. To line the two up, both start from a reset position: the simulated sensor hovers 10 mm above the centre of the block, and the real rig homes on its limit switches and then moves a fixed offset to the same place. We then drive both rigs with the keyboard, side by side, to matching poses at several points over the block. From these pairs the software fits a map from simulated positions in millimetres to motor steps, which also gives each axis's steps per millimetre and direction. Once calibrated, the real rig can follow the simulated one: moving the sensor in the simulator moves the real sensor to the same place.
+
+		<h3 class="headerText">Paired simulated and real datasets (ongoing work)</h3>
+		With the two rigs matched, the same motion can be run on both at once to build datasets where every real sample has a simulated twin. The motions go beyond straight strokes. They include single presses, taps, straight and depth-changing strokes, circles, spirals, figure-of-eights, zigzags and smooth random paths whose depth varies along the way. Each motion is split into points half a millimetre apart. At each point both rigs move there and settle, then the software records:
+		<ul>
+			<li>the simulated TacTip's camera image and the positions of its markers,</li>
+			<li>the real TacTip's camera image,</li>
+			<li>a depth image of the contact from an Intel RealSense D401 camera.</li>
+		</ul>
+		Motions can be repeated to measure how repeatable the sensor is, and the same set of motions can be run on every texture so the textures can be compared directly. The aim is a dataset for learning the mapping between what the real sensor sees and what the simulated sensor sees, so that models trained in simulation can be tested on the real sensor.
 
 <br><br>
 <div align="center"><a href="https://github.com/shepai/Rig-controller" target="_blank" style="text-decoration: none;">
