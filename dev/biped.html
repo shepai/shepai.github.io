@@ -32,8 +32,13 @@
 </div>
 	<!-- the main content -->
 	<div class="main">
-        <h1 class="headerText">Biped Orientation and Edge Detection</h1>
-        Much of this work is published in <a href="https://doi.org/10.1109/AIRC61399.2024.10671677">this paper</a> and my PhD thesis. This is a brief extract from parts of the chapter, for full details check out the thesis. 
+        <h1 class="headerText">Tactile Biped: Sensing, Simulation and Gaits</h1>
+        This page covers three strands of work on a small four-motor biped with tactile feet: using the foot sensors to detect the robot's orientation and the edges beneath it, a MuJoCo simulator of the robot with simulated tactile feet, and learning walking and turning gaits.
+        <br><br>
+        <a href="#sensing">Orientation and edge detection</a> &middot; <a href="#simulator">The simulator</a> &middot; <a href="#gaits">Gaits</a>
+
+        <h1 class="headerText" id="sensing">Orientation and Edge Detection</h1>
+        Much of this work is published in <a href="https://doi.org/10.1109/AIRC61399.2024.10671677">this paper</a> and my PhD thesis. This is a brief extract from parts of the chapter, for full details check out the thesis.
         <br>
         Navigating and adapting to diverse environments is a critical challenge for robots, especially when it comes to maintaining stability and adjusting behaviours based on real-time information. We used an MPU6050 as it is cheap and simple to integrate into an embedded system. While the MPU6050 accelerometer can detect tilt in a robot, its capabilities are limited in capturing nuanced attributes of the environment. In contrast, tactile feet sensors establish direct contact with the ground, offering a rich source of real-time data about the surface and potential variations in terrain, including slope. This information is useful for ensuring stability in complex environments and enabling the robot to respond effectively to different surroundings. By precisely determining the distribution of weight on each foot, tactile sensors can play a crucial role in optimising the robot's balance and facilitating adjustments in motor responses.
         The methods outline two experiments, edge detection and orientation of the robot detection. In the first subsection we look at the data gathering process for both of the tasks, using the PressTip foot sensor.
@@ -48,7 +53,7 @@
         The orientation was gathered across multiple textures. Varnished wood, smooth concrete, rough concrete and carpet.
         <br><br>
         Edge data was gathered by repeatedly placing the sensor over a flat hard surface, where there would always be an edge underneath the sensor. We labelled each of these classes using a straightforward binary code. The output is the classification of the model representing which class is most likely. 
-        We gathered pressure on both a soft material (cushion) and a hard material (wood). The soft material has less defined edges than the wood; the classification model is required to generalise to either material. Other textural properties were seen as irrelevant for this task as if you put the sensor on a slippery or coarse surface, this does not effect the edge reading. 
+        We gathered pressure on both a soft material (cushion) and a hard material (wood). The soft material has less defined edges than the wood; the classification model is required to generalise to either material. Other textural properties were seen as irrelevant for this task as if you put the sensor on a slippery or coarse surface, this does not affect the edge reading. 
         <br><br>
         Before starting the experiments, we gathered the average of each tactile pad (without contact) over a calibration period of 100 iterations, then subtracted this from the sensor values in the future. This method was only applied to the edge detection model to zero out the inherent noise. We used mean scaling to scale the data for the classification models. 
 
@@ -68,9 +73,9 @@ For orientation, the dataset was segmented into temporal windows of size T frame
 
         <h2 class="headerText">Results</h2>
         To determine the accuracy of the PressTip sensor we tested out our edge classification models to see whether the sensor could determine the relationship between sensor reading and edge direction. The sensor itself demonstrated good sensitivity given its size, discerning the abstract shapes of obstacles it encountered during its movement.
-Secondly we investigate the orientation detection which is a continuos-temporal scale, making it a harder task than the classification. We were able to determine the orientation of the robot with very low difference between predictions and truth values. We further investigate, using the orientation dataset, the minimal time window a model needs before it loses accuracy and further how the models perform on unseen textures. 
+Secondly we investigate the orientation detection which is a continuous temporal scale, making it a harder task than the classification. We were able to determine the orientation of the robot with very low difference between predictions and truth values. We further investigate, using the orientation dataset, the minimal time window a model needs before it loses accuracy and further how the models perform on unseen textures. 
 <h3 class="headerText">Orientation Detection</h3>
-The robot would tilt left and right over its feet, providing a temporal reading of 32 channels. To convert the image data to a vector that could be used in non temporal models such as Ridge regression, Random forest regression, and an ANN, the sensor inputs were concatenated over a window of size $T$ that helped improve performance (partly by smoothing effects of noise). To begin with we chose 60 as our number of frames. We mapped the values of the tactile sensors to the output of the accelerometer, which measures acceleration in a particular direction, which is proportional to tilt.
+The robot would tilt left and right over its feet, providing a temporal reading of 32 channels. To convert the image data to a vector that could be used in non temporal models such as Ridge regression, Random forest regression, and an ANN, the sensor inputs were concatenated over a window of size <i>T</i> that helped improve performance (partly by smoothing effects of noise). To begin with we chose 60 as our number of frames. We mapped the values of the tactile sensors to the output of the accelerometer, which measures acceleration in a particular direction, which is proportional to tilt.
 <br><br>
 <table style="border-collapse: collapse; margin: 0 auto;">
     <caption style="caption-side: bottom; padding-top: 8px;">
@@ -109,7 +114,56 @@ The robot would tilt left and right over its feet, providing a temporal reading 
   </table>
   
 <h3 class="headerText">Edge Detection</h3>
-The ridge regression model average accuracy on the unseen data set was 66.59% and training set 66.9% across the 8 classes. The random forest classifier model achieved a training accuracy of 100% and an accuracy of 98.8% on unseen test data. Random forest models are better at handling noise, which is more prevalent in our dataset. 
+The ridge regression model average accuracy on the unseen data set was 66.59% and training set 66.9% across the 8 classes. The random forest classifier model achieved a training accuracy of 100% and an accuracy of 98.8% on unseen test data. Random forest models are better at handling noise, which is more prevalent in our dataset.
+
+<h1 class="headerText" id="simulator">The Simulator</h1>
+Learning to walk on the physical robot is slow, and every fall risks the hardware, so I built a simulator of the biped. It started life in PyBullet, loading a URDF exported from the SolidWorks assembly, and has now been rebuilt as a Python package on top of <a href="https://mujoco.org/">MuJoCo</a> with a <a href="https://gymnasium.farama.org/">Gymnasium</a> environment, so standard reinforcement learning tools can be used with it.
+<br><br><div style="text-align: center;">
+<img style="width:60%;" src="https://raw.githubusercontent.com/shepai/Sim-Biped-Walker/main/docs/simulation.png">
+</div><br>
+
+<h3 class="headerText">The robot model</h3>
+The robot has four motors, two per leg. Each hip turns the leg about the vertical axis, and each ankle tilts the foot from side to side. Walking comes from rocking the weight onto one foot with the ankles and then swinging the free foot forward with the hips. The model is generated procedurally from the CAD meshes, with the masses and inertias taken from the CAD export. The motors are modelled as hobby servos: they are given a target angle and have a limited torque, some damping and the inertia of the gearbox, which keeps the simulated motors closer to what the real servos can do.
+
+<h3 class="headerText">Simulated tactile feet</h3>
+The key feature of the simulator is that the feet can feel the ground, just like the PressTip sensors on the real robot. The flat sole of each foot is covered by a 3&times;5 grid of thin pads, three across the width of the foot and five from heel to toe. Each pad is the foot's contact surface at that point and has its own MuJoCo touch sensor, which reports the normal force on that pad in newtons. This gives a 30-value pressure map across the two feet at every time step, showing how the robot's weight is spread over each foot as it rocks and steps. The grid size is a parameter, so the layout can be changed to match a different sensor design.
+
+<h3 class="headerText">The environment</h3>
+The Gymnasium environment gives the robot a velocity command at the start of each episode, a forward speed and a turning rate, and rewards it for following that command. There are three versions: walking straight forward, turning on the spot, and a mixed task that combines walking, turning and walking in arcs.
+<br><br>
+In keeping with the rest of this work, the robot senses the world mainly through its feet. Its observation is the tactile pressure map from both feet together with the four motor positions, stacked over the last few control steps so that the policy can pick up how the pressure changes over time, together with the current command. Unlike many locomotion benchmarks, there is no camera, no body velocity and no IMU in the observation. The motors are controlled 50 times per second.
+<br><br>
+Optional noise on the tactile and joint readings, and randomisation of the floor friction and body masses each episode, help policies trained in simulation cope with the differences they will meet on the real robot.
+
+<h1 class="headerText" id="gaits">Gaits</h1>
+<h3 class="headerText">Evolved gaits</h3>
+The first approach to gaits used evolutionary algorithms in the PyBullet version of the simulator. Two types of controller were evolved. The first was a sinusoidal pattern generator, in which each motor follows a sine wave and the genotype sets the amplitude, frequency, offset and phase of the hips and ankles. The second was a six-neuron continuous-time recurrent neural network (CTRNN), whose oscillating neuron activity drives the motors, giving a richer central pattern generator.
+<br><br>
+Controllers were evolved with a microbial genetic algorithm and with hill climbers. In each round of the microbial algorithm, two individuals from the population are compared; the winner's genotype is copied over the loser's and mutated. Several fitness functions were tried. These rewarded the distance travelled along the walking direction and penalised drifting to the side, jerky motion and tilting of the body. Any controller that let the robot fall over was given a large penalty. Gaits were also evolved across a sweep of floor frictions to see how the surface changes the walk that evolution finds.
+
+<h3 class="headerText">Learning efficient walking and turning</h3>
+The MuJoCo simulator moves from evolving open-loop rhythms to closed-loop policies that react to what the feet feel. The aim is efficient locomotion: following the commanded forward speed and turning rate while using as little energy as possible. The reward is made up of:
+<ul>
+  <li>a reward for matching the commanded forward speed,</li>
+  <li>a reward for matching the commanded turning rate,</li>
+  <li>a penalty on the mechanical power used by the servos, which drives the efficiency of the gait,</li>
+  <li>smaller penalties for jerky motor commands, drifting sideways and tilting the body,</li>
+  <li>a penalty for falling over.</li>
+</ul>
+The environment also reports the cost of transport (the energy used per unit weight per metre travelled), so gaits can be compared by efficiency as well as speed.
+<br><br>
+Two learning algorithms are included, both built on a shared base class that handles training, evaluation, saving and loading, and visualisation, including recording videos of the learned gait:
+<ul>
+  <li><b>PPO</b> (proximal policy optimisation) using Stable-Baselines3, trained over many simulations in parallel.</li>
+  <li><b>Evolution strategies</b>, written in plain NumPy. This follows on from the evolved gaits above: a population of perturbed policies is evaluated in parallel, and the policy is moved in the direction of the better ones. It needs no deep learning framework.</li>
+</ul>
+Training and watching a policy is a couple of commands:
+<pre style="background-color:#24292e; color:#f0f0f0; padding:12px; border-radius:6px; overflow-x:auto; text-align:left;">
+pip install -e ".[ppo]"
+python examples/train.py --algo ppo --task mixed --timesteps 3000000
+python examples/visualize.py runs/ppo_mixed/latest --command 0.05 0 --record
+</pre>
+Because the policy's inputs are foot pressures and motor angles, the same signals as on the physical robot, the next step is to bring these gaits back onto the hardware and to study how tactile feedback helps the robot walk on different surfaces and slopes.
 
 <br><br>
 <div align="center"><a href="https://github.com/shepai/Sim-Biped-Walker" target="_blank" style="text-decoration: none;">
