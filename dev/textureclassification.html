@@ -76,18 +76,6 @@
 		<br><br>
 		Moving the sensor across varying vectors shows the sensor's ability to classify the different textures with linear stroking movements, this is the most common way of gathering textural datasets. We also investigated how the sensor-classifier pairs performed on sensations they were not trained on. To do this, we collected a non-linear movement dataset by moving the sensor in circular movements of increasing radii (1cm, 1.75cm, 2.5cm) while increasing the contact force by approximately 17 grams on each iteration. We refer to this as the non-linear dataset. 
 
-		<h3 class="headerText">Linking the rig to simulation (ongoing work)</h3>
-		We are now pairing the physical rig with a simulated copy of it in <a href="https://github.com/shepai/TacTip-gym">TacTip-gym</a>, our MuJoCo simulator of a soft-bodied TacTip. The simulated rig has the same axes and holds the same 3D-printed texture blocks as the real one. To line the two up, both start from a reset position: the simulated sensor hovers 10 mm above the centre of the block, and the real rig homes on its limit switches and then moves a fixed offset to the same place. We then drive both rigs with the keyboard, side by side, to matching poses at several points over the block. From these pairs the software fits a map from simulated positions in millimetres to motor steps, which also gives each axis's steps per millimetre and direction. Once calibrated, the real rig can follow the simulated one: moving the sensor in the simulator moves the real sensor to the same place.
-
-		<h3 class="headerText">Paired simulated and real datasets (ongoing work)</h3>
-		With the two rigs matched, the same motion can be run on both at once to build datasets where every real sample has a simulated twin. The motions go beyond straight strokes. They include single presses, taps, straight and depth-changing strokes, circles, spirals, figure-of-eights, zigzags and smooth random paths whose depth varies along the way. Each motion is split into points half a millimetre apart. At each point both rigs move there and settle, then the software records:
-		<ul>
-			<li>the simulated TacTip's camera image and the positions of its markers,</li>
-			<li>the real TacTip's camera image,</li>
-			<li>a depth image of the contact from an Intel RealSense D401 camera.</li>
-		</ul>
-		Motions can be repeated to measure how repeatable the sensor is, and the same set of motions can be run on every texture so the textures can be compared directly. The aim is a dataset for learning the mapping between what the real sensor sees and what the simulated sensor sees, so that models trained in simulation can be tested on the real sensor.
-
 <br><br>
 <div align="center"><a href="https://github.com/shepai/Rig-controller" target="_blank" style="text-decoration: none;">
     <button style="
@@ -118,6 +106,90 @@
       </svg>
   
       See Repo
+    </button>
+  </a></div>
+
+		<h2 class="headerText">Simulation and sim-to-real (ongoing work)</h2>
+		The rig now has a simulated twin in <a href="https://github.com/shepai/TacTip-gym">TacTip-gym</a>, our MuJoCo simulator of a soft-bodied TacTip. The aim is to learn how what the real TacTip senses relates to what the simulated one senses, in both directions. Then models trained in simulation can be given what the real sensor would see, and real readings can be turned into simulated ones so a policy trained in simulation can run on the real sensor.
+
+		<h3 class="headerText">The simulated rig</h3>
+		The simulated TacTip is a soft skin made of linked nodes with markers on its inside, mounted on the same three axes as the real rig, above the same 3D-printed texture blocks (29.3 × 30 × 7 mm). The simulator gives several readings of the sensor, any of which can be chosen as an input in the gym:
+		<table border="1" style="border-collapse: collapse; text-align: center;">
+		  <caption><strong>Table:</strong> Readings of the simulated TacTip.</caption>
+		  <thead><tr><th>Reading</th><th>What it is</th></tr></thead>
+		  <tbody>
+			<tr><td>Markers</td><td>How far each of the 71 markers on the inside of the skin has moved (mm, 3D)</td></tr>
+			<tr><td>Camera image</td><td>What a camera inside the tip sees of the markers</td></tr>
+			<tr><td>Depth image</td><td>How far the inside of the skin is from a camera in the tip, as the real depth camera measures it</td></tr>
+			<tr><td>Real TacTip (learned)</td><td>The simulated reading passed through a learned mapping, giving what the real sensor would show</td></tr>
+		  </tbody>
+		</table>
+		<br>
+
+		<h3 class="headerText">Calibrating the real rig to the simulated one</h3>
+		Both rigs start from a reset position: the simulated sensor hovers 10 mm above the centre of the block, and the real rig homes on its limit switches. Each real axis's steps per millimetre is measured by driving it a known number of steps from its limit switch and measuring how far it went. We then drive both rigs with the keyboard, side by side, to matching poses over the block. From these pairs the software works out where the block sits in motor steps, and flags any pose that disagrees with the others. Once calibrated, moving the sensor in the simulator moves the real sensor to the same place.
+
+		<h3 class="headerText">Paired datasets</h3>
+		With the rigs matched, the same motion runs on both, so every real sample has a simulated twin. The motions are presses, taps, straight and depth-changing strokes, circles, spirals, figure-of-eights, zigzags and smooth random paths. Each is cut into points half a millimetre apart; at each point both rigs move there, settle, and record. The real sensor is a TacTip with an Intel RealSense D405 inside it: its colour stream is the TacTip image and its depth stream measures the skin. The session used below has 18,320 paired samples over 320 trajectories and 16 textures. Each sample holds the simulated markers and camera image, the real TacTip image, and the real depth image.
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/sample_images.png" style="max-width:100%;width:900px;" alt="One press, before contact (top) and at its deepest (bottom)"><br><span style="font-size:0.9em;"><strong>Figure:</strong> One press, before contact (top) and at its deepest (bottom). Left: the simulated TacTip's camera image. Middle: the real TacTip's camera image; the pins fill only the dark disc in the middle. Right: the real depth image; blank areas have no reading, because the camera sits closer to the skin than it can measure.</span></div>
+
+		<h3 class="headerText">Learning the mapping</h3>
+		<div align="center">
+		<svg viewBox="0 0 640 150" width="100%" style="max-width:640px" font-family="sans-serif" font-size="12">
+		  <rect x="5" y="20" width="120" height="40" rx="6" fill="#dbe9f6" stroke="#4a78a8"/><text x="65" y="45" text-anchor="middle">simulated TacTip</text>
+		  <rect x="165" y="20" width="100" height="40" rx="6" fill="#eee" stroke="#777"/><text x="215" y="45" text-anchor="middle">encode</text>
+		  <rect x="300" y="20" width="60" height="40" rx="6" fill="#fff3cd" stroke="#b08900"/><text x="330" y="45" text-anchor="middle">code</text>
+		  <rect x="300" y="90" width="60" height="40" rx="6" fill="#fff3cd" stroke="#b08900"/><text x="330" y="115" text-anchor="middle">code</text>
+		  <rect x="165" y="90" width="100" height="40" rx="6" fill="#eee" stroke="#777"/><text x="215" y="115" text-anchor="middle">encode</text>
+		  <rect x="5" y="90" width="120" height="40" rx="6" fill="#f6dbdb" stroke="#a84a4a"/><text x="65" y="115" text-anchor="middle">real TacTip</text>
+		  <rect x="400" y="55" width="110" height="40" rx="6" fill="#e2f0d9" stroke="#4a8a3a"/><text x="455" y="80" text-anchor="middle">learned map</text>
+		  <line x1="125" y1="40" x2="165" y2="40" stroke="#333"/><line x1="265" y1="40" x2="300" y2="40" stroke="#333"/>
+		  <line x1="125" y1="110" x2="165" y2="110" stroke="#333"/><line x1="265" y1="110" x2="300" y2="110" stroke="#333"/>
+		  <line x1="360" y1="40" x2="400" y2="70" stroke="#333"/><line x1="360" y1="110" x2="400" y2="80" stroke="#333"/>
+		  <text x="520" y="70">sim &#8596; real,</text><text x="520" y="86">both ways</text>
+		</svg>
+		</div>
+		<strong>Whole images.</strong> Our first approach mapped whole images. One autoencoder compresses the simulated image to a short code, another compresses the real image, and small networks translate between the codes. The simulated autoencoder reproduced its images well (error 0.10, where 1 is no better than always predicting the average image and 0 is perfect). The translation learned nothing: 1.00 from simulated to real, 0.85 back. One reason is that the real camera drifts. Its brightness wanders by several grey levels between trajectories while nothing touches the sensor, and the simulator cannot predict that.
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/brightness_drift.png" style="max-width:100%;width:620px;" alt="Mean brightness of the real image before contact, for every fourth trajectory"><br><span style="font-size:0.9em;"><strong>Figure:</strong> Mean brightness of the real image before contact, for every fourth trajectory. It varies between about 125 and 136 grey levels (standard deviation 2.5) with nothing touching the sensor.</span></div>
+
+		<strong>Do the real images follow the simulated ones?</strong> To catch problems like this before training, a pairing check measures, sample by sample, how much the real image has changed since before contact, and how much the simulated one has. If both rigs made the same contact, the two should rise and fall together. In the raw images they barely did (correlation 0.31), and contact changed the real image by only 1.4 times the camera's own noise. Comparing every real image with the same trajectory's frames from before contact removes the drift. Converting images to their edges with a Sobel filter, as in our texture classification work, nearly doubled the correlation, to 0.58.
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/pairing_signals.png" style="max-width:100%;width:1000px;" alt="How much each image changes from before contact (Sobel edges), along four trajectories"><br><span style="font-size:0.9em;"><strong>Figure:</strong> How much each image changes from before contact (Sobel edges), along four trajectories. Orange is the real image, blue is the simulated one, and dashed is the commanded depth (right axis). The real image changes strongly while the simulated one barely moves: the simulated sensor was hardly touching.</span></div>
+
+		<strong>Pins instead of pixels.</strong> Our current approach works with the markers. The software finds the 132 white pins in every real frame and follows each one through its trajectory. It finds them about 97% of the time. Each pin's position comes from the colour image. Its depth comes from the depth image where there is a reading, about half the time. Movement is measured from the trajectory's frames before contact, so the drift drops out.
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/pins_found.png" style="max-width:100%;width:950px;" alt="Left: the 132 pins found in the real image at the deepest point of a press"><br><span style="font-size:0.9em;"><strong>Figure:</strong> Left: the 132 pins found in the real image at the deepest point of a press. Right: how far each pin moved from before contact (arrows, enlarged); colour is how far it moved towards the camera, in mm, where the depth image has a reading.</span></div>
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/pins_along_press.png" style="max-width:100%;width:560px;" alt="Along one press: the real pins' mean sideways shift (px) and push towards the camera (mm), against the simulated markers' shift (mm) in the original recording"><br><span style="font-size:0.9em;"><strong>Figure:</strong> Along one press: the real pins' mean sideways shift (px) and push towards the camera (mm), against the simulated markers' shift (mm) in the original recording. The real pins move clearly; the simulated markers hardly move at all.</span></div>
+
+		<strong>Correcting the height.</strong> The plots above show that, as recorded, the simulated sensor was pressing much less than the real one. So we re-ran every recorded trajectory in simulation, with the same texture, path and points, pressing the simulated sensor deeper by a range of offsets. For each offset we compared the depth at which the simulated markers start moving with the depth at which the real image starts changing. The two line up at a 2.5 mm offset, and the pairs correlate best at 1.5 mm. Either way, the calibrated height was out by 1.5 to 2.5 mm. The re-simulated session uses 2.5 mm.
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/z_offset_fit.png" style="max-width:100%;width:820px;" alt="Choosing how much deeper the simulated sensor should press"><br><span style="font-size:0.9em;"><strong>Figure:</strong> Choosing how much deeper the simulated sensor should press. Left: the depth at which the real image starts changing, minus the depth at which the simulated markers start moving (0 = they touch at the same depth). Right: how closely the two change together.</span></div>
+
+		<strong>The marker map.</strong> On the re-simulated session, a small network maps the 71 simulated markers' movement to the 132 real pins' movement, and back. It was tested on whole motions held out from training.
+		<br><br>
+		<table border="1" style="border-collapse: collapse; text-align: center;">
+		  <caption><strong>Table:</strong> Results on motions held out from training. The score is the error relative to always guessing the average: 1 is no better than guessing, 0 is perfect.</caption>
+		  <thead><tr><th>Approach</th><th>Sim &#8594; real</th><th>Real &#8594; sim</th><th>Notes</th></tr></thead>
+		  <tbody>
+			<tr><td>Whole images</td><td>1.00</td><td>0.85</td><td>Learned the camera drift, not contact</td></tr>
+			<tr><td>Markers, linear map</td><td>0.48</td><td>0.77</td><td>Pins off by 0.66 px and 0.30 mm in depth</td></tr>
+			<tr><td>Markers, small network</td><td><b>0.42</b></td><td><b>0.74</b></td><td>Pins off by 0.62 px (pins are 12.5 px apart) and 0.29 mm in depth</td></tr>
+		  </tbody>
+		</table>
+		<br>
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/pins_measured_vs_predicted.png" style="max-width:100%;width:900px;" alt="A held-out press"><br><span style="font-size:0.9em;"><strong>Figure:</strong> A held-out press. Left: how the real pins actually moved. Right: how the marker map predicted they would move, from the simulated sensor alone.</span></div>
+
+		<div align="center" style="margin:14px 0;"><img src="https://raw.githubusercontent.com/shepai/shepai.github.io/refs/heads/master/assets/sim2real/held_out_scatter.png" style="max-width:100%;width:420px;" alt="Every held-out sample: the real pins' mean shift as measured, against the marker map's prediction"><br><span style="font-size:0.9em;"><strong>Figure:</strong> Every held-out sample: the real pins' mean shift as measured, against the marker map's prediction. Points on the dashed line are exact.</span></div>
+
+		<strong>Where this leaves us.</strong> The simulated-to-real direction works: from the simulated sensor alone, the map predicts the real pins' pattern and size of movement, explaining about 58% of their variation. The real-to-simulated direction is weaker, at about a quarter. That direction is the one needed to run a policy trained in simulation on the real sensor. The networks stopped improving within a few epochs, so the limit is how well the recorded pairs match, not the model. The next step is to record a new session with the height error corrected in the calibration, rather than after the fact. In TacTip-gym, the trained map is already an input, so a policy trained in simulation can be given what the real sensor would see.
+<br><br>
+<div align="center"><a href="https://github.com/shepai/TacTip-gym" target="_blank" style="text-decoration: none;">
+    <button style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background-color: #24292e; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
+      See TacTip-gym
     </button>
   </a></div>
 		<h2 class="headerText">Dataset</h2>
